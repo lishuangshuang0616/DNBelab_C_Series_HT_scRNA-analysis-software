@@ -1,90 +1,86 @@
-<div align="center" markdown="1">
+<div class="doc-hero-badge">
+  <span class="doc-badge-pill">v3.2 Latest</span>
+  <span class="doc-badge-sub">DNBC4TOOLS Single-Cell Suite</span>
+</div>
 
 # DNBelab C Series™ HT Single-Cell Analysis Software
 
-[![Github Release](https://img.shields.io/github/v/release/MGI-tech-bioinformatics/DNBelab_C_Series_HT_scRNA-analysis-software)](https://github.com/MGI-tech-bioinformatics/DNBelab_C_Series_HT_scRNA-analysis-software/releases)
-[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
-[![Documentation](https://img.shields.io/badge/docs-latest-brightgreen.svg)](https://lishuangshuang0616.github.io/DNBelab_C_Series_HT_scRNA-analysis-software/Document/site/index.html)
-[![Platform](https://img.shields.io/badge/platform-Linux-lightgrey.svg)](./doc/installation.en.md#system-requirements)
+An end-to-end, high-performance single-cell analysis toolkit for DNBelab C Series™ sequencing data. CLI tool: **`dnbc4tools`**. Fully supports single-cell RNA, ATAC, V(D)J, and C6 multi-sample pipelines with quality control, quantification, annotation, and interactive HTML reporting.
 
-A high-performance single-cell analysis toolkit for DNBelab C Series™ data. CLI tool: **`dnbc4tools`**.
-
-Supported modules: **scRNA-seq** | **scATAC-seq** | **scVDJ-seq** | **Multi-omics**
-
+<div class="doc-actions">
+<a href="doc/quickstart.md" class="doc-btn-primary">Quick Start →</a>
+<a href="doc/installation.md" class="doc-btn-outline">Installation & Environment</a>
+<a href="doc/migration.md" class="doc-btn-outline">Upgrade Guide (3.1 → 3.2)</a>
 </div>
 
----
+## Analysis Modalities
 
-## What's New in v3.1
-
-- Added multi-omics workflow for single-sample RNA + VDJ analysis
-- Added `--consistent_cells` for reproducible downstream analysis
-- Fixed RNA metrics and dual-species edge-case issues
-- Improved `bam2fastq` and `fqsubC4` performance
-
-See details in [Release Notes](./doc/release.en.md).
-
----
-
-## Documentation
-
-### Quick Access
-
-<div class="home-quick-links" markdown="1">
-
-[Installation](./doc/installation.en.md)
-[Quick Start](./doc/quickstart.en.md)
-[I/O Analysis](./doc/io.en.md)
-[Dataset](./doc/dataset.en.md)
-
+<div class="doc-module-grid">
+<div class="doc-module mod-rna">
+<div class="doc-module-header">
+  <span class="doc-module-tag">scRNA</span>
+  <h3>RNA Gene Expression</h3>
+</div>
+<p>Gene quantification, cell calling (EmptyDrops), UMI correction, and cell clustering.</p>
+<div class="doc-module-links">
+<a class="doc-pill-link" href="doc/pipeline/scRNA.md">Workflow</a>
+<a class="doc-pill-link" href="doc/parameter/scRNA.md">Parameters</a>
+<a class="doc-pill-link" href="doc/outs/scRNA.md">Outputs</a>
+</div>
+</div>
+<div class="doc-module mod-atac">
+<div class="doc-module-header">
+  <span class="doc-module-tag">scATAC</span>
+  <h3>ATAC Chromatin Accessibility</h3>
+</div>
+<p>Open chromatin profiling, peak calling, fragment filtering, and QC metrics.</p>
+<div class="doc-module-links">
+<a class="doc-pill-link" href="doc/pipeline/scATAC.md">Workflow</a>
+<a class="doc-pill-link" href="doc/parameter/scATAC.md">Parameters</a>
+<a class="doc-pill-link" href="doc/outs/scATAC.md">Outputs</a>
+</div>
+</div>
+<div class="doc-module mod-vdj">
+<div class="doc-module-header">
+  <span class="doc-module-tag">scVDJ</span>
+  <h3>V(D)J Immune Profiling</h3>
+</div>
+<p>De novo TCR / BCR assembly, V(D)J gene annotation, and full-length clonotype calling.</p>
+<div class="doc-module-links">
+<a class="doc-pill-link" href="doc/pipeline/scVDJ.md">Workflow</a>
+<a class="doc-pill-link" href="doc/parameter/scVDJ.md">Parameters</a>
+<a class="doc-pill-link" href="doc/outs/scVDJ.md">Outputs</a>
+</div>
+</div>
+<div class="doc-module mod-multi">
+<div class="doc-module-header">
+  <span class="doc-module-tag">Multi / C6</span>
+  <h3>Multi-Omics & C6 Multi-Sample</h3>
+</div>
+<p>Joint RNA + ATAC pipelines and probe-barcoded C6 multi-sample analysis and reporting.</p>
+<div class="doc-module-links">
+<a class="doc-pill-link" href="doc/pipeline/multi.md">Workflow</a>
+<a class="doc-pill-link" href="doc/parameter/multi.md">Parameters</a>
+<a class="doc-pill-link" href="doc/outs/multi.md">Outputs</a>
+</div>
+</div>
 </div>
 
----
+## Common Tasks
 
-### Module Navigation
+| I want to... | Quick Link | Notes |
+| :--- | :--- | :--- |
+| **Run my first sample** | [Quick Start Guide →](doc/quickstart.md) | Human / mouse reference build and end-to-end examples |
+| **Configure a C6 multi-sample experiment** | [Multi Configuration →](doc/parameter/multi.md#c6-samples) | `[samples]` section and multi-sample matrix demultiplexing |
+| **Load matrices in R or Python** | [I/O Analysis & Matrix Loading →](doc/io.md) | Sample scripts for Seurat and Scanpy |
+| **Review changes from 3.1 to 3.2** | [Version Upgrade Guide →](doc/migration.md) | Matrix directory changes, C6 summaries, and compatibility |
+| **Troubleshoot pipeline failures** | [Running & Troubleshooting →](doc/troubleshooting.md) | Memory limits, STAR parameters, and thread tuning |
+| **Download example datasets** | [Example Datasets →](doc/dataset.md) | Public benchmark FASTQ files and genome references |
 
-<div class="home-card-grid">
-  <div class="home-card">
-    <h4>Pipeline</h4>
-    <p>End-to-end workflow guidance from input preparation to result interpretation.</p>
-    <div class="home-card-links">
-      <a href="./doc/pipeline/pipeline.en.md">Overview</a>
-      <a href="./doc/pipeline/scRNA.en.md">scRNA</a>
-      <a href="./doc/pipeline/scATAC.en.md">scATAC</a>
-      <a href="./doc/pipeline/scVDJ.en.md">scVDJ</a>
-      <a href="./doc/pipeline/multi.en.md">Multi</a>
-    </div>
-  </div>
+## Versions & Updates
 
-  <div class="home-card">
-    <h4>Parameter</h4>
-    <p>Command parameters and recommended settings for configuration and troubleshooting.</p>
-    <div class="home-card-links">
-      <a href="./doc/parameter/parameter.en.md">Overview</a>
-      <a href="./doc/parameter/scRNA.en.md">scRNA</a>
-      <a href="./doc/parameter/scATAC.en.md">scATAC</a>
-      <a href="./doc/parameter/scVDJ.en.md">scVDJ</a>
-      <a href="./doc/parameter/multi.en.md">Multi</a>
-      <a href="./doc/parameter/tools.en.md">Toolbox</a>
-    </div>
-  </div>
+The version selector in the header switches seamlessly to the complete **3.1 archive**, preserving the current page and language. The default documentation entry is **3.2**.
 
-  <div class="home-card">
-    <h4>Outputs</h4>
-    <p>Output directory structure, key files, and web-report metric interpretation.</p>
-    <div class="home-card-links">
-      <a href="./doc/outs/outs.en.md">Overview</a>
-      <a href="./doc/outs/scRNA.en.md">scRNA</a>
-      <a href="./doc/outs/scATAC.en.md">scATAC</a>
-      <a href="./doc/outs/scVDJ.en.md">scVDJ</a>
-      <a href="./doc/outs/multi.en.md">Multi</a>
-    </div>
-  </div>
-</div>
+Version 3.2 adds C6 multi-sample analysis and QC reporting, updated matrix outputs, ATAC default counting logic, and runtime diagnostics. See [Release Notes](doc/release.md) for full details.
 
----
-
-## Support
-
-- Questions / bug reports / feature requests: [GitHub Issues](https://github.com/MGI-tech-bioinformatics/DNBelab_C_Series_HT_scRNA-analysis-software/issues)
-- Official website: [www.mgi-tech.com](https://www.mgi-tech.com)
+> 💡 **Feedback & Issues**: [GitHub Issues](https://github.com/MGI-tech-bioinformatics/DNBelab_C_Series_HT_scRNA-analysis-software/issues) · **Official Website**: [www.mgi-tech.com](https://www.mgi-tech.com)

@@ -1,26 +1,6 @@
-<div align="right" style="margin-bottom: 20px; max-width: 1200px; margin-left: auto; margin-right: auto;" markdown="block">
+# scRNA Analysis Parameters
 
-[Home](../../index.md)
-
-</div>
-
-<div align="center" style="padding: 40px 20px; background: linear-gradient(135deg, #f5f5f7 0%, #ffffff 100%); border-radius: 12px; margin-bottom: 30px; max-width: 1200px; margin-left: auto; margin-right: auto;" markdown="block">
-
-<h1 style="font-size: 48px; font-weight: 600; color: #1d1d1f; margin: 0 0 16px 0; letter-spacing: -0.02em;">scRNA Analysis Parameters</h1>
-
-<p style="font-size: 21px; color: rgba(0,0,0,0.6); margin: 0 0 30px 0; font-weight: 400;">DNBelab C Series HT scRNA Parameter Configuration Guide</p>
-
-<div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;" markdown="block">
-<a href="#main-analysis-pipeline-run" style="background: #0071e3; color: white; padding: 8px 16px; border-radius: 980px; text-decoration: none; font-size: 14px;">Main Analysis (run)</a>
-<a href="#reference-database-construction-mkref" style="background: transparent; color: #0071e3; padding: 8px 16px; border-radius: 980px; text-decoration: none; font-size: 14px; border: 1px solid #0071e3;">Database Construction (mkref)</a>
-<a href="#multi-sample-operations-multi" style="background: transparent; color: #0071e3; padding: 8px 16px; border-radius: 980px; text-decoration: none; font-size: 14px; border: 1px solid #0071e3;">Multi-sample (multi)</a>
-</div>
-
-</div>
-
-<div style="max-width: 1200px; margin: 0 auto;" markdown="block"><hr style="border: none; border-top: 1px solid #d2d2d7; margin: 24px 0;"></div>
-
-<div style="background: #f5f5f7; border-radius: 12px; padding: 24px; margin: 24px auto; max-width: 1200px;" markdown="block">
+DNBelab C Series HT scRNA Parameter Configuration Guide
 
 ## Overview <a id="overview"></a>
 
@@ -30,533 +10,659 @@ This document explains the parameter meanings, default behaviors, and common usa
 >
 > Parameter descriptions are based on the current command-line help information. Examples can be used directly as templates and adjusted as needed.
 
-</div>
-
-<div style="max-width: 1200px; margin: 0 auto;" markdown="block"><hr style="border: none; border-top: 1px solid #d2d2d7; margin: 24px 0;"></div>
-
-<div style="background: #f5f5f7; border-radius: 12px; padding: 24px; margin: 24px auto; max-width: 1200px;" markdown="block">
-
 ## Main Analysis Pipeline (run) <a id="main-analysis-pipeline-run"></a>
-
-</div>
-
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; margin: 20px auto; max-width: 1200px; border: 1px solid #d2d2d7; overflow-x: auto;" markdown="block">
 
 ### Usage <a id="usage"></a>
 
+```bash
+dnbc4tools rna run \
+  --name sample1 \
+  --fastqs /data/rna \
+  --genomeDir /reference/rna \
+  --threads 16
+```
+
+<details markdown="block" class="cli-help">
+<summary>Full CLI help</summary>
+
 ```shell
-$ dnbc4tools rna run
-dnbc4tools 3.1
+$ dnbc4tools rna run --help
+dnbc4tools 3.2
 
 Process a single-cell RNA-seq sample.
 
 Usage: dnbc4tools rna run [OPTIONS]
 
-optional arguments:
+options:
   --help                     show this help message and exit
 
 Input Files:
   Choose one input method: either `--fastqs` (directory input) or all four individual FASTQ files.
 
-  --fastqs <DIR>             Directory containing cDNA and oligo FASTQ subfolders (e.g., `cDNA/sample_cdna_R1.fastq.gz`, `oligo/sample_oligo_L01_R1.fastq.gz`). The pipeline automatically detects paired-end files.
-  --cDNAfastq1 <FILE>        cDNA Read 1 FASTQ list. Supports wildcard and comma-separated inputs (e.g., `sample1_R1.fastq.gz,sample2_R1.fastq.gz`).
-  --cDNAfastq2 <FILE>        cDNA Read 2 FASTQ list. Order must match `--cDNAfastq1` (e.g., `sample1_R2.fastq.gz,sample2_R2.fastq.gz`).
-  --oligofastq1 <FILE>       Oligo Read 1 FASTQ list for barcode merging. Supports wildcard and comma-separated inputs.
-  --oligofastq2 <FILE>       Oligo Read 2 FASTQ list. Order must match `--oligofastq1` (e.g., `sample1_oligo_R2.fastq.gz`).
+  --fastqs <DIR>             Directory containing cDNA and oligo FASTQ subfolders (e.g.,
+                             `cDNA/sample_cdna_R1.fastq.gz`, `oligo/sample_oligo_R1.fastq.gz`). Paired-end files are
+                             detected from the directory structure.
+  --cDNAfastq1 <FILE>        cDNA Read1 FASTQ list. Supports wildcard and comma-separated inputs (e.g.,
+                             `sample1_R1.fastq.gz,sample2_R1.fastq.gz`).
+  --cDNAfastq2 <FILE>        cDNA Read2 FASTQ list. Order must match `--cDNAfastq1` (e.g.,
+                             `sample1_R2.fastq.gz,sample2_R2.fastq.gz`).
+  --oligofastq1 <FILE>       Oligo Read1 FASTQ list for barcode merging. Supports wildcard and comma-separated inputs.
+  --oligofastq2 <FILE>       Oligo Read2 FASTQ list. Order must match `--oligofastq1` (e.g.,
+                             `sample1_oligo_R2.fastq.gz`).
 
 Basic Settings:
-  --name <STR>               Unique identifier for the sample. Used for naming output files and reports (e.g., `sample1`).
+  --name <STR>               Unique identifier for the sample. Used for naming output files and reports (e.g.,
+                             `sample1`).
   --genomeDir <DIR>          Reference genome directory path containing STAR index files (e.g., `./genome_index`).
-  --outdir <DIR>             Output directory path for results and reports [default: current directory] (e.g., `./output`).
-  --threads <INT>            Number of CPU threads for parallel processing [default: all available cores] (e.g., `16`).
+  --outdir <DIR>             Output directory path for results and reports [default: current directory] (e.g.,
+                             `./output`).
+  --threads <INT>            Number of CPU threads for parallel processing [default: all available cores] (e.g.,
+                             `16`).
 
 Filtering Settings:
-  --calling_method <STR>     Cell detection method [default: emptydrops]. Supported values: `barcoderanks`, `emptydrops`.
-  --expectcells <INT>        Expected number of cells to guide detection [default: auto] (e.g., `3000`).
-  --forcecells <INT>         Force pipeline to use exactly this number of cells, overriding expected cell detection (e.g., `5000`).
+  --calling_method <STR>     Cell detection method [default: emptydrops]. Supported values: `barcoderanks`,
+                             `emptydrops`.
+  --expectcells <INT>        Expected number of cells to guide detection (e.g., `3000`).
+  --forcecells <INT>         Force pipeline to use exactly this number of cells, overriding expected cell detection
+                             (e.g., `5000`).
   --minumi <INT>             Minimum UMI count per cell to retain [default: 1000].
-  --consistent_cells <FILE>  Headered CSV for merge/cell-calling constraints. Supported schemas: `cell`; `cell,barcode`; `cell,is_cell_barcode`; `cell,barcode,is_cell_barcode`. Other columns are ignored.
+  --consistent_cells <FILE>  Headered CSV for merge/cell-calling constraints. Supported schemas: `cell`;
+                             `cell,barcode`; `cell,is_cell_barcode`; `cell,barcode,is_cell_barcode`. Other columns are
+                             ignored.
 
 Library Settings:
-  --chemistry <STR>          Library chemistry version [default: auto]. Options: `scRNAv1HT`, `scRNAv2HT`, `scRNAv3HT`, `scRNA5Pv1`, `auto` (automatic detection).
-  --darkreaction <STR>       Dark cycle setting for cDNA and oligo libraries [default: auto]. Provide two comma-separated values in the form `<cDNA>,<oligo>`. Each field may be one of: `auto`, `R1R2`, `R1`, `unset`.
-  --customize <STR>          Custom read structure string. Format: `<type>,<read>:<start>-<end>` joined by `;`. cDNA (e.g., `cb,R1:1-10;cb,R1:11-20;umi,R1:21-30;R2,R2:1-100`). Oligo (e.g., `cb,R1:1-10;cb,R1:11-20;R1,R1:21-45`). For
-                             RNA, provide `--customize` twice when both cDNA and oligo are customized: first cDNA, then oligo.
+  --chemistry <STR>          Library chemistry version. Options: `scRNAv1HT`, `scRNAv2HT`, `scRNAv3HT`, `scRNA5Pv1`.
+  --darkreaction <STR>       Dark cycle setting for cDNA and oligo libraries. Provide two comma-separated values in
+                             the form `<cDNA>,<oligo>`. cDNA=`R1`/`unset`; oligo=`R1R2`/`R1`/`unset`.
+  --customize <STR>          Custom read structure string. Format: `<type>,<read>:<start>-<end>` joined by `;`. cDNA
+                             (e.g., `"cb,R1:7-16;cb,R1:23-32;umi,R1:38-47;R1,R2:1-100"`). Oligo (e.g.,
+                             `"cb,R1:7-16;cb,R1:23-32;R1,R2:1-10;R1,R2:17-26;R1,R2:33-42"`). For RNA, provide
+                             `--customize` twice when both cDNA and oligo are customized: first cDNA, then oligo.
 
 Analysis Settings:
   --no_introns               Exclude intronic reads from the expression matrix to increase specificity.
   --end5                     Enable 5'-end scRNA-seq analysis for 5' gene-expression profiling.
   --no_bam                   Skip BAM file generation to save time and disk space.
   --sample_read_pairs <INT>  Subsample this number of cDNA read pairs for analysis (e.g., `1000000`).
+  --star_parameters <STR>    Extra STAR filtering, alignment, seeding or scoring arguments. Wrap them in quotes (e.g.,
+                             `"--outFilterMismatchNmax 10 --outFilterMultimapNmax 1"`). Unknown or ineffective options
+                             are rejected.
 ```
 
-</div>
-
-<div style="background: #f5f5f7; border-radius: 12px; padding: 24px; margin: 24px auto; max-width: 1200px;" markdown="block">
+</details>
 
 ### Parameter Description
 
-</div>
-
-<div style="max-width: 1200px; margin: 0 auto;" markdown="block">
-
-#### Required Parameters
+### Required Parameters
 
 > **Essential parameters that must be specified for a successful analysis**
 
-</div>
+#### `--name` (Required)
 
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border: 1px solid #e5e5e5; margin: 20px auto; max-width: 1200px;" markdown="block">
-<h4><code>--name</code> <span style="font-size: 0.8em; font-weight: normal; color: #e74c3c;">(Required)</span></h4>
-<p>Provide a unique name for this analysis run.</p>
+Provide a unique name for this analysis run.
+
 <ul>
   <li><strong>Function:</strong> This name will be used as a prefix for all output files and the HTML report.</li>
   <li><strong>Display:</strong> In the final web report, this name will be shown as the Sample ID.</li>
 </ul>
-<p><strong>Default:</strong> None</p>
-<p><strong>Example:</strong></p>
-<pre><code>--name sample_001</code></pre>
-</div>
 
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border: 1px solid #e5e5e5; margin: 20px auto; max-width: 1200px;" markdown="block">
-<h4><code>--genomeDir</code> <span style="font-size: 0.8em; font-weight: normal; color: #e74c3c;">(Required)</span></h4>
-<p>Specify the path to the reference genome directory.</p>
+**Default:** None
+
+**Example:**
+
+```text
+--name sample_001
+```
+
+#### `--genomeDir` (Required)
+
+Specify the path to the reference genome directory.
+
 <ul>
   <li><strong>Requirement:</strong> The directory must contain the index and annotation resources generated by the <code>mkref</code> command.</li>
   <li><strong>Content:</strong> Includes genome sequence, STAR alignment index, etc.</li>
 </ul>
-<p><strong>Default:</strong> None</p>
-<p><strong>Example:</strong></p>
-<pre><code>--genomeDir /path/to/genome/database</code></pre>
-</div>
 
-<div style="max-width: 1200px; margin: 0 auto;" markdown="block"><hr style="border: none; border-top: 1px solid #d2d2d7; margin: 24px 0;"></div>
+**Default:** None
 
-<div style="max-width: 1200px; margin: 0 auto;" markdown="block">
+**Example:**
 
-#### Input File Parameters
+```text
+--genomeDir /path/to/genome/database
+```
 
-<p><strong>Choose one input method: directory input or individual FASTQ files</strong></p>
+### Input File Parameters
 
-</div>
+**Choose one input method: directory input or individual FASTQ files**
 
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border: 1px solid #e5e5e5; margin: 20px auto; max-width: 1200px;" markdown="block">
-<h4><code>--fastqs</code> <span style="font-size: 0.8em; font-weight: normal; color: #3498db;">(Method 1)</span></h4>
-<p>Specify the path to the directory containing all FASTQ files.</p>
+#### `--fastqs` (Method 1)
+
+Specify the path to the directory containing all FASTQ files.
+
 <ul>
   <li><strong>Function:</strong> The pipeline will automatically detect paired files within this directory (including cDNA and oligo subdirectories).</li>
   <li><strong>Directory requirement (RNA):</strong> The <code>--fastqs</code> directory must contain both <code>cDNA/</code> and <code>oligo/</code> subdirectories, and each subdirectory should include paired R1/R2 files.</li>
   <li><strong>Naming requirement:</strong> Automatic detection relies on R1/R2 markers in file names. Supported R1 patterns are <code>_R1_</code>, <code>_R1</code>, <code>_1</code>, and <code>_read1</code>; supported R2 patterns are <code>_R2_</code>, <code>_R2</code>, <code>_2</code>, and <code>_read2</code>. Supported extensions are <code>.fastq.gz</code>, <code>.fq.gz</code>, <code>.fastq</code>, and <code>.fq</code>.</li>
   <li><strong>Note:</strong> This is a convenience option and cannot be used simultaneously with <code>--cDNAfastq1</code> / <code>--cDNAfastq2</code> / <code>--oligofastq1</code> / <code>--oligofastq2</code>.</li>
 </ul>
-<p><strong>Recommended directory structure:</strong></p>
-<pre><code>fastq_directory/
+
+**Recommended directory structure:**
+
+```text
+fastq_directory/
 ├── cDNA/
 │   ├── sample_cDNA_L01_R1.fastq.gz
 │   └── sample_cDNA_L01_R2.fastq.gz
 └── oligo/
     ├── sample_oligo_L01_R1.fastq.gz
-    └── sample_oligo_L01_R2.fastq.gz</code></pre>
-<p><strong>Default:</strong> None</p>
-<p><strong>Example:</strong></p>
-<pre><code>--fastqs ./fastq_directory</code></pre>
-</div>
+    └── sample_oligo_L01_R2.fastq.gz
+```
 
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border: 1px solid #e5e5e5; margin: 20px auto; max-width: 1200px;" markdown="block">
-<h4><code>--cDNAfastq1</code> <span style="font-size: 0.8em; font-weight: normal; color: #3498db;">(Method 2A)</span></h4>
-<p>Specify one or more cDNA Read 1 FASTQ files individually.</p>
+**Default:** None
+
+**Example:**
+
+```text
+--fastqs ./fastq_directory
+```
+
+#### `--cDNAfastq1` (Method 2A)
+
+Specify one or more cDNA Read 1 FASTQ files individually.
+
 <ul>
   <li><strong>Support:</strong> You can use wildcards (<code>*</code>) to match files or a comma-separated list for multiple files.</li>
   <li><strong>Requirement:</strong> Must be used in pairs with the <code>--cDNAfastq2</code> parameter, and the file order must match exactly.</li>
 </ul>
-<p><strong>Default:</strong> None</p>
-<p><strong>Example:</strong></p>
-<pre><code>--cDNAfastq1 sample_cDNA_L01_R1.fastq.gz,sample_cDNA_L02_R1.fastq.gz</code></pre>
-</div>
 
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border: 1px solid #e5e5e5; margin: 20px auto; max-width: 1200px;" markdown="block">
-<h4><code>--cDNAfastq2</code> <span style="font-size: 0.8em; font-weight: normal; color: #3498db;">(Method 2B)</span></h4>
-<p>Specify one or more cDNA Read 2 FASTQ files individually.</p>
+**Default:** None
+
+**Example:**
+
+```text
+--cDNAfastq1 sample_cDNA_L01_R1.fastq.gz,sample_cDNA_L02_R1.fastq.gz
+```
+
+#### `--cDNAfastq2` (Method 2B)
+
+Specify one or more cDNA Read 2 FASTQ files individually.
+
 <ul>
   <li><strong>Support:</strong> You can use wildcards (<code>*</code>) to match files or a comma-separated list for multiple files.</li>
   <li><strong>Requirement:</strong> Must be used in pairs with the <code>--cDNAfastq1</code> parameter, and the file order must match exactly.</li>
 </ul>
-<p><strong>Default:</strong> None</p>
-<p><strong>Example:</strong></p>
-<pre><code>--cDNAfastq2 sample_cDNA_L01_R2.fastq.gz,sample_cDNA_L02_R2.fastq.gz</code></pre>
-</div>
 
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border: 1px solid #e5e5e5; margin: 20px auto; max-width: 1200px;" markdown="block">
-<h4><code>--oligofastq1</code> <span style="font-size: 0.8em; font-weight: normal; color: #3498db;">(Method 2C)</span></h4>
-<p>Specify one or more oligo Read 1 FASTQ files individually.</p>
+**Default:** None
+
+**Example:**
+
+```text
+--cDNAfastq2 sample_cDNA_L01_R2.fastq.gz,sample_cDNA_L02_R2.fastq.gz
+```
+
+#### `--oligofastq1` (Method 2C)
+
+Specify one or more oligo Read 1 FASTQ files individually.
+
 <ul>
   <li><strong>Support:</strong> You can use wildcards (<code>*</code>) to match files or a comma-separated list for multiple files.</li>
   <li><strong>Requirement:</strong> Must be used in pairs with the <code>--oligofastq2</code> parameter, and the file order must match exactly.</li>
 </ul>
-<p><strong>Default:</strong> None</p>
-<p><strong>Example:</strong></p>
-<pre><code>--oligofastq1 sample_oligo_L01_R1.fastq.gz</code></pre>
-</div>
 
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border: 1px solid #e5e5e5; margin: 20px auto; max-width: 1200px;" markdown="block">
-<h4><code>--oligofastq2</code> <span style="font-size: 0.8em; font-weight: normal; color: #3498db;">(Method 2D)</span></h4>
-<p>Specify one or more oligo Read 2 FASTQ files individually.</p>
+**Default:** None
+
+**Example:**
+
+```text
+--oligofastq1 sample_oligo_L01_R1.fastq.gz
+```
+
+#### `--oligofastq2` (Method 2D)
+
+Specify one or more oligo Read 2 FASTQ files individually.
+
 <ul>
   <li><strong>Support:</strong> You can use wildcards (<code>*</code>) to match files or a comma-separated list for multiple files.</li>
   <li><strong>Requirement:</strong> Must be used in pairs with the <code>--oligofastq1</code> parameter, and the file order must match exactly.</li>
 </ul>
-<p><strong>Default:</strong> None</p>
-<p><strong>Example:</strong></p>
-<pre><code>--oligofastq2 sample_oligo_L01_R2.fastq.gz</code></pre>
-</div>
 
-<div style="background: #f5f5f7; border-radius: 12px; padding: 20px; margin: 20px auto; max-width: 1200px;" markdown="block">
+**Default:** None
 
-<p><strong>Input Method Selection:</strong></p>
+**Example:**
+
+```text
+--oligofastq2 sample_oligo_L01_R2.fastq.gz
+```
+
+**Input Method Selection:**
+
 <ul>
   <li><strong>Method 1:</strong> Use <code>--fastqs</code> to specify a directory containing <code>cDNA/</code> and <code>oligo/</code> subdirectories.</li>
   <li><strong>Method 2:</strong> Use <code>--cDNAfastq1</code>, <code>--cDNAfastq2</code>, <code>--oligofastq1</code>, and <code>--oligofastq2</code> to specify the paired FASTQ files explicitly.</li>
 </ul>
 
-<p><strong>Compatible aliases</strong></p>
+**Compatible aliases**
+
 <ul>
 </ul>
 
-<p><strong>Important Note:</strong> Files provided for the same input group must come from the same library and use consistent sequencing mode and dark-reaction settings. Data from different libraries must not be merged for analysis.</p>
+**Important Note:** Files provided for the same input group must come from the same library and use consistent sequencing mode and dark-reaction settings. Data from different libraries must not be merged for analysis.
 
-</div>
+### Basic Settings
 
-<div style="max-width: 1200px; margin: 0 auto;" markdown="block"><hr style="border: none; border-top: 1px solid #d2d2d7; margin: 24px 0;"></div>
+#### `--outdir` (Optional)
 
-<div style="max-width: 1200px; margin: 0 auto;" markdown="block">
+Specify the output directory for all analysis results and reports.
 
-#### Basic Settings
-
-</div>
-
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border: 1px solid #e5e5e5; margin: 20px auto; max-width: 1200px;" markdown="block">
-<h4><code>--outdir</code> <span style="font-size: 0.8em; font-weight: normal; color: #27ae60;">(Optional)</span></h4>
-<p>Specify the output directory for all analysis results and reports.</p>
 <ul>
   <li><strong>Function:</strong> All analysis results will be saved in this directory, and the pipeline will automatically create a structured subdirectory named after the sample.</li>
 </ul>
-<p><strong>Default:</strong> <code>./</code> (current directory)</p>
-<p><strong>Example:</strong></p>
-<pre><code>--outdir ./output_results</code></pre>
-</div>
 
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border: 1px solid #e5e5e5; margin: 20px auto; max-width: 1200px;" markdown="block">
-<h4><code>--threads</code> <span style="font-size: 0.8em; font-weight: normal; color: #27ae60;">(Optional)</span></h4>
-<p>Set the number of CPU threads to be used during the analysis.</p>
+**Default:** `./` (current directory)
+
+**Example:**
+
+```text
+--outdir ./output_results
+```
+
+#### `--threads` (Optional)
+
+Set the number of CPU threads to be used during the analysis.
+
 <ul>
   <li><strong>Function:</strong> Increasing the number of threads can significantly speed up the analysis.</li>
   <li><strong>Recommendation:</strong> Adjust based on the number of available CPU cores for optimal performance.</li>
 </ul>
-<p><strong>Default:</strong> <code>Use all available CPU cores</code></p>
-<p><strong>Example:</strong></p>
-<pre><code>--threads 16</code></pre>
-</div>
 
-<div style="max-width: 1200px; margin: 0 auto;" markdown="block"><hr style="border: none; border-top: 1px solid #d2d2d7; margin: 24px 0;"></div>
+**Default:** `Use all available CPU cores`
 
-<div style="max-width: 1200px; margin: 0 auto;" markdown="block">
+**Example:**
 
-#### Filtering Settings
+```text
+--threads 16
+```
 
-</div>
+### Filtering Settings
 
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border: 1px solid #e5e5e5; margin: 20px auto; max-width: 1200px;" markdown="block">
-<h4><code>--calling_method</code> <span style="font-size: 0.8em; font-weight: normal; color: #27ae60;">(Optional)</span></h4>
-<p>Set the cell identification method to distinguish real cells from empty droplets.</p>
+#### `--calling_method` (Optional)
 
-<details open>
+Set the cell identification method to distinguish real cells from empty droplets.
+
+<details markdown="block" open>
   <summary><strong>Method Comparison</strong></summary>
-  <div style="margin-top: 10px;" markdown="block">
-    <h5 style="margin-bottom: 5px; font-size: 1.1em;">barcoderanks</h5>
-    <ul style="margin: 0; padding-left: 20px;">
+
+
+
+##### barcoderanks
+
+    <ul>
       <li><strong>Principle:</strong> Uses an empirical threshold based on total UMI counts, identifying cells via the "knee point" of the UMI rank plot.</li>
       <li><strong>Use Case:</strong> Quick preliminary analysis or in scenarios where cells are clearly distinct from the background.</li>
     </ul>
-  </div>
 
-  <div style="margin-top: 15px;" markdown="block">
-    <h5 style="margin-bottom: 5px; font-size: 1.1em;">emptydrops (Default)</h5>
-    <ul style="margin: 0; padding-left: 20px;">
+
+
+
+
+##### emptydrops (Default)
+
+    <ul>
       <li><strong>Principle:</strong> Based on a statistical test of the expression profile to determine if a cell's profile is significantly different from the ambient RNA background.</li>
       <li><strong>Use Case:</strong> Standard analysis (recommended), accurately identifies cells with low RNA content and controls for false positives.</li>
     </ul>
-  </div>
+
 
 </details>
 
-<p><strong>Default:</strong> <code>emptydrops</code></p>
-<p><strong>Example:</strong></p>
-<pre><code># Switch to barcoderanks for cell identification
-dnbc4tools rna run --name sample1 --fastqs ./fq --genomeDir ./ref --calling_method barcoderanks</code></pre>
-</div>
+**Default:** `emptydrops`
 
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border: 1px solid #e5e5e5; margin: 20px auto; max-width: 1200px;" markdown="block">
-<h4><code>--expectcells</code> <span style="font-size: 0.8em; font-weight: normal; color: #27ae60;">(Optional)</span></h4>
-<p>Set the expected number of recovered cells.</p>
+**Example:**
+
+```text
+# Switch to barcoderanks for cell identification
+dnbc4tools rna run --name sample1 --fastqs ./fq --genomeDir ./ref --calling_method barcoderanks
+```
+
+#### `--expectcells` (Optional)
+
+Omission or `auto` requests estimation. `--forcecells` accepts a positive integer only.
+
+Set the expected number of recovered cells.
+
 <ul>
   <li><strong>Function:</strong> Provides initial guidance for the emptydrops algorithm's preliminary screening.</li>
   <li><strong>Recommendation:</strong> The default <code>auto</code> mode is recommended, which automatically estimates the cell count based on UMI distribution features. If the effective cell count is known, you can also manually set it to 50% of that number as a preliminary screening basis.</li>
 </ul>
-<p><strong>Default:</strong> <code>auto</code></p>
-<p><strong>Example:</strong></p>
-<pre><code># Expect to recover 3000 cells
-dnbc4tools rna run --name sample1 --fastqs ./fq --genomeDir ./ref --expectcells 3000</code></pre>
-</div>
 
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border: 1px solid #e5e5e5; margin: 20px auto; max-width: 1200px;" markdown="block">
-<h4><code>--forcecells</code> <span style="font-size: 0.8em; font-weight: normal; color: #e67e22;">(Optional)</span></h4>
-<p>Force the pipeline to use an exact number of cells, overriding the software's automatic cell detection.</p>
+**Default:** `auto`
+
+**Example:**
+
+```text
+# Expect to recover 3000 cells
+dnbc4tools rna run --name sample1 --fastqs ./fq --genomeDir ./ref --expectcells 3000
+```
+
+#### `--forcecells` (Optional)
+
+Force the pipeline to use an exact number of cells, overriding the software's automatic cell detection.
+
 <ul>
   <li><strong>Function:</strong> Use when you want to analyze a cell population of a known quantity.</li>
   <li><strong>Priority:</strong> This is the highest-priority filtering parameter.</li>
 </ul>
-<p><strong>Default:</strong> None</p>
-<p><strong>Example:</strong></p>
-<pre><code># Force the output of 5000 cells for analysis
-dnbc4tools rna run --name sample1 --fastqs ./fq --genomeDir ./ref --forcecells 5000</code></pre>
-</div>
 
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border: 1px solid #e5e5e5; margin: 20px auto; max-width: 1200px;" markdown="block">
-<h4><code>--minumi</code> <span style="font-size: 0.8em; font-weight: normal; color: #27ae60;">(Optional)</span></h4>
-<p>Set the minimum UMI count to retain a cell.</p>
+**Default:** None
+
+**Example:**
+
+```text
+# Force the output of 5000 cells for analysis
+dnbc4tools rna run --name sample1 --fastqs ./fq --genomeDir ./ref --forcecells 5000
+```
+
+#### `--minumi` (Optional)
+
+Set the minimum UMI count to retain a cell.
+
 <ul>
   <li><strong>Function:</strong> This is a core cell quality control parameter. Cells below this threshold are considered to have poor data quality and will be excluded from subsequent analysis.</li>
   <li><strong>Recommendation:</strong> Use the default value for the initial analysis, then determine a more appropriate threshold based on the "UMI Count Distribution" plot in the web report.</li>
 </ul>
-<p><strong>Default:</strong> <code>1000</code></p>
-<p><strong>Example:</strong></p>
-<pre><code># Lower the UMI threshold for cell filtering to 500
-dnbc4tools rna run --name sample1 --fastqs ./fq --genomeDir ./ref --minumi 500</code></pre>
-</div>
 
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border: 1px solid #e5e5e5; margin: 20px auto; max-width: 1200px;" markdown="block">
-<h4><code>--consistent_cells</code> <span style="font-size: 0.8em; font-weight: normal; color: #9b59b6;">(Optional)</span></h4>
-<p>Provide a CSV file (with header) for cell-merge/cell-calling constraints.</p>
+**Default:** `1000`
+
+**Example:**
+
+```text
+# Lower the UMI threshold for cell filtering to 500
+dnbc4tools rna run --name sample1 --fastqs ./fq --genomeDir ./ref --minumi 500
+```
+
+#### `--consistent_cells` (Optional)
+
+Accepts complete headered `.csv` or `.csv.gz` tables, including legacy six-column summaries.
+
+Provide a CSV file (with header) for cell-merge/cell-calling constraints.
+
 <ul>
   <li><strong>Function:</strong> Adds external constraints during barcode merging and final cell calling to improve consistency across data batches.</li>
   <li><strong>Supported header schemas:</strong> <code>cell</code>, <code>cell,barcode</code>, <code>cell,is_cell_barcode</code>, <code>cell,barcode,is_cell_barcode</code>.</li>
   <li><strong>Note:</strong> Any additional columns are ignored and do not affect pipeline execution.</li>
   <li><strong>Caution:</strong> If both <code>cell</code> and <code>barcode</code> are present, the oligo data analysis results will not contribute to the final merging. Any other oligo data not from this sample can be used without affecting the analysis results.</li>
 </ul>
-<p><strong>Default:</strong> None</p>
-<p><strong>Example:</strong></p>
-<pre><code>--consistent_cells ./constraints/consistent_cells.csv</code></pre>
-</div>
 
-<p><strong>Cell Identification Analysis Recommendations</strong></p>
-<p>Cell identification is critical for downstream reliability. Start with defaults, then tune based on QC plots.</p>
+**Default:** None
 
-<details open>
+**Example:**
+
+```text
+--consistent_cells ./constraints/consistent_cells.csv
+```
+
+**Cell Identification Analysis Recommendations**
+
+Cell identification is critical for downstream reliability. Start with defaults, then tune based on QC plots.
+
+<details markdown="block" open>
 <summary><strong>Click to view diagnostics and strategy</strong></summary>
 
-<div style="margin-top:10px;" markdown="block">
 <ul>
   <li><strong>Too few cells:</strong> Usually <code>--minumi</code> is too strict or ambient RNA is high. Lower <code>--minumi</code> and re-check UMI rank.</li>
   <li><strong>Too many cells:</strong> Usually threshold is too loose. Increase <code>--minumi</code> or constrain with <code>--forcecells</code>.</li>
   <li><strong>No clear knee point:</strong> Check library/sequencing quality first, then tune parameters.</li>
   <li><strong>Multiple knee points:</strong> May indicate mixed populations or doublets; follow with doublet filtering.</li>
 </ul>
-</div>
 
 </details>
 
-<div style="max-width: 1200px; margin: 0 auto;" markdown="block"><hr style="border: none; border-top: 1px solid #d2d2d7; margin: 24px 0;"></div>
+### Library Settings
 
-<div style="max-width: 1200px; margin: 0 auto;" markdown="block">
+#### `--chemistry` (Optional)
 
-#### Library Settings
+Configure the chemistry version of the scRNA kit, which determines the sequence structure of barcodes and UMIs.
 
-</div>
-
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border: 1px solid #e5e5e5; margin: 20px auto; max-width: 1200px;" markdown="block">
-<h4><code>--chemistry</code> <span style="font-size: 0.8em; font-weight: normal; color: #f39c12;">(Optional)</span></h4>
-<p>Configure the chemistry version of the scRNA kit, which determines the sequence structure of barcodes and UMIs.</p>
 <ul>
   <li><strong>Function:</strong> Guides parsing of barcode and UMI sequence structure.</li>
   <li><strong>Supported Versions:</strong> <code>scRNAv1HT</code>, <code>scRNAv2HT</code>, <code>scRNAv3HT</code>, <code>scRNA5Pv1</code>.</li>
   <li><strong>Smart Detection (auto):</strong> Recommended for first-pass analysis; manual override only when auto-detection fails.</li>
 </ul>
-<p><strong>Default:</strong> <code>auto</code></p>
-<p><strong>Example:</strong></p>
-<pre><code># Scenario: Known library is scRNAv3HT with no dark reaction and auto-analysis failed
-dnbc4tools rna run --name sample2 --fastqs ./fq --genomeDir ./ref --chemistry scRNAv3HT --darkreaction unset,unset</code></pre>
-<p><strong>Important Note:</strong> Incorrect settings may lead to cell barcode identification failure. Specify manually only if you know the library structure or if auto-detection fails. When manually specified, it is recommended to set <code>--darkreaction</code> together.</p>
-</div>
 
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border: 1px solid #e5e5e5; margin: 20px auto; max-width: 1200px;" markdown="block">
-<h4><code>--darkreaction</code> <span style="font-size: 0.8em; font-weight: normal; color: #f39c12;">(Optional)</span></h4>
-<p>Configure the dark cycle settings for the cDNA and oligo libraries.</p>
+**Default:** `auto`
+
+**Example:**
+
+```text
+# Scenario: Known library is scRNAv3HT with no dark reaction and auto-analysis failed
+dnbc4tools rna run --name sample2 --fastqs ./fq --genomeDir ./ref --chemistry scRNAv3HT --darkreaction unset,unset
+```
+
+**Important Note:** Incorrect settings may lead to cell barcode identification failure. Specify manually only if you know the library structure or if auto-detection fails. When manually specified, it is recommended to set `--darkreaction` together.
+
+#### `--darkreaction` (Optional)
+
+Use `auto` alone, or a manual pair: cDNA=`R1/unset`, oligo=`R1/R1R2/unset`. Explicit chemistry and dark cycles must be supplied together.
+
+Configure the dark cycle settings for the cDNA and oligo libraries.
+
 <ul>
   <li><strong>Function:</strong> Guides parsing of dark-cycle patterns from sequencing chemistry.</li>
   <li><strong>Format:</strong> <code>&lt;cDNA_setting&gt;,&lt;oligo_setting&gt;</code>.</li>
-  <li><strong>Options:</strong> <code>auto</code>, <code>R1R2</code>, <code>R1</code>, <code>unset</code>.</li>
+  <li><strong>Manual values:</strong> cDNA=R1/unset, oligo=R1/R1R2/unset; use auto alone.</li>
   <li><strong>Smart Detection (auto):</strong> Recommended default; manually set only when auto-detection fails.</li>
 </ul>
-<p><strong>Default:</strong> <code>auto</code></p>
-<p><strong>Examples:</strong></p>
-<pre><code># Example 1: cDNA library has dark cycle on R1, oligo library has dark cycles on both ends
---darkreaction R1,R1R2</code></pre>
 
-<pre><code># Example 2: Both libraries have dark cycles on R1 only
---darkreaction R1,R1</code></pre>
+**Default:** `auto`
 
-<pre><code># Example 3: Neither library has dark cycles
---darkreaction unset,unset</code></pre>
-<p><strong>Important Note:</strong> Incorrect settings may lead to cell barcode identification failure. Specify manually only if you know the library structure or if auto-detection fails. When manually specified, it is recommended to set <code>--chemistry</code> together.</p>
-</div>
+**Examples:**
 
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border: 1px solid #e5e5e5; margin: 20px auto; max-width: 1200px;" markdown="block">
-<h4><code>--customize</code> <span style="font-size: 0.8em; font-weight: normal; color: #9b59b6;">(Advanced)</span></h4>
-<p>Precisely define the extraction structure for barcodes, UMIs, and effective sequences (reads) for non-standard libraries. This is an advanced feature that overrides <code>--chemistry</code> and <code>--darkreaction</code> settings.</p>
+```text
+# Example 1: cDNA library has dark cycle on R1, oligo library has dark cycles on both ends
+--darkreaction R1,R1R2
+```
+
+```text
+# Example 2: Both libraries have dark cycles on R1 only
+--darkreaction R1,R1
+```
+
+```text
+# Example 3: Neither library has dark cycles
+--darkreaction unset,unset
+```
+
+**Important Note:** Incorrect settings may lead to cell barcode identification failure. Specify manually only if you know the library structure or if auto-detection fails. When manually specified, it is recommended to set `--chemistry` together.
+
+#### `--customize` (Advanced)
+
+Precisely define the extraction structure for barcodes, UMIs, and effective sequences (reads) for non-standard libraries. This is an advanced feature that overrides `--chemistry` and `--darkreaction` settings.
+
 <ul>
   <li><strong>Syntax:</strong> <code>"&lt;type&gt;,&lt;read&gt;:&lt;start&gt;-&lt;end&gt;"</code>, with multiple segments separated by semicolons (<code>;</code>).</li>
   <li><strong>Parameter Types (type):</strong> <code>cb</code> (cell barcode), <code>umi</code> (UMI), <code>R1</code> (effective sequence in Read 1), <code>R2</code> (effective sequence in Read 2, paired-end only).</li>
   <li><strong>Dual Configuration:</strong> Specify <code>--customize</code> twice when both cDNA and oligo libraries are customized.</li>
   <li><strong>Notes:</strong> Enclose the full string in quotes; coordinates are 1-based and must not exceed read length.</li>
 </ul>
-<p><strong>Examples:</strong></p>
-<pre><code># For a cDNA library with structure: Barcode 1(1-10bp) + Barcode 2(11-20bp) + UMI(21-30bp) in R1; sequence(1-100bp) in R2
---customize "cb,R1:1-10;cb,R1:11-20;umi,R1:21-30;R1,R2:1-100"</code></pre>
-<pre><code># For a cDNA library with structure: Barcode 1(7-16bp) + Barcode 2(23-32bp) + UMI(38-47bp) in R1; sequence(1-100bp) in R2
---customize "cb,R1:7-16;cb,R1:23-32;umi,R1:38-47;R1,R2:1-100"</code></pre>
-<pre><code># For a 5'-end transcript cDNA library using data from both ends
---customize "cb,R1:1-10;cb,R1:11-20;umi,R1:21-30;R1,R1:31-120;R2,R2:1-150"</code></pre>
-<pre><code># Example: Custom sequence structures for cDNA and oligo libraries respectively
---customize "cb,R1:1-10;cb,R1:11-20;umi,R1:21-30;R1,R2:1-100" --customize "cb,R1:1-10;cb,R1:11-20;R1,R2:1-30"</code></pre>
-<p><strong>Risk Warning:</strong> Incorrect custom configurations can lead to data loss or analysis failure. Use only when standard configurations do not meet your needs.</p>
-</div>
 
-<div style="max-width: 1200px; margin: 0 auto;" markdown="block"><hr style="border: none; border-top: 1px solid #d2d2d7; margin: 24px 0;"></div>
+**Examples:**
 
-<div style="max-width: 1200px; margin: 0 auto;" markdown="block">
+```text
+# For a cDNA library with structure: Barcode 1(1-10bp) + Barcode 2(11-20bp) + UMI(21-30bp) in R1; sequence(1-100bp) in R2
+--customize "cb,R1:1-10;cb,R1:11-20;umi,R1:21-30;R1,R2:1-100"
+```
 
-#### Analysis Settings
+```text
+# For a cDNA library with structure: Barcode 1(7-16bp) + Barcode 2(23-32bp) + UMI(38-47bp) in R1; sequence(1-100bp) in R2
+--customize "cb,R1:7-16;cb,R1:23-32;umi,R1:38-47;R1,R2:1-100"
+```
 
-</div>
+```text
+# For a 5'-end transcript cDNA library using data from both ends
+--customize "cb,R1:1-10;cb,R1:11-20;umi,R1:21-30;R1,R1:31-120;R2,R2:1-150"
+```
 
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border: 1px solid #e5e5e5; margin: 20px auto; max-width: 1200px;" markdown="block">
-<h4><code>--no_introns</code> <span style="font-size: 0.8em; font-weight: normal; color: #e74c3c;">(Flag)</span></h4>
-<p>Enable this parameter to filter out reads from intronic regions during analysis.</p>
+```text
+# Example: Custom sequence structures for cDNA and oligo libraries respectively
+--customize "cb,R1:1-10;cb,R1:11-20;umi,R1:21-30;R1,R2:1-100" --customize "cb,R1:1-10;cb,R1:11-20;R1,R2:1-30"
+```
+
+**Risk Warning:** Incorrect custom configurations can lead to data loss or analysis failure. Use only when standard configurations do not meet your needs.
+
+### Analysis Settings
+
+#### `--no_introns` (Flag)
+
+Enable this parameter to filter out reads from intronic regions during analysis.
+
 <ul>
   <li><strong>Function:</strong> Retains only reads from exonic regions for expression quantification, avoiding interference from immature transcripts.</li>
 </ul>
-<p><strong>Default:</strong> If not set, reads from intronic regions are included.</p>
-</div>
 
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border: 1px solid #e5e5e5; margin: 20px auto; max-width: 1200px;" markdown="block">
-<h4><code>--end5</code> <span style="font-size: 0.8em; font-weight: normal; color: #e74c3c;">(Flag)</span></h4>
-<p>Enable 5'-end single-cell transcriptome data analysis mode.</p>
+**Default:** If not set, reads from intronic regions are included.
+
+#### `--end5` (Flag)
+
+Enable 5'-end single-cell transcriptome data analysis mode.
+
 <ul>
   <li><strong>Function:</strong> Specifically for analyzing mRNA captured at the 5' end.</li>
   <li><strong>Note:</strong> Use this parameter only when using a 5'-end scRNA kit.</li>
 </ul>
-<p><strong>Default:</strong> Not set.</p>
-</div>
 
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border: 1px solid #e5e5e5; margin: 20px auto; max-width: 1200px;" markdown="block">
-<h4><code>--no_bam</code> <span style="font-size: 0.8em; font-weight: normal; color: #e74c3c;">(Flag)</span></h4>
-<p>Enable this parameter to skip the generation of BAM files.</p>
+**Default:** Not set.
+
+#### `--no_bam` (Flag)
+
+Enable this parameter to skip the generation of BAM files.
+
 <ul>
   <li><strong>Function:</strong> Saves time and disk space, significantly reducing computation time and storage requirements.</li>
   <li><strong>Note:</strong> Downstream analysis requiring BAM files will not be possible.</li>
 </ul>
-<p><strong>Default:</strong> If not set, BAM files are generated.</p>
-</div>
 
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border: 1px solid #e5e5e5; margin: 20px auto; max-width: 1200px;" markdown="block">
-<h4><code>--sample_read_pairs</code> <span style="font-size: 0.8em; font-weight: normal; color: #9b59b6;">(Optional)</span></h4>
-<p>Extract a specified number of read pairs from the input cDNA FASTQ files for analysis.</p>
+**Default:** If not set, BAM files are generated.
+
+#### `--sample_read_pairs` (Optional)
+
+Extract a specified number of read pairs from the input cDNA FASTQ files for analysis.
+
 <ul>
   <li><strong>Function:</strong> Used for quick testing of large datasets before a full analysis, or for down-sampling analysis when resources are limited.</li>
 </ul>
-<p><strong>Default:</strong> None (uses all data)</p>
-<p><strong>Example:</strong></p>
-<pre><code>--sample_read_pairs 100000000</code></pre>
-</div>
 
-<div style="max-width: 1200px; margin: 0 auto;" markdown="block"><hr style="border: none; border-top: 1px solid #d2d2d7; margin: 24px 0;"></div>
+**Default:** None (uses all data)
 
-<div align="center" style="background: #f5f5f7; border-radius: 12px; padding: 30px; margin: 40px auto; max-width: 1200px;" markdown="block">
+**Example:**
+
+```text
+--sample_read_pairs 100000000
+```
 
 > **Analysis Recommendation**
 > > For the initial analysis, it is recommended to use the default parameters and then adjust them as needed based on the results report.
 
-</div>
+#### `--star_parameters`
 
-<div style="max-width: 1200px; margin: 0 auto;" markdown="block"><hr style="border: none; border-top: 1px solid #d2d2d7; margin: 24px 0;"></div>
+Extra validated STAR alignment, filtering, seeding or scoring arguments. Unknown, pipeline-managed or ineffective options are rejected.
 
-<div style="background: #f5f5f7; border-radius: 12px; padding: 24px; margin: 24px auto; max-width: 1200px;" markdown="block">
+```bash
+--star_parameters "--outFilterMismatchNmax 10 --outFilterMultimapNmax 1"
+```
+
+<details markdown="block">
+<summary>Advanced BAM resources</summary>
+
+BAM resources are planned automatically. Use these hidden overrides only when needed:
+
+| Option | Meaning |
+| :--- | :--- |
+| `--bam-workers` | Maximum concurrent chunk workers |
+| `--bam-compression-threads` | Compression threads per chunk |
+| `--bam-queue-depth` | Per-writer queue depth |
+| `--bam-max-memory-gb` | Estimated memory budget in GiB, not an RSS cap |
+| `--bam-compression-level` | 0–9; omission keeps the HTSlib default |
+| `--bam-limit-memory` | Rejects a budget unable to fit even one estimated worker |
+
+`--no_bam` disables BAM generation. See [Multi parameters](multi.md#bam-resources) for scheduling behavior.
+
+</details>
 
 ## Reference Database Construction (mkref) <a id="reference-database-construction-mkref"></a>
 
-</div>
-
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; margin: 20px auto; max-width: 1200px; border: 1px solid #d2d2d7; overflow-x: auto;" markdown="block">
-
 ### Usage
 
+```bash
+dnbc4tools rna mkref \
+  --fasta genome.fa --ingtf genes.gtf \
+  --species human --genomeDir /reference/rna --threads 16
+```
+
+<details markdown="block" class="cli-help">
+<summary>Full CLI help</summary>
+
 ```shell
-$ dnbc4tools rna mkref
-dnbc4tools 3.1
+$ dnbc4tools rna mkref --help
+dnbc4tools 3.2
 
 Build an RNA reference database.
 
 Usage: dnbc4tools rna mkref [OPTIONS]
 
-optional arguments:
+options:
   --help              show this help message and exit
 
 Input Files:
-  Input genome FASTA files and gene-annotation GTF files. For mixed-species analysis, separate multiple files with commas.
+  Input genome FASTA files and gene-annotation GTF files. For mixed-species analysis, separate multiple files with
+  commas.
 
-  --fasta <FILE>      Reference-genome FASTA file path(s). Separate multiple files with commas (e.g., `genome1.fa,genome2.fa`).
-  --ingtf <FILE>      Gene-annotation GTF file path(s). Separate multiple files with commas (e.g., `anno1.gtf,anno2.gtf`).
+  --fasta <FILE>      Reference-genome FASTA file path(s). Separate multiple files with commas (e.g.,
+                      `genome1.fa,genome2.fa`).
+  --ingtf <FILE>      Gene-annotation GTF file path(s). Separate multiple files with commas (e.g.,
+                      `anno1.gtf,anno2.gtf`).
 
 Basic Settings:
-  --genomeDir <DIR>   Output directory path for generated reference files [default: current directory] (e.g., `./ref`).
-  --species <STR>     Species identifier(s). Use commas for mixed-species analysis [default: undefined] (e.g., `human,mouse`).
+  --genomeDir <DIR>   Output directory path for generated reference files [default: current directory] (e.g.,
+                      `./ref`).
+  --species <STR>     Species identifier(s). Use commas for mixed-species analysis [default: undefined] (e.g.,
+                      `human,mouse`).
   --threads <INT>     Number of CPU threads for parallel processing [default: 10] (e.g., `16`).
 
 Advanced Settings:
-  --chrM <STR>        Mitochondrial chromosome identifier in the reference genome [default: auto] (e.g., `MT`).
-  --limitram <INT>    Maximum RAM, in GB, allowed for index generation (e.g., `64`). Also affects memory usage and alignment speed during mapping.
-  --extra-args <STR>  Additional STAR parameters to pass directly to STAR index generation (e.g., `"--sjdbOverhang 100"`).
+  --chrM <STR>        Mitochondrial chromosome identifier in the reference genome (e.g., `MT`).
+  --limitram <INT>    Maximum RAM, in GB, allowed for index generation (e.g., `64`). Also affects memory usage and
+                      alignment speed during mapping.
+  --extra-args <STR>  Additional validated STAR genomeGenerate parameters (e.g., `"--sjdbOverhang 100
+                      --genomeSAsparseD 2"`). Preflight rejects alignment-only, unknown and mkref-managed parameters.
   --noindex           Skip the STAR index-generation step.
 ```
 
-</div>
-
-<div style="background: #f5f5f7; border-radius: 12px; padding: 24px; margin: 24px auto; max-width: 1200px;" markdown="block">
+</details>
 
 ### Parameter Description
 
-</div>
+### Required Parameters
 
-<div style="max-width: 1200px; margin: 0 auto;" markdown="block">
+#### `--fasta` (Required)
 
-#### Required Parameters
+Provide the reference genome sequence file.
 
-</div>
-
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border: 1px solid #e5e5e5; margin: 20px auto; max-width: 1200px;" markdown="block">
-<h4><code>--fasta</code> <span style="font-size: 0.8em; font-weight: normal; color: #e74c3c;">(Required)</span></h4>
-<p>Provide the reference genome sequence file.</p>
 <ul>
   <li><strong>Requirement:</strong> Standard FASTA format, primary assembly version is recommended.</li>
 </ul>
-<p><strong>Default:</strong> None</p>
-<p><strong>Example:</strong></p>
-<pre><code>--fasta Homo_sapiens.GRCh38.dna.primary_assembly.fa</code></pre>
-</div>
 
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border: 1px solid #e5e5e5; margin: 20px auto; max-width: 1200px;" markdown="block">
-<h4><code>--ingtf</code> <span style="font-size: 0.8em; font-weight: normal; color: #e74c3c;">(Required)</span></h4>
-<p>Provide the gene structure annotation file.</p>
+**Default:** None
+
+**Example:**
+
+```text
+--fasta Homo_sapiens.GRCh38.dna.primary_assembly.fa
+```
+
+#### `--ingtf` (Required)
+
+Provide the gene structure annotation file.
+
 <ul>
   <li><strong>Function:</strong> Used for gene expression quantification and annotation.</li>
   <li><strong>Requirement:</strong> Standard GTF format.</li>
@@ -565,32 +671,37 @@ Advanced Settings:
   <li><strong>Chromosome Names:</strong> Must match chromosome names in the FASTA genome.</li>
   <li><strong>Coordinates:</strong> Start and end coordinates must be valid.</li>
 </ul>
-<p><strong>Default:</strong> None</p>
-<p><strong>Example:</strong></p>
-<pre><code>--ingtf Homo_sapiens.GRCh38.108.gtf</code></pre>
-</div>
 
-<p><strong>Dual-Species Analysis Configuration</strong></p>
-<p>For dual-species analysis, provide two file paths separated by commas in both <code>--fasta</code> and <code>--ingtf</code>.</p>
+**Default:** None
+
+**Example:**
+
+```text
+--ingtf Homo_sapiens.GRCh38.108.gtf
+```
+
+**Dual-Species Analysis Configuration**
+
+For dual-species analysis, provide two file paths separated by commas in both `--fasta` and `--ingtf`.
+
 <ul>
   <li><strong>Example:</strong> <code>--fasta human.fa,mouse.fa --ingtf human.gtf,mouse.gtf</code></li>
   <li><strong>Important:</strong> File order must exactly match the <code>--species</code> order.</li>
 </ul>
 
-<div style="max-width: 1200px; margin: 0 auto;" markdown="block"><hr style="border: none; border-top: 1px solid #d2d2d7; margin: 24px 0;"></div>
-
 #### Settings
 
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border: 1px solid #e5e5e5; margin: 20px auto; max-width: 1200px;" markdown="block">
-<h4><code>--genomeDir</code> <span style="font-size: 0.8em; font-weight: normal; color: #27ae60;">(Optional)</span></h4>
-<p>Specify the output directory for the generated reference database.</p>
+#### `--genomeDir` (Optional)
+
+Specify the output directory for the generated reference database.
+
 <ul>
   <li><strong>Function:</strong> All generated reference files (index, annotations, etc.) will be stored in this directory.</li>
 </ul>
 
-<details style="margin-top: 10px;" open>
+<details markdown="block" open>
   <summary><strong>Directory Structure Preview</strong></summary>
-  <pre style="padding: 10px; border-radius: 5px; margin-top: 5px;">
+  <pre>
   genomeDir/
   ├── fasta/
   │   └── genome.fa          # Processed genome sequence file
@@ -614,123 +725,169 @@ Advanced Settings:
   </pre>
   </details>
 
-<p><strong>Default:</strong> <code>./</code> (current directory)</p>
-<p><strong>Example:</strong></p>
-<pre><code>dnbc4tools rna mkref --fasta genome.fa --ingtf genes.gtf --genomeDir /database/scRNA/GRCh38</code></pre>
-</div>
+**Default:** `./` (current directory)
 
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border: 1px solid #e5e5e5; margin: 20px auto; max-width: 1200px;" markdown="block">
-<h4><code>--species</code> <span style="font-size: 0.8em; font-weight: normal; color: #f39c12;">(Optional)</span></h4>
-<p>Specify one or more species names for the reference database.</p>
+**Example:**
+
+```text
+dnbc4tools rna mkref --fasta genome.fa --ingtf genes.gtf --genomeDir /database/scRNA/GRCh38
+```
+
+#### `--species` (Optional)
+
+Identifiers cannot contain path separators, whitespace or reserved `_and_`.
+
+Specify one or more species names for the reference database.
+
 <ul>
   <li><strong>Function:</strong> This name is recorded in the configuration file and used for species identification, gene annotation, and cell annotation in subsequent analyses.</li>
 </ul>
 
-<details style="margin-top: 10px;" open>
+<details markdown="block" open>
   <summary><strong>Dual-Species Analysis Configuration</strong></summary>
-  <ul style="margin-top: 5px; padding-left: 20px;">
+  <ul>
     <li><strong>Naming Format:</strong> Use commas to separate multiple species names (e.g., <code>hg38,mm10</code>).</li>
     <li><strong>Order Requirement:</strong> Must be strictly consistent with the order of <code>--fasta</code> and <code>--ingtf</code> files.</li>
     <li><strong>Automatic Processing:</strong> The pipeline automatically adds a species prefix to genes (e.g., <code>hg38_GENE1</code>) and separates statistical information in the results.</li>
   </ul>
   </details>
 
-<details style="margin-top: 10px;" open>
+<details markdown="block" open>
   <summary><strong>Cell Annotation Support</strong></summary>
-  <p style="margin-top: 5px;">Providing this parameter for specific species enables automatic downstream cell type annotation.</p>
-  <ul style="padding-left: 20px;">
+
+
+Providing this parameter for specific species enables automatic downstream cell type annotation.
+
+  <ul>
     <li><strong>Supported:</strong> <code>Homo_sapiens</code> (or <code>hg38</code>), <code>Mus_musculus</code> (or <code>mm10</code>).</li>
     <li><strong>Not Supported:</strong> Other species do not support cell annotation.</li>
   </ul>
   </details>
 
-<p style="margin-top: 15px;"><strong>Default:</strong> <code>undefined</code></p>
-<p><strong>Examples:</strong></p>
-<pre><code># Single species
---species Homo_sapiens</code></pre>
-<pre><code># Dual species (human + mouse)
---species hg38,mm10</code></pre>
-</div>
+**Default:** `undefined`
 
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border: 1px solid #e5e5e5; margin: 20px auto; max-width: 1200px;" markdown="block">
-<h4><code>--threads</code> <span style="font-size: 0.8em; font-weight: normal; color: #27ae60;">(Optional)</span></h4>
-<p>Set the number of CPU threads to be used during STAR index construction.</p>
+**Examples:**
+
+```text
+# Single species
+--species Homo_sapiens
+```
+
+```text
+# Dual species (human + mouse)
+--species hg38,mm10
+```
+
+#### `--threads` (Optional)
+
+Set the number of CPU threads to be used during STAR index construction.
+
 <ul>
   <li><strong>Performance Impact:</strong> Increasing the number of threads can significantly shorten the index construction time.</li>
   <li><strong>Resource Balance:</strong> Be mindful of the balance between the number of threads and available RAM; too many threads can lead to insufficient memory.</li>
 </ul>
-<p><strong>Default:</strong> <code>10</code></p>
-<p><strong>Example:</strong></p>
-<pre><code>--threads 16</code></pre>
-</div>
 
-<div style="max-width: 1200px; margin: 0 auto;" markdown="block"><hr style="border: none; border-top: 1px solid #d2d2d7; margin: 24px 0;"></div>
+**Default:** `10`
 
-#### Advanced Settings
+**Example:**
 
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border: 1px solid #e5e5e5; margin: 20px auto; max-width: 1200px;" markdown="block">
-<h4><code>--chrM</code> <span style="font-size: 0.8em; font-weight: normal; color: #27ae60;">(Optional)</span></h4>
-<p>Specify the name of the mitochondrial chromosome.</p>
+```text
+--threads 16
+```
+
+### Advanced Settings
+
+#### `--chrM` (Optional)
+
+Specify the name of the mitochondrial chromosome.
+
 <ul>
   <li><strong>Function:</strong> Used to assess cell quality. High mitochondrial gene expression often indicates cell stress or death.</li>
   <li><strong>Auto-detection:</strong> By default, it will automatically identify from common names (e.g., <code>chrM</code>, <code>MT</code>).</li>
 </ul>
-<p><strong>Default:</strong> <code>auto</code></p>
-<p><strong>Example:</strong></p>
-<pre><code># If the mitochondrial chromosome name is "mitochondrion"
-dnbc4tools rna mkref --fasta genome.fa --ingtf genes.gtf --chrM mitochondrion</code></pre>
-</div>
 
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border: 1px solid #e5e5e5; margin: 20px auto; max-width: 1200px;" markdown="block">
-<h4><code>--limitram</code> <span style="font-size: 0.8em; font-weight: normal; color: #e67e22;">(Optional)</span></h4>
-<p>Limit the maximum memory usage (in GB) during STAR genome index generation.</p>
+**Default:** `auto`
+
+**Example:**
+
+```text
+# If the mitochondrial chromosome name is "mitochondrion"
+dnbc4tools rna mkref --fasta genome.fa --ingtf genes.gtf --chrM mitochondrion
+```
+
+#### `--limitram` (Optional)
+
+Limit the maximum memory usage (in GB) during STAR genome index generation.
+
 <ul>
   <li><strong>Function:</strong> This parameter controls the memory consumption during STAR index construction. The memory configuration of the index directly affects the memory usage and runtime speed of subsequent <code>rna run</code> analysis.</li>
   <li><strong>Impact:</strong> A higher memory limit enables the generation of higher-performance indexes, thereby speeding up RNA analysis, but increases memory consumption; a lower memory limit reduces index performance and may slow down analysis speed.</li>
   <li><strong>Recommendation:</strong> Set according to available system memory to avoid index construction failures due to insufficient memory.</li>
 </ul>
-<p><strong>Default:</strong> None</p>
-<p><strong>Example:</strong></p>
-<pre><code>--limitram 64</code></pre>
-</div>
 
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border: 1px solid #e5e5e5; margin: 20px auto; max-width: 1200px;" markdown="block">
-<h4><code>--extra-args</code> <span style="font-size: 0.8em; font-weight: normal; color: #9b59b6;">(Advanced)</span></h4>
-<p>Pass additional command-line arguments directly to STAR index generation.</p>
+**Default:** None
+
+**Example:**
+
+```text
+--limitram 64
+```
+
+#### `--extra-args` (Advanced)
+
+Pass additional command-line arguments directly to STAR index generation.
+
 <ul>
   <li><strong>Function:</strong> For special requirements and performance optimization.</li>
   <li><strong>Note:</strong> Improper parameter settings can lead to index construction failure or subsequent analysis issues.</li>
 </ul>
-<p><strong>Default:</strong> None</p>
-<p><strong>Example:</strong></p>
-<pre><code>--extra-args "--sjdbOverhang 99 --runThreadN 20"</code></pre>
-</div>
 
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border: 1px solid #e5e5e5; margin: 20px auto; max-width: 1200px;" markdown="block">
-<h4><code>--noindex</code> <span style="font-size: 0.8em; font-weight: normal; color: #e74c3c;">(Flag)</span></h4>
-<p>If this parameter is set, it will only generate the configuration file without building the genome index.</p>
+**Default:** None
+
+**Example:**
+
+```text
+--extra-args "--sjdbOverhang 99 --runThreadN 20"
+```
+
+#### `--extra-args`
+
+Validated STAR `genomeGenerate` arguments. Alignment-only and pipeline-managed options are rejected.
+
+```bash
+--extra-args "--sjdbOverhang 100 --genomeSAsparseD 2"
+```
+
+#### `--noindex` (Flag)
+
+If this parameter is set, it will only generate the configuration file without building the genome index.
+
 <ul>
   <li><strong>Function:</strong> Use this parameter to skip the time-consuming index construction step when the index files already exist.</li>
 </ul>
-<p><strong>Default:</strong> Not set</p>
-<p><strong>Example:</strong></p>
-<pre><code># Generate only the configuration file, do not build the index
-dnbc4tools rna mkref --fasta genome.fa --ingtf genes.gtf --noindex</code></pre>
-</div>
 
-<div style="background: #f5f5f7; border-radius: 12px; padding: 24px; margin: 24px auto; max-width: 1200px;" markdown="block">
-<p><strong>Database Construction Technical Notes:</strong></p>
+**Default:** Not set
+
+**Example:**
+
+```text
+# Generate only the configuration file, do not build the index
+dnbc4tools rna mkref --fasta genome.fa --ingtf genes.gtf --noindex
+```
+
+**Database Construction Technical Notes:**
+
 <ul>
   <li>For genomes with numerous and variably sized chromosomes, database construction automatically determines optimized values for <code>genomeSAindexNbases</code> and <code>genomeChrBinNbits</code>.</li>
   <li>After construction, a <code>ref.json</code> file is generated in the database directory to record all key configuration metadata.</li>
   <li>Dual-species analysis automatically adds a species prefix to each gene (for example, <code>hg38_GENE1</code> and <code>mm10_GENE2</code>) to distinguish genes across species.</li>
   <li>All build parameters and version information are recorded in <code>ref.json</code> to ensure reproducibility.</li>
 </ul>
-</div>
 
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; margin: 20px auto; max-width: 1200px; border: 1px solid #d2d2d7; overflow-x: auto;" markdown="block">
-<p><strong>Single-Species ref.json Example:</strong></p>
-<pre><code class="language-json">{
+**Single-Species ref.json Example:**
+
+```json
+{
   "chrmt": "chrM",
   "genome": "/database/scRNA/Homo_sapiens/fasta/genome.fa",
   "genomeDir": "/database/scRNA/Homo_sapiens/star",
@@ -743,13 +900,14 @@ dnbc4tools rna mkref --fasta genome.fa --ingtf genes.gtf --noindex</code></pre>
   ],
   "mtgenes": "/database/scRNA/Homo_sapiens/star/mtgene.list",
   "species": "Homo_sapiens",
-  "version": "3.1"
-}</code></pre>
-</div>
+  "version": "3.2"
+}
+```
 
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; margin: 20px auto; max-width: 1200px; border: 1px solid #d2d2d7; overflow-x: auto;" markdown="block">
-<p><strong>Dual-Species ref.json Example:</strong></p>
-<pre><code class="language-json">{
+**Dual-Species ref.json Example:**
+
+```json
+{
   "chrmt": "hg38_chrM,mm10_chrM",
   "genome": "/database/scRNA/hg38_and_mm10/fasta/genome.fa",
   "genomeDir": "/database/scRNA/hg38_and_mm10/star",
@@ -764,71 +922,67 @@ dnbc4tools rna mkref --fasta genome.fa --ingtf genes.gtf --noindex</code></pre>
   ],
   "mtgenes": "/database/scRNA/hg38_and_mm10/star/mtgene.list",
   "species": "hg38_and_mm10",
-  "version": "3.1"
-}</code></pre>
-</div>
+  "version": "3.2"
+}
+```
 
-<div style="background: #f5f5f7; border-radius: 12px; padding: 24px; margin: 24px auto; max-width: 1200px;" markdown="block">
-<p><strong>Performance Optimization Recommendations:</strong></p>
+**Performance Optimization Recommendations:**
+
 <ul>
   <li>For common genomes (for example, human and mouse), pre-build indexes and reuse them across projects.</li>
   <li>Dual-species index construction takes longer; run it when sufficient compute resources are available.</li>
   <li>Regularly check updates from Ensembl and similar databases, and refresh reference genomes and annotations in time.</li>
 </ul>
-</div>
-
-<div style="max-width: 1200px; margin: 0 auto;" markdown="block"><hr style="border: none; border-top: 1px solid #d2d2d7; margin: 24px 0;"></div>
-
-<div style="background: #f5f5f7; border-radius: 12px; padding: 24px; margin: 24px auto; max-width: 1200px;" markdown="block">
 
 ## Multi-sample Operations (multi) <a id="multi-sample-operations-multi"></a>
 
-</div>
-
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; margin: 20px auto; max-width: 1200px; border: 1px solid #d2d2d7; overflow-x: auto;" markdown="block">
+This command generates scripts without starting analysis. Use three TAB-separated columns: sample name, `cDNA_R1;cDNA_R2`, `oligo_R1;oligo_R2`. Commas join same-end lanes. Scripts are written to the working directory and never overwrite existing names; `--outdir` sets analysis output inside the scripts. Execute them after successful generation.
 
 ### Usage
 
+```bash
+dnbc4tools rna multi --list samples.tsv --genomeDir /reference/rna --threads 16
+```
+
+<details markdown="block" class="cli-help">
+<summary>Full CLI help</summary>
+
 ```shell
-$ dnbc4tools rna multi
-dnbc4tools 3.1
+$ dnbc4tools rna multi --help
+dnbc4tools 3.2
 
 Process multiple RNA-seq samples.
 
 Usage: dnbc4tools rna multi [OPTIONS]
 
-optional arguments:
+options:
   --help             show this help message and exit
 
 Input Files:
-  --list <FILE>      Sample list file path. Each line must contain sample name, cDNA FASTQ file path(s), and oligo FASTQ file path(s).
+  --list <FILE>      Tab-separated sample list: sample name <TAB> cDNA R1;R2 <TAB> oligo R1;R2. Multiple FASTQ files
+                     within one end are comma-separated. Generates one shell script per sample in the current working
+                     directory; run the generated scripts to start analysis.
 
 Basic Settings:
   --genomeDir <DIR>  Reference genome directory path containing required reference files.
-  --outdir <DIR>     Output directory path for analysis results [default: current directory] (e.g., `./output`).
-  --threads <INT>    Number of CPU threads for parallel processing.
+  --outdir <DIR>     Analysis output directory written into each generated script [default: current directory] (e.g.,
+                     `./output`). Scripts are written to the current working directory.
+  --threads <INT>    Number of CPU threads written into each generated analysis script.
 
 Analysis Settings:
   --end5             Enable 5'-end single-cell transcriptome analysis.
 ```
 
-</div>
-
-<div style="background: #f5f5f7; border-radius: 12px; padding: 24px; margin: 24px auto; max-width: 1200px;" markdown="block">
+</details>
 
 ### Parameter Description
 
-</div>
+### Required Parameters
 
-<div style="max-width: 1200px; margin: 0 auto;" markdown="block">
+#### `--list` (Required)
 
-#### Required Parameters
+Specify the path to the list file containing information for multiple samples.
 
-</div>
-
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border: 1px solid #e5e5e5; margin: 20px auto; max-width: 1200px;" markdown="block">
-<h4><code>--list</code> <span style="font-size: 0.8em; font-weight: normal; color: #e74c3c;">(Required)</span></h4>
-<p>Specify the path to the list file containing information for multiple samples.</p>
 <ul>
   <li><strong>File Format:</strong> Tab-separated (<code>\t</code>) text file, UTF-8 encoding recommended.</li>
   <li><strong>Column Structure:</strong>
@@ -838,9 +992,9 @@ Analysis Settings:
           <li>Oligo Data Path</li>
       </ol>
   </li>
-  <details open>
+  <details markdown="block" open>
   <summary><strong>Path Format Rules</strong></summary>
-  <ul style="margin-top: 5px;">
+  <ul>
       <li><strong>Multiple FASTQ files:</strong> Paths for multiple FASTQ files from the same library should be separated by commas (<code>,</code>).</li>
       <li><strong>R1 and R2 files:</strong> Paths for paired R1 and R2 files should be separated by semicolons (<code>;</code>).</li>
       <li><strong>Path Type:</strong> Both absolute and relative paths are supported.</li>
@@ -848,17 +1002,23 @@ Analysis Settings:
   </details>
 
 </ul>
-<p style="margin-top: 15px;"><strong>Default:</strong> None</p>
 
-<details open>
+**Default:** None
+
+<details markdown="block" open>
 <summary><strong>Example:</strong></summary>
-<pre><code># Example 1: SampleA, with 1 pair of R1/R2 files for cDNA and oligo each
-SampleA	/path/to/A_cDNA_R1.fq.gz;/path/to/A_cDNA_R2.fq.gz	/path/to/A_oligo_R1.fq.gz;/path/to/A_oligo_R2.fq.gz</code></pre>
-<pre><code># Example 2: SampleB, with 2 pairs of R1/R2 files for cDNA, and 1 pair for oligo
-SampleB	/path/to/B_cDNA_L01_R1.fq.gz,/path/to/B_cDNA_L02_R1.fq.gz;/path/to/B_cDNA_L01_R2.fq.gz,/path/to/B_cDNA_L02_R2.fq.gz	/path/to/B_oligo_R1.fq.gz;/path/to/B_oligo_R2.fq.gz</code></pre>
-</details>
 
-</div>
+```text
+# Example 1: SampleA, with 1 pair of R1/R2 files for cDNA and oligo each
+SampleA	/path/to/A_cDNA_R1.fq.gz;/path/to/A_cDNA_R2.fq.gz	/path/to/A_oligo_R1.fq.gz;/path/to/A_oligo_R2.fq.gz
+```
+
+```text
+# Example 2: SampleB, with 2 pairs of R1/R2 files for cDNA, and 1 pair for oligo
+SampleB	/path/to/B_cDNA_L01_R1.fq.gz,/path/to/B_cDNA_L02_R1.fq.gz;/path/to/B_cDNA_L01_R2.fq.gz,/path/to/B_cDNA_L02_R2.fq.gz	/path/to/B_oligo_R1.fq.gz;/path/to/B_oligo_R2.fq.gz
+```
+
+</details>
 
 > **Parameter Inheritance Note**
 > > For other analysis parameter settings, please refer to the corresponding parameters of the [`dnbc4tools rna run`](#main-analysis-pipeline-run) command. All samples should use the same reference database.
@@ -867,31 +1027,9 @@ SampleB	/path/to/B_cDNA_L01_R1.fq.gz,/path/to/B_cDNA_L02_R1.fq.gz;/path/to/B_cDN
 >
 > `dnbc4tools rna multi` generates per-sample execution scripts (for example, `sample1.sh`) for batch submission and reuse. By default, it does not automatically run all sample analyses serially.
 
-<div style="max-width: 1200px; margin: 0 auto;" markdown="block"><hr style="border: none; border-top: 1px solid #d2d2d7; margin: 24px 0;"></div>
-
-<div style="background: #f5f5f7; border-radius: 12px; padding: 24px; margin: 24px auto; max-width: 1200px;" markdown="block">
-
 ## Related Documentation
-
-</div>
-
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; margin: 20px auto; max-width: 1200px; border: 1px solid #e5e5e5; box-shadow: 0 1px 3px rgba(0,0,0,0.1);" markdown="block">
 
 | Resource | Description |
 | :--- | :--- |
-| [scRNA Pipeline](../pipeline/scRNA.en.md) | Single-cell RNA analysis workflow guide |
-| [scRNA Output](../outs/scRNA.en.md) | Detailed output file interpretation |
-
-</div>
-
-<div style="max-width: 1200px; margin: 0 auto;" markdown="block"><hr style="border: none; border-top: 1px solid #d2d2d7; margin: 24px 0;"></div>
-
-<div align="center" style="background: #f5f5f7; border-radius: 12px; padding: 30px; margin: 40px auto; max-width: 1200px;" markdown="block">
-
-> **Feedback & Support**
->
-> This document is continuously maintained. If you identify errors or additional information is required, please submit feedback via GitHub Issues.
->
-<strong>Document Version:</strong> 3.1 | <strong>Last Updated:</strong> May 15, 2026
-
-</div>
+| [scRNA Pipeline](../pipeline/scRNA.md) | Single-cell RNA analysis workflow guide |
+| [scRNA Output](../outs/scRNA.md) | Detailed output file interpretation |

@@ -1,129 +1,91 @@
-<div align="right" style="margin-bottom: 20px; max-width: 1200px; margin-left: auto; margin-right: auto;" markdown="block">
+# DNBelab C Series HT Multi-omics Analysis Pipeline
 
-[Home](../../index.md)
-
-</div>
-
-<div align="center" style="padding: 40px 20px; background: linear-gradient(135deg, #f5f5f7 0%, #ffffff 100%); border-radius: 12px; margin-bottom: 30px; max-width: 1200px; margin-left: auto; margin-right: auto;" markdown="block">
-
-<h1 style="font-size: 48px; font-weight: 600; color: #1d1d1f; margin: 0 0 16px 0; letter-spacing: -0.02em;">DNBelab C Series HT Multi-omics Analysis Pipeline</h1>
-
-<p style="font-size: 21px; color: #86868b; margin: 0 0 30px 0; font-weight: 400;">Single-Cell Multi-omics Integrated Analysis Guide</p>
-
-<div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;" markdown="block">
-<a href="#overview" style="background: #0071e3; color: white; padding: 8px 16px; border-radius: 980px; text-decoration: none; font-size: 14px;">Overview</a>
-<a href="#input-configuration" style="background: transparent; color: #0071e3; padding: 8px 16px; border-radius: 980px; text-decoration: none; font-size: 14px; border: 1px solid #0071e3;">Input Configuration</a>
-<a href="#main-pipeline" style="background: transparent; color: #0071e3; padding: 8px 16px; border-radius: 980px; text-decoration: none; font-size: 14px; border: 1px solid #0071e3;">Main Pipeline</a>
-<a href="#results" style="background: transparent; color: #0071e3; padding: 8px 16px; border-radius: 980px; text-decoration: none; font-size: 14px; border: 1px solid #0071e3;">Results</a>
-</div>
-
-</div>
-
-<div style="max-width: 1200px; margin: 0 auto;" markdown="block"><hr style="border: none; border-top: 1px solid #d2d2d7; margin: 24px 0;"></div>
-
-<div style="background: #f5f5f7; border-radius: 12px; padding: 24px; margin: 24px auto; max-width: 1200px;" markdown="block">
+Single-Cell Multi-omics Integrated Analysis Guide
 
 ## Overview <a id="overview"></a>
-
-</div>
-
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; margin: 20px auto; max-width: 1200px; border: 1px solid #e5e5e5; box-shadow: 0 1px 3px rgba(0,0,0,0.1);" markdown="block">
 
 The Multi-omics workflow orchestrates RNA / ATAC / VDJ sub-pipelines, enabling multi-omics joint analysis through a single configuration file and generating integrated reports for cross-omics inspection.
 
 **Workflow**: Configuration → Module Dispatch → Parallel Analysis → Status Aggregation → Integrated Report
 
-<div style="background-color: #e7f3fe; border-left: 6px solid #2196F3; padding: 15px; margin: 1.5em 0; border-radius: 4px;" markdown="block">
  <strong>Usage Notes</strong>: <code>$dnbc4tools</code> represents the executable path and should be replaced with your actual installation path. Examples use line continuation characters <code>\</code> for readability; commands can also be written on a single line.
-</div>
 
 **Key Features**:
 
-<table style="width:100%; border-collapse: collapse; margin: 1.5em 0; box-shadow: 0 2px 3px rgba(0,0,0,0.1);">
-  <thead style="background-color: #f2f2f2; border-bottom: 2px solid #ddd;">
+<table>
+  <thead>
     <tr>
-      <th style="padding: 12px 15px; border: 1px solid #ddd; text-align: left; width: 25%;">Feature</th>
-      <th style="padding: 12px 15px; border: 1px solid #ddd; text-align: left;">Description</th>
+      <th>Feature</th>
+      <th>Description</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <td style="padding: 12px 15px; border: 1px solid #ddd;"><b>Unified Orchestration</b></td>
-      <td style="padding: 12px 15px; border: 1px solid #ddd;">One entry command dispatches multiple omics modules (RNA / ATAC / VDJ)</td>
+      <td><b>Unified Orchestration</b></td>
+      <td>One entry command dispatches multiple omics modules (RNA / ATAC / VDJ)</td>
     </tr>
     <tr>
-      <td style="padding: 12px 15px; border: 1px solid #ddd;"><b>Status Tracking</b></td>
-      <td style="padding: 12px 15px; border: 1px solid #ddd;">Module-level status management (success / failed / skipped / reused)</td>
+      <td><b>Status Tracking</b></td>
+      <td>Module-level status management (success / failed / skipped / reused)</td>
     </tr>
     <tr>
-      <td style="padding: 12px 15px; border: 1px solid #ddd;"><b>Integrated Report</b></td>
-      <td style="padding: 12px 15px; border: 1px solid #ddd;">Generates integrated HTML report supporting cross-omics browsing and comparison</td>
+      <td><b>Integrated Report</b></td>
+      <td>Generates integrated HTML report supporting cross-omics browsing and comparison</td>
     </tr>
     <tr>
-      <td style="padding: 12px 15px; border: 1px solid #ddd;"><b>Flexible Configuration</b></td>
-      <td style="padding: 12px 15px; border: 1px solid #ddd;">Supports arbitrary module combinations (single / dual / all modules)</td>
+      <td><b>Flexible Configuration</b></td>
+      <td>Supports arbitrary module combinations (single / dual / all modules)</td>
     </tr>
   </tbody>
 </table>
 
-</div>
-
-<div style="max-width: 1200px; margin: 0 auto;" markdown="block"><hr style="border: none; border-top: 1px solid #d2d2d7; margin: 24px 0;"></div>
-
-<div style="background: #f5f5f7; border-radius: 12px; padding: 24px; margin: 24px auto; max-width: 1200px;" markdown="block">
-
 ## Input Configuration <a id="input-configuration"></a>
-
-</div>
-
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; margin: 20px auto; max-width: 1200px; border: 1px solid #e5e5e5; box-shadow: 0 1px 3px rgba(0,0,0,0.1);" markdown="block">
 
 ### Configuration File Structure
 
 `multi run` uses a CSV configuration file to define module parameters and input data. Typical sections include:
 
-<table style="width:100%; border-collapse: collapse; margin: 1.5em 0; box-shadow: 0 2px 3px rgba(0,0,0,0.1);">
-  <thead style="background-color: #f2f2f2; border-bottom: 2px solid #ddd;">
+<table>
+  <thead>
     <tr>
-      <th style="padding: 12px 15px; border: 1px solid #ddd; text-align: left; width: 20%;">Section</th>
-      <th style="padding: 12px 15px; border: 1px solid #ddd; text-align: left; width: 30%;">Purpose</th>
-      <th style="padding: 12px 15px; border: 1px solid #ddd; text-align: left;">Key Parameters</th>
+      <th>Section</th>
+      <th>Purpose</th>
+      <th>Key Parameters</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <td style="padding: 12px 15px; border: 1px solid #ddd;"><code>[rna]</code></td>
-      <td style="padding: 12px 15px; border: 1px solid #ddd;">RNA analysis module configuration</td>
-      <td style="padding: 12px 15px; border: 1px solid #ddd;"><code>genomeDir</code>, <code>expectcells</code>, <code>no_bam</code>...</td>
+      <td><code>[rna]</code></td>
+      <td>RNA analysis module configuration</td>
+      <td><code>genomeDir</code>, <code>expectcells</code>, <code>no_bam</code>...</td>
     </tr>
     <tr>
-      <td style="padding: 12px 15px; border: 1px solid #ddd;"><code>[atac]</code></td>
-      <td style="padding: 12px 15px; border: 1px solid #ddd;">ATAC analysis module configuration</td>
-      <td style="padding: 12px 15px; border: 1px solid #ddd;"><code>genomeDir</code>, <code>frags_cutoff</code>, <code>need_bam</code>...</td>
+      <td><code>[atac]</code></td>
+      <td>ATAC analysis module configuration</td>
+      <td><code>genomeDir</code>, <code>frags_cutoff</code>, <code>need_bam</code>...</td>
     </tr>
     <tr>
-      <td style="padding: 12px 15px; border: 1px solid #ddd;"><code>[vdj-t]</code></td>
-      <td style="padding: 12px 15px; border: 1px solid #ddd;">T-cell VDJ analysis configuration</td>
-      <td style="padding: 12px 15px; border: 1px solid #ddd;"><code>ref</code>, <code>beadstrans</code>...</td>
+      <td><code>[vdj-t]</code></td>
+      <td>T-cell VDJ analysis configuration</td>
+      <td><code>ref</code>, <code>beadstrans</code>...</td>
     </tr>
     <tr>
-      <td style="padding: 12px 15px; border: 1px solid #ddd;"><code>[vdj-b]</code></td>
-      <td style="padding: 12px 15px; border: 1px solid #ddd;">B-cell VDJ analysis configuration</td>
-      <td style="padding: 12px 15px; border: 1px solid #ddd;"><code>ref</code>, <code>beadstrans</code>...</td>
+      <td><code>[vdj-b]</code></td>
+      <td>B-cell VDJ analysis configuration</td>
+      <td><code>ref</code>, <code>beadstrans</code>...</td>
     </tr>
     <tr>
-      <td style="padding: 12px 15px; border: 1px solid #ddd;"><code>[libraries]</code></td>
-      <td style="padding: 12px 15px; border: 1px solid #ddd;">Input data mapping (required)</td>
-      <td style="padding: 12px 15px; border: 1px solid #ddd;"><code>fastqs</code>, <code>feature_types</code></td>
+      <td><code>[libraries]</code></td>
+      <td>Input data mapping (required)</td>
+      <td><code>fastqs</code>, <code>feature_types</code></td>
     </tr>
   </tbody>
 </table>
 
-<div style="background-color: #e7f3fe; border-left: 6px solid #2196F3; padding: 15px; margin: 1.5em 0; border-radius: 4px;" markdown="block">
- <strong>Detailed Configuration</strong>: Please refer to the <a href="../parameter/multi.en.html">Multi Parameter Documentation</a> for complete CSV configuration specifications and parameter mappings.
-</div>
+ <strong>Detailed Configuration</strong>: Please refer to the <a href="../parameter/multi.html">Multi Parameter Documentation</a> for complete CSV configuration specifications and parameter mappings.
 
-<p><strong><code>[libraries]</code> input directory requirements:</strong></p>
+**`[libraries]` input directory requirements:**
+
 <ul>
   <li><code>rna</code>: <code>fastqs</code> should point to the RNA FASTQ root directory, which must contain <code>cDNA/</code> and <code>oligo/</code> subdirectories.</li>
   <li><code>atac</code>: <code>fastqs</code> should point to the FASTQ directory for the current ATAC library, with R1/R2 files placed directly under that directory.</li>
@@ -133,7 +95,7 @@ The Multi-omics workflow orchestrates RNA / ATAC / VDJ sub-pipelines, enabling m
 
 ### Minimal Configuration Example
 
-<details open>
+<details markdown="block" open>
 <summary> Configuration Example</summary>
 
 ```csv
@@ -163,105 +125,91 @@ $dnbc4tools multi run \
 
 **Parameter Description**:
 
-<table style="width:100%; border-collapse: collapse; margin: 1.5em 0; box-shadow: 0 2px 3px rgba(0,0,0,0.1);">
-  <thead style="background-color: #f2f2f2; border-bottom: 2px solid #ddd;">
+<table>
+  <thead>
     <tr>
-      <th style="padding: 12px 15px; border: 1px solid #ddd; text-align: left; width: 20%;">Parameter</th>
-      <th style="padding: 12px 15px; border: 1px solid #ddd; text-align: left; width: 15%;">Required</th>
-      <th style="padding: 12px 15px; border: 1px solid #ddd; text-align: left;">Description</th>
+      <th>Parameter</th>
+      <th>Required</th>
+      <th>Description</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <td style="padding: 12px 15px; border: 1px solid #ddd;"><code>--csv</code></td>
-      <td style="padding: 12px 15px; border: 1px solid #ddd;"><b style="color: #e74c3c;">Yes</b></td>
-      <td style="padding: 12px 15px; border: 1px solid #ddd;">Path to CSV configuration file</td>
+      <td><code>--csv</code></td>
+      <td><b>Yes</b></td>
+      <td>Path to CSV configuration file</td>
     </tr>
     <tr>
-      <td style="padding: 12px 15px; border: 1px solid #ddd;"><code>--name</code></td>
-      <td style="padding: 12px 15px; border: 1px solid #ddd;"><b style="color: #e74c3c;">Yes</b></td>
-      <td style="padding: 12px 15px; border: 1px solid #ddd;">Sample name for output directory naming</td>
+      <td><code>--name</code></td>
+      <td><b>Yes</b></td>
+      <td>Sample name for output directory naming</td>
     </tr>
     <tr>
-      <td style="padding: 12px 15px; border: 1px solid #ddd;"><code>--outdir</code></td>
-      <td style="padding: 12px 15px; border: 1px solid #ddd;">No</td>
-      <td style="padding: 12px 15px; border: 1px solid #ddd;">Output directory, defaults to current directory <code>./</code></td>
+      <td><code>--outdir</code></td>
+      <td>No</td>
+      <td>Output directory, defaults to current directory <code>./</code></td>
     </tr>
     <tr>
-      <td style="padding: 12px 15px; border: 1px solid #ddd;"><code>--threads</code></td>
-      <td style="padding: 12px 15px; border: 1px solid #ddd;">No</td>
-      <td style="padding: 12px 15px; border: 1px solid #ddd;">Number of CPU threads, uses software default if not specified</td>
+      <td><code>--threads</code></td>
+      <td>No</td>
+      <td>Number of CPU threads, uses software default if not specified</td>
     </tr>
   </tbody>
 </table>
 
 ### Pre-Run Checklist
 
-<div style="background-color: #fffbe6; border-left: 6px solid #ffc107; padding: 15px; margin: 1.5em 0; border-radius: 4px;" markdown="block">
  <strong>Please verify the following before running</strong>:
 
-<ol style="margin: 10px 0;">
+<ol>
   <li><code>--csv</code> and <code>--name</code> parameters are properly provided</li>
   <li>At least one omics module is enabled in the CSV file (corresponding section present)</li>
   <li>Input paths in <code>[libraries]</code> exist and correctly match <code>feature_types</code></li>
   <li>Required reference database parameters (e.g., <code>genomeDir</code>, <code>ref</code>) are complete with valid paths</li>
 </ol>
-</div>
-
-</div>
-
-<div style="max-width: 1200px; margin: 0 auto;" markdown="block"><hr style="border: none; border-top: 1px solid #d2d2d7; margin: 24px 0;"></div>
-
-<div style="background: #f5f5f7; border-radius: 12px; padding: 24px; margin: 24px auto; max-width: 1200px;" markdown="block">
 
 ## Main Pipeline <a id="main-pipeline"></a>
 
-</div>
-
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; margin: 20px auto; max-width: 1200px; border: 1px solid #e5e5e5; box-shadow: 0 1px 3px rgba(0,0,0,0.1);" markdown="block">
-
 ### Execution Flow
 
-<table style="width:100%; border-collapse: collapse; margin: 1.5em 0; box-shadow: 0 2px 3px rgba(0,0,0,0.1);">
-  <thead style="background-color: #f2f2f2; border-bottom: 2px solid #ddd;">
+<table>
+  <thead>
     <tr>
-      <th style="padding: 12px 15px; border: 1px solid #ddd; text-align: left; width: 20%;">Stage</th>
-      <th style="padding: 12px 15px; border: 1px solid #ddd; text-align: left;">Description</th>
+      <th>Stage</th>
+      <th>Description</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <td style="padding: 12px 15px; border: 1px solid #ddd;"><b>1. Configuration Parsing</b></td>
-      <td style="padding: 12px 15px; border: 1px solid #ddd;">Reads CSV file, validates section integrity and parameter validity</td>
+      <td><b>1. Configuration Parsing</b></td>
+      <td>Reads CSV file, validates section integrity and parameter validity</td>
     </tr>
     <tr>
-      <td style="padding: 12px 15px; border: 1px solid #ddd;"><b>2. Task Decomposition</b></td>
-      <td style="padding: 12px 15px; border: 1px solid #ddd;">Builds RNA / ATAC / VDJ sub-task queues based on enabled modules</td>
+      <td><b>2. Task Decomposition</b></td>
+      <td>Builds RNA / ATAC / VDJ sub-task queues based on enabled modules</td>
     </tr>
     <tr>
-      <td style="padding: 12px 15px; border: 1px solid #ddd;"><b>3. Sub-Pipeline Execution</b></td>
-      <td style="padding: 12px 15px; border: 1px solid #ddd;">Sequentially invokes corresponding module commands, records runtime status</td>
+      <td><b>3. Sub-Pipeline Execution</b></td>
+      <td>Sequentially invokes corresponding module commands, records runtime status</td>
     </tr>
     <tr>
-      <td style="padding: 12px 15px; border: 1px solid #ddd;"><b>4. Status Aggregation</b></td>
-      <td style="padding: 12px 15px; border: 1px solid #ddd;">Aggregates return codes, runtime, skip/reuse status from each module</td>
+      <td><b>4. Status Aggregation</b></td>
+      <td>Aggregates return codes, runtime, skip/reuse status from each module</td>
     </tr>
     <tr>
-      <td style="padding: 12px 15px; border: 1px solid #ddd;"><b>5. Report Generation</b></td>
-      <td style="padding: 12px 15px; border: 1px solid #ddd;">Generates multi-omics HTML integrated report combining core results from all modules</td>
+      <td><b>5. Report Generation</b></td>
+      <td>Generates multi-omics HTML integrated report combining core results from all modules</td>
     </tr>
   </tbody>
 </table>
 
 ### Execution Highlights
 
-<div style="background-color: #e7f3fe; border-left: 6px solid #2196F3; padding: 15px; margin: 1.5em 0; border-radius: 4px;" markdown="block">
 <strong>Core Principles</strong>:
-<ul style="margin: 10px 0;">
+<ul>
   <li>Multi handles "<b>orchestration and aggregation</b>"; module algorithms remain in each single-omics sub-pipeline</li>
   <li>A module failure <b>will not</b> invalidate other completed modules but will be reflected in the final status summary</li>
 </ul>
-</div>
 
 ### Typical Runtime Log
 
@@ -304,22 +252,34 @@ Warning: ATAC joint analysis is currently unsupported. Libraries will be analyze
 └─────────────────────────────────────────────┴────────────────────────────────────────────────────┘
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 
- 2026-04-08 13:40:24 Starting oligo library filtering...    
+ 2026-04-08 13:40:24 Starting oligo library filtering...
 
- ...                                        
+ ...
 ```
 
-</div>
+## C6 multiplexed RNA workflow <a id="c6-workflow"></a>
 
-<div style="max-width: 1200px; margin: 0 auto;" markdown="block"><hr style="border: none; border-top: 1px solid #d2d2d7; margin: 24px 0;"></div>
+A `[samples]` section activates the `scRNAC6` workflow in 3.2. Biological samples share cDNA/oligo FASTQs and a reference and are distinguished by probe barcodes. See the [C6 configuration](../parameter/multi.md#c6-samples).
 
-<div style="background: #f5f5f7; border-radius: 12px; padding: 24px; margin: 24px auto; max-width: 1200px;" markdown="block">
+1. Validate libraries, samples and unique probe assignments; detect dark cycles and perform FASTQ QC and barcode correction.
+2. Align RNA and count UMIs. Sum RNA UMIs across probe suffixes for each 30 bp bead prefix; beads with at least 100 RNA UMIs become merge targets. Oligo supplies linkage evidence rather than the target threshold.
+3. Score bead similarity with the robust model, retain probe suffixes, call cells per sample, then apply experiment-wide high-occupancy filtering (enabled by default).
+4. Export combined raw/filtered matrices and complete `singlecell.csv.gz`; split sample matrices and run dimensional reduction, clustering, markers and available annotations independently.
+5. Deliver the root Multi report, individual RNA reports and matrices. When enabled, split BAMs per sample and retain Unassigned and shared oligo BAMs.
+
+The global `filtered_feature_bc_matrix.h5ad` contains sparse counts and gene/barcode metadata for all called cells. It has no joint PCA, UMAP, clustering or marker analysis. Start a separate combined analysis from that matrix if needed. The global `<run>_scRNA_report.html` is no longer delivered; complete RNA reports are in per-sample directories.
+
+C6 RNA is orchestrated in the current process; other configured modalities retain their own child workflows. Ordinary Multi library sections and RNA/ATAC/VDJ output organization remain applicable below.
+
+### Cell tables, reports and recovery
+
+The six-column C6 summary retains background and zero-UMI rows and is streamed through gzip. Positive-UMI rows descend by UMI; zero-UMI rows retain group order. Use `is_cell_barcode` to select called cells. Report readers use validated small caches or bounded chunks rather than inferring memory needs from compressed file size.
+
+Empty and failed samples have separate states. Zero cells do not imply successful clustering. Default `sample_failure_policy=skip` retains other successful samples; use `fail` to stop on failure. See [Running & Troubleshooting](../troubleshooting.md) for logs, checkpoints and integrity diagnostics.
+
+See [C6 outputs](../outs/multi.md#c6-outputs) for file paths and QC denominators.
 
 ## Results <a id="results"></a>
-
-</div>
-
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; margin: 20px auto; max-width: 1200px; border: 1px solid #e5e5e5; box-shadow: 0 1px 3px rgba(0,0,0,0.1);" markdown="block">
 
 ### Output Directory Structure
 
@@ -344,89 +304,49 @@ After completion, results are organized under `<outdir>/<name>/`:
 
 ### Key Output Files
 
-<table style="width:100%; border-collapse: collapse; margin: 1.5em 0; box-shadow: 0 2px 3px rgba(0,0,0,0.1);">
-  <thead style="background-color: #f2f2f2; border-bottom: 2px solid #ddd;">
+<table>
+  <thead>
     <tr>
-      <th style="padding: 12px 15px; border: 1px solid #ddd; text-align: left; width: 35%;">File/Directory</th>
-      <th style="padding: 12px 15px; border: 1px solid #ddd; text-align: left;">Description</th>
+      <th>File/Directory</th>
+      <th>Description</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <td style="padding: 12px 15px; border: 1px solid #ddd;"><code>outs/&lt;sample&gt;_multi_report.html</code></td>
-      <td style="padding: 12px 15px; border: 1px solid #ddd;">Multi-omics integrated report displaying core QC and analysis charts from all modules</td>
+      <td><code>outs/&lt;sample&gt;_multi_report.html</code></td>
+      <td>Multi-omics integrated report displaying core QC and analysis charts from all modules</td>
     </tr>
     <tr>
-      <td style="padding: 12px 15px; border: 1px solid #ddd;"><code>outs/rna/</code></td>
-      <td style="padding: 12px 15px; border: 1px solid #ddd;">RNA module standard outputs (matrix, statistics, module report, etc.)</td>
+      <td><code>outs/rna/</code></td>
+      <td>RNA module standard outputs (matrix, statistics, module report, etc.)</td>
     </tr>
     <tr>
-      <td style="padding: 12px 15px; border: 1px solid #ddd;"><code>outs/atac/</code></td>
-      <td style="padding: 12px 15px; border: 1px solid #ddd;">ATAC module standard outputs (fragment files, peaks, module report, etc.)</td>
+      <td><code>outs/atac/</code></td>
+      <td>ATAC module standard outputs (fragment files, peaks, module report, etc.)</td>
     </tr>
     <tr>
-      <td style="padding: 12px 15px; border: 1px solid #ddd;"><code>outs/vdj-t/</code> / <code>outs/vdj-b/</code></td>
-      <td style="padding: 12px 15px; border: 1px solid #ddd;">VDJ module standard outputs (clonotypes, annotations, module report, etc.)</td>
+      <td><code>outs/vdj-t/</code> / <code>outs/vdj-b/</code></td>
+      <td>VDJ module standard outputs (clonotypes, annotations, module report, etc.)</td>
     </tr>
     <tr>
-      <td style="padding: 12px 15px; border: 1px solid #ddd;"><code>logs/run_manifest.json</code></td>
-      <td style="padding: 12px 15px; border: 1px solid #ddd;">Module runtime status summary including return codes, runtime, and reuse status</td>
+      <td><code>logs/run_manifest.json</code></td>
+      <td>Module runtime status summary including return codes, runtime, and reuse status</td>
     </tr>
   </tbody>
 </table>
 
-<div style="background-color: #e7f3fe; border-left: 6px solid #2196F3; padding: 15px; margin: 1.5em 0; border-radius: 4px;" markdown="block">
- <strong>Detailed Output Description</strong>: Please refer to the <a href="../outs/multi.en.html">Multi Output Documentation</a> for detailed interpretation of the integrated report.
-</div>
-
-</div>
-
-<div style="max-width: 1200px; margin: 0 auto;" markdown="block"><hr style="border: none; border-top: 1px solid #d2d2d7; margin: 24px 0;"></div>
-
-<div style="background: #f5f5f7; border-radius: 12px; padding: 24px; margin: 24px auto; max-width: 1200px;" markdown="block">
+ <strong>Detailed Output Description</strong>: Please refer to the <a href="../outs/multi.html">Multi Output Documentation</a> for detailed interpretation of the integrated report.
 
 ## Related Documentation
 
-</div>
-
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; margin: 20px auto; max-width: 1200px; border: 1px solid #e5e5e5; box-shadow: 0 1px 3px rgba(0,0,0,0.1);" markdown="block">
-
 | Resource | Description |
 | :--- | :--- |
-| [Parameter Settings](../parameter/multi.en.md) | Complete parameter reference and descriptions |
-| [Output Descriptions](../outs/multi.en.md) | Detailed interpretation of analysis results |
-| [scRNA Pipeline](scRNA.en.md) | Single-cell RNA analysis workflow guide |
-| [scATAC Pipeline](scATAC.en.md) | Single-cell ATAC analysis workflow guide |
-| [scVDJ Pipeline](scVDJ.en.md) | Single-cell VDJ analysis workflow guide |
-
-</div>
-
-<div style="max-width: 1200px; margin: 0 auto;" markdown="block"><hr style="border: none; border-top: 1px solid #d2d2d7; margin: 24px 0;"></div>
-
-<div style="background: #f5f5f7; border-radius: 12px; padding: 24px; margin: 24px auto; max-width: 1200px;" markdown="block">
+| [Parameter Settings](../parameter/multi.md) | Complete parameter reference and descriptions |
+| [Output Descriptions](../outs/multi.md) | Detailed interpretation of analysis results |
+| [scRNA Pipeline](scRNA.md) | Single-cell RNA analysis workflow guide |
+| [scATAC Pipeline](scATAC.md) | Single-cell ATAC analysis workflow guide |
+| [scVDJ Pipeline](scVDJ.md) | Single-cell VDJ analysis workflow guide |
 
 ## Frequently Asked Questions
 
-</div>
-
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; margin: 20px auto; max-width: 1200px; border: 1px solid #e5e5e5; box-shadow: 0 1px 3px rgba(0,0,0,0.1);" markdown="block">
-
 This section will be expanded as common usage questions are collected. For the current version, use the run log, parameter reference, and output file documentation as the primary troubleshooting references.
-
-</div>
-
-<div style="max-width: 1200px; margin: 0 auto;" markdown="block"><hr style="border: none; border-top: 1px solid #d2d2d7; margin: 24px 0;"></div>
-
-<div style="background: #f5f5f7; border-radius: 12px; padding: 24px; margin: 24px auto; max-width: 1200px;" markdown="block">
-
-<div align="center" markdown="block">
-
-> <strong>Feedback & Support</strong>
->
-> This document is continuously maintained. If you identify errors or missing information, please submit feedback via GitHub Issues.
->
-> <strong>Document Version:</strong> 3.1 | <strong>Last Updated:</strong> May 15, 2026
-
-</div>
-
-</div>

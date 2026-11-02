@@ -1,49 +1,16 @@
-<div align="right" style="margin-bottom: 20px; max-width: 1200px; margin-left: auto; margin-right: auto;">
+# scVDJ Analysis Output
 
-[Home](../../README.md)
-
-</div>
-
-<div align="center" style="padding: 40px 20px; background: linear-gradient(135deg, #f5f5f7 0%, #ffffff 100%); border-radius: 12px; margin-bottom: 30px; max-width: 1200px; margin-left: auto; margin-right: auto;">
-
-<h1 style="font-size: 48px; font-weight: 600; color: #1d1d1f; margin: 0 0 16px 0; letter-spacing: -0.02em;"> scVDJ Analysis Output</h1>
-
-<p style="font-size: 21px; color: rgba(0,0,0,0.6); margin: 0 0 30px 0; font-weight: 400;">Single-Cell V(D)J Sequencing Output File Guide</p>
-
-<div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
-<a href="#output-directory-structure" style="background: #0071e3; color: white; padding: 8px 16px; border-radius: 980px; text-decoration: none; font-size: 14px;">Directory Structure</a>
-<a href="#detailed-file-description" style="background: transparent; color: #0071e3; padding: 8px 16px; border-radius: 980px; text-decoration: none; font-size: 14px; border: 1px solid #0071e3;">File Details</a>
-<a href="#analysis-metrics-summary" style="background: transparent; color: #0071e3; padding: 8px 16px; border-radius: 980px; text-decoration: none; font-size: 14px; border: 1px solid #0071e3;">Analysis Metrics</a>
-<a href="#web-report-interpretation" style="background: transparent; color: #0071e3; padding: 8px 16px; border-radius: 980px; text-decoration: none; font-size: 14px; border: 1px solid #0071e3;">Report Interpretation</a>
-</div>
-
-</div>
-
-<div style="max-width: 1200px; margin: 0 auto;"><hr style="border: none; border-top: 1px solid #d2d2d7; margin: 24px 0;"></div>
-
-<div style="background: #f5f5f7; border-radius: 12px; padding: 24px; margin: 24px auto; max-width: 1200px;">
+Single-Cell V(D)J Sequencing Output File Guide
 
 ## Overview <a id="overview"></a>
 
-<div align="center">
-
 After single-cell V(D)J analysis is complete, a standardized set of files and subdirectories is generated in the specified output directory for immune receptor repertoire analysis.
-
-</div>
 
 > **Tip**: V(D)J analysis requires 5' end RNA sequencing data, and all output files adhere to the AIRR standard and are compatible with mainstream immunoinformatics tools.
 
 > **Prerequisite**: 5' end single-cell RNA sequencing analysis must be completed first.
 
-</div>
-
-<div style="background: #f5f5f7; border-radius: 12px; padding: 24px; margin: 24px auto; max-width: 1200px;">
-
 ## Output Directory Structure <a id="output-directory-structure"></a>
-
-</div>
-
-<div style="background: #ffffff; border-radius: 12px; padding: 20px; margin: 20px auto; max-width: 1200px; overflow-x: auto; border: 1px solid #e5e5e5; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
 
 ```
 .
@@ -61,90 +28,59 @@ After single-cell V(D)J analysis is complete, a standardized set of files and su
 ├── metrics_summary.xls                     # Summary of analysis quality metrics
 └── *_scVDJ_TR(IG)_report.html              # Analysis report in HTML format
 ```
-
-</div>
-
-<br>
-
-<div style="max-width: 1200px; margin: 0 auto;"><hr style="border: none; border-top: 1px solid #d2d2d7; margin: 24px 0;"></div>
-
-<br>
-
 ## Detailed File Description <a id="detailed-file-description"></a>
 
 ### V(D)J Assembly and Annotation Files <a id="vdj-assembly-and-annotation-files"></a>
 
-<div align="center">
-
 **Core Content**: Results of V(D)J contig sequence assembly, precise annotation, and quality assessment, covering the complete information of TCR and BCR rearranged sequences.
-
-</div>
-
-<div style="max-width: 1200px; margin: 0 auto;"><hr style="border: none; border-top: 1px solid #d2d2d7; margin: 24px 0;"></div>
 
 #### V(D)J Transcript Structure and Composition
 
 **Diagram of a Typical V(D)J Transcript Structure:**
 
-<div align="center">
 <img src="../images/vdj_transcript.png" alt="V(D)J Transcript Structure Diagram" width="650">
-</div>
-
-<br>
-
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border: 1px solid #e5e5e5; margin: 20px auto; max-width: 1200px; ">
 
 **Explanation of Important Terms:**
 
-<table style="width:100%; border-collapse: collapse; margin: 15px 0; border-radius: 8px; overflow: hidden;">
-<thead style="background-color: #f5f5f7; border-bottom: 1px solid #d2d2d7;">
+<table>
+<thead>
 <tr>
-<th width="20%" align="left" style="padding: 12px 16px; font-weight: 600; color: #1d1d1f;">Region</th>
-<th width="30%" align="left" style="padding: 12px 16px; font-weight: 600; color: #1d1d1f;">Abbreviation</th>
-<th width="50%" align="left" style="padding: 12px 16px; font-weight: 600; color: #1d1d1f;">Biological Function</th>
+<th width="20%">Region</th>
+<th width="30%">Abbreviation</th>
+<th width="50%">Biological Function</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;"><strong>Untranslated Region</strong></td>
-<td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;">UTR</td>
-<td style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;">Regulates mRNA stability and translation efficiency.</td>
+<td><strong>Untranslated Region</strong></td>
+<td>UTR</td>
+<td>Regulates mRNA stability and translation efficiency.</td>
 </tr>
 <tr>
-<td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;"><strong>Framework Region</strong></td>
-<td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;">FWR</td>
-<td style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;">Maintains the conserved structural framework of the fold.</td>
+<td><strong>Framework Region</strong></td>
+<td>FWR</td>
+<td>Maintains the conserved structural framework of the fold.</td>
 </tr>
 <tr>
-<td align="left" style="padding: 12px 16px;"><strong>CDR</strong></td>
-<td align="left" style="padding: 12px 16px;">CDR</td>
-<td style="padding: 12px 16px;">The key variable region that directly contacts the antigen.</td>
+<td><strong>CDR</strong></td>
+<td>CDR</td>
+<td>The key variable region that directly contacts the antigen.</td>
 </tr>
 </tbody>
 </table>
 
 > **Technical Advantage**: The V(D)J analysis pipeline can accurately identify and provide the amino acid and nucleotide sequences of the framework (FWR) and complementarity determining (CDR) regions.
 
-</div>
-
-<div style="max-width: 1200px; margin: 0 auto;"><hr style="border: none; border-top: 1px solid #d2d2d7; margin: 24px 0;"></div>
-
 #### Explanation of Important Annotation Standards
 
 ##### Full-Length Sequence Determination Criteria (Full Length)
-
-<div style="padding: 15px; border-left: 4px solid #007bff; margin: 15px 0;">
 
 A contig sequence is identified as a **full-length sequence** if it meets the following strict conditions simultaneously:
 
 - The contig sequence perfectly matches the 5' start region of an annotated V gene.
 - The contig sequence extends completely to the 3' end region of a J gene.
 
-</div>
-
 ##### Productive Sequence Determination Criteria (Productive)
-
-<div style="padding: 15px; border-left: 4px solid #0ea5e9; margin: 15px 0;">
 
 A contig sequence is identified as a **productive sequence** (i.e., functionally active) if it meets all of the following conditions simultaneously:
 
@@ -155,86 +91,64 @@ A contig sequence is identified as a **productive sequence** (i.e., functionally
 - A complete CDR3 variable region is successfully identified.
 - The length of the V-J spanning region is within the biologically plausible range for the respective gene.
 
-</div>
-
 ##### High-Confidence Sequence Determination (High Confidence)
-
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border: 1px solid #e5e5e5; margin: 20px auto; max-width: 1200px; ">
 
 **Expected Receptor Configurations for Different Cell Types:**
 
-<table style="width:100%; border-collapse: collapse; margin: 15px 0; border-radius: 8px; overflow: hidden;">
-<thead style="background-color: #f5f5f7; border-bottom: 1px solid #d2d2d7;">
+<table>
+<thead>
 <tr>
-<th width="25%" align="left" style="padding: 12px 16px; font-weight: 600; color: #1d1d1f;">Cell Type</th>
-<th width="45%" align="left" style="padding: 12px 16px; font-weight: 600; color: #1d1d1f;">Standard Receptor Configuration</th>
-<th width="30%" align="left" style="padding: 12px 16px; font-weight: 600; color: #1d1d1f;">Biological Significance</th>
+<th width="25%">Cell Type</th>
+<th width="45%">Standard Receptor Configuration</th>
+<th width="30%">Biological Significance</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;"><strong>T Cell</strong></td>
-<td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;">1 productive TRA chain + 1 productive TRB chain</td>
-<td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;">Normal TCR α/β heterodimer</td>
+<td><strong>T Cell</strong></td>
+<td>1 productive TRA chain + 1 productive TRB chain</td>
+<td>Normal TCR α/β heterodimer</td>
 </tr>
 <tr>
-<td align="left" style="padding: 12px 16px;"><strong>B Cell</strong></td>
-<td align="left" style="padding: 12px 16px;">1 productive heavy chain + 1 productive light chain (κ or λ)</td>
-<td align="left" style="padding: 12px 16px;">Normal BCR heavy/light chain pairing</td>
+<td><strong>B Cell</strong></td>
+<td>1 productive heavy chain + 1 productive light chain (κ or λ)</td>
+<td>Normal BCR heavy/light chain pairing</td>
 </tr>
 </tbody>
 </table>
-
-</div>
 
 **Principles for Marking Low-Confidence Sequences:**
 
-<div style="padding: 15px; border-left: 4px solid #ffc107; margin: 15px 0;">
-
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border: 1px solid #e5e5e5; margin: 20px auto; max-width: 1200px; ">
-
 **Common Causes for Anomalous Receptor Signals:**
 
-<table style="width:100%; border-collapse: collapse; margin: 15px 0; border-radius: 8px; overflow: hidden;">
-<thead style="background-color: #f5f5f7; border-bottom: 1px solid #d2d2d7;">
+<table>
+<thead>
 <tr>
-<th width="25%" align="left" style="padding: 12px 16px; font-weight: 600; color: #1d1d1f;">Anomaly Type</th>
-<th width="75%" align="left" style="padding: 12px 16px; font-weight: 600; color: #1d1d1f;">Cause Analysis</th>
+<th width="25%">Anomaly Type</th>
+<th width="75%">Cause Analysis</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;"><strong>Ambient Contamination</strong></td>
-<td style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;">Non-specific capture of free-floating mRNA (e.g., from apoptotic cells).</td>
+<td><strong>Ambient Contamination</strong></td>
+<td>Non-specific capture of free-floating mRNA (e.g., from apoptotic cells).</td>
 </tr>
 <tr>
-<td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;"><strong>Doublet Events</strong></td>
-<td style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;">Droplets containing multiple cells.</td>
+<td><strong>Doublet Events</strong></td>
+<td>Droplets containing multiple cells.</td>
 </tr>
 <tr>
-<td align="left" style="padding: 12px 16px;"><strong>Technical Artifacts</strong></td>
-<td style="padding: 12px 16px;">Artificial sequences from PCR chimeras or incorrect primer binding.</td>
+<td><strong>Technical Artifacts</strong></td>
+<td>Artificial sequences from PCR chimeras or incorrect primer binding.</td>
 </tr>
 </tbody>
 </table>
 
-</div>
-
 ** Basis for Determining Low-Confidence Sequences:**
-
-<div style="padding: 15px; border-left: 4px solid #ef4444; margin: 15px 0;">
 
 - Abnormal receptor configuration patterns that are biologically highly improbable.
 - Suspicious sequences with significantly low UMI support.
 - A number of extra productive chains that clearly exceeds expectations.
-
-</div>
-
-</div>
-
-<div style="max-width: 1200px; margin: 0 auto;"><hr style="border: none; border-top: 1px solid #d2d2d7; margin: 24px 0;"></div>
-
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border: 1px solid #e5e5e5; margin: 20px auto; max-width: 1200px; ">
 
 #### airr_annotations.tsv
 
@@ -248,150 +162,144 @@ Contains annotated and consensus sequences of V(D)J rearrangements in the AIRR s
     *   The file is in the AIRR standard TSV format.
     *   The fields included in the file are shown in the table below:
 
-        <table style="width:100%; border-collapse: collapse; margin: 15px 0; border-radius: 8px; overflow: hidden;">
-        <thead style="background-color: #f5f5f7; border-bottom: 1px solid #d2d2d7;">
+        <table>
+        <thead>
         <tr>
-        <th width="25%" align="left" style="padding: 12px 16px; font-weight: 600; color: #1d1d1f;">Field Name</th>
-        <th width="75%" align="left" style="padding: 12px 16px; font-weight: 600; color: #1d1d1f;">Detailed Description</th>
+        <th width="25%">Field Name</th>
+        <th width="75%">Detailed Description</th>
         </tr>
         </thead>
         <tbody>
         <tr>
-        <td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;"><code>cell_id</code></td>
-        <td style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;">A unique identifier for the cell to which this rearrangement belongs, used for linking single-cell data.</td>
+        <td><code>cell_id</code></td>
+        <td>A unique identifier for the cell to which this rearrangement belongs, used for linking single-cell data.</td>
         </tr>
         <tr>
-        <td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;"><code>clone_id</code></td>
-        <td style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;">A clonotype ID that identifies the specific clonal group to which this rearrangement belongs, used for clonotype analysis.</td>
+        <td><code>clone_id</code></td>
+        <td>A clonotype ID that identifies the specific clonal group to which this rearrangement belongs, used for clonotype analysis.</td>
         </tr>
         <tr>
-        <td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;"><code>sequence_id</code></td>
-        <td style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;">The unique name or identifier of the contig (rearranged sequence).</td>
+        <td><code>sequence_id</code></td>
+        <td>The unique name or identifier of the contig (rearranged sequence).</td>
         </tr>
         <tr>
-        <td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;"><code>sequence</code></td>
-        <td style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;">The complete nucleotide sequence of the V(D)J rearrangement, including all variable, diversity, and joining regions.</td>
+        <td><code>sequence</code></td>
+        <td>The complete nucleotide sequence of the V(D)J rearrangement, including all variable, diversity, and joining regions.</td>
         </tr>
         <tr>
-        <td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;"><code>sequence_aa</code></td>
-        <td style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;">The amino acid sequence translated from the rearranged region, reflecting the functional protein product.</td>
+        <td><code>sequence_aa</code></td>
+        <td>The amino acid sequence translated from the rearranged region, reflecting the functional protein product.</td>
         </tr>
         <tr>
-        <td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;"><code>productive</code></td>
-        <td style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;">Indicates whether the rearrangement is productive (biologically functional), requiring conditions like in-frame translation and no stop codons.</td>
+        <td><code>productive</code></td>
+        <td>Indicates whether the rearrangement is productive (biologically functional), requiring conditions like in-frame translation and no stop codons.</td>
         </tr>
         <tr>
-        <td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;"><code>rev_comp</code></td>
-        <td style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;">Indicates if the sequence is a reverse complement (default: false), used for sequence orientation marking.</td>
+        <td><code>rev_comp</code></td>
+        <td>Indicates if the sequence is a reverse complement (default: false), used for sequence orientation marking.</td>
         </tr>
         <tr>
-        <td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;"><code>v_call</code></td>
-        <td style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;">The name of the identified V (variable) gene segment.</td>
+        <td><code>v_call</code></td>
+        <td>The name of the identified V (variable) gene segment.</td>
         </tr>
         <tr>
-        <td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;"><code>v_cigar</code></td>
-        <td style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;">The CIGAR string for the V gene alignment, recording detailed alignment information (matches, insertions, deletions, etc.).</td>
+        <td><code>v_cigar</code></td>
+        <td>The CIGAR string for the V gene alignment, recording detailed alignment information (matches, insertions, deletions, etc.).</td>
         </tr>
         <tr>
-        <td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;"><code>d_call</code></td>
-        <td style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;">The name of the identified D (diversity) gene segment (only for heavy and beta chains).</td>
+        <td><code>d_call</code></td>
+        <td>The name of the identified D (diversity) gene segment (only for heavy and beta chains).</td>
         </tr>
         <tr>
-        <td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;"><code>d_cigar</code></td>
-        <td style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;">The CIGAR string for the D gene alignment, detailing the alignment results of the diversity region.</td>
+        <td><code>d_cigar</code></td>
+        <td>The CIGAR string for the D gene alignment, detailing the alignment results of the diversity region.</td>
         </tr>
         <tr>
-        <td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;"><code>j_call</code></td>
-        <td style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;">The name of the identified J (joining) gene segment, a key element for completing V(D)J recombination.</td>
+        <td><code>j_call</code></td>
+        <td>The name of the identified J (joining) gene segment, a key element for completing V(D)J recombination.</td>
         </tr>
         <tr>
-        <td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;"><code>j_cigar</code></td>
-        <td style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;">The CIGAR string for the J gene alignment, recording precise alignment information of the joining region.</td>
+        <td><code>j_cigar</code></td>
+        <td>The CIGAR string for the J gene alignment, recording precise alignment information of the joining region.</td>
         </tr>
         <tr>
-        <td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;"><code>c_call</code></td>
-        <td style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;">The name of the identified C (constant) gene segment, which determines the functional type of the antibody/receptor.</td>
+        <td><code>c_call</code></td>
+        <td>The name of the identified C (constant) gene segment, which determines the functional type of the antibody/receptor.</td>
         </tr>
         <tr>
-        <td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;"><code>c_cigar</code></td>
-        <td style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;">The CIGAR string for the C gene alignment, recording the alignment details of the constant region.</td>
+        <td><code>c_cigar</code></td>
+        <td>The CIGAR string for the C gene alignment, recording the alignment details of the constant region.</td>
         </tr>
         <tr>
-        <td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;"><code>sequence_alignment</code></td>
-        <td style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;">Detailed alignment result of the V(D)J rearranged region against the reference germline sequence, showing mutations and variations.</td>
+        <td><code>sequence_alignment</code></td>
+        <td>Detailed alignment result of the V(D)J rearranged region against the reference germline sequence, showing mutations and variations.</td>
         </tr>
         <tr>
-        <td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;"><code>germline_alignment</code></td>
-        <td style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;">Inferred full-length germline sequence alignment result, used for somatic hypermutation analysis.</td>
+        <td><code>germline_alignment</code></td>
+        <td>Inferred full-length germline sequence alignment result, used for somatic hypermutation analysis.</td>
         </tr>
         <tr>
-        <td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;"><code>junction</code></td>
-        <td style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;">The nucleotide sequence of the V(D)J rearrangement's junction (CDR3 region), which determines antigen-binding specificity.</td>
+        <td><code>junction</code></td>
+        <td>The nucleotide sequence of the V(D)J rearrangement's junction (CDR3 region), which determines antigen-binding specificity.</td>
         </tr>
         <tr>
-        <td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;"><code>junction_aa</code></td>
-        <td style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;">The amino acid sequence of the junction (CDR3 amino acids), the key domain for antigen recognition.</td>
+        <td><code>junction_aa</code></td>
+        <td>The amino acid sequence of the junction (CDR3 amino acids), the key domain for antigen recognition.</td>
         </tr>
         <tr>
-        <td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;"><code>junction_length</code></td>
-        <td style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;">The length of the CDR3 nucleotide sequence (in bp), which affects antigen-binding affinity and specificity.</td>
+        <td><code>junction_length</code></td>
+        <td>The length of the CDR3 nucleotide sequence (in bp), which affects antigen-binding affinity and specificity.</td>
         </tr>
         <tr>
-        <td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;"><code>junction_aa_length</code></td>
-        <td style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;">The length of the CDR3 amino acid sequence (in aa), which determines the spatial structure of the antigen-binding loop.</td>
+        <td><code>junction_aa_length</code></td>
+        <td>The length of the CDR3 amino acid sequence (in aa), which determines the spatial structure of the antigen-binding loop.</td>
         </tr>
         <tr>
-        <td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;"><code>v_sequence_start</code></td>
-        <td style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;">The start position of the V region in the rearranged sequence (1-based coordinate system).</td>
+        <td><code>v_sequence_start</code></td>
+        <td>The start position of the V region in the rearranged sequence (1-based coordinate system).</td>
         </tr>
         <tr>
-        <td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;"><code>v_sequence_end</code></td>
-        <td style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;">The end position of the V region in the rearranged sequence (1-based coordinate system).</td>
+        <td><code>v_sequence_end</code></td>
+        <td>The end position of the V region in the rearranged sequence (1-based coordinate system).</td>
         </tr>
         <tr>
-        <td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;"><code>d_sequence_start</code></td>
-        <td style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;">The start position of the D region in the rearranged sequence (1-based coordinate system).</td>
+        <td><code>d_sequence_start</code></td>
+        <td>The start position of the D region in the rearranged sequence (1-based coordinate system).</td>
         </tr>
         <tr>
-        <td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;"><code>d_sequence_end</code></td>
-        <td style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;">The end position of the D region in the rearranged sequence (1-based coordinate system).</td>
+        <td><code>d_sequence_end</code></td>
+        <td>The end position of the D region in the rearranged sequence (1-based coordinate system).</td>
         </tr>
         <tr>
-        <td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;"><code>j_sequence_start</code></td>
-        <td style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;">The start position of the J region in the rearranged sequence (1-based coordinate system).</td>
+        <td><code>j_sequence_start</code></td>
+        <td>The start position of the J region in the rearranged sequence (1-based coordinate system).</td>
         </tr>
         <tr>
-        <td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;"><code>j_sequence_end</code></td>
-        <td style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;">The end position of the J region in the rearranged sequence (1-based coordinate system).</td>
+        <td><code>j_sequence_end</code></td>
+        <td>The end position of the J region in the rearranged sequence (1-based coordinate system).</td>
         </tr>
         <tr>
-        <td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;"><code>c_sequence_start</code></td>
-        <td style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;">The start position of the C region in the rearranged sequence (1-based coordinate system).</td>
+        <td><code>c_sequence_start</code></td>
+        <td>The start position of the C region in the rearranged sequence (1-based coordinate system).</td>
         </tr>
         <tr>
-        <td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;"><code>c_sequence_end</code></td>
-        <td style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;">The end position of the C region in the rearranged sequence (1-based coordinate system).</td>
+        <td><code>c_sequence_end</code></td>
+        <td>The end position of the C region in the rearranged sequence (1-based coordinate system).</td>
         </tr>
         <tr>
-        <td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;"><code>consensus_count</code></td>
-        <td style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;">The total number of reads supporting this rearrangement, reflecting sequencing depth and sequence reliability.</td>
+        <td><code>consensus_count</code></td>
+        <td>The total number of reads supporting this rearrangement, reflecting sequencing depth and sequence reliability.</td>
         </tr>
         <tr>
-        <td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;"><code>duplicate_count</code></td>
-        <td style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;">The number of unique UMI molecules supporting this rearrangement, used for deduplication and quantitative analysis.</td>
+        <td><code>duplicate_count</code></td>
+        <td>The number of unique UMI molecules supporting this rearrangement, used for deduplication and quantitative analysis.</td>
         </tr>
         <tr>
-        <td align="left" style="padding: 12px 16px;"><code>is_cell</code></td>
-        <td style="padding: 12px 16px;">Indicates whether this rearrangement originates from a real cell (TRUE: cell; FALSE: background/empty droplet).</td>
+        <td><code>is_cell</code></td>
+        <td>Indicates whether this rearrangement originates from a real cell (TRUE: cell; FALSE: background/empty droplet).</td>
         </tr>
         </tbody>
         </table>
-
-</div>
-
-<div style="max-width: 1200px; margin: 0 auto;"><hr style="border: none; border-top: 1px solid #d2d2d7; margin: 24px 0;"></div>
-
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border: 1px solid #e5e5e5; margin: 20px auto; max-width: 1200px; ">
 
 #### all_contig_annotations.csv
 
@@ -405,144 +313,140 @@ Contains detailed annotation information for all contig sequences (from both cel
     *   The file is in CSV text format.
     *   The fields included in the file are shown in the table below:
 
-        <table style="width:100%; border-collapse: collapse; margin: 15px 0; border-radius: 8px; overflow: hidden;">
-        <thead style="background-color: #f5f5f7; border-bottom: 1px solid #d2d2d7;">
+        <table>
+        <thead>
         <tr>
-        <th width="25%" align="left" style="padding: 12px 16px; font-weight: 600; color: #1d1d1f;">Field Name</th>
-        <th width="75%" align="left" style="padding: 12px 16px; font-weight: 600; color: #1d1d1f;">Description</th>
+        <th width="25%">Field Name</th>
+        <th width="75%">Description</th>
         </tr>
         </thead>
         <tbody>
         <tr>
-        <td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;"><code>sample</code></td>
-        <td style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;">Sample name of the V(D)J library.</td>
+        <td><code>sample</code></td>
+        <td>Sample name of the V(D)J library.</td>
         </tr>
         <tr>
-        <td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;"><code>barcode</code></td>
-        <td style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;">The cell ID (or barcode) corresponding to this contig.</td>
+        <td><code>barcode</code></td>
+        <td>The cell ID (or barcode) corresponding to this contig.</td>
         </tr>
         <tr>
-        <td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;"><code>is_cell</code></td>
-        <td style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;">A boolean value indicating if this cell ID was identified as a cell (TRUE for cell, FALSE for background).</td>
+        <td><code>is_cell</code></td>
+        <td>A boolean value indicating if this cell ID was identified as a cell (TRUE for cell, FALSE for background).</td>
         </tr>
         <tr>
-        <td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;"><code>contig_id</code></td>
-        <td style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;">A unique identifier for this contig.</td>
+        <td><code>contig_id</code></td>
+        <td>A unique identifier for this contig.</td>
         </tr>
         <tr>
-        <td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;"><code>high_confidence</code></td>
-        <td style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;">A boolean value indicating if this contig was marked as high confidence (not likely to be a chimera or other artifact).</td>
+        <td><code>high_confidence</code></td>
+        <td>A boolean value indicating if this contig was marked as high confidence (not likely to be a chimera or other artifact).</td>
         </tr>
         <tr>
-        <td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;"><code>length</code></td>
-        <td style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;">The nucleotide length of the contig sequence (bp).</td>
+        <td><code>length</code></td>
+        <td>The nucleotide length of the contig sequence (bp).</td>
         </tr>
         <tr>
-        <td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;"><code>chain</code></td>
-        <td style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;">The chain type associated with this contig: TRA, TRB, IGK, IGL, or IGH.</td>
+        <td><code>chain</code></td>
+        <td>The chain type associated with this contig: TRA, TRB, IGK, IGL, or IGH.</td>
         </tr>
         <tr>
-        <td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;"><code>v_gene</code></td>
-        <td style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;">Top-scoring V gene segment call (e.g., TRAV1-1).</td>
+        <td><code>v_gene</code></td>
+        <td>Top-scoring V gene segment call (e.g., TRAV1-1).</td>
         </tr>
         <tr>
-        <td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;"><code>d_gene</code></td>
-        <td style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;">Top-scoring D gene segment call (e.g., TRBD1), when applicable.</td>
+        <td><code>d_gene</code></td>
+        <td>Top-scoring D gene segment call (e.g., TRBD1), when applicable.</td>
         </tr>
         <tr>
-        <td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;"><code>j_gene</code></td>
-        <td style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;">Top-scoring J gene segment call (e.g., TRAJ1-1).</td>
+        <td><code>j_gene</code></td>
+        <td>Top-scoring J gene segment call (e.g., TRAJ1-1).</td>
         </tr>
         <tr>
-        <td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;"><code>full_length</code></td>
-        <td style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;">Boolean flag indicating whether the contig is called full length.</td>
+        <td><code>full_length</code></td>
+        <td>Boolean flag indicating whether the contig is called full length.</td>
         </tr>
         <tr>
-        <td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;"><code>productive</code></td>
-        <td style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;">Boolean flag indicating whether the contig is called productive.</td>
+        <td><code>productive</code></td>
+        <td>Boolean flag indicating whether the contig is called productive.</td>
         </tr>
         <tr>
-        <td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;"><code>fwr1</code></td>
-        <td style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;">Predicted FWR1 amino acid sequence.</td>
+        <td><code>fwr1</code></td>
+        <td>Predicted FWR1 amino acid sequence.</td>
         </tr>
         <tr>
-        <td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;"><code>fwr1_nt</code></td>
-        <td style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;">Predicted FWR1 nucleotide sequence.</td>
+        <td><code>fwr1_nt</code></td>
+        <td>Predicted FWR1 nucleotide sequence.</td>
         </tr>
         <tr>
-        <td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;"><code>cdr1</code></td>
-        <td style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;">Predicted CDR1 amino acid sequence.</td>
+        <td><code>cdr1</code></td>
+        <td>Predicted CDR1 amino acid sequence.</td>
         </tr>
         <tr>
-        <td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;"><code>cdr1_nt</code></td>
-        <td style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;">Predicted CDR1 nucleotide sequence.</td>
+        <td><code>cdr1_nt</code></td>
+        <td>Predicted CDR1 nucleotide sequence.</td>
         </tr>
         <tr>
-        <td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;"><code>fwr2</code></td>
-        <td style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;">Predicted FWR2 amino acid sequence.</td>
+        <td><code>fwr2</code></td>
+        <td>Predicted FWR2 amino acid sequence.</td>
         </tr>
         <tr>
-        <td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;"><code>fwr2_nt</code></td>
-        <td style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;">Predicted FWR2 nucleotide sequence.</td>
+        <td><code>fwr2_nt</code></td>
+        <td>Predicted FWR2 nucleotide sequence.</td>
         </tr>
         <tr>
-        <td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;"><code>cdr2</code></td>
-        <td style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;">Predicted CDR2 amino acid sequence.</td>
+        <td><code>cdr2</code></td>
+        <td>Predicted CDR2 amino acid sequence.</td>
         </tr>
         <tr>
-        <td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;"><code>cdr2_nt</code></td>
-        <td style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;">Predicted CDR2 nucleotide sequence.</td>
+        <td><code>cdr2_nt</code></td>
+        <td>Predicted CDR2 nucleotide sequence.</td>
         </tr>
         <tr>
-        <td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;"><code>fwr3</code></td>
-        <td style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;">Predicted FWR3 amino acid sequence.</td>
+        <td><code>fwr3</code></td>
+        <td>Predicted FWR3 amino acid sequence.</td>
         </tr>
         <tr>
-        <td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;"><code>fwr3_nt</code></td>
-        <td style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;">Predicted FWR3 nucleotide sequence.</td>
+        <td><code>fwr3_nt</code></td>
+        <td>Predicted FWR3 nucleotide sequence.</td>
         </tr>
         <tr>
-        <td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;"><code>cdr3</code></td>
-        <td style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;">Predicted CDR3 amino acid sequence.</td>
+        <td><code>cdr3</code></td>
+        <td>Predicted CDR3 amino acid sequence.</td>
         </tr>
         <tr>
-        <td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;"><code>cdr3_nt</code></td>
-        <td style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;">Predicted CDR3 nucleotide sequence.</td>
+        <td><code>cdr3_nt</code></td>
+        <td>Predicted CDR3 nucleotide sequence.</td>
         </tr>
         <tr>
-        <td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;"><code>fwr4</code></td>
-        <td style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;">Predicted FWR4 amino acid sequence.</td>
+        <td><code>fwr4</code></td>
+        <td>Predicted FWR4 amino acid sequence.</td>
         </tr>
         <tr>
-        <td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;"><code>fwr4_nt</code></td>
-        <td style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;">Predicted FWR4 nucleotide sequence.</td>
+        <td><code>fwr4_nt</code></td>
+        <td>Predicted FWR4 nucleotide sequence.</td>
         </tr>
         <tr>
-        <td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;"><code>reads</code></td>
-        <td style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;">Number of reads aligned to this contig.</td>
+        <td><code>reads</code></td>
+        <td>Number of reads aligned to this contig.</td>
         </tr>
         <tr>
-        <td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;"><code>umis</code></td>
-        <td style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;">Number of distinct UMIs aligned to this contig.</td>
+        <td><code>umis</code></td>
+        <td>Number of distinct UMIs aligned to this contig.</td>
         </tr>
         <tr>
-        <td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;"><code>raw_clonotype_id</code></td>
-        <td style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;">Clonotype ID assigned to this cell barcode.</td>
+        <td><code>raw_clonotype_id</code></td>
+        <td>Clonotype ID assigned to this cell barcode.</td>
         </tr>
         <tr>
-        <td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;"><code>raw_consensus_id</code></td>
-        <td style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;">Consensus sequence ID assigned to this contig.</td>
+        <td><code>raw_consensus_id</code></td>
+        <td>Consensus sequence ID assigned to this contig.</td>
         </tr>
         <tr>
-        <td align="left" style="padding: 12px 16px;"><code>exact_subclonotype_id</code></td>
-        <td style="padding: 12px 16px;">Exact subclonotype ID assigned to this cell barcode.</td>
+        <td><code>exact_subclonotype_id</code></td>
+        <td>Exact subclonotype ID assigned to this cell barcode.</td>
         </tr>
         </tbody>
         </table>
-
-</div>
-
-<div style="max-width: 1200px; margin: 0 auto;"><hr style="border: none; border-top: 1px solid #d2d2d7; margin: 24px 0;"></div>
 
 #### all_contig.fasta
 
@@ -553,10 +457,6 @@ Contains the nucleotide sequences of all assembled contigs.
     *   **Data Integrity**: Provides the most original assembly results.
 *   **Content and Format**:
     *   Standard FASTA format, where each sequence corresponds to a contig, and the sequence identifier is the unique name of the contig.
-
-<div style="max-width: 1200px; margin: 0 auto;"><hr style="border: none; border-top: 1px solid #d2d2d7; margin: 24px 0;"></div>
-
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border: 1px solid #e5e5e5; margin: 20px auto; max-width: 1200px; ">
 
 #### filtered_contig_annotations.csv
 
@@ -569,10 +469,6 @@ A high-quality subset of `all_contig_annotations.csv`, containing only the annot
 *   **Content and Format**:
     *   The file format is identical to `all_contig_annotations.csv`.
 
-</div>
-
-<div style="max-width: 1200px; margin: 0 auto;"><hr style="border: none; border-top: 1px solid #d2d2d7; margin: 24px 0;"></div>
-
 #### filtered_contig.fasta
 
 A high-quality subset of `all_contig.fasta`, containing only high-quality contig sequences that have passed quality filtering and cell calling.
@@ -582,19 +478,9 @@ A high-quality subset of `all_contig.fasta`, containing only high-quality contig
 *   **Content and Format**:
     *   Standard FASTA format, with the sequence identifier being the contig ID.
 
-<div style="max-width: 1200px; margin: 0 auto;"><hr style="border: none; border-top: 1px solid #d2d2d7; margin: 24px 0;"></div>
-
 ### Clonotype Analysis Files <a id="clonotype-analysis-files"></a>
 
-<div align="center">
-
 **Core Content**: Precise identification, frequency statistics, and CDR3-sequence diversity analysis of TCR and BCR clonotypes.
-
-</div>
-
-<div style="max-width: 1200px; margin: 0 auto;"><hr style="border: none; border-top: 1px solid #d2d2d7; margin: 24px 0;"></div>
-
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border: 1px solid #e5e5e5; margin: 20px auto; max-width: 1200px; ">
 
 #### clonotypes.csv
 
@@ -609,42 +495,36 @@ A statistical analysis file for clonotypes, providing detailed descriptive infor
     *   The file is in CSV format.
     *   The fields included in the file are shown in the table below:
 
-        <table style="width:100%; border-collapse: collapse; margin: 15px 0; border-radius: 8px; overflow: hidden;">
-        <thead style="background-color: #f5f5f7; border-bottom: 1px solid #d2d2d7;">
+        <table>
+        <thead>
         <tr>
-        <th width="25%" align="left" style="padding: 12px 16px; font-weight: 600; color: #1d1d1f;">Field Name</th>
-        <th width="75%" align="left" style="padding: 12px 16px; font-weight: 600; color: #1d1d1f;">Detailed Description</th>
+        <th width="25%">Field Name</th>
+        <th width="75%">Detailed Description</th>
         </tr>
         </thead>
         <tbody>
         <tr>
-        <td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;"><code>clonotype_id</code></td>
-        <td style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;">A unique identifier for the clonotype assigned to this consensus sequence, used to link and track all related cells of a specific clonal group.</td>
+        <td><code>clonotype_id</code></td>
+        <td>A unique identifier for the clonotype assigned to this consensus sequence, used to link and track all related cells of a specific clonal group.</td>
         </tr>
         <tr>
-        <td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;"><code>frequency</code></td>
-        <td style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;">The absolute number of cells observed with this clonotype, reflecting the degree of clonal expansion and the strength of the immune response.</td>
+        <td><code>frequency</code></td>
+        <td>The absolute number of cells observed with this clonotype, reflecting the degree of clonal expansion and the strength of the immune response.</td>
         </tr>
         <tr>
-        <td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;"><code>proportion</code></td>
-        <td style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;">The relative proportion of cells of this clonotype within the total cell population, used to assess clonal dominance and diversity distribution.</td>
+        <td><code>proportion</code></td>
+        <td>The relative proportion of cells of this clonotype within the total cell population, used to assess clonal dominance and diversity distribution.</td>
         </tr>
         <tr>
-        <td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;"><code>cdr3s_aa</code></td>
-        <td style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;">A semicolon-separated list of chain:sequence pairs, formatted as "chain_name:CDR3_amino_acid_sequence".</td>
+        <td><code>cdr3s_aa</code></td>
+        <td>A semicolon-separated list of chain:sequence pairs, formatted as "chain_name:CDR3_amino_acid_sequence".</td>
         </tr>
         <tr>
-        <td align="left" style="padding: 12px 16px;"><code>cdr3s_nt</code></td>
-        <td style="padding: 12px 16px;">A semicolon-separated list of chain:sequence pairs, formatted as "chain_name:CDR3_nucleotide_sequence".</td>
+        <td><code>cdr3s_nt</code></td>
+        <td>A semicolon-separated list of chain:sequence pairs, formatted as "chain_name:CDR3_nucleotide_sequence".</td>
         </tr>
         </tbody>
         </table>
-
-</div>
-
-<div style="max-width: 1200px; margin: 0 auto;"><hr style="border: none; border-top: 1px solid #d2d2d7; margin: 24px 0;"></div>
-
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border: 1px solid #e5e5e5; margin: 20px auto; max-width: 1200px; ">
 
 #### consensus_annotations.csv
 
@@ -656,82 +536,76 @@ Provides detailed annotation information for each clonotype consensus sequence.
 *   **Content and Format**:
     *   The file is in CSV format.
     *   The fields included are shown in the table below:
-    <table style="width:100%; border-collapse: collapse; margin: 15px 0; border-radius: 8px; overflow: hidden;">
-    <thead style="background-color: #f5f5f7; border-bottom: 1px solid #d2d2d7;">
+    <table>
+    <thead>
     <tr>
-    <th width="25%" align="left" style="padding: 12px 16px; font-weight: 600; color: #1d1d1f;">Field Name</th>
-    <th width="75%" align="left" style="padding: 12px 16px; font-weight: 600; color: #1d1d1f;">Description</th>
+    <th width="25%">Field Name</th>
+    <th width="75%">Description</th>
     </tr>
     </thead>
     <tbody>
     <tr>
-    <td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;"><code>clonotype_id</code></td>
-    <td style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;">Clonotype ID assigned to this consensus sequence, corresponding to the clonotype identifier in <code>clonotypes.csv</code>.</td>
+    <td><code>clonotype_id</code></td>
+    <td>Clonotype ID assigned to this consensus sequence, corresponding to the clonotype identifier in <code>clonotypes.csv</code>.</td>
     </tr>
     <tr>
-    <td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;"><code>consensus_id</code></td>
-    <td style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;">Unique identifier for the consensus sequence, used to link sequence records in FASTA files.</td>
+    <td><code>consensus_id</code></td>
+    <td>Unique identifier for the consensus sequence, used to link sequence records in FASTA files.</td>
     </tr>
     <tr>
-    <td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;"><code>sample</code></td>
-    <td style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;">Sample name of the V(D)J library.</td>
+    <td><code>sample</code></td>
+    <td>Sample name of the V(D)J library.</td>
     </tr>
     <tr>
-    <td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;"><code>length</code></td>
-    <td style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;">Nucleotide length of the consensus sequence.</td>
+    <td><code>length</code></td>
+    <td>Nucleotide length of the consensus sequence.</td>
     </tr>
     <tr>
-    <td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;"><code>chain</code></td>
-    <td style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;">Chain type associated with this consensus sequence: TRA, TRB, IGK, IGL, or IGH.</td>
+    <td><code>chain</code></td>
+    <td>Chain type associated with this consensus sequence: TRA, TRB, IGK, IGL, or IGH.</td>
     </tr>
     <tr>
-    <td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;"><code>v_gene</code></td>
-    <td style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;">Top-scoring V gene call.</td>
+    <td><code>v_gene</code></td>
+    <td>Top-scoring V gene call.</td>
     </tr>
     <tr>
-    <td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;"><code>d_gene</code></td>
-    <td style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;">Top-scoring D gene call (if applicable).</td>
+    <td><code>d_gene</code></td>
+    <td>Top-scoring D gene call (if applicable).</td>
     </tr>
     <tr>
-    <td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;"><code>j_gene</code></td>
-    <td style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;">Top-scoring J gene call.</td>
+    <td><code>j_gene</code></td>
+    <td>Top-scoring J gene call.</td>
     </tr>
     <tr>
-    <td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;"><code>c_gene</code></td>
-    <td style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;">Top-scoring C gene call.</td>
+    <td><code>c_gene</code></td>
+    <td>Top-scoring C gene call.</td>
     </tr>
     <tr>
-    <td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;"><code>full_length</code></td>
-    <td style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;">Boolean flag indicating whether this consensus sequence is full length.</td>
+    <td><code>full_length</code></td>
+    <td>Boolean flag indicating whether this consensus sequence is full length.</td>
     </tr>
     <tr>
-    <td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;"><code>productive</code></td>
-    <td style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;">Boolean flag indicating whether this consensus sequence is productive.</td>
+    <td><code>productive</code></td>
+    <td>Boolean flag indicating whether this consensus sequence is productive.</td>
     </tr>
     <tr>
-    <td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;"><code>cdr3</code></td>
-    <td style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;">Predicted CDR3 amino acid sequence.</td>
+    <td><code>cdr3</code></td>
+    <td>Predicted CDR3 amino acid sequence.</td>
     </tr>
     <tr>
-    <td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;"><code>cdr3_nt</code></td>
-    <td style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;">Predicted CDR3 nucleotide sequence.</td>
+    <td><code>cdr3_nt</code></td>
+    <td>Predicted CDR3 nucleotide sequence.</td>
     </tr>
     <tr>
-    <td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;"><code>reads</code></td>
-    <td style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;">Total number of reads supporting this consensus sequence.</td>
+    <td><code>reads</code></td>
+    <td>Total number of reads supporting this consensus sequence.</td>
     </tr>
     <tr>
-    <td align="left" style="padding: 12px 16px;"><code>umis</code></td>
-    <td style="padding: 12px 16px;">Number of distinct UMIs supporting this consensus sequence.</td>
+    <td><code>umis</code></td>
+    <td>Number of distinct UMIs supporting this consensus sequence.</td>
     </tr>
     </tbody>
     </table>
-
-</div>
-
-<div style="max-width: 1200px; margin: 0 auto;"><hr style="border: none; border-top: 1px solid #d2d2d7; margin: 24px 0;"></div>
-
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border: 1px solid #e5e5e5; margin: 20px auto; max-width: 1200px; ">
 
 #### consensus.fasta
 
@@ -744,21 +618,9 @@ A FASTA file containing the consensus sequence for each clonotype.
 *   **Content and Format**:
     *   Standard FASTA format, with the sequence identifier being the `consensus_id`.
 
-</div>
-
-<div style="max-width: 1200px; margin: 0 auto;"><hr style="border: none; border-top: 1px solid #d2d2d7; margin: 24px 0;"></div>
-
 ### Analysis Metrics Summary <a id="analysis-metrics-summary"></a>
 
-<div align="center">
-
 **Core Content**: A comprehensive evaluation and summary of statistical metrics for V(D)J assembly quality, providing complete data quality control information.
-
-</div>
-
-<div style="max-width: 1200px; margin: 0 auto;"><hr style="border: none; border-top: 1px solid #d2d2d7; margin: 24px 0;"></div>
-
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border: 1px solid #e5e5e5; margin: 20px auto; max-width: 1200px; ">
 
 #### metrics_summary.xls
 
@@ -771,39 +633,39 @@ A summary table of key analysis metrics in Excel format, providing a structured 
 *   **Content and Format**:
     *   Includes five main categories of key metrics:
 
-        <table style="width:100%; border-collapse: collapse; margin: 15px 0; border-radius: 8px; overflow: hidden;">
-        <thead style="background-color: #f5f5f7; border-bottom: 1px solid #d2d2d7;">
+        <table>
+        <thead>
         <tr>
-        <th width="25%" align="left" style="padding: 12px 16px; font-weight: 600; color: #1d1d1f;">Metric Category</th>
-        <th width="75%" align="left" style="padding: 12px 16px; font-weight: 600; color: #1d1d1f;">Content Included</th>
+        <th width="25%">Metric Category</th>
+        <th width="75%">Content Included</th>
         </tr>
         </thead>
         <tbody>
         <tr>
-        <td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;"><strong>Basic Statistics</strong></td>
-        <td style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;">Total reads, valid barcode ratio, UMI quality, Q30 base quality, etc.</td>
+        <td><strong>Basic Statistics</strong></td>
+        <td>Total reads, valid barcode ratio, UMI quality, Q30 base quality, etc.</td>
         </tr>
         <tr>
-        <td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;"><strong>Cell Identification</strong></td>
-        <td style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;">Estimated number of cells, fraction of reads in cells, mean reads per cell, etc.</td>
+        <td><strong>Cell Identification</strong></td>
+        <td>Estimated number of cells, fraction of reads in cells, mean reads per cell, etc.</td>
         </tr>
         <tr>
-        <td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;"><strong>Gene Mapping</strong></td>
-        <td style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;">V(D)J gene mapping ratio, chain-specific mapping statistics, gene usage analysis.</td>
+        <td><strong>Gene Mapping</strong></td>
+        <td>V(D)J gene mapping ratio, chain-specific mapping statistics, gene usage analysis.</td>
         </tr>
         <tr>
-        <td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;"><strong>Assembly Quality</strong></td>
-        <td style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;">Full-length sequence ratio, productive sequence ratio, CDR3 identification Success.</td>
+        <td><strong>Assembly Quality</strong></td>
+        <td>Full-length sequence ratio, productive sequence ratio, CDR3 identification Success.</td>
         </tr>
         <tr>
-        <td align="left" style="padding: 12px 16px;"><strong>Clonotype Analysis</strong></td>
-        <td style="padding: 12px 16px;">Clonotype diversity, pairing success rate, major clonotype frequencies.</td>
+        <td><strong>Clonotype Analysis</strong></td>
+        <td>Clonotype diversity, pairing success rate, major clonotype frequencies.</td>
         </tr>
         </tbody>
         </table>
 
     *   Built-in recommended quality control standards for user convenience:
-        <details open>
+        <details markdown="block" open>
         <summary><strong>Recommended Quality Thresholds:</strong></summary>
         <ul>
         <li><strong>Valid Barcode Rate</strong>: >70%</li>
@@ -813,12 +675,6 @@ A summary table of key analysis metrics in Excel format, providing a structured 
         <li><strong>Mean Reads per Cell</strong>: >5,000</li>
         </ul>
         </details>
-
-</div>
-
-<div style="max-width: 1200px; margin: 0 auto;"><hr style="border: none; border-top: 1px solid #d2d2d7; margin: 24px 0;"></div>
-
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border: 1px solid #e5e5e5; margin: 20px auto; max-width: 1200px; ">
 
 #### *_scVDJ_TR(IG)_report.html
 
@@ -832,19 +688,9 @@ An interactive HTML report for reviewing analysis results.
 *   **Content and Format**:
     *   Can be opened in any modern browser without an internet connection.
 
-</div>
-
-<div style="max-width: 1200px; margin: 0 auto;"><hr style="border: none; border-top: 1px solid #d2d2d7; margin: 24px 0;"></div>
-
-<br>
-
 ## Web Report Interpretation <a id="web-report-interpretation"></a>
 
-<div align="center">
-
 **Overview**: The HTML web report provides visual summaries and metric explanations for single-cell V(D)J sequencing results, including key performance indicators for experimental quality and immune receptor analysis.
-
-</div>
 
 The HTML web report is the main entry point for reviewing single-cell V(D)J sequencing results. It covers cell calling, sequencing quality, V(D)J enrichment, productive pairing, and clonotype abundance, and helps users identify metrics that require further review.
 
@@ -854,206 +700,176 @@ The HTML web report is the main entry point for reviewing single-cell V(D)J sequ
 
 ### Main Report Content and Structure
 
-<div align="center">
 <img src="../images/html_scvdj1.png" alt="scVDJ Web Report" width="500">
-</div>
-
-<br>
 
 ### Detailed Explanation of Core Analysis Metrics
 
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border: 1px solid #e5e5e5; margin: 20px auto; max-width: 1200px; ">
-
 #### V(D)J Analysis Metrics <a id="vdj-analysis-metrics"></a>
-
-<div align="center">
 
 **Core Function**: Cell identification, quality assessment, and immune receptor assembly statistics.
 
-</div>
-
 **Quality Control Standards:**
 
-<table style="width:100%; border-collapse: collapse; margin: 15px 0; border-radius: 8px; overflow: hidden;">
-<thead style="background-color: #f5f5f7; border-bottom: 1px solid #d2d2d7;">
+<table>
+<thead>
 <tr>
-<th width="25%" align="left" style="padding: 12px 16px; font-weight: 600; color: #1d1d1f;">Metric Name</th>
-<th width="30%" align="left" style="padding: 12px 16px; font-weight: 600; color: #1d1d1f;">Recommended</th>
-<th width="30%" align="left" style="padding: 12px 16px; font-weight: 600; color: #1d1d1f;">Acceptable</th>
-<th width="15%" align="left" style="padding: 12px 16px; font-weight: 600; color: #1d1d1f;">Needs Improvement</th>
+<th width="25%">Metric Name</th>
+<th width="30%">Recommended</th>
+<th width="30%">Acceptable</th>
+<th width="15%">Needs Improvement</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;"><strong>Mean reads per cell</strong></td>
-<td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;">≥ 10,000</td>
-<td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;">5,000–10,000</td>
-<td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;">< 5,000</td>
+<td><strong>Mean reads per cell</strong></td>
+<td>≥ 10,000</td>
+<td>5,000–10,000</td>
+<td>< 5,000</td>
 </tr>
 <tr>
-<td align="left" style="padding: 12px 16px;"><strong>Fraction of Reads in Cells</strong></td>
-<td align="left" style="padding: 12px 16px;">≥ 50%</td>
-<td align="left" style="padding: 12px 16px;">20–50%</td>
-<td align="left" style="padding: 12px 16px;">< 20%</td>
+<td><strong>Fraction of Reads in Cells</strong></td>
+<td>≥ 50%</td>
+<td>20–50%</td>
+<td>< 20%</td>
 </tr>
 </tbody>
 </table>
 
 **Detailed Metric Explanations:**
 
-<table style="width:100%; border-collapse: collapse; margin: 15px 0; border-radius: 8px; overflow: hidden;">
-<thead style="background-color: #f5f5f7; border-bottom: 1px solid #d2d2d7;">
+<table>
+<thead>
 <tr>
-<th width="30%" align="left" style="padding: 12px 16px; font-weight: 600; color: #1d1d1f;">Metric Name</th>
-<th width="70%" align="left" style="padding: 12px 16px; font-weight: 600; color: #1d1d1f;">Detailed Explanation and Technical Requirements</th>
+<th width="30%">Metric Name</th>
+<th width="70%">Detailed Explanation and Technical Requirements</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;"><strong>Estimated number of cells</strong></td>
-<td style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;">Estimated number of barcodes associated with cells expressing target V(D)J transcripts. Interpret this value together with loaded cell number, target B/T-cell proportion, sample integrity, enrichment efficiency, and sequencing depth.</td>
+<td><strong>Estimated number of cells</strong></td>
+<td>Estimated number of barcodes associated with cells expressing target V(D)J transcripts. Interpret this value together with loaded cell number, target B/T-cell proportion, sample integrity, enrichment efficiency, and sequencing depth.</td>
 </tr>
 <tr>
-<td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;"><strong>Mean reads per cell</strong></td>
-<td style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;">Ratio of total sequencing read pairs to estimated valid cells. A depth of ≥ 5,000 read pairs per cell is recommended; insufficient depth may reduce cell calling accuracy, contig assembly completeness, and clonotype identification stability.</td>
+<td><strong>Mean reads per cell</strong></td>
+<td>Ratio of total sequencing read pairs to estimated valid cells. A depth of ≥ 5,000 read pairs per cell is recommended; insufficient depth may reduce cell calling accuracy, contig assembly completeness, and clonotype identification stability.</td>
 </tr>
 <tr>
-<td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;"><strong>Fraction of Reads in Cells</strong></td>
-<td style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;">Ratio of reads with cell-associated barcodes to total valid-barcode reads. Higher values usually indicate better cell capture and lower background; low values may suggest poor sample quality, inappropriate cell concentration, library issues, or elevated background reads.</td>
+<td><strong>Fraction of Reads in Cells</strong></td>
+<td>Ratio of reads with cell-associated barcodes to total valid-barcode reads. Higher values usually indicate better cell capture and lower background; low values may suggest poor sample quality, inappropriate cell concentration, library issues, or elevated background reads.</td>
 </tr>
 <tr>
-<td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;"><strong>Median UMIs per cell</strong></td>
-<td style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;">Median UMI count assigned to specific receptor chains such as IGH, TRA, TRB, IGK, and IGL. Used to assess receptor transcript capture and expression strength per cell.</td>
+<td><strong>Median UMIs per cell</strong></td>
+<td>Median UMI count assigned to specific receptor chains such as IGH, TRA, TRB, IGK, and IGL. Used to assess receptor transcript capture and expression strength per cell.</td>
 </tr>
 <tr>
-<td align="left" style="padding: 12px 16px;"><strong>Productive contig metrics</strong></td>
-<td style="padding: 12px 16px;">Statistics for cells with productive V-J spanning rearrangements. These metrics indicate the fraction of cells suitable for functional TCR/BCR analysis and clonotype interpretation.</td>
+<td><strong>Productive contig metrics</strong></td>
+<td>Statistics for cells with productive V-J spanning rearrangements. These metrics indicate the fraction of cells suitable for functional TCR/BCR analysis and clonotype interpretation.</td>
 </tr>
 </tbody>
 </table>
-
-</div>
-
-<div style="max-width: 1200px; margin: 0 auto;"><hr style="border: none; border-top: 1px solid #d2d2d7; margin: 24px 0;"></div>
-
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border: 1px solid #e5e5e5; margin: 20px auto; max-width: 1200px; ">
 
 #### Sequencing Metrics <a id="sequencing-metrics"></a>
 
-<div align="center">
-
 **Core Function**: Basic quality assessment of sequencing data.
-
-</div>
 
 **Quality Control Standards:**
 
-<table style="width:100%; border-collapse: collapse; margin: 15px 0; border-radius: 8px; overflow: hidden;">
-<thead style="background-color: #f5f5f7; border-bottom: 1px solid #d2d2d7;">
+<table>
+<thead>
 <tr>
-<th width="25%" align="left" style="padding: 12px 16px; font-weight: 600; color: #1d1d1f;">Metric Name</th>
-<th width="30%" align="left" style="padding: 12px 16px; font-weight: 600; color: #1d1d1f;">Recommended</th>
-<th width="30%" align="left" style="padding: 12px 16px; font-weight: 600; color: #1d1d1f;">Acceptable</th>
-<th width="15%" align="left" style="padding: 12px 16px; font-weight: 600; color: #1d1d1f;">Needs Improvement</th>
+<th width="25%">Metric Name</th>
+<th width="30%">Recommended</th>
+<th width="30%">Acceptable</th>
+<th width="15%">Needs Improvement</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;"><strong>Valid barcodes</strong></td>
-<td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;">≥ 80%</td>
-<td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;">70–80%</td>
-<td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;">< 70%</td>
+<td><strong>Valid barcodes</strong></td>
+<td>≥ 80%</td>
+<td>70–80%</td>
+<td>< 70%</td>
 </tr>
 <tr>
-<td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;"><strong>Valid UMIs</strong></td>
-<td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;">≥ 80%</td>
-<td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;">70–80%</td>
-<td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;">< 70%</td>
+<td><strong>Valid UMIs</strong></td>
+<td>≥ 80%</td>
+<td>70–80%</td>
+<td>< 70%</td>
 </tr>
 <tr>
-<td align="left" style="padding: 12px 16px;"><strong>Q30 Base Quality</strong></td>
-<td align="left" style="padding: 12px 16px;">≥ 85%</td>
-<td align="left" style="padding: 12px 16px;">75–85%</td>
-<td align="left" style="padding: 12px 16px;">< 75%</td>
+<td><strong>Q30 Base Quality</strong></td>
+<td>≥ 85%</td>
+<td>75–85%</td>
+<td>< 75%</td>
 </tr>
 </tbody>
 </table>
 
 **Detailed Metric Explanations:**
 
-<table style="width:100%; border-collapse: collapse; margin: 15px 0; border-radius: 8px; overflow: hidden;">
-<thead style="background-color: #f5f5f7; border-bottom: 1px solid #d2d2d7;">
+<table>
+<thead>
 <tr>
-<th width="30%" align="left" style="padding: 12px 16px; font-weight: 600; color: #1d1d1f;">Metric Name</th>
-<th width="70%" align="left" style="padding: 12px 16px; font-weight: 600; color: #1d1d1f;">Detailed Explanation and Significance</th>
+<th width="30%">Metric Name</th>
+<th width="70%">Detailed Explanation and Significance</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;"><strong>Valid barcodes</strong></td>
-<td style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;">Proportion of reads whose cell barcode matches the whitelist. This metric assesses barcode recognition stability and whether reads can be assigned to cells correctly.</td>
+<td><strong>Valid barcodes</strong></td>
+<td>Proportion of reads whose cell barcode matches the whitelist. This metric assesses barcode recognition stability and whether reads can be assigned to cells correctly.</td>
 </tr>
 <tr>
-<td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;"><strong>Valid UMIs</strong></td>
-<td style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;">Proportion of UMIs without `N` bases and not homopolymers. This metric assesses whether UMI sequences can support reliable molecular deduplication and counting.</td>
+<td><strong>Valid UMIs</strong></td>
+<td>Proportion of UMIs without `N` bases and not homopolymers. This metric assesses whether UMI sequences can support reliable molecular deduplication and counting.</td>
 </tr>
 <tr>
-<td align="left" style="padding: 12px 16px;"><strong>Q30 Base Quality</strong></td>
-<td style="padding: 12px 16px;">Proportion of bases with quality score Q30 or higher. Q30 corresponds to a sequencing error rate below 0.1% and supports accurate barcode recognition, UMI counting, and V(D)J sequence assembly.</td>
+<td><strong>Q30 Base Quality</strong></td>
+<td>Proportion of bases with quality score Q30 or higher. Q30 corresponds to a sequencing error rate below 0.1% and supports accurate barcode recognition, UMI counting, and V(D)J sequence assembly.</td>
 </tr>
 </tbody>
 </table>
 
-</div>
-
-<div style="max-width: 1200px; margin: 0 auto;"><hr style="border: none; border-top: 1px solid #d2d2d7; margin: 24px 0;"></div>
-
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border: 1px solid #e5e5e5; margin: 20px auto; max-width: 1200px; ">
-
 #### Enrichment Metrics <a id="enrichment-metrics"></a>
 
-<div align="center">
-
 **Core Function**: Evaluation of V(D)J gene enrichment efficiency, reflecting the capture performance of immune receptor sequences.
-
-</div>
 
 **Quality Control Standards:**
 
 > **Note**: The following standards are for reference only. Actual quality assessment should consider tissue type, cell state, and experimental objectives.
 
-<table style="width:100%; border-collapse: collapse; margin: 15px 0; border-radius: 8px; overflow: hidden;">
-<thead style="background-color: #f5f5f7; border-bottom: 1px solid #d2d2d7;">
+<table>
+<thead>
 <tr>
-<th width="25%" align="left" style="padding: 12px 16px; font-weight: 600; color: #1d1d1f;">Metric Category</th>
-<th width="25%" align="left" style="padding: 12px 16px; font-weight: 600; color: #1d1d1f;">Recommended</th>
-<th width="25%" align="left" style="padding: 12px 16px; font-weight: 600; color: #1d1d1f;">Acceptable</th>
-<th width="25%" align="left" style="padding: 12px 16px; font-weight: 600; color: #1d1d1f;">Needs Improvement</th>
+<th width="25%">Metric Category</th>
+<th width="25%">Recommended</th>
+<th width="25%">Acceptable</th>
+<th width="25%">Needs Improvement</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left" style="padding: 12px 16px;"><strong>Reads mapped to any V(D)J gene</strong></td>
-<td align="left" style="padding: 12px 16px;">≥ 50%</td>
-<td align="left" style="padding: 12px 16px;">30–50%</td>
-<td align="left" style="padding: 12px 16px;">< 30%</td>
+<td><strong>Reads mapped to any V(D)J gene</strong></td>
+<td>≥ 50%</td>
+<td>30–50%</td>
+<td>< 30%</td>
 </tr>
 </tbody>
 </table>
 
 **Detailed Metric Explanations:**
 
-<table style="width:100%; border-collapse: collapse; margin: 15px 0; border-radius: 8px; overflow: hidden;">
-<thead style="background-color: #f5f5f7; border-bottom: 1px solid #d2d2d7;">
+<table>
+<thead>
 <tr>
-<th width="30%" align="left" style="padding: 12px 16px; font-weight: 600; color: #1d1d1f;">Metric Name</th>
-<th width="70%" align="left" style="padding: 12px 16px; font-weight: 600; color: #1d1d1f;">Detailed Explanation and Significance</th>
+<th width="30%">Metric Name</th>
+<th width="70%">Detailed Explanation and Significance</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;"><strong>Reads mapped to any V(D)J gene</strong><br><em>Fraction of reads mapped to V(D)J genes</em></td>
-<td style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;">
+<td><strong>Reads mapped to any V(D)J gene</strong><br><em>Fraction of reads mapped to V(D)J genes</em></td>
+<td>
 <ul>
 <li><strong>Definition</strong>: Fraction of reads with valid barcodes that partially or fully map to any germline V(D)J gene segment.</li>
 <li><strong>Interpretation (&lt;30%)</strong>: May indicate low B/T-cell proportion, degraded sample quality, insufficient enrichment efficiency, or reference mismatch.</li>
@@ -1061,8 +877,8 @@ The HTML web report is the main entry point for reviewing single-cell V(D)J sequ
 </td>
 </tr>
 <tr>
-<td align="left" style="padding: 12px 16px;"><strong>Reads mapped to TRA/TRB/IGH/IGK/IGL</strong><br><em>Chain-specific mapping fractions</em></td>
-<td style="padding: 12px 16px;">
+<td><strong>Reads mapped to TRA/TRB/IGH/IGK/IGL</strong><br><em>Chain-specific mapping fractions</em></td>
+<td>
 <ul>
 <li><strong>TRA vs TRB</strong>: TRA expression is often lower than TRB; this ratio helps assess whether TCR chain capture is consistent with expectations.</li>
 <li><strong>IGH vs IGK/IGL</strong>: Heavy and light chain mapping fractions jointly reflect BCR chain usage and relative expression abundance.</li>
@@ -1073,153 +889,105 @@ The HTML web report is the main entry point for reviewing single-cell V(D)J sequ
 </tbody>
 </table>
 
-</div>
-
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border: 1px solid #e5e5e5; margin: 20px auto; max-width: 1200px; ">
-
 #### V(D)J Annotation Metrics <a id="vdj-annotation-metrics"></a>
-
-<div align="center">
 
 **Core Function**: Productive rearrangement pairing analysis to evaluate functional immune receptor expression.
 
-</div>
-
 **Quality Control Standards:**
 
-<table style="width:100%; border-collapse: collapse; margin: 15px 0; border-radius: 8px; overflow: hidden;">
-<thead style="background-color: #f5f5f7; border-bottom: 1px solid #d2d2d7;">
+<table>
+<thead>
 <tr>
-<th width="25%" align="left" style="padding: 12px 16px; font-weight: 600; color: #1d1d1f;">Metric Name</th>
-<th width="25%" align="left" style="padding: 12px 16px; font-weight: 600; color: #1d1d1f;">Recommended</th>
-<th width="25%" align="left" style="padding: 12px 16px; font-weight: 600; color: #1d1d1f;">Acceptable</th>
-<th width="25%" align="left" style="padding: 12px 16px; font-weight: 600; color: #1d1d1f;">Needs Improvement</th>
+<th width="25%">Metric Name</th>
+<th width="25%">Recommended</th>
+<th width="25%">Acceptable</th>
+<th width="25%">Needs Improvement</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left" style="padding: 12px 16px;"><strong>Cells with productive V-J spanning pair</strong></td>
-<td align="left" style="padding: 12px 16px;">≥ 40%</td>
-<td align="left" style="padding: 12px 16px;">20–40%</td>
-<td align="left" style="padding: 12px 16px;">< 20%</td>
+<td><strong>Cells with productive V-J spanning pair</strong></td>
+<td>≥ 40%</td>
+<td>20–40%</td>
+<td>< 20%</td>
 </tr>
 </tbody>
 </table>
 
 **Detailed Metric Explanations:**
 
-<table style="width:100%; border-collapse: collapse; margin: 15px 0; border-radius: 8px; overflow: hidden;">
-<thead style="background-color: #f5f5f7; border-bottom: 1px solid #d2d2d7;">
+<table>
+<thead>
 <tr>
-<th width="30%" align="left" style="padding: 12px 16px; font-weight: 600; color: #1d1d1f;">Metric Name</th>
-<th width="70%" align="left" style="padding: 12px 16px; font-weight: 600; color: #1d1d1f;">Detailed Explanation and Technical Requirements</th>
+<th width="30%">Metric Name</th>
+<th width="70%">Detailed Explanation and Technical Requirements</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;"><strong>Number of Cells with Productive V-J Spanning Pair</strong></td>
-<td style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;">Absolute number of cells with at least one productive paired receptor (TRA/TRB or heavy/light chain pair). This metric indicates the number of cells available for functional TCR/BCR pairing analysis.</td>
+<td><strong>Number of Cells with Productive V-J Spanning Pair</strong></td>
+<td>Absolute number of cells with at least one productive paired receptor (TRA/TRB or heavy/light chain pair). This metric indicates the number of cells available for functional TCR/BCR pairing analysis.</td>
 </tr>
 <tr>
-<td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;"><strong>Cells with productive V-J spanning pair</strong></td>
-<td style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;">
+<td><strong>Cells with productive V-J spanning pair</strong></td>
+<td>
 Percentage of cell-associated barcodes with at least one complete receptor pair where both chains are productive. This metric indicates the fraction of cells suitable for reliable clonotype analysis and functional receptor interpretation. Productive contigs require a full V-to-J span, valid start codon, complete in-frame CDR3, and no premature stop codon.
 </td>
 </tr>
 <tr>
-<td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;"><strong>Cells with productive V-J spanning (IGK, IGH) pair</strong></td>
-<td style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;">BCR-specific metric showing the fraction of cells with productive IGK/IGH pairing. It depends on the proportion of kappa-chain expressing B-cell subpopulations and should be interpreted together with IGL/IGH pairing.</td>
+<td><strong>Cells with productive V-J spanning (IGK, IGH) pair</strong></td>
+<td>BCR-specific metric showing the fraction of cells with productive IGK/IGH pairing. It depends on the proportion of kappa-chain expressing B-cell subpopulations and should be interpreted together with IGL/IGH pairing.</td>
 </tr>
 <tr>
-<td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;"><strong>Cells with productive V-J spanning (IGL, IGH) pair</strong></td>
-<td style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;">BCR-specific metric showing the fraction of cells with productive IGL/IGH pairing. It complements the IGK/IGH metric and helps characterize B-cell light-chain usage.</td>
+<td><strong>Cells with productive V-J spanning (IGL, IGH) pair</strong></td>
+<td>BCR-specific metric showing the fraction of cells with productive IGL/IGH pairing. It complements the IGK/IGH metric and helps characterize B-cell light-chain usage.</td>
 </tr>
 <tr>
-<td align="left" style="padding: 12px 16px;"><strong>Cells with productive V-J spanning (TRA, TRB) pair</strong></td>
-<td style="padding: 12px 16px;">TCR-specific metric showing the fraction of cells with productive TRA/TRB pairing. Higher values generally indicate more cells available for functional alpha-beta TCR analysis.</td>
+<td><strong>Cells with productive V-J spanning (TRA, TRB) pair</strong></td>
+<td>TCR-specific metric showing the fraction of cells with productive TRA/TRB pairing. Higher values generally indicate more cells available for functional alpha-beta TCR analysis.</td>
 </tr>
 </tbody>
 </table>
 
-</div>
-
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border: 1px solid #e5e5e5; margin: 20px auto; max-width: 1200px; ">
-
 #### Visualization Chart 1 <a id="visualization-chart-1"></a>
 
-<div align="center">
-
 **Core Function**: Multi-dimensional visualization for V(D)J cell QC, UMI analysis, and receptor expression assessment.
-
-</div>
 
 ##### V(D)J Barcode Rank Plot
 
 **Chart Function:** Visualizes per-cell UMI distribution (productive contigs only), showing cell-calling quality and background level.
 
-<div align="center">
 <img src="../images/html_scvdj3.jpg" alt="V(D)J Barcode Rank Plot" width="400">
-</div>
 
-<p><strong>How to Interpret:</strong></p>
+**How to Interpret:**
+
 <ul>
   <li><strong>Axes</strong>: X-axis (Barcode Rank) shows cell barcodes ranked by total UMI counts (log scale); Y-axis (UMI Counts) shows total UMIs per cell (log scale).</li>
   <li><strong>Visual encoding</strong>: Blue line indicates called valid cells; gray line indicates background/noise; blue gradient zone indicates a transitional mixed region.</li>
   <li><strong>Quality assessment</strong>: A steeper drop typically indicates clearer separation between called cells and background. In BCR datasets, a subgroup with very high UMIs may appear and often represents plasma cells or plasmablasts with high immunoglobulin expression.</li>
 </ul>
 
-</div>
-
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border: 1px solid #e5e5e5; margin: 20px auto; max-width: 1200px; ">
-
 #### Visualization Chart 2 <a id="visualization-chart-2"></a>
 
-<div align="center">
-
 **Core Function**: Visualization of clonotype abundance and immune receptor diversity.
-
-</div>
 
 ##### Clonotype Abundance Analysis
 
 **Chart Function:** Shows the relative abundance distribution of clonotypes and helps assess whether the immune response is dominated by a small number of expanded clones.
 
-<div align="center">
 <img src="../images/html_scvdj2.png" alt="scVDJ clonotype analysis charts" width="500">
-</div>
 
-<p><strong>How to Interpret:</strong></p>
+**How to Interpret:**
+
 <ul>
   <li><strong>Top panel (Top 10 Clonotypes)</strong>: Bar chart of cell percentages for the top 10 clonotypes. More concentrated proportions usually indicate stronger clonal expansion.</li>
   <li><strong>Bottom table (Detail table)</strong>: Detailed information for the top 10 clonotypes, including clonotype ID, CDR3 amino acid/nucleotide sequences, absolute frequency, and relative proportion.</li>
 </ul>
 
-</div>
-
-<div style="background: #f5f5f7; border-radius: 12px; padding: 24px; margin: 24px auto; max-width: 1200px;">
-
 ## Related Documentation
-
-</div>
-
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; margin: 20px auto; max-width: 1200px; border: 1px solid #e5e5e5; box-shadow: 0 1px 3px rgba(0,0,0,0.1);" markdown="1">
 
 | Document | Description |
 | :--- | :--- |
 | [scVDJ Pipeline](../pipeline/scVDJ.en.md) | Detailed scVDJ analysis workflow |
 | [scVDJ Parameters](../parameter/scVDJ.en.md) | Command parameter reference |
 | [Output Files](./outs.en.md) | Return to output documentation index |
-
-</div>
-
-<div style="max-width: 1200px; margin: 0 auto;"><hr style="border: none; border-top: 1px solid #d2d2d7; margin: 24px 0;"></div>
-
-<div align="center" style="background: #f5f5f7; border-radius: 12px; padding: 30px; margin: 40px auto; max-width: 1200px;">
-
-> <strong>Feedback & Support</strong>
->
-> This document is continuously updated. If you find any errors or need additional information, please provide feedback.
->
-<strong>Document Version:</strong> 3.1 | <strong>Last Updated:</strong> May 15, 2026
-
-</div>

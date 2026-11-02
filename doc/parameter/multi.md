@@ -1,39 +1,35 @@
-<div align="right" style="margin-bottom: 20px; max-width: 1200px; margin-left: auto; margin-right: auto;">
+# Multi 分析参数
 
-[首页](../../README.md)
+`dnbc4tools multi run` 通过一份 CSV 配置执行分析。普通多组学组合与 C6 多样本 RNA 使用同一入口，输入与输出有所区别。
 
-</div>
+| 任务 | 配置方式 | 结果组织 |
+| :--- | :--- | :--- |
+| 普通 RNA / ATAC / VDJ 组合 | 填写模态分段与 `[libraries]` | 每个模态一个结果目录 |
+| C6 多样本 RNA | 在 RNA 配置中增加 `[samples]` | 同一文库按 probe barcode 拆分样本 |
 
-<div align="center" style="padding: 40px 20px; background: linear-gradient(135deg, #f5f5f7 0%, #ffffff 100%); border-radius: 12px; margin-bottom: 30px; max-width: 1200px; margin-left: auto; margin-right: auto;">
+## 运行命令 <a id="多组学整合流程-run"></a>
 
-<h1 style="font-size: 48px; font-weight: 600; color: #1d1d1f; margin: 0 0 16px 0; letter-spacing: -0.02em;">多组学分析参数</h1>
+```bash
+dnbc4tools multi run \
+  --name demo \
+  --csv config.csv \
+  --outdir ./results \
+  --threads 16
+```
 
-<p style="font-size: 21px; color: rgba(0,0,0,0.6); margin: 0 0 30px 0; font-weight: 400;">DNBelab C Series HT 多组学整合流程参数与配置说明</p>
+| 参数 | 是否必需 | 说明 |
+| :--- | :--- | :--- |
+| `--name` | 是 | 任务名称；结果写入 `<outdir>/<name>/` |
+| `--csv` | 是 | 分段式 CSV 配置文件 |
+| `--outdir` | 否 | 分析输出根目录，默认当前目录 |
+| `--threads` | 否 | 总 CPU 线程预算 |
 
-<div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
-<a href="#多组学整合流程-run" style="background: #0071e3; color: white; padding: 8px 16px; border-radius: 980px; text-decoration: none; font-size: 14px;">多组学整合流程 (run)</a>
-<a href="#csv-配置规范" style="background: transparent; color: #0071e3; padding: 8px 16px; border-radius: 980px; text-decoration: none; font-size: 14px; border: 1px solid #0071e3;">CSV 配置规范</a>
-<a href="#模块参数映射" style="background: transparent; color: #0071e3; padding: 8px 16px; border-radius: 980px; text-decoration: none; font-size: 14px; border: 1px solid #0071e3;">模块参数映射</a>
-<a href="#配置示例" style="background: transparent; color: #0071e3; padding: 8px 16px; border-radius: 980px; text-decoration: none; font-size: 14px; border: 1px solid #0071e3;">配置示例</a>
-</div>
-
-</div>
-
-<div style="max-width: 1200px; margin: 0 auto;"><hr style="border: none; border-top: 1px solid #d2d2d7; margin: 24px 0;"></div>
-
-<div style="background: #f5f5f7; border-radius: 12px; padding: 24px; margin: 24px auto; max-width: 1200px;">
-
-## 多组学整合流程 (run) <a id="多组学整合流程-run"></a>
-
-</div>
-
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; margin: 20px auto; max-width: 1200px; border: 1px solid #d2d2d7; overflow-x: auto;">
-
-### 用法
+<details markdown="block" class="cli-help">
+<summary>查看完整命令行帮助</summary>
 
 ```shell
-$ dnbc4tools multi run
-dnbc4tools 3.1
+$ dnbc4tools multi run --help
+dnbc4tools 3.2
 
 Process an integrated multi-omics sample.
 Coordinate RNA, ATAC, and V(D)J workflows within a single run.
@@ -41,401 +37,149 @@ Generate a unified multi-omics report.
 
 Usage: dnbc4tools multi run [OPTIONS]
 
-optional arguments:
-  --help             show this help message and exit
+options:
+  --help           show this help message and exit
 
-Basic Options:
-  --name NAME        Unique identifier for the sample.
-  --csv CSV          CSV file containing pipeline configuration settings.
-  --outdir OUTDIR    Output directory for analysis results.
-  --threads THREADS  Number of CPU threads to use.
-```
-
-</div>
-
-<div style="background: #f5f5f7; border-radius: 12px; padding: 24px; margin: 24px auto; max-width: 1200px;">
-
-### 参数说明
-
-</div>
-
-<div style="max-width: 1200px; margin: 0 auto;">
-
-#### 必需参数
-
-> **成功运行 multi 流程必须提供的参数**
-
-</div>
-
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border: 1px solid #e5e5e5; margin: 20px auto; max-width: 1200px;">
-<h4><code>--name</code> <span style="font-size: 0.8em; font-weight: normal; color: #e74c3c;">(必需)</span></h4>
-<p>指定本次 multi 任务名称。</p>
-<ul>
-  <li><strong>功能：</strong> 作为输出目录和报告中的样本标识。</li>
-  <li><strong>影响：</strong> 最终输出路径通常为 <code>&lt;outdir&gt;/&lt;name&gt;/</code>。</li>
-</ul>
-<p><strong>默认值：</strong> 无</p>
-<p><strong>示例：</strong></p>
-<pre><code>--name demo</code></pre>
-</div>
-
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border: 1px solid #e5e5e5; margin: 20px auto; max-width: 1200px;">
-<h4><code>--csv</code> <span style="font-size: 0.8em; font-weight: normal; color: #e74c3c;">(必需)</span></h4>
-<p>指定多组学配置 CSV 文件。</p>
-<ul>
-  <li><strong>功能：</strong> 定义 RNA / ATAC / VDJ 各模块参数，以及输入数据来源。</li>
-  <li><strong>要求：</strong> 文件中应包含模块配置段和 <code>[libraries]</code> 输入映射。</li>
-</ul>
-<p><strong>默认值：</strong> 无</p>
-<p><strong>示例：</strong></p>
-<pre><code>--csv sample.csv</code></pre>
-</div>
-
-<div style="max-width: 1200px; margin: 0 auto;"><hr style="border: none; border-top: 1px solid #d2d2d7; margin: 24px 0;"></div>
-
-#### 基本设置参数
-
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border: 1px solid #e5e5e5; margin: 20px auto; max-width: 1200px;">
-<h4><code>--outdir</code> <span style="font-size: 0.8em; font-weight: normal; color: #27ae60;">(可选)</span></h4>
-<p>指定 multi 流程输出目录。</p>
-<ul>
-  <li><strong>功能：</strong> 存放整合报告、模块输出和运行日志。</li>
-  <li><strong>建议：</strong> 为不同任务使用独立目录，便于结果管理。</li>
-</ul>
-<p><strong>默认值：</strong> <code>./</code> (当前目录)</p>
-<p><strong>示例：</strong></p>
-<pre><code>--outdir /data/result</code></pre>
-</div>
-
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border: 1px solid #e5e5e5; margin: 20px auto; max-width: 1200px;">
-<h4><code>--threads</code> <span style="font-size: 0.8em; font-weight: normal; color: #27ae60;">(可选)</span></h4>
-<p>设置流程可用 CPU 线程数。</p>
-<ul>
-  <li><strong>功能：</strong> 控制并行度，影响整体运行速度。</li>
-  <li><strong>建议：</strong> 根据机器资源和并发任务数量设置。</li>
-</ul>
-<p><strong>默认值：</strong> 使用软件默认线程策略</p>
-<p><strong>示例：</strong></p>
-<pre><code>--threads 20</code></pre>
-</div>
-
-<div style="max-width: 1200px; margin: 0 auto;"><hr style="border: none; border-top: 1px solid #d2d2d7; margin: 24px 0;"></div>
-
-#### 运行行为说明
-
-<div style="background: #f5f5f7; border-radius: 12px; padding: 16px; margin: 16px auto; max-width: 1200px;">
-
-- **统一编排**：通过一份配置文件调度 RNA / ATAC / VDJ 子流程。
-- **状态汇总**：汇总模块运行状态，并生成整合 HTML 报告。
-- **模块分段配置**：各模块参数在对应分段中配置（`[rna]`、`[atac]`、`[vdj-t]`、`[vdj-b]`）。
-
-</div>
-
-<div style="max-width: 1200px; margin: 0 auto;"><hr style="border: none; border-top: 1px solid #d2d2d7; margin: 24px 0;"></div>
-
-<div style="background: #f5f5f7; border-radius: 12px; padding: 24px; margin: 24px auto; max-width: 1200px;">
-
-## CSV 配置规范 <a id="csv-配置规范"></a>
-
-</div>
-
-<div style="background: #f5f5f7; border-radius: 12px; padding: 16px; margin: 16px auto; max-width: 1200px;">
-
-### 配置文件模板
-
-</div>
-
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; margin: 20px auto; max-width: 1200px; border: 1px solid #e5e5e5; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
-
-<details open>
-<summary> 展开完整模板（RNA + VDJ-T/B 示例）</summary>
-
-```csv
-[rna]
-genomeDir,/database/scRNA/Human
-no_bam,true
-end5,true
-include_introns,true
-
-[vdj-t]
-ref,human
-
-[vdj-b]
-ref,human
-
-[libraries]
-fastqs,feature_types
-/rawdata/rna/demo,rna
-/rawdata/tcr/demo,vdj-t
-/rawdata/bcr/demo,vdj-b
+Basic Settings:
+  --name <STR>     Unique identifier for the sample.
+  --csv <FILE>     CSV file containing pipeline configuration settings. With [samples], RNA chemistry is scRNAC6.
+  --outdir <DIR>   Output directory path for analysis results.
+  --threads <INT>  Number of CPU threads to use.
 ```
 
 </details>
 
-</div>
+`rna multi` 和 `atac multi` 只生成逐样本脚本；这里的 `multi run` 会实际执行分析。
 
-<div style="max-width: 1200px; margin: 0 auto;"><hr style="border: none; border-top: 1px solid #d2d2d7; margin: 24px 0;"></div>
+## CSV 配置规则 <a id="csv-配置规范"></a>
 
-<div style="background: #f5f5f7; border-radius: 12px; padding: 20px; margin: 24px auto; max-width: 1200px;">
+模态分段使用 `参数名,值`；`[libraries]` 和 `[samples]` 使用带表头的行表。
 
-### 填写规则（高频易错点）
-
-</div>
-
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; margin: 20px auto; max-width: 1200px; border: 1px solid #e5e5e5; box-shadow: 0 1px 3px rgba(0,0,0,0.1);" markdown="1">
-
-| 序号 | 规则 | 正确示例 | 错误示例 |
-| :--- | :--- | :--- | :--- |
-| 1 | 分段名使用**方括号** | `[rna]`、`[libraries]` | `rna:`、`libraries` |
-| 2 | 使用 `key,value` 格式 | `no_bam,true` | `no_bam=true` |
-| 3 | 参数值允许逗号 | `darkreaction,R1,R1R2` | - |
-| 4 | `customize` 可重复，单值参数建议仅保留最终定义 | - | - |
-| 5 | `feature_types` 必须与模块名一致 | `rna`、`vdj-t` | `RNA`、`VDJ` |
-| 6 | 建议使用**绝对路径** | `/data/sample` | - |
-
-</div>
-
-<div style="max-width: 1200px; margin: 0 auto;"><hr style="border: none; border-top: 1px solid #d2d2d7; margin: 24px 0;"></div>
-
-<div style="background: #f5f5f7; border-radius: 12px; padding: 20px; margin: 24px auto; max-width: 1200px;">
-
-### `beadstrans` 行为说明
-
-</div>
-
-<div style="background: #f5f5f7; border-radius: 12px; padding: 16px; margin: 16px auto; max-width: 1200px;">
-
-在 multi 场景中，VDJ 的细胞筛选默认与 RNA 分析结果对齐。若启用 VDJ 模块，`[rna]` 分段需要设置 `end5,true`，以确保 RNA 分析按 5' 端转录组模式运行。
-
-</div>
-
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; margin: 20px auto; max-width: 1200px; border: 1px solid #e5e5e5; box-shadow: 0 1px 3px rgba(0,0,0,0.1);" markdown="1">
-
-| 模式 | 行为描述 | 适用场景 |
-| :--- | :--- | :--- |
-| **默认** | 使用 RNA 分析的细胞信息进行 VDJ 过滤 | 常规多组学分析 |
-| **自定义** | 显式填写 `beadstrans` 参数，使用自定义细胞文件 | 需要独立定义 VDJ 细胞时 |
-
-</div>
-
-<div style="max-width: 1200px; margin: 0 auto;"><hr style="border: none; border-top: 1px solid #d2d2d7; margin: 24px 0;"></div>
-
-<div style="background: #f5f5f7; border-radius: 12px; padding: 24px; margin: 24px auto; max-width: 1200px;">
-
-## 模块参数映射 <a id="模块参数映射"></a>
-
-</div>
-
-<div style="background: #f5f5f7; border-radius: 12px; padding: 16px; margin: 16px auto; max-width: 1200px;">
-
-### 参数分段与子流程映射
-
-</div>
-
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; margin: 20px auto; max-width: 1200px; border: 1px solid #e5e5e5; box-shadow: 0 1px 3px rgba(0,0,0,0.1);" markdown="1">
-
-| 配置分段 | 对应子流程 | 参数文档 |
-| :--- | :--- | :--- |
-| `[rna]` | `dnbc4tools rna run` | [scRNA 参数](./scRNA.md) |
-| `[atac]` | `dnbc4tools atac run` | [scATAC 参数](./scATAC.md) |
-| `[vdj-t]` / `[vdj-b]` | `dnbc4tools vdj run` | [scVDJ 参数](./scVDJ.md) |
-| `[libraries]` | multi 输入映射 | [见 CSV 配置规范](#csv-配置规范) |
-
-</div>
-
-<div style="max-width: 1200px; margin: 0 auto;"><hr style="border: none; border-top: 1px solid #d2d2d7; margin: 24px 0;"></div>
-
-<div style="background: #f5f5f7; border-radius: 12px; padding: 20px; margin: 24px auto; max-width: 1200px;">
-
-### 各分段可填参数
-
-</div>
-
-<div style="background: #f5f5f7; border-radius: 12px; padding: 16px; margin: 16px auto; max-width: 1200px;">
-
-#### `[rna]` 分段参数
-
-</div>
-
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; margin: 20px auto; max-width: 1200px; border: 1px solid #e5e5e5; box-shadow: 0 1px 3px rgba(0,0,0,0.1);" markdown="1">
-
-| 类别 | 参数名 |
+| 分段 | 用途 |
 | :--- | :--- |
-| **参考基因组** | `genomeDir` |
-| **细胞筛选** | `expectcells`, `forcecells`, `minumi`, `consistent_cells` |
-| **测序化学** | `chemistry`, `darkreaction`, `customize` |
-| **分析选项** | `calling_method`, `no_introns`, `end5`, `no_bam` |
-| **采样** | `sample_read_pairs` |
+| `[rna]` | RNA 参考、试剂和细胞识别等设置 |
+| `[atac]` | ATAC 参考、叫峰和过滤设置 |
+| `[vdj-t]` / `[vdj-b]` | TCR / BCR 参考及组装设置 |
+| `[libraries]` | FASTQ 目录与模态对应关系，必填 |
+| `[samples]` | C6 样本与 probe barcode 对应关系；普通文库不填写 |
 
-</div>
+布尔值推荐 `true/false`。值含逗号时加双引号，例如 `darkreaction,"R1,R1R2"`。`[rna] expectcells` 和 `[atac] jaccard_cutoff` 可填 `auto`。输入目录建议使用绝对路径。
 
-<div style="max-width: 1200px; margin: 0 auto;"><hr style="border: none; border-top: 1px solid #d2d2d7; margin: 24px 0;"></div>
+RNA FASTQ 根目录须含 `cDNA/`、`oligo/`；ATAC 和 VDJ 目录直接放对应文库的配对 FASTQ。文件名的 R1/R2 规则见[快速开始](../quickstart.md#file-naming-conventions)。
 
-<div style="background: #f5f5f7; border-radius: 12px; padding: 16px; margin: 16px auto; max-width: 1200px;">
+## 普通多组学配置 <a id="配置示例"></a>
 
-#### `[atac]` 分段参数
-
-</div>
-
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; margin: 20px auto; max-width: 1200px; border: 1px solid #e5e5e5; box-shadow: 0 1px 3px rgba(0,0,0,0.1);" markdown="1">
-
-| 类别 | 参数名 |
-| :--- | :--- |
-| **参考基因组** | `genomeDir` |
-| **细胞筛选** | `forcecells`, `frags_cutoff`, `tss_cutoff`, `jaccard_cutoff`, `merge_cutoff` |
-| **测序化学** | `darkreaction`, `customize` |
-| **输出选项** | `need_bam` |
-| **采样** | `sample_read_pairs` |
-
-</div>
-
-<div style="max-width: 1200px; margin: 0 auto;"><hr style="border: none; border-top: 1px solid #d2d2d7; margin: 24px 0;"></div>
-
-<div style="background: #f5f5f7; border-radius: 12px; padding: 16px; margin: 16px auto; max-width: 1200px;">
-
-#### `[vdj-t]` / `[vdj-b]` 分段参数
-
-</div>
-
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; margin: 20px auto; max-width: 1200px; border: 1px solid #e5e5e5; box-shadow: 0 1px 3px rgba(0,0,0,0.1);" markdown="1">
-
-| 类别 | 参数名 |
-| :--- | :--- |
-| **参考数据** | `ref` |
-| **细胞筛选** | `beadstrans`, `keep_all_cells` |
-| **测序化学** | `darkreaction`, `customize`, `r2_only` |
-| **引物** | `enrichment_primers` |
-| **采样** | `sample_read_pairs` |
-
-</div>
-
-<div style="max-width: 1200px; margin: 0 auto;"><hr style="border: none; border-top: 1px solid #d2d2d7; margin: 24px 0;"></div>
-
-#### `[libraries]` 分段（必填）
-
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; margin: 20px auto; max-width: 1200px; border: 1px solid #e5e5e5; box-shadow: 0 1px 3px rgba(0,0,0,0.1);" markdown="1">
-
-| 列名 | 说明 |
-| :--- | :--- |
-| `fastqs` | FASTQ 输入目录路径，建议使用绝对路径 |
-| `feature_types` | 数据类型：`rna` / `atac` / `vdj-t` / `vdj-b` |
-
-</div>
-
-<div style="background: #f5f5f7; border-radius: 12px; padding: 16px; margin: 16px auto; max-width: 1200px;">
-
-**`fastqs` 目录要求**
-
-- `rna`：路径应指向 RNA FASTQ 根目录，目录下需包含 `cDNA/` 和 `oligo/` 两个子目录；两个子目录内分别放置对应文库的 R1/R2 文件。
-- `atac`：路径应指向当前 ATAC 文库的 FASTQ 目录，R1/R2 文件直接放在该目录下。
-- `vdj-t` / `vdj-b`：路径应指向当前 VDJ 文库的 FASTQ 目录，R1/R2 文件直接放在该目录下。
-- 自动识别依赖 FASTQ 文件名中的 R1/R2 标记，建议使用 `_R1` / `_R2`、`_R1_` / `_R2_` 或等价的 Read 1/Read 2 命名。
-
-</div>
-
-<div style="max-width: 1200px; margin: 0 auto;"><hr style="border: none; border-top: 1px solid #d2d2d7; margin: 24px 0;"></div>
-
-<div style="background: #f5f5f7; border-radius: 12px; padding: 20px; margin: 24px auto; max-width: 1200px;">
-
-### 重要提示
-
-</div>
-
-<div style="background: #f5f5f7; border-radius: 12px; padding: 16px; margin: 16px auto; max-width: 1200px;">
-
-- **[libraries] 集中配置**：所有模块的 FASTQ 输入目录均在 `[libraries]` 中配置，便于统一检查和管理
-- **customize 参数**：可按规则填写多条；其余单值参数建议仅保留最终定义
-
-</div>
-
-<div style="max-width: 1200px; margin: 0 auto;"><hr style="border: none; border-top: 1px solid #d2d2d7; margin: 24px 0;"></div>
-
-<div style="background: #f5f5f7; border-radius: 12px; padding: 24px; margin: 24px auto; max-width: 1200px;">
-
-## 配置示例 <a id="配置示例"></a>
-
-</div>
-
-<div style="background: #f5f5f7; border-radius: 12px; padding: 16px; margin: 16px auto; max-width: 1200px;">
-
-### 示例1：RNA
-
-</div>
-
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; margin: 20px auto; max-width: 1200px; border: 1px solid #e5e5e5; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
-
-```csv
-[rna]
-genomeDir,/database/scRNA/Human
-
-[libraries]
-fastqs,feature_types
-/rawdata/rna/demo,rna
-```
-
-</div>
-
-<div style="background: #f5f5f7; border-radius: 12px; padding: 16px; margin: 16px auto; max-width: 1200px;">
-
-### 示例2：RNA + ATAC + VDJ-T + VDJ-B（全模块）
-
-</div>
-
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; margin: 20px auto; max-width: 1200px; border: 1px solid #e5e5e5; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+以下为 5′ RNA + TCR 的最小示例，保存为 `config.csv` 后使用上方命令运行。
 
 ```csv
 [rna]
 genomeDir,/database/scRNA/Human
 end5,true
-include_introns,true
-
-[atac]
-genomeDir,/database/scATAC/Human
+no_bam,true
 
 [vdj-t]
 ref,human
 
-[vdj-b]
-ref,human
+[libraries]
+fastqs,feature_types
+/rawdata/rna,rna
+/rawdata/tcr,vdj-t
+```
+
+使用 BCR 时将 `[vdj-t]` / `vdj-t` 改为 `[vdj-b]` / `vdj-b`。添加 ATAC 时增加 `[atac]` 及对应的 libraries 行。只运行 RNA 时移除 VDJ 分段及该输入行。
+
+VDJ 默认复用 RNA 的细胞信息；可用 `beadstrans` 指定另一份细胞表。普通 RNA + VDJ 联合分析需设置 `end5,true`。
+
+## C6 多样本 RNA 配置 <a id="c6-samples"></a>
+
+适用于多个生物学样本共享一份 **scRNAC6** 文库的实验。probe barcode 应与实验设计一致；`[samples]` 不用于将普通 RNA 文库转换为 C6。
+
+### 最小配置
+
+```csv
+[rna]
+genomeDir,/database/scRNA/Human
+chemistry,scRNAC6
+darkreaction,auto
+no_bam,true
 
 [libraries]
 fastqs,feature_types
-/rawdata/rna/demo,rna
-/rawdata/atac/demo,atac
-/rawdata/tcr/demo,vdj-t
-/rawdata/bcr/demo,vdj-b
+/rawdata/c6_run,rna
+
+[samples]
+sample_id,probe_barcode_ids
+S1,BC01
+S2,BC02;BC03
 ```
 
-</div>
+保存为 `c6.csv`，运行：
 
-<div style="max-width: 1200px; margin: 0 auto;"><hr style="border: none; border-top: 1px solid #d2d2d7; margin: 24px 0;"></div>
+```bash
+dnbc4tools multi run --name c6_run --csv c6.csv --outdir ./results --threads 16
+```
 
-<div style="background: #f5f5f7; border-radius: 12px; padding: 24px; margin: 24px auto; max-width: 1200px;">
+上例的 S2 使用两个 probe。C6 的 chemistry 固定为 `scRNAC6`，省略或旧值 `auto` 会归一化为该名称；`darkreaction=auto` 仅检测暗反应。
+
+### 样本表与覆盖值
+
+| 列 | 填写规则 |
+| :--- | :--- |
+| `sample_id` | 必填且唯一；以字母/数字开头，后续仅含字母、数字、`.`、`_`、`-`；不得使用 `unassigned`、`non_multiplexed` |
+| `probe_barcode_ids` | 必填；有效的内置 BC 编号或自定义 DNA 序列；同一样本多个 probe 用 `;` 或 `\|` 分隔；禁止重复分配 |
+| `expectcells` / `forcecells` / `minumi` | 可选覆盖列，填写正整数；空值继承 `[rna]`；覆盖列不接受 `auto` |
+
+需要逐样本设置时，扩展为：
+
+```csv
+[samples]
+sample_id,probe_barcode_ids,expectcells,forcecells,minumi
+S1,BC01,3000,,1000
+S2,BC02;BC03,3000,,1000
+```
+
+### 实验级设置
+
+| `[rna]` 参数 | 默认行为 |
+| :--- | :--- |
+| `high_occupancy_filter` | `true`，在整个实验统一应用高占用过滤；设 `false` 时常规 cell calling 仍执行；不能作为 samples 列 |
+| `sample_failure_policy` | `skip`，记录失败样本并继续；`fail` 在样本失败时停止 |
+| `darkreaction` | `auto`；手工 cDNA 支持 `R1/unset`，oligo 支持 `R1/R2/R1R2/unset`；不能混用自动与手工值 |
+
+输出目录、样本报告和指标分母见 [C6 输出](../outs/multi.md#c6-outputs)。
+
+## 模块参数映射 <a id="模块参数映射"></a>
+
+| 分段 | 常用设置 | 完整参数说明 |
+| :--- | :--- | :--- |
+| `[rna]` | `genomeDir`, `chemistry`, `darkreaction`, `expectcells`, `forcecells`, `minumi`, `consistent_cells`, `calling_method`, `no_introns`, `end5`, `no_bam`, `star_parameters`, `sample_read_pairs` | [RNA](scRNA.md) |
+| `[atac]` | `genomeDir`, `darkreaction`, `forcecells`, `frags_cutoff`, `tss_cutoff`, `jaccard_cutoff`, `merge_cutoff`, `peak_signal`, `need_bam`, `sample_read_pairs` | [ATAC](scATAC.md) |
+| `[vdj-t]` / `[vdj-b]` | `ref`, `beadstrans`, `darkreaction`, `customize`, `keep_all_cells`, `r2_only`, `enrichment_primers`, `sample_read_pairs` | [VDJ](scVDJ.md) |
+
+普通 RNA 显式 chemistry 与暗反应须成对设置；C6 固定 chemistry，可独立检测暗反应。`customize` 可按对应文库规则填写多条，其余单值参数保留一份定义。
+
+### BAM 资源 <a id="bam-resources"></a>
+
+默认自动调度，日常只需设置总线程预算。只有需要覆盖自动值时才展开以下高级设置。
+
+<details markdown="block">
+<summary>高级设置：BAM 资源调度</summary>
+
+日常只需设置流程总线程数。BAM 按 CPU、文件句柄和估算可用内存自动规划并发。只有需要覆盖自动值时，才在 `[rna]` 中填写：
+
+| 参数 | 含义 |
+| :--- | :--- |
+| `bam_workers` | 并发 chunk worker 的正整数上限 |
+| `bam_compression_threads` | 每个 chunk 的压缩线程数；与 worker 共同受总线程预算约束 |
+| `bam_queue_depth` | 每个 sample writer 的队列深度，默认是实际压缩线程数的两倍 |
+| `bam_max_memory_gb` | 内存估算预算，单位 GiB；不会限制实际 RSS |
+| `bam_compression_level` | 0–9；省略保留 HTSlib 默认值 |
+| `bam_limit_memory` | 默认 `false`；设 `true` 时连一个 worker 都无法满足估算预算便报错 |
+
+自动模式会降低并发；如果单个 worker 的估算仍超预算，使用一个 worker 并记录警告。内存检测不可用时沿用 CPU/文件句柄调度。`no_bam=true` 时不生成相关 BAM，以上参数不生效。输出布局和统计口径见 [Multi 输出](../outs/multi.md#c6-outputs)。
+
+</details>
 
 ## 相关文档
 
-</div>
-
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; margin: 20px auto; max-width: 1200px; border: 1px solid #e5e5e5; box-shadow: 0 1px 3px rgba(0,0,0,0.1);" markdown="1">
-
-| 资源 | 描述 |
-| :--- | :--- |
-| [多组学流程文档](../pipeline/multi.md) | 多组学整合分析流程指南 |
-| [多组学输出文档](../outs/multi.md) | 输出文件详细解读 |
-| [scRNA 参数文档](./scRNA.md) | 单细胞 RNA 分析参数 |
-| [scATAC 参数文档](./scATAC.md) | 单细胞 ATAC 分析参数 |
-| [scVDJ 参数文档](./scVDJ.md) | 单细胞 VDJ 分析参数 |
-
-</div>
-
-<div style="max-width: 1200px; margin: 0 auto;"><hr style="border: none; border-top: 1px solid #d2d2d7; margin: 24px 0;"></div>
-
-<div align="center" style="background: #f5f5f7; border-radius: 12px; padding: 30px; margin: 40px auto; max-width: 1200px;">
-
-> <strong>反馈与支持</strong>
->
-> 本页聚焦参数与配置填写，建议与流程文档、输出文档配套使用。
->
-<strong>文档版本：</strong> 3.1 | <strong>最后更新：</strong> 2026 年 5 月 15 日
-
-</div>
+[分析流程](../pipeline/multi.md) · [输出与报告](../outs/multi.md) · [升级指南](../migration.md) · [运行与排错](../troubleshooting.md)

@@ -1,24 +1,10 @@
-<div align="right" markdown="block">
-
-[首页](../index.md)
-
-</div>
-
 # 输出结果分析指南
-
-<div align="center" markdown="block">
 
 **在 R 与 Python 中读取 dnbc4tools 输出数据**
 
 [scRNA](#scrna-analysis) • [scATAC](#scatac-analysis)
 
-</div>
-
----
-
 ## scRNA 分析 <a id="scrna-analysis"></a>
-
-<div style="background-color: #e7f3fe; border-left: 6px solid #2196F3; padding: 15px; margin: 1.5em 0; border-radius: 4px;" markdown="block">
 
 **R (Seurat)**
 
@@ -26,12 +12,8 @@
 
 ```r
 library(Seurat)
-counts.data <- Read10X(data.dir = "/outs/filter_matrix")
+counts.data <- Read10X(data.dir = "/outs/filtered_feature_bc_matrix")
 ```
-
-</div>
-
-<div style="background-color: #e7f3fe; border-left: 6px solid #2196F3; padding: 15px; margin: 1.5em 0; border-radius: 4px;" markdown="block">
 
 **Python (Scanpy)**
 
@@ -40,22 +22,38 @@ counts.data <- Read10X(data.dir = "/outs/filter_matrix")
 **1. 读取 h5ad 格式（推荐）：**
 ```python
 import scanpy as sc
-adata = sc.read_h5ad('/outs/filter_feature.h5ad')
+adata = sc.read_h5ad('/outs/filtered_feature_bc_matrix.h5ad')
 ```
 
 **2. 读取矩阵格式：**
 ```python
 import scanpy as sc
-adata = sc.read_10x_mtx('/outs/filter_matrix')
+adata = sc.read_10x_mtx('/outs/filtered_feature_bc_matrix')
 ```
 
-</div>
+## C6 多样本结果读取 <a id="c6-import"></a>
 
----
+使用各样本目录进行独立分析；全局 filtered H5AD 只包含合并计数，不带联合 UMAP/聚类。原始计数保留用于下游归一化。
+
+```python
+import scanpy as sc
+import pandas as pd
+
+sample_dir = "/results/c6_run/outs/rna/per_sample_outs/S1"
+adata = sc.read_10x_h5(f"{sample_dir}/filtered_feature_bc_matrix.h5")
+# 全局完整表含背景，按有效标记选择；大表分块读取。
+called_parts = []
+for chunk in pd.read_csv("/results/c6_run/outs/rna/singlecell.csv.gz", chunksize=100_000):
+    called = chunk["is_cell_barcode"].astype(str).str.lower().isin(["1", "true"])
+    called_parts.append(chunk.loc[called])
+called_cells = pd.concat(called_parts, ignore_index=True)
+```
+
+只需稀疏计数和基因/barcode 元数据时，可用 `sc.read_h5ad("/results/c6_run/outs/rna/filtered_feature_bc_matrix.h5ad")`。跨样本关联使用完整 barcode/probe 后缀，避免只用 bead 前缀混淆样本。
 
 ## scATAC 分析 <a id="scatac-analysis"></a>
 
-<div style="background-color: #e7f3fe; border-left: 6px solid #2196F3; padding: 15px; margin: 1.5em 0; border-radius: 4px;" markdown="block">
+ATAC 默认矩阵计数是 cutsite；元数据中的 `peak_region_fragments` 和 `peak_region_cutsites` 是不同统计。将 metadata 与过滤矩阵关联时按 barcode 索引重排，不依赖行序。BAM 索引可为 BAI 或 CSI。
 
 **R (Signac)**
 
@@ -75,10 +73,10 @@ read_signac_C4 <- function(mex_dir_path, fragments, singlecellmetadata){
     mtx_path <- paste(mex_dir_path, "matrix.mtx.gz", sep = '/')
     feature_path <- paste(mex_dir_path, "peaks.bed.gz", sep = '/')
     barcode_path <- paste(mex_dir_path, "barcodes.tsv.gz", sep = '/')
-    
+
     features <- readr::read_tsv(feature_path, col_names = F) %>% tidyr::unite(feature)
     barcodes <- readr::read_tsv(barcode_path, col_names = F) %>% tidyr::unite(barcode)
-    
+
     mtx <- Matrix::readMM(mtx_path) %>%
     magrittr::set_rownames(features$feature) %>%
     magrittr::set_colnames(barcodes$barcode)
@@ -88,7 +86,7 @@ read_signac_C4 <- function(mex_dir_path, fragments, singlecellmetadata){
         header = TRUE,
         row.names = 1
     )
-    
+
     chrom_assay <- CreateChromatinAssay(
         counts = mtx,
         sep = c("_", "_"),
@@ -105,10 +103,6 @@ read_signac_C4 <- function(mex_dir_path, fragments, singlecellmetadata){
     return(scATAC)
 }
 ```
-
-</div>
-
-<div style="background-color: #e7f3fe; border-left: 6px solid #2196F3; padding: 15px; margin: 1.5em 0; border-radius: 4px;" markdown="block">
 
 **R (ArchR)**
 
@@ -144,10 +138,6 @@ ArrowFiles <- createArrowFiles(
 )
 ```
 
-</div>
-
-<div style="background-color: #e7f3fe; border-left: 6px solid #2196F3; padding: 15px; margin: 1.5em 0; border-radius: 4px;" markdown="block">
-
 **Python (AnnData)**
 
 将过滤后的 peak 矩阵加载为 AnnData 对象。
@@ -180,20 +170,14 @@ def read_atac_C4(path):
     return adata
 ```
 
-</div>
-
----
-
 ## 常见输出文件 <a id="common-output-files"></a>
 
 | 文件 / 目录 | 说明 | 分析类型 |
 | :--- | :--- | :--- |
-| `filter_matrix/` | 过滤后的基因表达矩阵（MEX 格式）。 | scRNA-seq |
-| `filter_peak_matrix/` | 过滤后的 peak 可及性矩阵（MEX 格式）。 | scATAC-seq |
-| `filter_feature.h5ad` | AnnData 格式过滤矩阵（适用于 Python）。 | scRNA-seq |
+| `filtered_feature_bc_matrix/` | 过滤后的基因表达矩阵（MEX 格式）。 | scRNA-seq |
+| `filtered_peak_bc_matrix/` | 过滤后的 peak 可及性矩阵（MEX 格式）。 | scATAC-seq |
+| `filtered_feature_bc_matrix.h5ad` | AnnData 格式过滤矩阵（适用于 Python）。 | scRNA-seq |
 | `fragments.tsv.gz` | ATAC 分析片段文件。 | scATAC-seq |
 | `singlecell.csv` | 细胞元信息与质控指标。 | 全部 |
-
----
 
 *详细输出说明见 [输出文件文档](./outs/outs.md)*

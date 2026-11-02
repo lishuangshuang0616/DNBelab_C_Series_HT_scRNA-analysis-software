@@ -14,7 +14,7 @@
         <link rel="prev" href="outs/multi.html">
       
       
-        <link rel="next" href="release.html">
+        <link rel="next" href="migration.html">
       
       
         
@@ -82,7 +82,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#output-analysis-guide" class="md-skip">
+        <a href="#scrna-analysis" class="md-skip">
           Skip to content
         </a>
       
@@ -981,8 +981,6 @@
       <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
       
       
-        
-      
       
         <label class="md-nav__link md-nav__link--active" for="__toc">
           
@@ -1025,8 +1023,6 @@
   
   
   
-    
-  
   
     <label class="md-nav__title" for="__toc">
       <span class="md-nav__icon md-icon"></span>
@@ -1039,6 +1035,17 @@
     <span class="md-ellipsis">
       
         scRNA Analysis
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#importing-c6-results" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Importing C6 results
       
     </span>
   </a>
@@ -1071,6 +1078,60 @@
   
 </nav>
       
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="migration.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Upgrade Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="troubleshooting.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Running & Troubleshooting
+  
+
+    
+  </span>
+  
+  
+
+      </a>
     </li>
   
 
@@ -1144,10 +1205,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_12" >
         
           
-          <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_12" id="__nav_12_label" tabindex="0">
             
   
   
@@ -1165,8 +1226,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_10">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_12_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_12">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -1256,8 +1317,6 @@
   
   
   
-    
-  
   
     <label class="md-nav__title" for="__toc">
       <span class="md-nav__icon md-icon"></span>
@@ -1270,6 +1329,17 @@
     <span class="md-ellipsis">
       
         scRNA Analysis
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#importing-c6-results" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Importing C6 results
       
     </span>
   </a>
@@ -1315,144 +1385,142 @@
 
 
 
-<div align="right">
-<p><a href="../index.html">Home</a></p>
-</div>
 <h1 id="output-analysis-guide">Output Analysis Guide<a class="headerlink" href="#output-analysis-guide" title="Permanent link">&para;</a></h1>
-<div align="center">
 <p><strong>How to analyze dnbc4tools output in R and Python</strong></p>
 <p><a href="#scrna-analysis">scRNA</a> • <a href="#scatac-analysis">scATAC</a></p>
-</div>
-<hr />
 <h2 id="scrna-analysis">scRNA Analysis <a id="scrna-analysis"></a><a class="headerlink" href="#scrna-analysis" title="Permanent link">&para;</a></h2>
-<div style="background-color: #e7f3fe; border-left: 6px solid #2196F3; padding: 15px; margin: 1.5em 0; border-radius: 4px;">
 <p><strong>R (Seurat)</strong></p>
 <p>Load the filtered gene expression matrix using the <code>Read10X</code> function.</p>
-<pre><code class="language-r">library(Seurat)
-counts.data &lt;- Read10X(data.dir = &quot;/outs/filter_matrix&quot;)
-</code></pre>
-</div>
-<div style="background-color: #e7f3fe; border-left: 6px solid #2196F3; padding: 15px; margin: 1.5em 0; border-radius: 4px;">
+<div class="highlight"><pre><span></span><code><span class="nf">library</span><span class="p">(</span><span class="n">Seurat</span><span class="p">)</span>
+<span class="n">counts.data</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">Read10X</span><span class="p">(</span><span class="n">data.dir</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"/outs/filtered_feature_bc_matrix"</span><span class="p">)</span>
+</code></pre></div>
 <p><strong>Python (Scanpy)</strong></p>
 <p>You can load the data using either the <code>h5ad</code> file or the MEX matrix directory.</p>
-<p><strong>1. Read h5ad format (recommended):</strong></p>
-<pre><code class="language-python">import scanpy as sc
-adata = sc.read_h5ad('/outs/filter_feature.h5ad')
-</code></pre>
-<p><strong>2. Read matrix format:</strong></p>
-<pre><code class="language-python">import scanpy as sc
-adata = sc.read_10x_mtx('/outs/filter_matrix')
-</code></pre>
-</div>
-<hr />
+<p><strong>1. Read h5ad format (recommended):</strong>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">scanpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sc</span>
+<span class="n">adata</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">read_h5ad</span><span class="p">(</span><span class="s1">'/outs/filtered_feature_bc_matrix.h5ad'</span><span class="p">)</span>
+</code></pre></div></p>
+<p><strong>2. Read matrix format:</strong>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">scanpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sc</span>
+<span class="n">adata</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">read_10x_mtx</span><span class="p">(</span><span class="s1">'/outs/filtered_feature_bc_matrix'</span><span class="p">)</span>
+</code></pre></div></p>
+<h2 id="importing-c6-results">Importing C6 results <a id="c6-import"></a><a class="headerlink" href="#importing-c6-results" title="Permanent link">&para;</a></h2>
+<p>Use individual sample directories for independent analysis. The global filtered H5AD contains combined counts without joint UMAP/clustering. Retain raw counts for downstream normalization.</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">scanpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sc</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+
+<span class="n">sample_dir</span> <span class="o">=</span> <span class="s2">"/results/c6_run/outs/rna/per_sample_outs/S1"</span>
+<span class="n">adata</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">read_10x_h5</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">sample_dir</span><span class="si">}</span><span class="s2">/filtered_feature_bc_matrix.h5"</span><span class="p">)</span>
+<span class="c1"># The global table includes background; select called cells in bounded chunks.</span>
+<span class="n">called_parts</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">"/results/c6_run/outs/rna/singlecell.csv.gz"</span><span class="p">,</span> <span class="n">chunksize</span><span class="o">=</span><span class="mi">100_000</span><span class="p">):</span>
+    <span class="n">called</span> <span class="o">=</span> <span class="n">chunk</span><span class="p">[</span><span class="s2">"is_cell_barcode"</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">isin</span><span class="p">([</span><span class="s2">"1"</span><span class="p">,</span> <span class="s2">"true"</span><span class="p">])</span>
+    <span class="n">called_parts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">chunk</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">called</span><span class="p">])</span>
+<span class="n">called_cells</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">called_parts</span><span class="p">,</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</code></pre></div>
+<p>For sparse counts and gene/barcode metadata alone, use <code>sc.read_h5ad("/results/c6_run/outs/rna/filtered_feature_bc_matrix.h5ad")</code>. Retain complete barcode/probe suffixes in joins; a bead prefix alone does not identify the sample.</p>
 <h2 id="scatac-analysis">scATAC Analysis <a id="scatac-analysis"></a><a class="headerlink" href="#scatac-analysis" title="Permanent link">&para;</a></h2>
-<div style="background-color: #e7f3fe; border-left: 6px solid #2196F3; padding: 15px; margin: 1.5em 0; border-radius: 4px;">
+<p>ATAC matrices count cutsites by default. Metadata <code>peak_region_fragments</code> and <code>peak_region_cutsites</code> are distinct. Align metadata to filtered matrix barcodes rather than relying on row order. BAM indexes can be BAI or CSI.</p>
 <p><strong>R (Signac)</strong></p>
 <p>Load the filtered peak matrix and create a Seurat object.</p>
-<pre><code class="language-r">require(magrittr)
-require(readr)
-require(Matrix)
-require(tidyr)
-require(dplyr)
-library(Signac)
-library(Seurat)
+<div class="highlight"><pre><span></span><code><span class="nf">require</span><span class="p">(</span><span class="n">magrittr</span><span class="p">)</span>
+<span class="nf">require</span><span class="p">(</span><span class="n">readr</span><span class="p">)</span>
+<span class="nf">require</span><span class="p">(</span><span class="n">Matrix</span><span class="p">)</span>
+<span class="nf">require</span><span class="p">(</span><span class="n">tidyr</span><span class="p">)</span>
+<span class="nf">require</span><span class="p">(</span><span class="n">dplyr</span><span class="p">)</span>
+<span class="nf">library</span><span class="p">(</span><span class="n">Signac</span><span class="p">)</span>
+<span class="nf">library</span><span class="p">(</span><span class="n">Seurat</span><span class="p">)</span>
 
-# Function to read dnbc4tools ATAC output
-read_signac_C4 &lt;- function(mex_dir_path, fragments, singlecellmetadata){
-    mtx_path &lt;- paste(mex_dir_path, &quot;matrix.mtx.gz&quot;, sep = '/')
-    feature_path &lt;- paste(mex_dir_path, &quot;peaks.bed.gz&quot;, sep = '/')
-    barcode_path &lt;- paste(mex_dir_path, &quot;barcodes.tsv.gz&quot;, sep = '/')
+<span class="c1"># Function to read dnbc4tools ATAC output</span>
+<span class="n">read_signac_C4</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="kr">function</span><span class="p">(</span><span class="n">mex_dir_path</span><span class="p">,</span><span class="w"> </span><span class="n">fragments</span><span class="p">,</span><span class="w"> </span><span class="n">singlecellmetadata</span><span class="p">){</span>
+<span class="w">    </span><span class="n">mtx_path</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">paste</span><span class="p">(</span><span class="n">mex_dir_path</span><span class="p">,</span><span class="w"> </span><span class="s">"matrix.mtx.gz"</span><span class="p">,</span><span class="w"> </span><span class="n">sep</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">'/'</span><span class="p">)</span>
+<span class="w">    </span><span class="n">feature_path</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">paste</span><span class="p">(</span><span class="n">mex_dir_path</span><span class="p">,</span><span class="w"> </span><span class="s">"peaks.bed.gz"</span><span class="p">,</span><span class="w"> </span><span class="n">sep</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">'/'</span><span class="p">)</span>
+<span class="w">    </span><span class="n">barcode_path</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">paste</span><span class="p">(</span><span class="n">mex_dir_path</span><span class="p">,</span><span class="w"> </span><span class="s">"barcodes.tsv.gz"</span><span class="p">,</span><span class="w"> </span><span class="n">sep</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">'/'</span><span class="p">)</span>
 
-    features &lt;- readr::read_tsv(feature_path, col_names = F) %&gt;% tidyr::unite(feature)
-    barcodes &lt;- readr::read_tsv(barcode_path, col_names = F) %&gt;% tidyr::unite(barcode)
+<span class="w">    </span><span class="n">features</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">readr</span><span class="o">::</span><span class="nf">read_tsv</span><span class="p">(</span><span class="n">feature_path</span><span class="p">,</span><span class="w"> </span><span class="n">col_names</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="bp">F</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="n">tidyr</span><span class="o">::</span><span class="nf">unite</span><span class="p">(</span><span class="n">feature</span><span class="p">)</span>
+<span class="w">    </span><span class="n">barcodes</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">readr</span><span class="o">::</span><span class="nf">read_tsv</span><span class="p">(</span><span class="n">barcode_path</span><span class="p">,</span><span class="w"> </span><span class="n">col_names</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="bp">F</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="n">tidyr</span><span class="o">::</span><span class="nf">unite</span><span class="p">(</span><span class="n">barcode</span><span class="p">)</span>
 
-    mtx &lt;- Matrix::readMM(mtx_path) %&gt;%
-    magrittr::set_rownames(features$feature) %&gt;%
-    magrittr::set_colnames(barcodes$barcode)
+<span class="w">    </span><span class="n">mtx</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">Matrix</span><span class="o">::</span><span class="nf">readMM</span><span class="p">(</span><span class="n">mtx_path</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span>
+<span class="w">    </span><span class="n">magrittr</span><span class="o">::</span><span class="nf">set_rownames</span><span class="p">(</span><span class="n">features</span><span class="o">$</span><span class="n">feature</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span>
+<span class="w">    </span><span class="n">magrittr</span><span class="o">::</span><span class="nf">set_colnames</span><span class="p">(</span><span class="n">barcodes</span><span class="o">$</span><span class="n">barcode</span><span class="p">)</span>
 
-    metadata &lt;- read.csv(
-        file = singlecellmetadata,
-        header = TRUE,
-        row.names = 1
-    )
+<span class="w">    </span><span class="n">metadata</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">read.csv</span><span class="p">(</span>
+<span class="w">        </span><span class="n">file</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">singlecellmetadata</span><span class="p">,</span>
+<span class="w">        </span><span class="n">header</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">TRUE</span><span class="p">,</span>
+<span class="w">        </span><span class="n">row.names</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">1</span>
+<span class="w">    </span><span class="p">)</span>
 
-    chrom_assay &lt;- CreateChromatinAssay(
-        counts = mtx,
-        sep = c(&quot;_&quot;, &quot;_&quot;),
-        fragments = fragments,
-        min.cells = 10,
-        min.features = 200
-    )
+<span class="w">    </span><span class="n">chrom_assay</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">CreateChromatinAssay</span><span class="p">(</span>
+<span class="w">        </span><span class="n">counts</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mtx</span><span class="p">,</span>
+<span class="w">        </span><span class="n">sep</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="s">"_"</span><span class="p">,</span><span class="w"> </span><span class="s">"_"</span><span class="p">),</span>
+<span class="w">        </span><span class="n">fragments</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">fragments</span><span class="p">,</span>
+<span class="w">        </span><span class="n">min.cells</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">10</span><span class="p">,</span>
+<span class="w">        </span><span class="n">min.features</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">200</span>
+<span class="w">    </span><span class="p">)</span>
 
-    scATAC &lt;- CreateSeuratObject(
-        counts = chrom_assay,
-        assay = &quot;peaks&quot;,
-        meta.data = metadata
-    )
-    return(scATAC)
-}
-</code></pre>
-</div>
-<div style="background-color: #e7f3fe; border-left: 6px solid #2196F3; padding: 15px; margin: 1.5em 0; border-radius: 4px;">
+<span class="w">    </span><span class="n">scATAC</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">CreateSeuratObject</span><span class="p">(</span>
+<span class="w">        </span><span class="n">counts</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">chrom_assay</span><span class="p">,</span>
+<span class="w">        </span><span class="n">assay</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"peaks"</span><span class="p">,</span>
+<span class="w">        </span><span class="n">meta.data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">metadata</span>
+<span class="w">    </span><span class="p">)</span>
+<span class="w">    </span><span class="kr">return</span><span class="p">(</span><span class="n">scATAC</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div>
 <p><strong>R (ArchR)</strong></p>
 <p>Create Arrow files from either <code>fragments.tsv.gz</code> (raw fragments) or <code>filtered.fragments.tsv.gz</code> (cell-filtered fragments).</p>
 <p><strong>Note:</strong>
 - ArchR-only filtering: point to the raw <code>fragments.tsv.gz</code> and rely on <code>filterTSS</code>/<code>filterFrags</code> thresholds.
 - Combined filtering: point to <code>filtered.fragments.tsv.gz</code> generated after dnbc4tools cell filtering, then apply ArchR thresholds as an additional filter.</p>
-<pre><code class="language-r"># Option A: ArchR-only filtering (raw fragments)
-library(ArchR)
-ArrowFiles &lt;- createArrowFiles(
-  inputFiles = &quot;/outs/fragments.tsv.gz&quot;,
-  sampleNames = &quot;MySample&quot;,
-  filterTSS = 4,
-  filterFrags = 1000,
-  addTileMat = TRUE,
-  addGeneScoreMat = TRUE
-)
-</code></pre>
-<pre><code class="language-r"># Option B: Use dnbc4tools cell-filtered fragments then ArchR filters
-library(ArchR)
-ArrowFiles &lt;- createArrowFiles(
-  inputFiles = &quot;/outs/filtered.fragments.tsv.gz&quot;,
-  sampleNames = &quot;MySample&quot;,
-  filterTSS = 4,
-  filterFrags = 1000,
-  addTileMat = TRUE,
-  addGeneScoreMat = TRUE
-)
-</code></pre>
-</div>
-<div style="background-color: #e7f3fe; border-left: 6px solid #2196F3; padding: 15px; margin: 1.5em 0; border-radius: 4px;">
+<div class="highlight"><pre><span></span><code><span class="c1"># Option A: ArchR-only filtering (raw fragments)</span>
+<span class="nf">library</span><span class="p">(</span><span class="n">ArchR</span><span class="p">)</span>
+<span class="n">ArrowFiles</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">createArrowFiles</span><span class="p">(</span>
+<span class="w">  </span><span class="n">inputFiles</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"/outs/fragments.tsv.gz"</span><span class="p">,</span>
+<span class="w">  </span><span class="n">sampleNames</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"MySample"</span><span class="p">,</span>
+<span class="w">  </span><span class="n">filterTSS</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">4</span><span class="p">,</span>
+<span class="w">  </span><span class="n">filterFrags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">1000</span><span class="p">,</span>
+<span class="w">  </span><span class="n">addTileMat</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">TRUE</span><span class="p">,</span>
+<span class="w">  </span><span class="n">addGeneScoreMat</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">TRUE</span>
+<span class="p">)</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="c1"># Option B: Use dnbc4tools cell-filtered fragments then ArchR filters</span>
+<span class="nf">library</span><span class="p">(</span><span class="n">ArchR</span><span class="p">)</span>
+<span class="n">ArrowFiles</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">createArrowFiles</span><span class="p">(</span>
+<span class="w">  </span><span class="n">inputFiles</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"/outs/filtered.fragments.tsv.gz"</span><span class="p">,</span>
+<span class="w">  </span><span class="n">sampleNames</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"MySample"</span><span class="p">,</span>
+<span class="w">  </span><span class="n">filterTSS</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">4</span><span class="p">,</span>
+<span class="w">  </span><span class="n">filterFrags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">1000</span><span class="p">,</span>
+<span class="w">  </span><span class="n">addTileMat</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">TRUE</span><span class="p">,</span>
+<span class="w">  </span><span class="n">addGeneScoreMat</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">TRUE</span>
+<span class="p">)</span>
+</code></pre></div>
 <p><strong>Python (AnnData)</strong></p>
 <p>Load the filtered peak matrix into an AnnData object.</p>
-<pre><code class="language-python">import os
-from scipy.sparse import csr_matrix
-import anndata
-import pandas as pd
-import scipy.io
-import scipy.sparse
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.sparse</span><span class="w"> </span><span class="kn">import</span> <span class="n">csr_matrix</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">anndata</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">scipy.io</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">scipy.sparse</span>
 
-def read_atac_C4(path):
-    mtx_path = os.path.join(path, &quot;matrix.mtx.gz&quot;)
-    barcode_path = os.path.join(path, &quot;barcodes.tsv.gz&quot;)
-    feature_path = os.path.join(path, &quot;peaks.bed.gz&quot;)
+<span class="k">def</span><span class="w"> </span><span class="nf">read_atac_C4</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+    <span class="n">mtx_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s2">"matrix.mtx.gz"</span><span class="p">)</span>
+    <span class="n">barcode_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s2">"barcodes.tsv.gz"</span><span class="p">)</span>
+    <span class="n">feature_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s2">"peaks.bed.gz"</span><span class="p">)</span>
 
-    obs = pd.read_csv(barcode_path, header=None, index_col=0, sep=&quot;\t&quot;)
-    obs.index.name = &quot;barcode&quot;
+    <span class="n">obs</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">barcode_path</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">"</span><span class="se">\t</span><span class="s2">"</span><span class="p">)</span>
+    <span class="n">obs</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">"barcode"</span>
 
-    var = pd.read_csv(feature_path, header=None, sep=&quot;\t&quot;)
-    var.columns = ['chrom', 'chromStart', 'chromEnd']
-    var.index = var['chrom'].astype(str) + ':' + var['chromStart'].astype(str) + '-' + var['chromEnd'].astype(str)
-    var.index.name = &quot;peak&quot;
+    <span class="n">var</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">feature_path</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">"</span><span class="se">\t</span><span class="s2">"</span><span class="p">)</span>
+    <span class="n">var</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'chrom'</span><span class="p">,</span> <span class="s1">'chromStart'</span><span class="p">,</span> <span class="s1">'chromEnd'</span><span class="p">]</span>
+    <span class="n">var</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">var</span><span class="p">[</span><span class="s1">'chrom'</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span> <span class="o">+</span> <span class="s1">':'</span> <span class="o">+</span> <span class="n">var</span><span class="p">[</span><span class="s1">'chromStart'</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span> <span class="o">+</span> <span class="s1">'-'</span> <span class="o">+</span> <span class="n">var</span><span class="p">[</span><span class="s1">'chromEnd'</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
+    <span class="n">var</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">"peak"</span>
 
-    mtx = csr_matrix(scipy.io.mmread(mtx_path).T)
+    <span class="n">mtx</span> <span class="o">=</span> <span class="n">csr_matrix</span><span class="p">(</span><span class="n">scipy</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">mmread</span><span class="p">(</span><span class="n">mtx_path</span><span class="p">)</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
 
-    adata = anndata.AnnData(mtx, obs=obs, var=var)
-    adata.var_names_make_unique()
-    return adata
-</code></pre>
-</div>
-<hr />
+    <span class="n">adata</span> <span class="o">=</span> <span class="n">anndata</span><span class="o">.</span><span class="n">AnnData</span><span class="p">(</span><span class="n">mtx</span><span class="p">,</span> <span class="n">obs</span><span class="o">=</span><span class="n">obs</span><span class="p">,</span> <span class="n">var</span><span class="o">=</span><span class="n">var</span><span class="p">)</span>
+    <span class="n">adata</span><span class="o">.</span><span class="n">var_names_make_unique</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">adata</span>
+</code></pre></div>
 <h2 id="common-output-files">Common Output Files <a id="common-output-files"></a><a class="headerlink" href="#common-output-files" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -1464,17 +1532,17 @@ def read_atac_C4(path):
 </thead>
 <tbody>
 <tr>
-<td style="text-align: left;"><code>filter_matrix/</code></td>
+<td style="text-align: left;"><code>filtered_feature_bc_matrix/</code></td>
 <td style="text-align: left;">Filtered gene expression matrix (MEX format).</td>
 <td style="text-align: left;">scRNA-seq</td>
 </tr>
 <tr>
-<td style="text-align: left;"><code>filter_peak_matrix/</code></td>
+<td style="text-align: left;"><code>filtered_peak_bc_matrix/</code></td>
 <td style="text-align: left;">Filtered peak accessibility matrix (MEX format).</td>
 <td style="text-align: left;">scATAC-seq</td>
 </tr>
 <tr>
-<td style="text-align: left;"><code>filter_feature.h5ad</code></td>
+<td style="text-align: left;"><code>filtered_feature_bc_matrix.h5ad</code></td>
 <td style="text-align: left;">Filtered matrix in AnnData format (Python-ready).</td>
 <td style="text-align: left;">scRNA-seq</td>
 </tr>
@@ -1490,7 +1558,6 @@ def read_atac_C4(path):
 </tr>
 </tbody>
 </table>
-<hr />
 <p><em>For detailed output descriptions, see the <a href="outs/outs.html">Output Files Guide</a></em></p>
 
 
@@ -1512,6 +1579,12 @@ def read_atac_C4(path):
 <script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
         </div>
         
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
       </main>
       
         <footer class="md-footer">
@@ -1521,9 +1594,7 @@ def read_atac_C4(path):
       <div class="md-copyright">
   
     <div class="md-copyright__highlight">
-      Copyright &copy; 2026 MGI Tech Bioinformatics. All rights reserved.<br>
-Documentation Version 3.1 · Last updated May 15, 2026
-
+      Copyright &copy; 2026 MGI Tech Bioinformatics.<br>Documentation 3.2 · Updated 2026-10-23
     </div>
   
   
@@ -1542,12 +1613,12 @@ Documentation Version 3.1 · Last updated May 15, 2026
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["search.suggest", "search.highlight"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["search.suggest", "search.highlight", "content.code.copy", "navigation.top"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
       <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
       
-        <script src="../../javascripts/lang-toggle.js"></script>
+        <script src="../../javascripts/doc-controls.js"></script>
       
     
   </body>

@@ -82,7 +82,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#dnbelab-c-series-ht-scatac-analysis-pipeline" class="md-skip">
+        <a href="#overview" class="md-skip">
           Skip to content
         </a>
       
@@ -476,8 +476,6 @@
       <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
       
       
-        
-      
       
         <label class="md-nav__link md-nav__link--active" for="__toc">
           
@@ -519,8 +517,6 @@
 <nav class="md-nav md-nav--secondary" aria-label="Table of contents">
   
   
-  
-    
   
   
     <label class="md-nav__title" for="__toc">
@@ -629,6 +625,17 @@
     <span class="md-ellipsis">
       
         Multi-Sample Batch Processing (Optional)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#calling-and-matrix-counts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Calling and matrix counts
       
     </span>
   </a>
@@ -1195,6 +1202,60 @@
   
   
     <li class="md-nav__item">
+      <a href="../migration.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Upgrade Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../troubleshooting.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Running & Troubleshooting
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../release.html" class="md-nav__link">
         
   
@@ -1257,10 +1318,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_12" >
         
           
-          <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_12" id="__nav_12_label" tabindex="0">
             
   
   
@@ -1278,8 +1339,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_10">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_12_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_12">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -1368,8 +1429,6 @@
 <nav class="md-nav md-nav--secondary" aria-label="Table of contents">
   
   
-  
-    
   
   
     <label class="md-nav__title" for="__toc">
@@ -1484,6 +1543,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#calling-and-matrix-counts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Calling and matrix counts
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1539,114 +1609,77 @@
 
 
 
-<div align="right" style="margin-bottom: 20px; max-width: 1200px; margin-left: auto; margin-right: auto;">
-<p><a href="../../index.html">Home</a></p>
-</div>
-<div align="center" style="padding: 40px 20px; background: linear-gradient(135deg, #f5f5f7 0%, #ffffff 100%); border-radius: 12px; margin-bottom: 30px; max-width: 1200px; margin-left: auto; margin-right: auto;">
-<h1 id="dnbelab-c-series-ht-scatac-analysis-pipeline" style="font-size: 48px; font-weight: 600; color: #1d1d1f; margin: 0 0 16px 0; letter-spacing: -0.02em;">DNBelab C Series HT scATAC Analysis Pipeline<a class="headerlink" href="#dnbelab-c-series-ht-scatac-analysis-pipeline" title="Permanent link">&para;</a></h1>
-<p style="font-size: 21px; color: #86868b; margin: 0 0 30px 0; font-weight: 400;">Single-Cell ATAC Sequencing Data Analysis Guide</p>
-<div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
-<p><a href="#overview" style="background: #0071e3; color: white; padding: 8px 16px; border-radius: 980px; text-decoration: none; font-size: 14px;">Overview</a>
-<a href="#file-preparation" style="background: transparent; color: #0071e3; padding: 8px 16px; border-radius: 980px; text-decoration: none; font-size: 14px; border: 1px solid #0071e3;">File Preparation</a>
-<a href="#reference-data" style="background: transparent; color: #0071e3; padding: 8px 16px; border-radius: 980px; text-decoration: none; font-size: 14px; border: 1px solid #0071e3;">Reference Data</a>
-<a href="#main-pipeline" style="background: transparent; color: #0071e3; padding: 8px 16px; border-radius: 980px; text-decoration: none; font-size: 14px; border: 1px solid #0071e3;">Main Pipeline</a>
-<a href="#results-interpretation" style="background: transparent; color: #0071e3; padding: 8px 16px; border-radius: 980px; text-decoration: none; font-size: 14px; border: 1px solid #0071e3;">Results Interpretation</a></p>
-</div>
-</div>
-<div style="max-width: 1200px; margin: 0 auto;">
-<hr style="border: none; border-top: 1px solid #d2d2d7; margin: 24px 0;">
-</div>
-<div style="background: #f5f5f7; border-radius: 12px; padding: 24px; margin: 24px auto; max-width: 1200px;">
+<h1 id="dnbelab-c-series-ht-scatac-analysis-pipeline">DNBelab C Series HT scATAC Analysis Pipeline<a class="headerlink" href="#dnbelab-c-series-ht-scatac-analysis-pipeline" title="Permanent link">&para;</a></h1>
+<p>Single-Cell ATAC Sequencing Data Analysis Guide</p>
 <h2 id="overview">Overview <a id="overview"></a><a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-</div>
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; margin: 20px auto; max-width: 1200px; border: 1px solid #e5e5e5; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
 <p>This document provides a detailed guide for analyzing single-cell ATAC sequencing data using dnbc4tools.</p>
 <p><strong>Workflow</strong>: Raw Data → Quality Control → Alignment → Bead Merging → Peak Calling → Cell Identification → Dimensionality Reduction &amp; Clustering → Analysis Report</p>
-<div align="center">
 <p><img src="../images/scATAC_pipeline.png" alt="scATACpipeline" width="700"></p>
-</div>
-<div style="background-color: #e7f3fe; border-left: 6px solid #2196F3; padding: 15px; margin: 1.5em 0; border-radius: 4px;">
 <p><strong>Usage Note</strong>: <code>$dnbc4tools</code> represents the executable path and must be replaced with the actual installation path. The backslash <code>\</code> is used to split a command across multiple lines for readability.</p>
-</div>
-</div>
-<div style="max-width: 1200px; margin: 0 auto;">
-<hr style="border: none; border-top: 1px solid #d2d2d7; margin: 24px 0;">
-</div>
-<div style="background: #f5f5f7; border-radius: 12px; padding: 24px; margin: 24px auto; max-width: 1200px;">
 <h2 id="file-preparation">File Preparation <a id="file-preparation"></a><a class="headerlink" href="#file-preparation" title="Permanent link">&para;</a></h2>
-</div>
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; margin: 20px auto; max-width: 1200px; border: 1px solid #e5e5e5; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
 <p>The analysis requires FASTQ files:</p>
-<table style="width:100%; border-collapse: collapse; margin: 1.5em 0; box-shadow: 0 2px 3px rgba(0,0,0,0.1);">
-<thead style="background-color: #f2f2f2; border-bottom: 2px solid #ddd;">
+<table>
+  <thead>
     <tr>
-      <th style="padding: 12px 15px; border: 1px solid #ddd; text-align: left;">File Type</th>
-      <th style="padding: 12px 15px; border: 1px solid #ddd; text-align: left;">Description</th>
+      <th>File Type</th>
+      <th>Description</th>
     </tr>
   </thead>
-<tbody>
+  <tbody>
     <tr>
-      <td style="padding: 12px 15px; border: 1px solid #ddd;"><b>ATAC Library</b></td>
-      <td style="padding: 12px 15px; border: 1px solid #ddd;">Sequencing data containing cell barcodes and chromatin accessibility information.</td>
+      <td><b>ATAC Library</b></td>
+      <td>Sequencing data containing cell barcodes and chromatin accessibility information.</td>
     </tr>
   </tbody>
 </table>
-<div style="background-color: #fffbe6; border-left: 6px solid #ffc107; padding: 15px; margin: 1.5em 0; border-radius: 4px;">
+
 <p><strong>Note</strong>: Ensure that the FASTQ files are of good quality and record their paths for subsequent analysis.</p>
-</div>
-</div>
-<div style="max-width: 1200px; margin: 0 auto;">
-<hr style="border: none; border-top: 1px solid #d2d2d7; margin: 24px 0;">
-</div>
-<div style="background: #f5f5f7; border-radius: 12px; padding: 24px; margin: 24px auto; max-width: 1200px;">
 <h2 id="reference-data">Reference Data <a id="reference-data"></a><a class="headerlink" href="#reference-data" title="Permanent link">&para;</a></h2>
-</div>
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; margin: 20px auto; max-width: 1200px; border: 1px solid #e5e5e5; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
 <h3 id="reference-database-input-files">Reference Database Input Files<a class="headerlink" href="#reference-database-input-files" title="Permanent link">&para;</a></h3>
-<table style="width:100%; border-collapse: collapse; margin: 1.5em 0; box-shadow: 0 2px 3px rgba(0,0,0,0.1);">
-<thead style="background-color: #f2f2f2; border-bottom: 2px solid #ddd;">
+<table>
+  <thead>
     <tr>
-      <th style="padding: 12px 15px; border: 1px solid #ddd; text-align: left;">File Type</th>
-      <th style="padding: 12px 15px; border: 1px solid #ddd; text-align: left;">Format</th>
-      <th style="padding: 12px 15px; border: 1px solid #ddd; text-align: left;">Description</th>
+      <th>File Type</th>
+      <th>Format</th>
+      <th>Description</th>
     </tr>
   </thead>
-<tbody>
+  <tbody>
     <tr>
-      <td style="padding: 12px 15px; border: 1px solid #ddd;"><b>Genome File</b></td>
-      <td style="padding: 12px 15px; border: 1px solid #ddd;">FASTA</td>
-      <td style="padding: 12px 15px; border: 1px solid #ddd;">Contains the complete genome sequence of a species, including chromosomes, mitochondria, and other genetic information, typically the primary assembly. This file provides the foundation for genome analysis and alignment.</td>
+      <td><b>Genome File</b></td>
+      <td>FASTA</td>
+      <td>Contains the complete genome sequence of a species, including chromosomes, mitochondria, and other genetic information, typically the primary assembly. This file provides the foundation for genome analysis and alignment.</td>
     </tr>
     <tr>
-      <td style="padding: 12px 15px; border: 1px solid #ddd;"><b>Annotation File</b></td>
-      <td style="padding: 12px 15px; border: 1px solid #ddd;">GTF</td>
-      <td style="padding: 12px 15px; border: 1px solid #ddd;">Contains detailed information about genes, transcripts, exons, and other functional regions in the genome. This file identifies the location, type, and related attributes of genes.</td>
+      <td><b>Annotation File</b></td>
+      <td>GTF</td>
+      <td>Contains detailed information about genes, transcripts, exons, and other functional regions in the genome. This file identifies the location, type, and related attributes of genes.</td>
     </tr>
   </tbody>
 </table>
-<div style="background-color: #e7f3fe; border-left: 6px solid #2196F3; padding: 15px; margin: 1.5em 0; border-radius: 4px;">
+
 <p><strong>Recommended Data Source</strong>: It is recommended to use files from the <a href="https://www.ensembl.org/index.html">Ensembl database</a>. Ensembl's GTF files contain optional tags that facilitate filtering with <code>dnbc4tools tools mkgtf</code>.</p>
-</div>
 <p><strong>GTF File Requirements:</strong></p>
 <ul>
-<li>Must contain annotations of type <code>gene</code> or <code>transcript</code> as well as <code>exon</code>.</li>
-<li>Attributes must include <code>gene_id</code> or <code>gene_name</code> and <code>transcript_id</code> or <code>transcript_name</code>.</li>
-<li>The GFF file format is not supported.</li>
-<li>The genome file and annotation file must be from corresponding versions.</li>
+  <li>Must contain annotations of type <code>gene</code> or <code>transcript</code> as well as <code>exon</code>.</li>
+  <li>Attributes must include <code>gene_id</code> or <code>gene_name</code> and <code>transcript_id</code> or <code>transcript_name</code>.</li>
+  <li>The GFF file format is not supported.</li>
+  <li>The genome file and annotation file must be from corresponding versions.</li>
 </ul>
+
 <h3 id="gtf-file-processing-optional">GTF File Processing (Optional)<a class="headerlink" href="#gtf-file-processing-optional" title="Permanent link">&para;</a></h3>
 <p>For details on GTF file filtering, please <a href="scRNA.html#gtf-file-processing-optional">refer to the scRNA analysis pipeline</a>.</p>
 <h3 id="reference-database-construction">Reference Database Construction<a class="headerlink" href="#reference-database-construction" title="Permanent link">&para;</a></h3>
 <p>Before running the <code>dnbc4tools atac run</code> analysis, a reference database must be built. This step requires an annotation file (GTF) and a reference genome (FASTA) to create index files for read alignment and statistical analysis.</p>
 <p><strong>Command:</strong></p>
-<pre><code class="language-shell">$dnbc4tools atac mkref \
-  --fasta genome.fa \
-  --ingtf genes.gtf \
-  --species Mus_musculus 
-</code></pre>
+<div class="highlight"><pre><span></span><code><span class="nv">$dnbc4tools</span><span class="w"> </span>atac<span class="w"> </span>mkref<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--fasta<span class="w"> </span>genome.fa<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--ingtf<span class="w"> </span>genes.gtf<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--species<span class="w"> </span>Mus_musculus
+</code></pre></div>
 <p><strong>Output Directory:</strong></p>
 <p>Upon successful execution, a reference database directory will be created at the specified location with the following structure:</p>
-<pre><code>/database/scATAC/Mus_musculus
+<div class="highlight"><pre><span></span><code>/database/scATAC/Mus_musculus
 ├── fasta
 │   ├── genome.fa
 │   ├── genome.fa.fai
@@ -1659,65 +1692,56 @@
     ├── chrom.sizes
     ├── promoter.bed
     └── tss.bed
-</code></pre>
+</code></pre></div>
 <p><strong>ref.json Example:</strong></p>
 <p>The <code>ref.json</code> file records the main information of the database:</p>
-<pre><code class="language-json">{
-    &quot;species&quot;: &quot;Mus_musculus&quot;,
-    &quot;input_fasta_files&quot;: [
-        &quot;genome.fa&quot;
-    ],
-    &quot;input_gtf_files&quot;: [
-        &quot;genes.gtf&quot;
-    ],
-    &quot;genome&quot;: &quot;fasta/genome.fa&quot;,
-    &quot;index&quot;: &quot;fasta/genome.index&quot;,
-    &quot;gtf&quot;: &quot;genes/genes.gtf&quot;,
-    &quot;chrmt&quot;: &quot;chrM&quot;,
-    &quot;chloroplast&quot;: &quot;None&quot;,
-    &quot;chromeSize&quot;: &quot;regions/chrom.sizes&quot;,
-    &quot;tss&quot;: &quot;regions/tss.bed&quot;,
-    &quot;promoter&quot;: &quot;regions/promoter.bed&quot;,
-    &quot;version&quot;: &quot;3.1&quot;,
-    &quot;blacklist&quot;: &quot;None&quot;,
-    &quot;genomesize&quot;: &quot;mm&quot;
-}
-</code></pre>
-<div style="background-color: #fffbe6; border-left: 6px solid #ffc107; padding: 15px; margin: 1.5em 0; border-radius: 4px;">
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">    </span><span class="nt">"species"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Mus_musculus"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"input_fasta_files"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="s2">"genome.fa"</span>
+<span class="w">    </span><span class="p">],</span>
+<span class="w">    </span><span class="nt">"input_gtf_files"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="s2">"genes.gtf"</span>
+<span class="w">    </span><span class="p">],</span>
+<span class="w">    </span><span class="nt">"genome"</span><span class="p">:</span><span class="w"> </span><span class="s2">"fasta/genome.fa"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"index"</span><span class="p">:</span><span class="w"> </span><span class="s2">"fasta/genome.index"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"gtf"</span><span class="p">:</span><span class="w"> </span><span class="s2">"genes/genes.gtf"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"chrmt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"chrM"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"chloroplast"</span><span class="p">:</span><span class="w"> </span><span class="s2">"None"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"chromeSize"</span><span class="p">:</span><span class="w"> </span><span class="s2">"regions/chrom.sizes"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"tss"</span><span class="p">:</span><span class="w"> </span><span class="s2">"regions/tss.bed"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"promoter"</span><span class="p">:</span><span class="w"> </span><span class="s2">"regions/promoter.bed"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"version"</span><span class="p">:</span><span class="w"> </span><span class="s2">"3.2"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"blacklist"</span><span class="p">:</span><span class="w"> </span><span class="s2">"None"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"genomesize"</span><span class="p">:</span><span class="w"> </span><span class="s2">"mm"</span>
+<span class="p">}</span>
+</code></pre></div>
 <p><strong>Note</strong>: Building the reference database can be time-consuming, depending on the genome size and computational resources. The main analysis pipeline is compatible with older database versions.</p>
-</div>
 <p><strong>Runtime Log Example:</strong></p>
 <p>The following information will be printed during runtime:</p>
-<pre><code class="language-shell"> 2025-11-12 16:13:32 Creating new reference folder at /opt/database/Mus_musculus      
+<div class="highlight"><pre><span></span><code><span class="w"> </span><span class="m">2025</span>-11-12<span class="w"> </span><span class="m">16</span>:13:32<span class="w"> </span>Creating<span class="w"> </span>new<span class="w"> </span>reference<span class="w"> </span>folder<span class="w"> </span>at<span class="w"> </span>/opt/database/Mus_musculus
 ...done
 
- 2025-11-12 16:13:32 Writing genome FASTA file into reference folder...                             
+<span class="w"> </span><span class="m">2025</span>-11-12<span class="w"> </span><span class="m">16</span>:13:32<span class="w"> </span>Writing<span class="w"> </span>genome<span class="w"> </span>FASTA<span class="w"> </span>file<span class="w"> </span>into<span class="w"> </span>reference<span class="w"> </span>folder...
 ...done
 
- 2025-11-12 16:13:33 Indexing genome FASTA file...                                                  
+<span class="w"> </span><span class="m">2025</span>-11-12<span class="w"> </span><span class="m">16</span>:13:33<span class="w"> </span>Indexing<span class="w"> </span>genome<span class="w"> </span>FASTA<span class="w"> </span>file...
 ...done
 
- 2025-11-12 16:13:34 Writing genes GTF file into reference folder...                                
+<span class="w"> </span><span class="m">2025</span>-11-12<span class="w"> </span><span class="m">16</span>:13:34<span class="w"> </span>Writing<span class="w"> </span>genes<span class="w"> </span>GTF<span class="w"> </span>file<span class="w"> </span>into<span class="w"> </span>reference<span class="w"> </span>folder...
 ...done
 
- 2025-11-12 16:13:38 Extracting TSS and promoter regions from GTF file...                           
+<span class="w"> </span><span class="m">2025</span>-11-12<span class="w"> </span><span class="m">16</span>:13:38<span class="w"> </span>Extracting<span class="w"> </span>TSS<span class="w"> </span>and<span class="w"> </span>promoter<span class="w"> </span>regions<span class="w"> </span>from<span class="w"> </span>GTF<span class="w"> </span>file...
 ...done
 
- 2025-11-12 16:13:42 Generating Chromap genome index...                                             
+<span class="w"> </span><span class="m">2025</span>-11-12<span class="w"> </span><span class="m">16</span>:13:42<span class="w"> </span>Generating<span class="w"> </span>Chromap<span class="w"> </span>genome<span class="w"> </span>index...
 ...done
 
- 2025-11-12 16:14:07 Writing reference JSON file...                                                 
+<span class="w"> </span><span class="m">2025</span>-11-12<span class="w"> </span><span class="m">16</span>:14:07<span class="w"> </span>Writing<span class="w"> </span>reference<span class="w"> </span>JSON<span class="w"> </span>file...
 ...done
-Analysis Complete
-</code></pre>
-</div>
-<div style="max-width: 1200px; margin: 0 auto;">
-<hr style="border: none; border-top: 1px solid #d2d2d7; margin: 24px 0;">
-</div>
-<div style="background: #f5f5f7; border-radius: 12px; padding: 24px; margin: 24px auto; max-width: 1200px;">
+Analysis<span class="w"> </span>Complete
+</code></pre></div>
 <h2 id="main-pipeline">Main Pipeline <a id="main-pipeline"></a><a class="headerlink" href="#main-pipeline" title="Permanent link">&para;</a></h2>
-</div>
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; margin: 20px auto; max-width: 1200px; border: 1px solid #e5e5e5; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
 <p>The main pipeline can be used in two ways:</p>
 <ul>
 <li><strong>Single-sample analysis</strong>: Run <code>dnbc4tools atac run</code> directly for a complete analysis of one ATAC library.</li>
@@ -1726,25 +1750,26 @@ Analysis Complete
 <h3 id="single-sample-analysis">Single-Sample Analysis<a class="headerlink" href="#single-sample-analysis" title="Permanent link">&para;</a></h3>
 <p>The ATAC main analysis pipeline processes single-cell ATAC library data from a single sample. The core workflow includes:</p>
 <ol>
-<li><strong>Data Processing</strong>: Perform quality control and alignment to generate the <code>fragments</code> file for all beads.</li>
-<li><strong>Peak Calling</strong>: Run peak calling on aggregated data to identify open chromatin regions.</li>
-<li><strong>Cell Identification</strong>: Identify valid cells using fragment information within peak regions.</li>
-<li><strong>Advanced Analysis</strong>: Perform cell filtering, dimensionality reduction, and clustering.</li>
-<li><strong>Report Generation</strong>: Integrate outputs from all steps and generate the HTML report plus other result files.</li>
+  <li><strong>Data Processing</strong>: Perform quality control and alignment to generate the <code>fragments</code> file for all beads.</li>
+  <li><strong>Peak Calling</strong>: Run peak calling on aggregated data to identify open chromatin regions.</li>
+  <li><strong>Cell Identification</strong>: Identify valid cells using fragment information within peak regions.</li>
+  <li><strong>Advanced Analysis</strong>: Perform cell filtering, dimensionality reduction, and clustering.</li>
+  <li><strong>Report Generation</strong>: Integrate outputs from all steps and generate the HTML report plus other result files.</li>
 </ol>
+
 <p>Two input methods are supported:</p>
 <p><strong>Method 1: Directory (Recommended)</strong></p>
-<pre><code class="language-shell">$dnbc4tools atac run \
-  --name sample \
-  --fastqs /data \
-  --genomeDir /opt/database/Mus_musculus \
-  --threads 10
-</code></pre>
-<p>Directory structure example:</p>
-<pre><code>/data/
+<div class="highlight"><pre><span></span><code><span class="nv">$dnbc4tools</span><span class="w"> </span>atac<span class="w"> </span>run<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--name<span class="w"> </span>sample<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--fastqs<span class="w"> </span>/data<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--genomeDir<span class="w"> </span>/opt/database/Mus_musculus<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--threads<span class="w"> </span><span class="m">10</span>
+</code></pre></div>
+<p>Directory structure example:
+<div class="highlight"><pre><span></span><code>/data/
 ├── sample_R1.fastq.gz
 └── sample_R2.fastq.gz
-</code></pre>
+</code></pre></div></p>
 <p>Directory requirements:</p>
 <ul>
 <li>The <code>--fastqs</code> path should point to the FASTQ directory for the current ATAC library.</li>
@@ -1753,135 +1778,122 @@ Analysis Complete
 <li>Do not mix data from different samples or different libraries in the same input directory.</li>
 </ul>
 <p><strong>Method 2: Individual Parameters</strong></p>
-<pre><code class="language-shell">$dnbc4tools atac run \
-  --name sample \
-  --fastq1 /data/sample_R1.fastq.gz \
-  --fastq2 /data/sample_R2.fastq.gz \
-  --genomeDir /opt/database/Mus_musculus \
-  --threads 10
-</code></pre>
+<div class="highlight"><pre><span></span><code><span class="nv">$dnbc4tools</span><span class="w"> </span>atac<span class="w"> </span>run<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--name<span class="w"> </span>sample<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--fastq1<span class="w"> </span>/data/sample_R1.fastq.gz<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--fastq2<span class="w"> </span>/data/sample_R2.fastq.gz<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--genomeDir<span class="w"> </span>/opt/database/Mus_musculus<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--threads<span class="w"> </span><span class="m">10</span>
+</code></pre></div>
 <p>After auto-detecting the reagent version and dark reaction, the software begins the analysis. Here is an example:</p>
-<pre><code class="language-shell">
-──────────────────────────── Parsed FASTQ Inputs — 2025-11-12 15:05:39 ─────────────────────────────
+<div class="highlight"><pre><span></span><code>────────────────────────────<span class="w"> </span>Parsed<span class="w"> </span>FASTQ<span class="w"> </span>Inputs<span class="w"> </span>—<span class="w"> </span><span class="m">2025</span>-11-12<span class="w"> </span><span class="m">15</span>:05:39<span class="w"> </span>─────────────────────────────
 ┌───────┬──────────────────────────────────────────────────────────────────────────────────────────┐
-│ Type  │ Path                                                                                     │
+│<span class="w"> </span>Type<span class="w">  </span>│<span class="w"> </span>Path<span class="w">                                                                                     </span>│
 ├───────┼──────────────────────────────────────────────────────────────────────────────────────────┤
-│ Read 1 │ /data/sample_R1.fastq.gz                                                                 │
-│ Read 2 │ /data/sample_R2.fastq.gz                                                                 │
+│<span class="w"> </span>Read<span class="w"> </span><span class="m">1</span><span class="w"> </span>│<span class="w"> </span>/data/sample_R1.fastq.gz<span class="w">                                                                 </span>│
+│<span class="w"> </span>Read<span class="w"> </span><span class="m">2</span><span class="w"> </span>│<span class="w"> </span>/data/sample_R2.fastq.gz<span class="w">                                                                 </span>│
 └───────┴──────────────────────────────────────────────────────────────────────────────────────────┘
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 
-──────────────────────────── Chemistry Detection — 2025-11-12 15:05:49 ─────────────────────────────
+────────────────────────────<span class="w"> </span>Chemistry<span class="w"> </span>Detection<span class="w"> </span>—<span class="w"> </span><span class="m">2025</span>-11-12<span class="w"> </span><span class="m">15</span>:05:49<span class="w"> </span>─────────────────────────────
 ┌─────────────────────────────────┬────────────────────────────────────────────────────────────────┐
-│ Type                            │ Result                                                         │
+│<span class="w"> </span>Type<span class="w">                            </span>│<span class="w"> </span>Result<span class="w">                                                         </span>│
 ├─────────────────────────────────┼────────────────────────────────────────────────────────────────┤
-│ Read 1                           │ darkreaction                                                   │
-│ Read 2                           │ darkreaction                                                   │
+│<span class="w"> </span>Read<span class="w"> </span><span class="m">1</span><span class="w">                           </span>│<span class="w"> </span>darkreaction<span class="w">                                                   </span>│
+│<span class="w"> </span>Read<span class="w"> </span><span class="m">2</span><span class="w">                           </span>│<span class="w"> </span>darkreaction<span class="w">                                                   </span>│
 └─────────────────────────────────┴────────────────────────────────────────────────────────────────┘
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 
- 2025-11-12 15:05:49 Performing raw data quality control and alignment...                           
+<span class="w"> </span><span class="m">2025</span>-11-12<span class="w"> </span><span class="m">15</span>:05:49<span class="w"> </span>Performing<span class="w"> </span>raw<span class="w"> </span>data<span class="w"> </span>quality<span class="w"> </span>control<span class="w"> </span>and<span class="w"> </span>alignment...
 ...done
 
- 2025-11-12 15:24:56 Calculating bead similarity and merging beads within droplets...               
+<span class="w"> </span><span class="m">2025</span>-11-12<span class="w"> </span><span class="m">15</span>:24:56<span class="w"> </span>Calculating<span class="w"> </span>bead<span class="w"> </span>similarity<span class="w"> </span>and<span class="w"> </span>merging<span class="w"> </span>beads<span class="w"> </span>within<span class="w"> </span>droplets...
 ...done
 
- 2025-11-12 15:28:00 Processing fragments for peak calling...                                       
+<span class="w"> </span><span class="m">2025</span>-11-12<span class="w"> </span><span class="m">15</span>:28:00<span class="w"> </span>Processing<span class="w"> </span>fragments<span class="w"> </span><span class="k">for</span><span class="w"> </span>peak<span class="w"> </span>calling...
 ...done
 
- 2025-11-12 15:31:22 Generating raw peak count matrix...                                            
+<span class="w"> </span><span class="m">2025</span>-11-12<span class="w"> </span><span class="m">15</span>:31:22<span class="w"> </span>Generating<span class="w"> </span>raw<span class="w"> </span>peak<span class="w"> </span>count<span class="w"> </span>matrix...
 ...done
 
- 2025-11-12 15:38:18 Generating cell-filtered peak count matrix...                                  
+<span class="w"> </span><span class="m">2025</span>-11-12<span class="w"> </span><span class="m">15</span>:38:18<span class="w"> </span>Generating<span class="w"> </span>cell-filtered<span class="w"> </span>peak<span class="w"> </span>count<span class="w"> </span>matrix...
 ...done
 
- 2025-11-12 15:43:23 Performing dimensionality reduction and clustering...                          
+<span class="w"> </span><span class="m">2025</span>-11-12<span class="w"> </span><span class="m">15</span>:43:23<span class="w"> </span>Performing<span class="w"> </span>dimensionality<span class="w"> </span>reduction<span class="w"> </span>and<span class="w"> </span>clustering...
 ...done
 
- 2025-11-12 15:50:03 Generating analysis report and summary statistics...                           
+<span class="w"> </span><span class="m">2025</span>-11-12<span class="w"> </span><span class="m">15</span>:50:03<span class="w"> </span>Generating<span class="w"> </span>analysis<span class="w"> </span>report<span class="w"> </span>and<span class="w"> </span>summary<span class="w"> </span>statistics...
 ...done
 
- 2025-11-12 15:50:19 Analysis Finished. Elapsed Time: 0:44:30
-</code></pre>
+<span class="w"> </span><span class="m">2025</span>-11-12<span class="w"> </span><span class="m">15</span>:50:19<span class="w"> </span>Analysis<span class="w"> </span>Finished.<span class="w"> </span>Elapsed<span class="w"> </span>Time:<span class="w"> </span><span class="m">0</span>:44:30
+</code></pre></div>
 <p>A successful run will end with <code>Analysis Finished</code>.</p>
-<div style="border-top: 1px solid #d2d2d7; margin: 32px 0;"></div>
 <h3 id="multi-sample-batch-processing-optional">Multi-Sample Batch Processing (Optional)<a class="headerlink" href="#multi-sample-batch-processing-optional" title="Permanent link">&para;</a></h3>
 <p>To simplify the analysis of multiple samples, you can use a configuration file to generate a shell script for each sample.</p>
-<pre><code class="language-shell">$dnbc4tools atac multi \
-  --list sample.tsv \
-  --genomeDir /opt/database/Mus_musculus \
-  --threads 10
-</code></pre>
+<div class="highlight"><pre><span></span><code><span class="nv">$dnbc4tools</span><span class="w"> </span>atac<span class="w"> </span>multi<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--list<span class="w"> </span>sample.tsv<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--genomeDir<span class="w"> </span>/opt/database/Mus_musculus<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--threads<span class="w"> </span><span class="m">10</span>
+</code></pre></div>
 <p>The <code>sample.tsv</code> file is tab-separated (<code>\t</code>) and contains two columns:</p>
-<table style="width:100%; border-collapse: collapse; margin: 1.5em 0; box-shadow: 0 2px 3px rgba(0,0,0,0.1);">
-<thead style="background-color: #f2f2f2; border-bottom: 2px solid #ddd;">
+<table>
+  <thead>
     <tr>
-      <th style="padding: 12px 15px; border: 1px solid #ddd; text-align: left;">Column</th>
-      <th style="padding: 12px 15px; border: 1px solid #ddd; text-align: left;">Content</th>
+      <th>Column</th>
+      <th>Content</th>
     </tr>
   </thead>
-<tbody>
+  <tbody>
     <tr>
-      <td style="padding: 12px 15px; border: 1px solid #ddd;">1</td>
-      <td style="padding: 12px 15px; border: 1px solid #ddd;">Sample Name</td>
+      <td>1</td>
+      <td>Sample Name</td>
     </tr>
     <tr>
-      <td style="padding: 12px 15px; border: 1px solid #ddd;">2</td>
-      <td style="padding: 12px 15px; border: 1px solid #ddd;">Library Sequencing Data</td>
+      <td>2</td>
+      <td>Library Sequencing Data</td>
     </tr>
   </tbody>
 </table>
-<div style="background-color: #fffbe6; border-left: 6px solid #ffc107; padding: 15px; margin: 1.5em 0; border-radius: 4px;">
+
 <p><strong>Note</strong>:
 - Multiple FASTQ files should be separated by commas (<code>,</code>).
 - R1 and R2 files should be separated by semicolons (<code>;</code>).</p>
-</div>
-<pre><code class="language-tsv">sample1 /data/sample1_R1.fq.gz;/data/sample1_R2.fq.gz
+<div class="highlight"><pre><span></span><code>sample1 /data/sample1_R1.fq.gz;/data/sample1_R2.fq.gz
 sample2 /data/sample2_R1.fq.gz;/data/sample2_R2.fq.gz
 sample3 /data/sample3_1_R1.fq.gz,/data/sample3_2_R1.fq.gz;/data/sample3_1_R2.fq.gz,/data/sample3_2_R2.fq.gz
-</code></pre>
+</code></pre></div>
 <p>After execution, a shell script is generated for each sample:</p>
-<pre><code class="language-shell">sample1.sh
+<div class="highlight"><pre><span></span><code>sample1.sh
 sample2.sh
 sample3.sh
-</code></pre>
+</code></pre></div>
 <p>Example content of <code>sample1.sh</code>:</p>
-<pre><code class="language-shell">$cat sample1.sh
-/opt/software/dnbc4tools3.1/dnbc4tools atac run --name sample1 --fastq1 /data/sample1_R1.fq.gz --fastq2 /data/sample1_R2.fq.gz --genomeDir /opt/database/Mus_musculus --threads 10 
-</code></pre>
+<div class="highlight"><pre><span></span><code><span class="nv">$cat</span><span class="w"> </span>sample1.sh
+/opt/software/dnbc4tools3.2/dnbc4tools<span class="w"> </span>atac<span class="w"> </span>run<span class="w"> </span>--name<span class="w"> </span>sample1<span class="w"> </span>--fastq1<span class="w"> </span>/data/sample1_R1.fq.gz<span class="w"> </span>--fastq2<span class="w"> </span>/data/sample1_R2.fq.gz<span class="w"> </span>--genomeDir<span class="w"> </span>/opt/database/Mus_musculus<span class="w"> </span>--threads<span class="w"> </span><span class="m">10</span>
+</code></pre></div>
 <p>You can then execute these scripts to run the main analysis.</p>
-</div>
-<div style="max-width: 1200px; margin: 0 auto;">
-<hr style="border: none; border-top: 1px solid #d2d2d7; margin: 24px 0;">
-</div>
-<div style="background: #f5f5f7; border-radius: 12px; padding: 24px; margin: 24px auto; max-width: 1200px;">
+<h3 id="calling-and-matrix-counts">Calling and matrix counts <a id="v32-defaults"></a><a class="headerlink" href="#calling-and-matrix-counts" title="Permanent link">&para;</a></h3>
+<p>Cell calling defaults to <strong>ordmag</strong>. Peak calling uses <strong>all merged deduplicated fragments</strong>, with Tn5-adjusted <strong>cutsite</strong> signal. The peak matrix also defaults to endpoint counts; calling, FRIP and TSS fractions continue to use unique fragments.</p>
+<p><code>frags_cutoff=0</code> and <code>tss_cutoff=0</code> disable their additional final thresholds; low-targeting filtering still applies by default. Bead merging uses its own candidate threshold (<code>merge_cutoff=500</code>). See <a href="../parameter/scATAC.html#v32-defaults">ATAC parameters</a> for explicit overrides.</p>
+<p>Downstream normalization uses TF-IDF method 1. Neighbors and UMAP use original LSI dimensions 2–30; clustering uses Leiden.</p>
 <h2 id="results-interpretation">Results Interpretation <a id="results-interpretation"></a><a class="headerlink" href="#results-interpretation" title="Permanent link">&para;</a></h2>
-</div>
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; margin: 20px auto; max-width: 1200px; border: 1px solid #e5e5e5; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
 <p>Upon completion, <code>outs</code> (outputs) and <code>logs</code> directories will be generated.</p>
-<pre><code>. 
+<div class="highlight"><pre><span></span><code>.
 ├── *_scATAC_report.html
-├── filter_peak_matrix/
+├── filtered_peak_bc_matrix/
 │   ├── barcodes.tsv.gz
 │   ├── matrix.mtx.gz
 │   └── peaks.bed.gz
 ├── fragments.tsv.gz
 ├── fragments.tsv.gz.tbi
 ├── metrics_summary.xls
-├── raw_peak_matrix/
+├── raw_peak_bc_matrix/
 │   ├── barcodes.tsv.gz
 │   ├── matrix.mtx.gz
 │   └── peaks.bed.gz
 └── singlecell.csv
-</code></pre>
-</div>
-<div style="max-width: 1200px; margin: 0 auto;">
-<hr style="border: none; border-top: 1px solid #d2d2d7; margin: 24px 0;">
-</div>
-<div style="background: #f5f5f7; border-radius: 12px; padding: 24px; margin: 24px auto; max-width: 1200px;">
+</code></pre></div>
 <h2 id="related-documentation">Related Documentation<a class="headerlink" href="#related-documentation" title="Permanent link">&para;</a></h2>
-</div>
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; margin: 20px auto; max-width: 1200px; border: 1px solid #e5e5e5; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
 <table>
 <thead>
 <tr>
@@ -1904,28 +1916,8 @@ sample3.sh
 </tr>
 </tbody>
 </table>
-</div>
-<div style="max-width: 1200px; margin: 0 auto;">
-<hr style="border: none; border-top: 1px solid #d2d2d7; margin: 24px 0;">
-</div>
-<div style="background: #f5f5f7; border-radius: 12px; padding: 24px; margin: 24px auto; max-width: 1200px;">
 <h2 id="frequently-asked-questions">Frequently Asked Questions<a class="headerlink" href="#frequently-asked-questions" title="Permanent link">&para;</a></h2>
-</div>
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; margin: 20px auto; max-width: 1200px; border: 1px solid #e5e5e5; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
 <p>This section will be expanded as common usage questions are collected. For the current version, use the run log, parameter reference, and output file documentation as the primary troubleshooting references.</p>
-</div>
-<div style="max-width: 1200px; margin: 0 auto;">
-<hr style="border: none; border-top: 1px solid #d2d2d7; margin: 24px 0;">
-</div>
-<div style="background: #f5f5f7; border-radius: 12px; padding: 24px; margin: 24px auto; max-width: 1200px;">
-<div align="center">
-<blockquote>
-<p><strong>Feedback &amp; Support</strong></p>
-<p>This document is continuously maintained. If you identify errors or missing information, please submit feedback via GitHub Issues.</p>
-<p><strong>Document Version:</strong> 3.1 | <strong>Last Updated:</strong> May 15, 2026</p>
-</blockquote>
-</div>
-</div>
 
 
 
@@ -1946,6 +1938,12 @@ sample3.sh
 <script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
         </div>
         
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
       </main>
       
         <footer class="md-footer">
@@ -1955,9 +1953,7 @@ sample3.sh
       <div class="md-copyright">
   
     <div class="md-copyright__highlight">
-      Copyright &copy; 2026 MGI Tech Bioinformatics. All rights reserved.<br>
-Documentation Version 3.1 · Last updated May 15, 2026
-
+      Copyright &copy; 2026 MGI Tech Bioinformatics.<br>Documentation 3.2 · Updated 2026-10-23
     </div>
   
   
@@ -1976,12 +1972,12 @@ Documentation Version 3.1 · Last updated May 15, 2026
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["search.suggest", "search.highlight"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["search.suggest", "search.highlight", "content.code.copy", "navigation.top"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
       <script src="../../../assets/javascripts/bundle.79ae519e.min.js"></script>
       
-        <script src="../../../javascripts/lang-toggle.js"></script>
+        <script src="../../../javascripts/doc-controls.js"></script>
       
     
   </body>

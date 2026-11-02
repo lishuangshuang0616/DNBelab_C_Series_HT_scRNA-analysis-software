@@ -82,7 +82,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#_1" class="md-skip">
+        <a href="#_2" class="md-skip">
           跳转至
         </a>
       
@@ -836,8 +836,6 @@
       <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
       
       
-        
-      
       
         <label class="md-nav__link md-nav__link--active" for="__toc">
           
@@ -880,8 +878,6 @@
   
   
   
-    
-  
   
     <label class="md-nav__title" for="__toc">
       <span class="md-nav__icon md-icon"></span>
@@ -893,18 +889,7 @@
   <a href="#_2" class="md-nav__link">
     <span class="md-ellipsis">
       
-        输出文档
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#_3" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        相关文档
+        读取结果时注意
       
     </span>
   </a>
@@ -1073,6 +1058,60 @@
   
   
     <li class="md-nav__item">
+      <a href="../migration.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    升级指南
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../troubleshooting.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    运行与排错
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../release.html" class="md-nav__link">
         
   
@@ -1135,10 +1174,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_12" >
         
           
-          <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_12" id="__nav_12_label" tabindex="0">
             
   
   
@@ -1156,8 +1195,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_10">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_12_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_12">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -1247,8 +1286,6 @@
   
   
   
-    
-  
   
     <label class="md-nav__title" for="__toc">
       <span class="md-nav__icon md-icon"></span>
@@ -1260,18 +1297,7 @@
   <a href="#_2" class="md-nav__link">
     <span class="md-ellipsis">
       
-        输出文档
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#_3" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        相关文档
+        读取结果时注意
       
     </span>
   </a>
@@ -1295,96 +1321,48 @@
 
 
 
-<div align="right" style="margin-bottom: 20px; max-width: 1200px; margin-left: auto; margin-right: auto;">
-<p><a href="../../index.html">首页</a></p>
-</div>
-<div align="center" style="padding: 40px 20px; background: linear-gradient(135deg, #f5f5f7 0%, #ffffff 100%); border-radius: 12px; margin-bottom: 30px; max-width: 1200px; margin-left: auto; margin-right: auto;">
-<h1 id="_1" style="font-size: 48px; font-weight: 600; color: #1d1d1f; margin: 0 0 16px 0; letter-spacing: -0.02em;">输出结果总览<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h1>
-<p style="font-size: 21px; color: #86868b; margin: 0; font-weight: 400;">分析结果文件与报告说明</p>
-</div>
-<div style="max-width: 1200px; margin: 0 auto;">
-<hr style="border: none; border-top: 1px solid #d2d2d7; margin: 24px 0;">
-</div>
-<div style="background: #f5f5f7; border-radius: 12px; padding: 24px; margin: 24px auto; max-width: 1200px;">
-<h2 id="_2">输出文档<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
-<div align="center">
-<p><strong>使用说明</strong>：根据分析类型选择对应输出说明，查看文件结构与报告指标解读。</p>
-</div>
-</div>
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; margin: 20px auto; max-width: 1200px; border: 1px solid #e5e5e5; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+<h1 id="_1">输出与报告<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h1>
+<p>按模块查找输出目录、文件字段与网页报告指标。独立流程的结果位于 <code>&lt;outdir&gt;/&lt;name&gt;/outs/</code>；Multi 在该目录下按模态归档。</p>
 <table>
 <thead>
 <tr>
-<th style="text-align: left;">分析类型</th>
-<th style="text-align: left;">说明与关键内容</th>
-<th style="text-align: left;">文档</th>
+<th style="text-align: left;">模块</th>
+<th style="text-align: left;">主要交付内容</th>
+<th style="text-align: left;">输出说明</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td style="text-align: left;"><strong>单细胞 RNA</strong></td>
-<td style="text-align: left;"><strong>输出</strong>：基因表达分析结果。 <br> <ul><li>多格式基因-细胞表达矩阵</li><li>完整质量控制指标</li><li>细胞识别与过滤结果</li><li>交互式可视化报告</li></ul></td>
-<td style="text-align: left;"><a href="scRNA.html">查看文档</a></td>
+<td style="text-align: left;">RNA</td>
+<td style="text-align: left;">基因表达矩阵、H5/H5AD、细胞表、聚类与 RNA 报告</td>
+<td style="text-align: left;"><a href="scRNA.html">RNA 输出</a></td>
 </tr>
 <tr>
-<td style="text-align: left;"><strong>单细胞 ATAC</strong></td>
-<td style="text-align: left;"><strong>输出</strong>：染色质开放性分析结果。 <br> <ul><li>峰值-细胞可及性矩阵</li><li>下游分析片段文件</li><li>TSS 富集结果</li><li>细胞过滤与质量指标</li></ul></td>
-<td style="text-align: left;"><a href="scATAC.html">查看文档</a></td>
+<td style="text-align: left;">ATAC</td>
+<td style="text-align: left;">peak 矩阵、片段文件、细胞质控与 ATAC 报告</td>
+<td style="text-align: left;"><a href="scATAC.html">ATAC 输出</a></td>
 </tr>
 <tr>
-<td style="text-align: left;"><strong>单细胞 VDJ</strong></td>
-<td style="text-align: left;"><strong>输出</strong>：V(D)J 免疫组库分析结果。 <br> <ul><li>全长 V(D)J 序列重构</li><li>克隆型识别与分群</li><li>细胞级受体注释</li><li>组装与质控统计</li></ul></td>
-<td style="text-align: left;"><a href="scVDJ.html">查看文档</a></td>
+<td style="text-align: left;">V(D)J</td>
+<td style="text-align: left;">contig 序列、注释、克隆型与 VDJ 报告</td>
+<td style="text-align: left;"><a href="scVDJ.html">VDJ 输出</a></td>
 </tr>
 <tr>
-<td style="text-align: left;"><strong>多组学</strong></td>
-<td style="text-align: left;"><strong>输出</strong>：一体化多组学结果。 <br> <ul><li>统一多组学 HTML 报告</li><li>模块执行状态汇总</li><li>同一运行目录下组织 RNA/ATAC/VDJ 输出</li><li>运行清单与诊断日志</li></ul></td>
-<td style="text-align: left;"><a href="multi.html">查看文档</a></td>
+<td style="text-align: left;">Multi / C6</td>
+<td style="text-align: left;">组合报告、模态目录，以及 C6 的逐样本矩阵与报告</td>
+<td style="text-align: left;"><a href="multi.html">Multi 输出</a></td>
 </tr>
 </tbody>
 </table>
-</div>
-<div style="max-width: 1200px; margin: 0 auto;">
-<hr style="border: none; border-top: 1px solid #d2d2d7; margin: 24px 0;">
-</div>
-<div style="background: #f5f5f7; border-radius: 12px; padding: 24px; margin: 24px auto; max-width: 1200px;">
-<h2 id="_3">相关文档<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
-</div>
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; margin: 20px auto; max-width: 1200px; border: 1px solid #e5e5e5; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
-<table>
-<thead>
-<tr>
-<th style="text-align: left;">文档</th>
-<th style="text-align: left;">说明</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align: left;"><a href="../pipeline/pipeline.html">流程说明</a></td>
-<td style="text-align: left;">各分析流程使用说明</td>
-</tr>
-<tr>
-<td style="text-align: left;"><a href="../parameter/parameter.html">参数说明</a></td>
-<td style="text-align: left;">命令参数与配置项参考</td>
-</tr>
-<tr>
-<td style="text-align: left;"><a href="../quickstart.html">快速开始</a></td>
-<td style="text-align: left;">入门操作指南</td>
-</tr>
-<tr>
-<td style="text-align: left;"><a href="../installation.html">安装指南</a></td>
-<td style="text-align: left;">软件安装与环境要求</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div align="center" style="background: #f5f5f7; border-radius: 12px; padding: 30px; margin: 40px auto; max-width: 1200px;">
-<blockquote>
-<p><strong>反馈与支持</strong></p>
-<p>如需详细输出文件说明，请进入上方各模块文档。</p>
-<p><strong>文档版本：</strong> 3.1 | <strong>最后更新：</strong> 2026 年 5 月 15 日</p>
-</blockquote>
-</div>
+<h2 id="_2">读取结果时注意<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<ul>
+<li>C6 的完整细胞汇总为 <code>singlecell.csv.gz</code>，包含背景与零 UMI 行；按 <code>is_cell_barcode</code> 选择有效细胞。</li>
+<li>普通 RNA/ATAC 默认仍交付 <code>singlecell.csv</code>。</li>
+<li>ATAC 矩阵默认统计 cutsite，不能用其列和替代 fragment 质控指标。</li>
+<li><code>.xls</code> 指标汇总为制表符分隔文本，可在表格软件中按文本导入。</li>
+<li>BAM 依对应输出开关生成，索引可能为 BAI 或 CSI。</li>
+</ul>
+<p><a href="../io.html">在 R / Python 中读取结果</a> · <a href="../migration.html">升级前后的文件变化</a> · <a href="../troubleshooting.html">运行与排错</a></p>
 
 
 
@@ -1405,6 +1383,12 @@
 <script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
         </div>
         
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  回到页面顶部
+</button>
+        
       </main>
       
         <footer class="md-footer">
@@ -1414,9 +1398,7 @@
       <div class="md-copyright">
   
     <div class="md-copyright__highlight">
-      Copyright &copy; 2026 MGI Tech Bioinformatics. All rights reserved.<br>
-Documentation Version 3.1 · Last updated May 15, 2026
-
+      Copyright &copy; 2026 MGI Tech Bioinformatics.<br>Documentation 3.2 · Updated 2026-10-23
     </div>
   
   
@@ -1435,12 +1417,12 @@ Documentation Version 3.1 · Last updated May 15, 2026
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["search.suggest", "search.highlight"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "\u5df2\u590d\u5236", "clipboard.copy": "\u590d\u5236", "search.result.more.one": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.other": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 # \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.term.missing": "\u7f3a\u5c11", "select.version": "\u9009\u62e9\u5f53\u524d\u7248\u672c"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["search.suggest", "search.highlight", "content.code.copy", "navigation.top"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "\u5df2\u590d\u5236", "clipboard.copy": "\u590d\u5236", "search.result.more.one": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.other": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 # \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.term.missing": "\u7f3a\u5c11", "select.version": "\u9009\u62e9\u5f53\u524d\u7248\u672c"}, "version": null}</script>
     
     
       <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
       
-        <script src="../../javascripts/lang-toggle.js"></script>
+        <script src="../../javascripts/doc-controls.js"></script>
       
     
   </body>

@@ -1,44 +1,16 @@
-<div align="right" style="margin-bottom: 20px; max-width: 1200px; margin-left: auto; margin-right: auto;">
+# 多组学分析输出
 
-[首页](../../README.md)
-
-</div>
-
-<div align="center" style="padding: 40px 20px; background: linear-gradient(135deg, #f5f5f7 0%, #ffffff 100%); border-radius: 12px; margin-bottom: 30px; max-width: 1200px; margin-left: auto; margin-right: auto;">
-
-<h1 style="font-size: 48px; font-weight: 600; color: #1d1d1f; margin: 0 0 16px 0; letter-spacing: -0.02em;">多组学分析输出</h1>
-
-<p style="font-size: 21px; color: rgba(0,0,0,0.6); margin: 0 0 30px 0; font-weight: 400;">多组学整合分析输出文件说明</p>
-
-<div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
-<a href="#输出目录结构" style="background: #0071e3; color: white; padding: 8px 16px; border-radius: 980px; text-decoration: none; font-size: 14px;">目录结构</a>
-<a href="#详细文件说明" style="background: transparent; color: #0071e3; padding: 8px 16px; border-radius: 980px; text-decoration: none; font-size: 14px; border: 1px solid #0071e3;">文件详情</a>
-<a href="#网页报告释义" style="background: transparent; color: #0071e3; padding: 8px 16px; border-radius: 980px; text-decoration: none; font-size: 14px; border: 1px solid #0071e3;">报告解读</a>
-</div>
-
-</div>
-
-<div style="background: #f5f5f7; border-radius: 12px; padding: 24px; margin: 24px auto; max-width: 1200px;">
+多组学整合分析输出文件说明
 
 ## 概述 <a id="概述"></a>
 
 多组学流程会将 RNA / ATAC / VDJ 的关键结果统一整理到一个样本目录，支持在同一份报告中完成跨组学浏览和对比。
 
 > **提示**
-> 
+>
 > 组合报告用于快速总览和跨模块查看。需要详细说明时，请进入对应单组学 outs 文档。
 
-</div>
-
-<div style="max-width: 1200px; margin: 0 auto;"><hr style="border: none; border-top: 1px solid #d2d2d7; margin: 24px 0;"></div>
-
-<div style="background: #f5f5f7; border-radius: 12px; padding: 24px; margin: 24px auto; max-width: 1200px;">
-
 ## 输出目录结构 <a id="输出目录结构"></a>
-
-</div>
-
-<div style="background: #ffffff; border-radius: 12px; padding: 20px; margin: 20px auto; max-width: 1200px; overflow-x: auto; border: 1px solid #d2d2d7;">
 
 ```text
 <outdir>/<sample>/
@@ -50,55 +22,91 @@
     └── vdj-b/                                 # VDJ-B 结果目录（若启用）
 ```
 
-</div>
-
-<div style="max-width: 1200px; margin: 0 auto;"><hr style="border: none; border-top: 1px solid #d2d2d7; margin: 24px 0;"></div>
-
-<div style="background: #f5f5f7; border-radius: 12px; padding: 24px; margin: 24px auto; max-width: 1200px;">
-
 ## 详细文件说明 <a id="详细文件说明"></a>
-
-</div>
-
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border: 1px solid #e5e5e5; margin: 20px auto; max-width: 1200px;">
 
 ### `outs/<sample>_multi_report.html`
 
 - **内容**：整合展示 RNA / ATAC / VDJ 的核心 QC 与分析图表。
 - **用途**：一页内完成跨组学质量检查与结果浏览。
 
-</div>
-
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border: 1px solid #e5e5e5; margin: 20px auto; max-width: 1200px;">
-
 ### `outs/rna`, `outs/atac`, `outs/vdj-t`, `outs/vdj-b`
 
 - **内容**：对应模块的标准输出（矩阵、统计表、模块报告等）。
 - **用途**：用于下游模块化分析或单组学复用。
 
-</div>
+## C6 多样本 RNA 输出 <a id="c6-outputs"></a>
 
-<div style="max-width: 1200px; margin: 0 auto;"><hr style="border: none; border-top: 1px solid #d2d2d7; margin: 24px 0;"></div>
+含 `[samples]` 的运行采用以下布局。普通单样本 Multi 使用上方的模态目录。
 
-<div style="background: #f5f5f7; border-radius: 12px; padding: 24px; margin: 24px auto; max-width: 1200px;">
+```text
+<run>/outs/
+├── <run>_multi_report.html
+└── rna/
+    ├── raw_feature_bc_matrix/             # 含背景的全局矩阵
+    ├── raw_feature_bc_matrix.h5
+    ├── filtered_feature_bc_matrix/        # 全部 called cells
+    ├── filtered_feature_bc_matrix.h5
+    ├── filtered_feature_bc_matrix.h5ad    # 稀疏计数，无联合聚类
+    ├── singlecell.csv.gz                 # 完整六列表，含背景
+    ├── metrics_summary.xls               # 制表符分隔文本
+    ├── oligo.records.bam                 # 启用 BAM 时
+    ├── unassigned_alignments.bam         # 启用 BAM 时
+    ├── multi_sample/
+    │   ├── per_sample_metrics.csv
+    │   ├── sample_metrics_summary.xls
+    │   ├── barcode_assignment_metrics.json
+    │   └── high_occupancy_metrics.json
+    └── per_sample_outs/<sample>/
+        ├── raw_feature_bc_matrix/
+        ├── raw_feature_bc_matrix.h5
+        ├── filtered_feature_bc_matrix/
+        ├── filtered_feature_bc_matrix.h5
+        ├── filtered_feature_bc_matrix.h5ad
+        ├── <sample>_scRNA_report.html
+        ├── metrics_summary.xls
+        ├── <sample>_alignments.bam         # 启用 BAM 时
+        └── analysis/                     # 样本级聚类、marker 等
+```
+
+BAM 随实际基因组范围附带 `.bai` 或 `.csi`；`no_bam=true` 不交付样本 BAM、Unassigned BAM 或 oligo BAM。双物种时可额外交付全局 `analysis/cell_classification.csv`；单物种不创建空的全局 analysis 目录。子样本分析文件按实际成功状态交付，空或失败样本不交付残留的旧分析结果。
+
+全局不交付联合 cluster/marker、`QC_Cluster.h5ad` 或运行级 RNA HTML。全局 H5AD 只提供合并计数；每个样本有自己的分析与完整 RNA 报告。处理目录 `SAMPLE_SPLIT`、`MULTI_CELL_CALLING`、`tempN` 及报告缓存不属于公共交付结构。
+
+### `singlecell.csv.gz`
+
+| 列 | 含义 |
+| :--- | :--- |
+| `cell` | 合并后 cell 标识；异常缺失映射背景可为空 |
+| `reads` | 对应分组汇总的 reads 计数 |
+| `gene` / `umi` | 该分组的检测基因与 UMI 数 |
+| `is_cell_barcode` | 有效细胞标记 |
+| `barcode` | 原始 barcode 成员信息，保留 probe 后缀 |
+
+完整表保留背景及零 UMI 行；正 UMI 行降序，零 UMI 行在末尾保持原组序。无需先手工解压，读取方式见[结果读取](../io.md#c6-import)。
+
+### 报告与指标分母
+
+| 内容 | 使用范围和解释 |
+| :--- | :--- |
+| 根目录 Multi 报告 | 批次概览、Library QC 与 Samples 比较；C6 chemistry 显示 `scRNAC6` |
+| 逐样本 RNA 报告 | 该样本的细胞、聚类、marker、比对和饱和度结果；缺失值显示 N/A |
+| Assigned Reads | 已分配到该样本的 read pairs，不是全库原始 reads |
+| Mean Reads per Cell | Assigned Reads / Cells；细胞数为 0 或缺失时不计算 |
+| Fraction reads in cells | 该样本细胞内可信转录组 reads / 该样本全部有效 barcode 的可信转录组 reads |
+| 样本 Mapping Quality | 使用该样本 All Reads 范围；不能混入 Filtered Cells 的比例 |
+| 逐样本 cDNA Valid barcodes | Assigned Reads > 0 时为 100%，只描述已分配集合；为零或缺失时 N/A |
+| Q30 / Valid UMI / Corrected barcodes / Oligo QC | 来自全库共享测量，不能解释为样本独立 QC；指标表保留 `cDNA QC scope` |
+| cell/probe barcode 有效率 | 分别来自纠错阶段的真实统计，不从联合有效率推算；缺失时 N/A |
+
+`.xls` 汇总是制表符分隔文本。`sample_metrics_summary.xls` 每个配置样本一行，保留空/失败样本；All Reads 与 Filtered Cells 两组比对比例分别使用各自分母。旧 HTML 不会自动更新，模板修复后需要重生成报告。
 
 ## 网页报告释义 <a id="网页报告释义"></a>
 
-<div align="center">
-
 **概述**：多组学组合报告整合展示 RNA / ATAC / VDJ 的核心 QC 与分析图表。
-
-</div>
-
-</div>
-
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border: 1px solid #e5e5e5; margin: 20px auto; max-width: 1200px;">
 
 ### Summary 与导航
 
-<div align="center" style="margin: 24px auto; max-width: 1200px;">
-<img src="../images/html_multi_summary.png" alt="multi summary 页面" width="760" style="border-radius: 12px; box-shadow: 0 4px 16px rgba(0,0,0,0.1);">
-</div>
+<img src="../images/html_multi_summary.png" alt="multi summary 页面" width="760">
 
 `Summary` 页面定义了报告的两级导航：
 
@@ -111,15 +119,9 @@
 - `Cells`：细胞层面的质控、聚类、注释或克隆型信息。
 - `Library`：文库与测序层面的质量指标（Q30、mapping、enrichment 等）。
 
-</div>
-
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border: 1px solid #e5e5e5; margin: 20px auto; max-width: 1200px;">
-
 ### 参数信息
 
-<div align="center" style="margin: 24px auto; max-width: 1200px;">
-<img src="../images/html_multi_parameter.png" alt="multi configuration parameters 页面" width="760" style="border-radius: 12px; box-shadow: 0 4px 16px rgba(0,0,0,0.1);">
-</div>
+<img src="../images/html_multi_parameter.png" alt="multi configuration parameters 页面" width="760">
 
 该区域用于展示本次运行的关键参数与输入 FASTQ 路径，建议在结果复现和问题排查时优先查看。
 
@@ -130,23 +132,11 @@
 - 输入文件路径：`Input FASTQs` 区域展示各文库实际使用的 FASTQ 路径。
 - 视图切换：可按组学标签查看不同模块的参数片段。
 
-</div>
-
-<div style="max-width: 1200px; margin: 0 auto;"><hr style="border: none; border-top: 1px solid #d2d2d7; margin: 24px 0;"></div>
-
-<div style="background: #f5f5f7; border-radius: 12px; padding: 24px; margin: 24px auto; max-width: 1200px;">
-
 ### RNA 页面
-
-</div>
-
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border: 1px solid #e5e5e5; margin: 20px auto; max-width: 1200px;">
 
 #### `RNA > Cells`
 
-<div align="center" style="margin: 24px auto; max-width: 1200px;">
-<img src="../images/html_multi_scrna_cells.png" alt="multi RNA cells 页面" width="760" style="border-radius: 12px; box-shadow: 0 4px 16px rgba(0,0,0,0.1);">
-</div>
+<img src="../images/html_multi_scrna_cells.png" alt="multi RNA cells 页面" width="760">
 
 页面内容包括：
 
@@ -156,15 +146,9 @@
 - `RNA Cell Annotation`：细胞类型注释结果。
 - `Top Features by Cluster`：各聚类的特征基因表。
 
-</div>
-
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border: 1px solid #e5e5e5; margin: 20px auto; max-width: 1200px;">
-
 #### `RNA > Library`
 
-<div align="center" style="margin: 24px auto; max-width: 1200px;">
-<img src="../images/html_multi_scrna_library.png" alt="multi RNA library 页面" width="760" style="border-radius: 12px; box-shadow: 0 4px 16px rgba(0,0,0,0.1);">
-</div>
+<img src="../images/html_multi_scrna_library.png" alt="multi RNA library 页面" width="760">
 
 页面内容包括：
 
@@ -176,23 +160,11 @@
 
 - [scRNA 输出文档](./scRNA.md)
 
-</div>
-
-<div style="max-width: 1200px; margin: 0 auto;"><hr style="border: none; border-top: 1px solid #d2d2d7; margin: 24px 0;"></div>
-
-<div style="background: #f5f5f7; border-radius: 12px; padding: 24px; margin: 24px auto; max-width: 1200px;">
-
 ### ATAC 页面
-
-</div>
-
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border: 1px solid #e5e5e5; margin: 20px auto; max-width: 1200px;">
 
 #### `ATAC > Cells`
 
-<div align="center" style="margin: 24px auto; max-width: 1200px;">
-<img src="../images/html_multi_scatac_cells.png" alt="multi ATAC cells 页面" width="760" style="border-radius: 12px; box-shadow: 0 4px 16px rgba(0,0,0,0.1);">
-</div>
+<img src="../images/html_multi_scatac_cells.png" alt="multi ATAC cells 页面" width="760">
 
 页面内容包括：
 
@@ -201,15 +173,9 @@
 - `ATAC Cluster Analysis`：ATAC 聚类结果与降维可视化。
 - `Targeting`：TSS enrichment profile 与 targeting 相关图表。
 
-</div>
-
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border: 1px solid #e5e5e5; margin: 20px auto; max-width: 1200px;">
-
 #### `ATAC > Library`
 
-<div align="center" style="margin: 24px auto; max-width: 1200px;">
-<img src="../images/html_multi_scatac_library.png" alt="multi ATAC library 页面" width="760" style="border-radius: 12px; box-shadow: 0 4px 16px rgba(0,0,0,0.1);">
-</div>
+<img src="../images/html_multi_scatac_library.png" alt="multi ATAC library 页面" width="760">
 
 页面内容包括：
 
@@ -220,23 +186,11 @@
 
 - [scATAC 输出文档](./scATAC.md)
 
-</div>
-
-<div style="max-width: 1200px; margin: 0 auto;"><hr style="border: none; border-top: 1px solid #d2d2d7; margin: 24px 0;"></div>
-
-<div style="background: #f5f5f7; border-radius: 12px; padding: 24px; margin: 24px auto; max-width: 1200px;">
-
 ### VDJ 页面
-
-</div>
-
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border: 1px solid #e5e5e5; margin: 20px auto; max-width: 1200px;">
 
 #### `VDJ-T / VDJ-B > Cells`
 
-<div align="center" style="margin: 24px auto; max-width: 1200px;">
-<img src="../images/html_multi_scvdj_cells.png" alt="multi VDJ cells 页面" width="760" style="border-radius: 12px; box-shadow: 0 4px 16px rgba(0,0,0,0.1);">
-</div>
+<img src="../images/html_multi_scvdj_cells.png" alt="multi VDJ cells 页面" width="760">
 
 页面内容包括：
 
@@ -245,15 +199,9 @@
 - `VDJ Clonotypes`：克隆型丰度图与 Top clonotype 表。
 - `VDJ Target`：V(D)J 细胞在降维图中的分布。
 
-</div>
-
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border: 1px solid #e5e5e5; margin: 20px auto; max-width: 1200px;">
-
 #### `VDJ-T / VDJ-B > Library`
 
-<div align="center" style="margin: 24px auto; max-width: 1200px;">
-<img src="../images/html_multi_scvdj_library.png" alt="multi VDJ library 页面" width="760" style="border-radius: 12px; box-shadow: 0 4px 16px rgba(0,0,0,0.1);">
-</div>
+<img src="../images/html_multi_scvdj_library.png" alt="multi VDJ library 页面" width="760">
 
 页面内容包括：
 
@@ -264,17 +212,7 @@
 
 - [scVDJ 输出文档](./scVDJ.md)
 
-</div>
-
-<div style="max-width: 1200px; margin: 0 auto;"><hr style="border: none; border-top: 1px solid #d2d2d7; margin: 24px 0;"></div>
-
-<div style="background: #f5f5f7; border-radius: 12px; padding: 24px; margin: 24px auto; max-width: 1200px;">
-
 ## 相关文档
-
-</div>
-
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; margin: 20px auto; max-width: 1200px; border: 1px solid #e5e5e5; box-shadow: 0 1px 3px rgba(0,0,0,0.1);" markdown="1">
 
 | 文档 | 说明 |
 | :--- | :--- |
@@ -284,17 +222,3 @@
 | [scATAC 输出](./scATAC.md) | scATAC 模块输出文件说明 |
 | [scVDJ 输出](./scVDJ.md) | scVDJ 模块输出文件说明 |
 | [输出文件](./outs.md) | 返回总输出文档索引 |
-
-</div>
-
-<div style="max-width: 1200px; margin: 0 auto;"><hr style="border: none; border-top: 1px solid #d2d2d7; margin: 24px 0;"></div>
-
-<div align="center" style="background: #f5f5f7; border-radius: 12px; padding: 30px; margin: 40px auto; max-width: 1200px;">
-
-> <strong>反馈与支持</strong>
-> 
-> 本文档持续维护更新。若发现内容错误或需要补充信息，请通过 GitHub Issues 反馈。
-> 
-<strong>文档版本：</strong> 3.1 | <strong>最后更新：</strong> 2026 年 5 月 15 日
-
-</div>

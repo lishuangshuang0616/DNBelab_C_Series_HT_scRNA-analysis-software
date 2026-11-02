@@ -1,76 +1,23 @@
-<div align="right" style="margin-bottom: 20px; max-width: 1200px; margin-left: auto; margin-right: auto;">
+# Parameter reference
 
-[Home](../../README.md)
+Choose a module to find commands, defaults and configuration rules. Each reference starts with examples; full help and advanced options can be expanded when needed.
 
-</div>
-
-<div align="center" style="padding: 40px 20px; background: linear-gradient(135deg, #f5f5f7 0%, #ffffff 100%); border-radius: 12px; margin-bottom: 30px; max-width: 1200px; margin-left: auto; margin-right: auto;">
-
-<h1 style="font-size: 48px; font-weight: 600; color: #1d1d1f; margin: 0 0 16px 0; letter-spacing: -0.02em;">dnbc4tools Parameter Reference</h1>
-
-<p style="font-size: 21px; color: #86868b; margin: 0; font-weight: 400;">Command and parameter reference</p>
-
-</div>
-
-<div style="max-width: 1200px; margin: 0 auto;"><hr style="border: none; border-top: 1px solid #d2d2d7; margin: 24px 0;"></div>
-
-<div style="background: #f5f5f7; border-radius: 12px; padding: 16px; margin: 24px auto; max-width: 1200px;">
-
-<strong>Documentation Guide</strong>: Each parameter guide includes detailed descriptions, default values, and usage examples for all available options.
-
-</div>
-
-<div style="max-width: 1200px; margin: 0 auto;"><hr style="border: none; border-top: 1px solid #d2d2d7; margin: 24px 0;"></div>
-
-<div style="background: #f5f5f7; border-radius: 12px; padding: 24px; margin: 24px auto; max-width: 1200px;">
-
-## Analysis Pipelines
-
-<div align="center">
-
-**Guide**: Select your analysis type below to view detailed parameter descriptions and usage examples.
-
-</div>
-
-</div>
-
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; margin: 20px auto; max-width: 1200px; border: 1px solid #e5e5e5; box-shadow: 0 1px 3px rgba(0,0,0,0.1);" markdown="1">
-
-| Analysis Type | Description & Key Commands | Documentation |
+| Module | Commands | Reference |
 | :--- | :--- | :--- |
-| **Single-Cell RNA** | **Parameters for gene expression analysis.** <br> <ul><li>`run`: Main analysis pipeline</li><li>`mkref`: Reference building</li><li>`multi`: Multi-sample aggregation</li></ul> | [View Guide](scRNA.en.md) |
-| **Single-Cell ATAC** | **Parameters for chromatin accessibility analysis.** <br> <ul><li>`run`: Main analysis pipeline</li><li>`mkref`: Reference building</li><li>`multi`: Multi-sample aggregation</li></ul> | [View Guide](scATAC.en.md) |
-| **Single-Cell VDJ** | **Parameters for immune repertoire analysis.** <br> <ul><li>`run`: Main analysis pipeline</li></ul> | [View Guide](scVDJ.en.md) |
-| **Multi-omics** | **Parameters for integrated multi-omics analysis.** <br> <ul><li>`run`: Integrated RNA/ATAC/VDJ workflow</li></ul> | [View Guide](multi.en.md) |
-| **Utility Tools** | **Parameters for helper and utility scripts.** <br> <ul><li>`mkgtf`: GTF file manipulation</li><li>`bam2fastq`: BAM to FASTQ conversion</li><li>`chromsplit`: Genome splitting</li><li>`fqsubC4`: FASTQ subsequence extraction</li></ul> | [View Guide](tools.en.md) |
+| RNA | `rna run`, `rna mkref`, `rna multi` | [RNA parameters](scRNA.md) |
+| ATAC | `atac run`, `atac mkref`, `atac multi` | [ATAC parameters](scATAC.md) |
+| V(D)J | `vdj run` | [VDJ parameters](scVDJ.md) |
+| Multi / C6 | `multi run`, configured by CSV | [Multi parameters](multi.md) |
+| GTF tools | `tools mkgtf` | [Tools](tools.md) |
 
-</div>
+## Choose an entry point
 
-<div style="max-width: 1200px; margin: 0 auto;"><hr style="border: none; border-top: 1px solid #d2d2d7; margin: 24px 0;"></div>
+- Use a module's `run` for an independent library.
+- `rna multi` / `atac multi` only generate sample scripts. Execute them after successful generation.
+- `multi run` executes multi-omics or C6 analysis. C6 requires a real scRNAC6 library and `[samples]` configuration.
 
-<div style="background: #f5f5f7; border-radius: 12px; padding: 24px; margin: 24px auto; max-width: 1200px;">
+## Before configuring
 
-## Related Documentation
+Omitting an option normally uses its workflow default; not every option accepts the string `auto`. CLI boolean switches take no value; Multi CSV uses `true/false`. See each reference for global and sample-override rules.
 
-</div>
-
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; margin: 20px auto; max-width: 1200px; border: 1px solid #e5e5e5; box-shadow: 0 1px 3px rgba(0,0,0,0.1);" markdown="1">
-
-| Resource | Description |
-| :--- | :--- |
-| [Workflows](../pipeline/pipeline.en.md) | Analysis pipeline guides |
-| [Outputs](../outs/outs.en.md) | Understanding result files |
-| [Quick Start](../quickstart.en.md) | Introductory workflow guide |
-| [Installation](../installation.en.md) | Software setup and requirements |
-
-</div>
-
-<div align="center" style="background: #f5f5f7; border-radius: 12px; padding: 30px; margin: 40px auto; max-width: 1200px;">
-
-> <strong>Feedback & Support</strong>
-> 
-> For detailed parameter descriptions, select any analysis type above.
-> 
-<strong>Document Version:</strong> 3.1 | <strong>Last Updated:</strong> May 15, 2026
-
-</div>
+[Workflows](../pipeline/pipeline.md) · [Outputs](../outs/outs.md) · [Quick Start](../quickstart.md)

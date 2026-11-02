@@ -1,4 +1,5 @@
 .DS_Store
 DESIGN.md
-/Document/build_mkdocs.sh
-/Document/mkdocs.yml
+Document/.build/
+Document/__pycache__/
+.venv-docs/

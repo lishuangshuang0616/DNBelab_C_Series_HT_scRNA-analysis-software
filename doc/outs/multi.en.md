@@ -1,24 +1,6 @@
-<div align="right" style="margin-bottom: 20px; max-width: 1200px; margin-left: auto; margin-right: auto;">
+# Multi-omics Analysis Output
 
-[Home](../../README.md)
-
-</div>
-
-<div align="center" style="padding: 40px 20px; background: linear-gradient(135deg, #f5f5f7 0%, #ffffff 100%); border-radius: 12px; margin-bottom: 30px; max-width: 1200px; margin-left: auto; margin-right: auto;">
-
-<h1 style="font-size: 48px; font-weight: 600; color: #1d1d1f; margin: 0 0 16px 0; letter-spacing: -0.02em;">Multi-omics Analysis Output</h1>
-
-<p style="font-size: 21px; color: rgba(0,0,0,0.6); margin: 0 0 30px 0; font-weight: 400;">Integrated Multi-omics Output File Guide</p>
-
-<div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
-<a href="#output-directory-structure" style="background: #0071e3; color: white; padding: 8px 16px; border-radius: 980px; text-decoration: none; font-size: 14px;">Directory Structure</a>
-<a href="#detailed-file-description" style="background: transparent; color: #0071e3; padding: 8px 16px; border-radius: 980px; text-decoration: none; font-size: 14px; border: 1px solid #0071e3;">File Details</a>
-<a href="#web-report-interpretation" style="background: transparent; color: #0071e3; padding: 8px 16px; border-radius: 980px; text-decoration: none; font-size: 14px; border: 1px solid #0071e3;">Report Interpretation</a>
-</div>
-
-</div>
-
-<div style="background: #f5f5f7; border-radius: 12px; padding: 24px; margin: 24px auto; max-width: 1200px;">
+Integrated Multi-omics Output File Guide
 
 ## Overview <a id="overview"></a>
 
@@ -28,17 +10,7 @@ The multi-omics workflow organizes key RNA / ATAC / VDJ results into one sample-
 >
 > The combined report is intended for fast overview and cross-module inspection. For detailed interpretation, please refer to each single-omics output document.
 
-</div>
-
-<div style="max-width: 1200px; margin: 0 auto;"><hr style="border: none; border-top: 1px solid #d2d2d7; margin: 24px 0;"></div>
-
-<div style="background: #f5f5f7; border-radius: 12px; padding: 24px; margin: 24px auto; max-width: 1200px;">
-
 ## Output Directory Structure <a id="output-directory-structure"></a>
-
-</div>
-
-<div style="background: #ffffff; border-radius: 12px; padding: 20px; margin: 20px auto; max-width: 1200px; overflow-x: auto; border: 1px solid #d2d2d7;">
 
 ```text
 <outdir>/<sample>/
@@ -50,55 +22,91 @@ The multi-omics workflow organizes key RNA / ATAC / VDJ results into one sample-
     └── vdj-b/                                 # VDJ-B outputs (if enabled)
 ```
 
-</div>
-
-<div style="max-width: 1200px; margin: 0 auto;"><hr style="border: none; border-top: 1px solid #d2d2d7; margin: 24px 0;"></div>
-
-<div style="background: #f5f5f7; border-radius: 12px; padding: 24px; margin: 24px auto; max-width: 1200px;">
-
 ## Detailed File Description <a id="detailed-file-description"></a>
-
-</div>
-
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border: 1px solid #e5e5e5; margin: 20px auto; max-width: 1200px;">
 
 ### `outs/<sample>_multi_report.html`
 
 - **Content**: Integrated QC and analysis charts across RNA / ATAC / VDJ.
 - **Purpose**: Cross-omics quality check and result overview on one page.
 
-</div>
-
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border: 1px solid #e5e5e5; margin: 20px auto; max-width: 1200px;">
-
 ### `outs/rna`, `outs/atac`, `outs/vdj-t`, `outs/vdj-b`
 
 - **Content**: Standard module outputs (matrices, metrics tables, module reports, etc.).
 - **Purpose**: Module-specific downstream analysis or single-omics reuse.
 
-</div>
+## C6 multiplexed RNA outputs <a id="c6-outputs"></a>
 
-<div style="max-width: 1200px; margin: 0 auto;"><hr style="border: none; border-top: 1px solid #d2d2d7; margin: 24px 0;"></div>
+Runs with `[samples]` use this layout. Ordinary single-sample Multi uses the modality directories above.
 
-<div style="background: #f5f5f7; border-radius: 12px; padding: 24px; margin: 24px auto; max-width: 1200px;">
+```text
+<run>/outs/
+├── <run>_multi_report.html
+└── rna/
+    ├── raw_feature_bc_matrix/             # Global, including background
+    ├── raw_feature_bc_matrix.h5
+    ├── filtered_feature_bc_matrix/        # All called cells
+    ├── filtered_feature_bc_matrix.h5
+    ├── filtered_feature_bc_matrix.h5ad    # Counts, no joint clustering
+    ├── singlecell.csv.gz                 # Complete six-column table
+    ├── metrics_summary.xls               # Tab-separated text
+    ├── oligo.records.bam                 # When BAM enabled
+    ├── unassigned_alignments.bam         # When BAM enabled
+    ├── multi_sample/
+    │   ├── per_sample_metrics.csv
+    │   ├── sample_metrics_summary.xls
+    │   ├── barcode_assignment_metrics.json
+    │   └── high_occupancy_metrics.json
+    └── per_sample_outs/<sample>/
+        ├── raw_feature_bc_matrix/
+        ├── raw_feature_bc_matrix.h5
+        ├── filtered_feature_bc_matrix/
+        ├── filtered_feature_bc_matrix.h5
+        ├── filtered_feature_bc_matrix.h5ad
+        ├── <sample>_scRNA_report.html
+        ├── metrics_summary.xls
+        ├── <sample>_alignments.bam         # When BAM enabled
+        └── analysis/                     # Sample clustering, markers, etc.
+```
+
+BAMs have `.bai` or `.csi` indexes as appropriate. `no_bam=true` omits sample, Unassigned and oligo BAMs. Mixed-species runs may add global `analysis/cell_classification.csv`; single-species runs do not publish an empty global analysis directory. Sample analysis outputs depend on successful completion; empty/failed samples do not publish stale analysis results.
+
+There is no global joint cluster/marker result, `QC_Cluster.h5ad` or run-level RNA HTML. Global H5AD contains combined counts; individual samples retain their own analysis and full RNA report. Processing directories such as `SAMPLE_SPLIT`, `MULTI_CELL_CALLING`, `tempN` and report caches are internal.
+
+### `singlecell.csv.gz`
+
+| Column | Meaning |
+| :--- | :--- |
+| `cell` | Merged cell identifier; unmapped background can have a missing identifier |
+| `reads` | Aggregated read count for the group |
+| `gene` / `umi` | Detected genes and UMIs for the group |
+| `is_cell_barcode` | Called-cell flag |
+| `barcode` | Original barcode members, including probe suffixes |
+
+The complete table retains background and zero-UMI rows. Positive-UMI rows descend by UMI; zero-UMI rows follow in group order. Read gzip directly; see [Result import](../io.md#c6-import).
+
+### Reports and metric denominators
+
+| Content | Scope and interpretation |
+| :--- | :--- |
+| Root Multi report | Batch overview, library QC and Samples comparisons; C6 chemistry is `scRNAC6` |
+| Individual RNA report | Sample cells, clustering, markers, mapping and saturation; missing metrics show N/A |
+| Assigned Reads | Read pairs assigned to that sample, not raw library reads |
+| Mean Reads per Cell | Assigned Reads / Cells; undefined when cells are zero or missing |
+| Fraction reads in cells | Sample confident-transcriptome reads in cells / confident-transcriptome reads across all valid sample barcodes |
+| Sample Mapping Quality | Sample All Reads scope, not Filtered Cells ratios |
+| Per-sample cDNA Valid barcodes | 100% if Assigned Reads > 0, describing only the assigned set; otherwise N/A |
+| Q30 / Valid UMI / Corrected barcodes / Oligo QC | Shared library measurements, not independent sample QC; metric exports retain `cDNA QC scope` |
+| Cell/probe barcode validity | Independent correction-stage measurements, not derived from joint validity; N/A if missing |
+
+`.xls` files are tab-separated text. `sample_metrics_summary.xls` keeps one row per configured sample, including empty/failed samples. All Reads and Filtered Cells mapping groups each use their own denominators. Existing HTML must be regenerated to adopt template fixes.
 
 ## Web Report Interpretation <a id="web-report-interpretation"></a>
 
-<div align="center">
-
 **Overview**: The combined multi-omics report provides integrated views of core QC and analysis charts from RNA / ATAC / VDJ modules.
-
-</div>
-
-</div>
-
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border: 1px solid #e5e5e5; margin: 20px auto; max-width: 1200px;">
 
 ### Summary and Navigation
 
-<div align="center" style="margin: 24px auto; max-width: 1200px;">
-<img src="../images/html_multi_summary.png" alt="multi summary page" width="760" style="border-radius: 12px; box-shadow: 0 4px 16px rgba(0,0,0,0.1);">
-</div>
+<img src="../images/html_multi_summary.png" alt="multi summary page" width="760">
 
 The `Summary` page defines two-level navigation:
 
@@ -111,15 +119,9 @@ Left-tab roles:
 - `Cells`: Cell-level QC, clustering, annotation, and clonotype views.
 - `Library`: Library/sequencing-level quality metrics (Q30, mapping, enrichment).
 
-</div>
-
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border: 1px solid #e5e5e5; margin: 20px auto; max-width: 1200px;">
-
 ### Configuration Parameters
 
-<div align="center" style="margin: 24px auto; max-width: 1200px;">
-<img src="../images/html_multi_parameter.png" alt="multi configuration parameters page" width="760" style="border-radius: 12px; box-shadow: 0 4px 16px rgba(0,0,0,0.1);">
-</div>
+<img src="../images/html_multi_parameter.png" alt="multi configuration parameters page" width="760">
 
 This section is recommended for reproducibility checks and troubleshooting.
 
@@ -130,23 +132,11 @@ Page content includes:
 - Input file paths: actual FASTQ paths in the `Input FASTQs` section.
 - View switching: inspect parameter blocks by omics tabs.
 
-</div>
-
-<div style="max-width: 1200px; margin: 0 auto;"><hr style="border: none; border-top: 1px solid #d2d2d7; margin: 24px 0;"></div>
-
-<div style="background: #f5f5f7; border-radius: 12px; padding: 24px; margin: 24px auto; max-width: 1200px;">
-
 ### RNA Pages
-
-</div>
-
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border: 1px solid #e5e5e5; margin: 20px auto; max-width: 1200px;">
 
 #### `RNA > Cells`
 
-<div align="center" style="margin: 24px auto; max-width: 1200px;">
-<img src="../images/html_multi_scrna_cells.png" alt="multi RNA cells page" width="760" style="border-radius: 12px; box-shadow: 0 4px 16px rgba(0,0,0,0.1);">
-</div>
+<img src="../images/html_multi_scrna_cells.png" alt="multi RNA cells page" width="760">
 
 Page content includes:
 
@@ -156,15 +146,9 @@ Page content includes:
 - `RNA Cell Annotation`: Cell-type annotation results.
 - `Top Features by Cluster`: Feature-gene table by cluster.
 
-</div>
-
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border: 1px solid #e5e5e5; margin: 20px auto; max-width: 1200px;">
-
 #### `RNA > Library`
 
-<div align="center" style="margin: 24px auto; max-width: 1200px;">
-<img src="../images/html_multi_scrna_library.png" alt="multi RNA library page" width="760" style="border-radius: 12px; box-shadow: 0 4px 16px rgba(0,0,0,0.1);">
-</div>
+<img src="../images/html_multi_scrna_library.png" alt="multi RNA library page" width="760">
 
 Page content includes:
 
@@ -176,23 +160,11 @@ Reference:
 
 - [scRNA output documentation](scRNA.en.md)
 
-</div>
-
-<div style="max-width: 1200px; margin: 0 auto;"><hr style="border: none; border-top: 1px solid #d2d2d7; margin: 24px 0;"></div>
-
-<div style="background: #f5f5f7; border-radius: 12px; padding: 24px; margin: 24px auto; max-width: 1200px;">
-
 ### ATAC Pages
-
-</div>
-
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border: 1px solid #e5e5e5; margin: 20px auto; max-width: 1200px;">
 
 #### `ATAC > Cells`
 
-<div align="center" style="margin: 24px auto; max-width: 1200px;">
-<img src="../images/html_multi_scatac_cells.png" alt="multi ATAC cells page" width="760" style="border-radius: 12px; box-shadow: 0 4px 16px rgba(0,0,0,0.1);">
-</div>
+<img src="../images/html_multi_scatac_cells.png" alt="multi ATAC cells page" width="760">
 
 Page content includes:
 
@@ -201,15 +173,9 @@ Page content includes:
 - `ATAC Cluster Analysis`: ATAC clustering and low-dimensional visualization.
 - `Targeting`: TSS enrichment profile and targeting-related charts.
 
-</div>
-
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border: 1px solid #e5e5e5; margin: 20px auto; max-width: 1200px;">
-
 #### `ATAC > Library`
 
-<div align="center" style="margin: 24px auto; max-width: 1200px;">
-<img src="../images/html_multi_scatac_library.png" alt="multi ATAC library page" width="760" style="border-radius: 12px; box-shadow: 0 4px 16px rgba(0,0,0,0.1);">
-</div>
+<img src="../images/html_multi_scatac_library.png" alt="multi ATAC library page" width="760">
 
 Page content includes:
 
@@ -220,23 +186,11 @@ Reference:
 
 - [scATAC output documentation](scATAC.en.md)
 
-</div>
-
-<div style="max-width: 1200px; margin: 0 auto;"><hr style="border: none; border-top: 1px solid #d2d2d7; margin: 24px 0;"></div>
-
-<div style="background: #f5f5f7; border-radius: 12px; padding: 24px; margin: 24px auto; max-width: 1200px;">
-
 ### VDJ Pages
-
-</div>
-
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border: 1px solid #e5e5e5; margin: 20px auto; max-width: 1200px;">
 
 #### `VDJ-T / VDJ-B > Cells`
 
-<div align="center" style="margin: 24px auto; max-width: 1200px;">
-<img src="../images/html_multi_scvdj_cells.png" alt="multi VDJ cells page" width="760" style="border-radius: 12px; box-shadow: 0 4px 16px rgba(0,0,0,0.1);">
-</div>
+<img src="../images/html_multi_scvdj_cells.png" alt="multi VDJ cells page" width="760">
 
 Page content includes:
 
@@ -245,15 +199,9 @@ Page content includes:
 - `VDJ Clonotypes`: Clonotype abundance plot and top-clonotype table.
 - `VDJ Target`: Distribution of V(D)J cells in low-dimensional embedding.
 
-</div>
-
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border: 1px solid #e5e5e5; margin: 20px auto; max-width: 1200px;">
-
 #### `VDJ-T / VDJ-B > Library`
 
-<div align="center" style="margin: 24px auto; max-width: 1200px;">
-<img src="../images/html_multi_scvdj_library.png" alt="multi VDJ library page" width="760" style="border-radius: 12px; box-shadow: 0 4px 16px rgba(0,0,0,0.1);">
-</div>
+<img src="../images/html_multi_scvdj_library.png" alt="multi VDJ library page" width="760">
 
 Page content includes:
 
@@ -264,17 +212,7 @@ Reference:
 
 - [scVDJ output documentation](scVDJ.en.md)
 
-</div>
-
-<div style="max-width: 1200px; margin: 0 auto;"><hr style="border: none; border-top: 1px solid #d2d2d7; margin: 24px 0;"></div>
-
-<div style="background: #f5f5f7; border-radius: 12px; padding: 24px; margin: 24px auto; max-width: 1200px;">
-
 ## Related Documentation
-
-</div>
-
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; margin: 20px auto; max-width: 1200px; border: 1px solid #e5e5e5; box-shadow: 0 1px 3px rgba(0,0,0,0.1);" markdown="1">
 
 | Document | Description |
 | :--- | :--- |
@@ -284,17 +222,3 @@ Reference:
 | [scATAC Outputs](scATAC.en.md) | scATAC module output documentation |
 | [scVDJ Outputs](scVDJ.en.md) | scVDJ module output documentation |
 | [Output Files](./outs.en.md) | Return to output documentation index |
-
-</div>
-
-<div style="max-width: 1200px; margin: 0 auto;"><hr style="border: none; border-top: 1px solid #d2d2d7; margin: 24px 0;"></div>
-
-<div align="center" style="background: #f5f5f7; border-radius: 12px; padding: 30px; margin: 40px auto; max-width: 1200px;">
-
-> <strong>Feedback & Support</strong>
->
-> This document is continuously maintained. If you identify issues or missing information, please submit feedback via GitHub Issues.
->
-<strong>Document Version:</strong> 3.1 | <strong>Last Updated:</strong> May 15, 2026
-
-</div>

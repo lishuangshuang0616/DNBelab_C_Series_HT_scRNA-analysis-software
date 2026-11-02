@@ -82,7 +82,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#dnbelab-c-series-ht-scvdj-analysis-pipeline" class="md-skip">
+        <a href="#overview" class="md-skip">
           Skip to content
         </a>
       
@@ -504,8 +504,6 @@
       <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
       
       
-        
-      
       
         <label class="md-nav__link md-nav__link--active" for="__toc">
           
@@ -547,8 +545,6 @@
 <nav class="md-nav md-nav--secondary" aria-label="Table of contents">
   
   
-  
-    
   
   
     <label class="md-nav__title" for="__toc">
@@ -1184,6 +1180,60 @@
   
   
     <li class="md-nav__item">
+      <a href="../migration.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Upgrade Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../troubleshooting.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Running & Troubleshooting
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../release.html" class="md-nav__link">
         
   
@@ -1246,10 +1296,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_12" >
         
           
-          <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_12" id="__nav_12_label" tabindex="0">
             
   
   
@@ -1267,8 +1317,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_10">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_12_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_12">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -1357,8 +1407,6 @@
 <nav class="md-nav md-nav--secondary" aria-label="Table of contents">
   
   
-  
-    
   
   
     <label class="md-nav__title" for="__toc">
@@ -1517,84 +1565,53 @@
 
 
 
-<div align="right" style="margin-bottom: 20px; max-width: 1200px; margin-left: auto; margin-right: auto;">
-<p><a href="../../index.html">Home</a></p>
-</div>
-<div align="center" style="padding: 40px 20px; background: linear-gradient(135deg, #f5f5f7 0%, #ffffff 100%); border-radius: 12px; margin-bottom: 30px; max-width: 1200px; margin-left: auto; margin-right: auto;">
-<h1 id="dnbelab-c-series-ht-scvdj-analysis-pipeline" style="font-size: 48px; font-weight: 600; color: #1d1d1f; margin: 0 0 16px 0; letter-spacing: -0.02em;">DNBelab C Series HT scVDJ Analysis Pipeline<a class="headerlink" href="#dnbelab-c-series-ht-scvdj-analysis-pipeline" title="Permanent link">&para;</a></h1>
-<p style="font-size: 21px; color: #86868b; margin: 0 0 30px 0; font-weight: 400;">Single-Cell VDJ Sequencing Data Analysis Guide</p>
-<div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
-<p><a href="#overview" style="background: #0071e3; color: white; padding: 8px 16px; border-radius: 980px; text-decoration: none; font-size: 14px;">Overview</a>
-<a href="#file-preparation" style="background: transparent; color: #0071e3; padding: 8px 16px; border-radius: 980px; text-decoration: none; font-size: 14px; border: 1px solid #0071e3;">File Preparation</a>
-<a href="#main-pipeline" style="background: transparent; color: #0071e3; padding: 8px 16px; border-radius: 980px; text-decoration: none; font-size: 14px; border: 1px solid #0071e3;">Main Pipeline</a>
-<a href="#results-interpretation" style="background: transparent; color: #0071e3; padding: 8px 16px; border-radius: 980px; text-decoration: none; font-size: 14px; border: 1px solid #0071e3;">Results Interpretation</a></p>
-</div>
-</div>
-<div style="max-width: 1200px; margin: 0 auto;">
-<hr style="border: none; border-top: 1px solid #d2d2d7; margin: 24px 0;">
-</div>
-<div style="background: #f5f5f7; border-radius: 12px; padding: 24px; margin: 24px auto; max-width: 1200px;">
+<h1 id="dnbelab-c-series-ht-scvdj-analysis-pipeline">DNBelab C Series HT scVDJ Analysis Pipeline<a class="headerlink" href="#dnbelab-c-series-ht-scvdj-analysis-pipeline" title="Permanent link">&para;</a></h1>
+<p>Single-Cell VDJ Sequencing Data Analysis Guide</p>
 <h2 id="overview">Overview <a id="overview"></a><a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-</div>
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; margin: 20px auto; max-width: 1200px; border: 1px solid #e5e5e5; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
 <p>This document provides a detailed guide for analyzing single-cell VDJ sequencing data using dnbc4tools.</p>
 <p><strong>Workflow</strong>: 5' Transcriptome Analysis → VDJ Library Processing → Sequence Assembly &amp; Annotation → Cell Filtering → Clonotype Analysis → Analysis Report</p>
-<div align="center">
 <p><img src="../images/scVDJ_pipeline.png" alt="scVDJpipeline" width="700"></p>
-</div>
-<div style="background-color: #e7f3fe; border-left: 6px solid #2196F3; padding: 15px; margin: 1.5em 0; border-radius: 4px;">
 <p><strong>Usage Note</strong>: <code>$dnbc4tools</code> represents the executable path and must be replaced with the actual installation path. The backslash <code>\</code> is used to split a command across multiple lines for readability.</p>
-</div>
-</div>
-<div style="max-width: 1200px; margin: 0 auto;">
-<hr style="border: none; border-top: 1px solid #d2d2d7; margin: 24px 0;">
-</div>
-<div style="background: #f5f5f7; border-radius: 12px; padding: 24px; margin: 24px auto; max-width: 1200px;">
 <h2 id="file-preparation">File Preparation <a id="file-preparation"></a><a class="headerlink" href="#file-preparation" title="Permanent link">&para;</a></h2>
-</div>
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; margin: 20px auto; max-width: 1200px; border: 1px solid #e5e5e5; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
 <h3 id="5-transcriptome-analysis">5' Transcriptome Analysis<a class="headerlink" href="#5-transcriptome-analysis" title="Permanent link">&para;</a></h3>
 <p>For transcriptome analysis, please refer to <code>dnbc4tools rna run</code>. The 5' transcriptome analysis pipeline requires adding the <code>--end5</code> parameter to the standard single-cell RNA analysis workflow.</p>
 <p>Here is an example script to generate an expression matrix for a single sample:</p>
-<pre><code class="language-shell">$dnbc4tools rna run \
-    --name sample_5rna \
-    --cDNAfastq1 /data/sample_cDNA_R1.fastq.gz \
-    --cDNAfastq2 /data/sample_cDNA_R2.fastq.gz \
-    --oligofastq1 /data/sample_oligo1_1.fq.gz,/data/sample_oligo2_1.fq.gz \
-    --oligofastq2 /data/sample_oligo1_2.fq.gz,/data/sample_oligo2_2.fq.gz \
-    --genomeDir /opt/database/Homo_sapiens \
-    --threads 30 \
-    --end5
-</code></pre>
-<div style="background-color: #fffbe6; border-left: 6px solid #ffc107; padding: 15px; margin: 1.5em 0; border-radius: 4px;">
+<div class="highlight"><pre><span></span><code><span class="nv">$dnbc4tools</span><span class="w"> </span>rna<span class="w"> </span>run<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--name<span class="w"> </span>sample_5rna<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--cDNAfastq1<span class="w"> </span>/data/sample_cDNA_R1.fastq.gz<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--cDNAfastq2<span class="w"> </span>/data/sample_cDNA_R2.fastq.gz<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--oligofastq1<span class="w"> </span>/data/sample_oligo1_1.fq.gz,/data/sample_oligo2_1.fq.gz<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--oligofastq2<span class="w"> </span>/data/sample_oligo1_2.fq.gz,/data/sample_oligo2_2.fq.gz<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--genomeDir<span class="w"> </span>/opt/database/Homo_sapiens<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--threads<span class="w"> </span><span class="m">30</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--end5
+</code></pre></div>
 <p><strong>Note</strong>: 5' transcriptome analysis is a prerequisite for VDJ analysis and must be completed first.</p>
-</div>
 <h3 id="required-files-for-vdj-analysis">Required Files for VDJ Analysis<a class="headerlink" href="#required-files-for-vdj-analysis" title="Permanent link">&para;</a></h3>
 <p>The analysis requires the following files:</p>
-<table style="width:100%; border-collapse: collapse; margin: 1.5em 0; box-shadow: 0 2px 3px rgba(0,0,0,0.1);">
-<thead style="background-color: #f2f2f2; border-bottom: 2px solid #ddd;">
+<table>
+  <thead>
     <tr>
-      <th style="padding: 12px 15px; border: 1px solid #ddd; text-align: left;">File Type</th>
-      <th style="padding: 12px 15px; border: 1px solid #ddd; text-align: left;">Description</th>
+      <th>File Type</th>
+      <th>Description</th>
     </tr>
   </thead>
-<tbody>
+  <tbody>
     <tr>
-      <td style="padding: 12px 15px; border: 1px solid #ddd;"><b>FASTQ Files</b></td>
-      <td style="padding: 12px 15px; border: 1px solid #ddd;">VDJ library sequencing data containing TCR or BCR sequence information.</td>
+      <td><b>FASTQ Files</b></td>
+      <td>VDJ library sequencing data containing TCR or BCR sequence information.</td>
     </tr>
     <tr>
-      <td style="padding: 12px 15px; border: 1px solid #ddd;"><b>singlecell.csv File</b></td>
-      <td style="padding: 12px 15px; border: 1px solid #ddd;">The cell information file from the 5' transcriptome analysis results.</td>
+      <td><b>singlecell.csv File</b></td>
+      <td>The cell information file from the 5' transcriptome analysis results.</td>
     </tr>
   </tbody>
 </table>
+
 <p>The analysis requires the <code>singlecell.csv</code> file from the 5' transcriptome analysis output directory. This file contains merged information from the <code>cell</code> and <code>barcode</code> columns, as well as an <code>is_cell_barcode</code> column (1 for a cell, 0 for a non-cell), which is used to identify valid cells.</p>
-<div style="background-color: #fffbe6; border-left: 6px solid #ffc107; padding: 15px; margin: 1.5em 0; border-radius: 4px;">
 <p><strong>Note</strong>: Ensure the path to the <code>singlecell.csv</code> file is correct, as this file is crucial for linking the transcriptome and VDJ analyses.</p>
-</div>
 <p>Example file content:</p>
-<pre><code class="language-csv">cell,reads,gene,umi,is_cell_barcode,barcode
+<div class="highlight"><pre><span></span><code>cell,reads,gene,umi,is_cell_barcode,barcode
 CELL1118_N3,1485813,5693,57580,1,AGATCGCCTACGATCACGAT;GGTGGAAGGTGAGAGAAGCG;GTAGTTCTAGGCTAAGTACT
 CELL1651_N3,805447,4881,32131,1,ATCTCAAGCCCACCGTGTGT;CATCAATTAAGTGATCGCAT;CCTAACTGAGGAACGCTTAG
 CELL4_N3,820269,5649,30326,1,AACACCTGATCGTTCAATAA;AATTCGAAGGTAGTCGGAAT;CACATGTTACATGTTCTATA
@@ -1604,15 +1621,8 @@ CELL2064_N2,542608,2355,23324,1,CATAAGCACTCACCGCTAGT;GTCTCACAGTTGTTCACTAG
 CELL1332_N6,580950,4702,22953,1,AGGTGTAAGCCTACCGGACC;CGCACTCACCTAACATTGTG;CTTGCCGCGCTATCAATGCA;GCCACTAGTCGACGCGGTTG;GTCAGCATGCTCTTCCACAG;TCGATATCCTCACTCTTAAC
 CELL726_N4,585934,4617,22660,1,ACCTACGGCGTTACTATGTG;CGACGCTCTCGACAGTTAGG;CGGCAGAGTCTTGGCGCTTA;TCCGACCGTATCTTCATCTC
 CELL4010_N1,555308,4268,22554,1,AGAGAGTCGCAGCAAGCGAC
-</code></pre>
-</div>
-<div style="max-width: 1200px; margin: 0 auto;">
-<hr style="border: none; border-top: 1px solid #d2d2d7; margin: 24px 0;">
-</div>
-<div style="background: #f5f5f7; border-radius: 12px; padding: 24px; margin: 24px auto; max-width: 1200px;">
+</code></pre></div>
 <h2 id="main-pipeline">Main Pipeline <a id="main-pipeline"></a><a class="headerlink" href="#main-pipeline" title="Permanent link">&para;</a></h2>
-</div>
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; margin: 20px auto; max-width: 1200px; border: 1px solid #e5e5e5; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
 <p>The main VDJ pipeline combines single-cell VDJ library data with the 5' transcriptome results from the same sample. It includes these key steps:</p>
 <ol>
 <li>Filter data and merge beads using the 5' transcriptome results.</li>
@@ -1624,55 +1634,55 @@ CELL4010_N1,555308,4268,22554,1,AGAGAGTCGCAGCAAGCGAC
 <h3 id="tcr-analysis">TCR Analysis<a class="headerlink" href="#tcr-analysis" title="Permanent link">&para;</a></h3>
 <p>To run TCR analysis for a single sample, two input methods are supported:</p>
 <p><strong>Method 1: Directory (Recommended)</strong></p>
-<pre><code class="language-shell">$dnbc4tools vdj run \
-  --name sample_tcr \
-  --fastqs /data/vdjt \
-  --ref human \
-  --chain TR \
-  --beadstrans /sample_5rna/outs/singlecell.csv \
-  --threads 10
-</code></pre>
+<div class="highlight"><pre><span></span><code><span class="nv">$dnbc4tools</span><span class="w"> </span>vdj<span class="w"> </span>run<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--name<span class="w"> </span>sample_tcr<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--fastqs<span class="w"> </span>/data/vdjt<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--ref<span class="w"> </span>human<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--chain<span class="w"> </span>TR<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--beadstrans<span class="w"> </span>/sample_5rna/outs/singlecell.csv<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--threads<span class="w"> </span><span class="m">10</span>
+</code></pre></div>
 <p>Directory structure example:</p>
-<pre><code class="language-text">/data/vdjt/
+<div class="highlight"><pre><span></span><code>/data/vdjt/
 ├── sample_tcr_R1.fastq.gz
 └── sample_tcr_R2.fastq.gz
-</code></pre>
+</code></pre></div>
 <p><strong>Method 2: Individual Parameters</strong></p>
-<pre><code class="language-shell">$dnbc4tools vdj run \
-  --name sample_tcr \
-  --fastq1 /data/vdjt/sample_tcr_R1.fastq.gz \
-  --fastq2 /data/vdjt/sample_tcr_R2.fastq.gz \
-  --ref human \
-  --chain TR \
-  --beadstrans /sample_5rna/outs/singlecell.csv \
-  --threads 10
-</code></pre>
+<div class="highlight"><pre><span></span><code><span class="nv">$dnbc4tools</span><span class="w"> </span>vdj<span class="w"> </span>run<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--name<span class="w"> </span>sample_tcr<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--fastq1<span class="w"> </span>/data/vdjt/sample_tcr_R1.fastq.gz<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--fastq2<span class="w"> </span>/data/vdjt/sample_tcr_R2.fastq.gz<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--ref<span class="w"> </span>human<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--chain<span class="w"> </span>TR<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--beadstrans<span class="w"> </span>/sample_5rna/outs/singlecell.csv<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--threads<span class="w"> </span><span class="m">10</span>
+</code></pre></div>
 <h3 id="bcr-analysis">BCR Analysis<a class="headerlink" href="#bcr-analysis" title="Permanent link">&para;</a></h3>
 <p>To run BCR analysis for a single sample, two input methods are supported:</p>
 <p><strong>Method 1: Directory (Recommended)</strong></p>
-<pre><code class="language-shell">$dnbc4tools vdj run \
-  --name sample_bcr \
-  --fastqs /data/vdjb \
-  --ref human \
-  --chain IG \
-  --beadstrans /sample_5rna/outs/singlecell.csv \
-  --threads 10
-</code></pre>
+<div class="highlight"><pre><span></span><code><span class="nv">$dnbc4tools</span><span class="w"> </span>vdj<span class="w"> </span>run<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--name<span class="w"> </span>sample_bcr<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--fastqs<span class="w"> </span>/data/vdjb<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--ref<span class="w"> </span>human<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--chain<span class="w"> </span>IG<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--beadstrans<span class="w"> </span>/sample_5rna/outs/singlecell.csv<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--threads<span class="w"> </span><span class="m">10</span>
+</code></pre></div>
 <p>Directory structure example:</p>
-<pre><code class="language-text">/data/vdjb/
+<div class="highlight"><pre><span></span><code>/data/vdjb/
 ├── sample_bcr_R1.fastq.gz
 └── sample_bcr_R2.fastq.gz
-</code></pre>
+</code></pre></div>
 <p><strong>Method 2: Individual Parameters</strong></p>
-<pre><code class="language-shell">$dnbc4tools vdj run \
-  --name sample_bcr \
-  --fastq1 /data/vdjb/sample_bcr_R1.fastq.gz \
-  --fastq2 /data/vdjb/sample_bcr_R2.fastq.gz \
-  --ref human \
-  --chain IG \
-  --beadstrans /sample_5rna/outs/singlecell.csv \
-  --threads 10
-</code></pre>
+<div class="highlight"><pre><span></span><code><span class="nv">$dnbc4tools</span><span class="w"> </span>vdj<span class="w"> </span>run<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--name<span class="w"> </span>sample_bcr<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--fastq1<span class="w"> </span>/data/vdjb/sample_bcr_R1.fastq.gz<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--fastq2<span class="w"> </span>/data/vdjb/sample_bcr_R2.fastq.gz<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--ref<span class="w"> </span>human<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--chain<span class="w"> </span>IG<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--beadstrans<span class="w"> </span>/sample_5rna/outs/singlecell.csv<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--threads<span class="w"> </span><span class="m">10</span>
+</code></pre></div>
 <p>Input directory requirements:</p>
 <ul>
 <li>The <code>--fastqs</code> path should point to the FASTQ directory for the current VDJ library.</li>
@@ -1682,57 +1692,50 @@ CELL4010_N1,555308,4268,22554,1,AGAGAGTCGCAGCAAGCGAC
 </ul>
 <h3 id="execution-process">Execution Process<a class="headerlink" href="#execution-process" title="Permanent link">&para;</a></h3>
 <p>After auto-detecting the dark reaction, the software begins the analysis. Here is an example:</p>
-<pre><code class="language-shell">──────────────────────────── Parsed FASTQ Inputs — 2025-11-12 15:13:16 ─────────────────────────────
+<div class="highlight"><pre><span></span><code>────────────────────────────<span class="w"> </span>Parsed<span class="w"> </span>FASTQ<span class="w"> </span>Inputs<span class="w"> </span>—<span class="w"> </span><span class="m">2025</span>-11-12<span class="w"> </span><span class="m">15</span>:13:16<span class="w"> </span>─────────────────────────────
 ┌───────┬──────────────────────────────────────────────────────────────────────────────────────────┐
-│ Type  │ Path                                                                                     │
+│<span class="w"> </span>Type<span class="w">  </span>│<span class="w"> </span>Path<span class="w">                                                                                     </span>│
 ├───────┼──────────────────────────────────────────────────────────────────────────────────────────┤
-│ Read 1 │ /data/vdjt/sample_tcr_R1.fastq.gz                                                        │
-│ Read 2 │ /data/vdjt/sample_tcr_R2.fastq.gz                                                        │
+│<span class="w"> </span>Read<span class="w"> </span><span class="m">1</span><span class="w"> </span>│<span class="w"> </span>/data/vdjt/sample_tcr_R1.fastq.gz<span class="w">                                                        </span>│
+│<span class="w"> </span>Read<span class="w"> </span><span class="m">2</span><span class="w"> </span>│<span class="w"> </span>/data/vdjt/sample_tcr_R2.fastq.gz<span class="w">                                                        </span>│
 └───────┴──────────────────────────────────────────────────────────────────────────────────────────┘
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 
-──────────────────────────── Chemistry Detection — 2025-11-12 15:13:20 ─────────────────────────────
+────────────────────────────<span class="w"> </span>Chemistry<span class="w"> </span>Detection<span class="w"> </span>—<span class="w"> </span><span class="m">2025</span>-11-12<span class="w"> </span><span class="m">15</span>:13:20<span class="w"> </span>─────────────────────────────
 ┌─────────────────────────────────┬────────────────────────────────────────────────────────────────┐
-│ Type                            │ Result                                                         │
+│<span class="w"> </span>Type<span class="w">                            </span>│<span class="w"> </span>Result<span class="w">                                                         </span>│
 ├─────────────────────────────────┼────────────────────────────────────────────────────────────────┤
-│ Read 1                           │ darkreaction                                                   │
+│<span class="w"> </span>Read<span class="w"> </span><span class="m">1</span><span class="w">                           </span>│<span class="w"> </span>darkreaction<span class="w">                                                   </span>│
 └─────────────────────────────────┴────────────────────────────────────────────────────────────────┘
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 
- 2025-11-12 15:13:20 Starting VDJ library filtering...                                              
+<span class="w"> </span><span class="m">2025</span>-11-12<span class="w"> </span><span class="m">15</span>:13:20<span class="w"> </span>Starting<span class="w"> </span>VDJ<span class="w"> </span>library<span class="w"> </span>filtering...
 ...done
 
- 2025-11-12 15:15:46 Preparing input data for VDJ assembly...                                       
+<span class="w"> </span><span class="m">2025</span>-11-12<span class="w"> </span><span class="m">15</span>:15:46<span class="w"> </span>Preparing<span class="w"> </span>input<span class="w"> </span>data<span class="w"> </span><span class="k">for</span><span class="w"> </span>VDJ<span class="w"> </span>assembly...
 ...done
 
- 2025-11-12 15:18:14 Performing VDJ sequence assembly and gene segment annotation...                
+<span class="w"> </span><span class="m">2025</span>-11-12<span class="w"> </span><span class="m">15</span>:18:14<span class="w"> </span>Performing<span class="w"> </span>VDJ<span class="w"> </span>sequence<span class="w"> </span>assembly<span class="w"> </span>and<span class="w"> </span>gene<span class="w"> </span>segment<span class="w"> </span>annotation...
 ...done
 
- 2025-11-12 16:03:18 Performing cell calling for VDJ data...                                        
+<span class="w"> </span><span class="m">2025</span>-11-12<span class="w"> </span><span class="m">16</span>:03:18<span class="w"> </span>Performing<span class="w"> </span>cell<span class="w"> </span>calling<span class="w"> </span><span class="k">for</span><span class="w"> </span>VDJ<span class="w"> </span>data...
 ...done
 
- 2025-11-12 16:04:02 Generating VDJ clonotype analysis...                                           
+<span class="w"> </span><span class="m">2025</span>-11-12<span class="w"> </span><span class="m">16</span>:04:02<span class="w"> </span>Generating<span class="w"> </span>VDJ<span class="w"> </span>clonotype<span class="w"> </span>analysis...
 ...done
 
- 2025-11-12 16:05:02 Converting VDJ results from cellbarcode to cell ID...                          
+<span class="w"> </span><span class="m">2025</span>-11-12<span class="w"> </span><span class="m">16</span>:05:02<span class="w"> </span>Converting<span class="w"> </span>VDJ<span class="w"> </span>results<span class="w"> </span>from<span class="w"> </span>cellbarcode<span class="w"> </span>to<span class="w"> </span>cell<span class="w"> </span>ID...
 ...done
 
- 2025-11-12 16:05:15 Generating analysis report and summary statistics...                           
+<span class="w"> </span><span class="m">2025</span>-11-12<span class="w"> </span><span class="m">16</span>:05:15<span class="w"> </span>Generating<span class="w"> </span>analysis<span class="w"> </span>report<span class="w"> </span>and<span class="w"> </span>summary<span class="w"> </span>statistics...
 ...done
 
- 2025-11-12 16:05:44 Analysis Finished. Elapsed Time: 0:52:24
-</code></pre>
+<span class="w"> </span><span class="m">2025</span>-11-12<span class="w"> </span><span class="m">16</span>:05:44<span class="w"> </span>Analysis<span class="w"> </span>Finished.<span class="w"> </span>Elapsed<span class="w"> </span>Time:<span class="w"> </span><span class="m">0</span>:52:24
+</code></pre></div>
 <p>A successful run will end with <code>Analysis Finished</code>.</p>
-</div>
-<div style="max-width: 1200px; margin: 0 auto;">
-<hr style="border: none; border-top: 1px solid #d2d2d7; margin: 24px 0;">
-</div>
-<div style="background: #f5f5f7; border-radius: 12px; padding: 24px; margin: 24px auto; max-width: 1200px;">
 <h2 id="results-interpretation">Results Interpretation <a id="results-interpretation"></a><a class="headerlink" href="#results-interpretation" title="Permanent link">&para;</a></h2>
-</div>
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; margin: 20px auto; max-width: 1200px; border: 1px solid #e5e5e5; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
 <p>Upon completion, <code>outs</code> (outputs) and <code>logs</code> directories will be generated. The <code>outs</code> directory includes:</p>
-<pre><code>. 
+<div class="highlight"><pre><span></span><code>.
 ├── airr_annotations.tsv
 ├── all_contig_annotations.csv
 ├── all_contig.fasta
@@ -1746,15 +1749,8 @@ CELL4010_N1,555308,4268,22554,1,AGAGAGTCGCAGCAAGCGAC
 ├── filtered_contig.fasta
 ├── filtered_contig.fasta.fai
 └── metrics_summary.xls
-</code></pre>
-</div>
-<div style="max-width: 1200px; margin: 0 auto;">
-<hr style="border: none; border-top: 1px solid #d2d2d7; margin: 24px 0;">
-</div>
-<div style="background: #f5f5f7; border-radius: 12px; padding: 24px; margin: 24px auto; max-width: 1200px;">
+</code></pre></div>
 <h2 id="related-documentation">Related Documentation<a class="headerlink" href="#related-documentation" title="Permanent link">&para;</a></h2>
-</div>
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; margin: 20px auto; max-width: 1200px; border: 1px solid #e5e5e5; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
 <table>
 <thead>
 <tr>
@@ -1777,28 +1773,8 @@ CELL4010_N1,555308,4268,22554,1,AGAGAGTCGCAGCAAGCGAC
 </tr>
 </tbody>
 </table>
-</div>
-<div style="max-width: 1200px; margin: 0 auto;">
-<hr style="border: none; border-top: 1px solid #d2d2d7; margin: 24px 0;">
-</div>
-<div style="background: #f5f5f7; border-radius: 12px; padding: 24px; margin: 24px auto; max-width: 1200px;">
 <h2 id="frequently-asked-questions">Frequently Asked Questions<a class="headerlink" href="#frequently-asked-questions" title="Permanent link">&para;</a></h2>
-</div>
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; margin: 20px auto; max-width: 1200px; border: 1px solid #e5e5e5; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
 <p>This section will be expanded as common usage questions are collected. For the current version, use the run log, parameter reference, and output file documentation as the primary troubleshooting references.</p>
-</div>
-<div style="max-width: 1200px; margin: 0 auto;">
-<hr style="border: none; border-top: 1px solid #d2d2d7; margin: 24px 0;">
-</div>
-<div style="background: #f5f5f7; border-radius: 12px; padding: 24px; margin: 24px auto; max-width: 1200px;">
-<div align="center">
-<blockquote>
-<p><strong>Feedback &amp; Support</strong></p>
-<p>This document is continuously maintained. If you identify errors or missing information, please submit feedback via GitHub Issues.</p>
-<p><strong>Document Version:</strong> 3.1 | <strong>Last Updated:</strong> May 15, 2026</p>
-</blockquote>
-</div>
-</div>
 
 
 
@@ -1819,6 +1795,12 @@ CELL4010_N1,555308,4268,22554,1,AGAGAGTCGCAGCAAGCGAC
 <script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
         </div>
         
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
       </main>
       
         <footer class="md-footer">
@@ -1828,9 +1810,7 @@ CELL4010_N1,555308,4268,22554,1,AGAGAGTCGCAGCAAGCGAC
       <div class="md-copyright">
   
     <div class="md-copyright__highlight">
-      Copyright &copy; 2026 MGI Tech Bioinformatics. All rights reserved.<br>
-Documentation Version 3.1 · Last updated May 15, 2026
-
+      Copyright &copy; 2026 MGI Tech Bioinformatics.<br>Documentation 3.2 · Updated 2026-10-23
     </div>
   
   
@@ -1849,12 +1829,12 @@ Documentation Version 3.1 · Last updated May 15, 2026
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["search.suggest", "search.highlight"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["search.suggest", "search.highlight", "content.code.copy", "navigation.top"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
       <script src="../../../assets/javascripts/bundle.79ae519e.min.js"></script>
       
-        <script src="../../../javascripts/lang-toggle.js"></script>
+        <script src="../../../javascripts/doc-controls.js"></script>
       
     
   </body>

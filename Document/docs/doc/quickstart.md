@@ -1,46 +1,37 @@
-<div align="right" markdown="block">
-
-[首页](../index.md)
-
-</div>
-
 # 快速开始指南
-
-<div align="center" markdown="block">
 
 **dnbc4tools 快速开始操作说明**
 
 [RNA-seq](#single-cell-rna-analysis) • [ATAC-seq](#single-cell-atac-analysis) • [VDJ-seq](#single-cell-vdj-analysis) • [多组学](#integrated-multi-omics-analysis)
 
-</div>
+## 选择运行方式
 
----
+| 任务 | 命令入口 |
+| :--- | :--- |
+| 普通 RNA / ATAC / VDJ 单样本 | `rna run` / `atac run` / `vdj run` |
+| 多组学联合运行 | `multi run --csv config.csv` |
+| C6 probe barcode 多样本 | `multi run --csv c6.csv`，配置含 `[samples]`，RNA chemistry 为 `scRNAC6` |
+| 多份独立 RNA / ATAC 任务 | `rna multi` / `atac multi` 生成脚本，之后逐个执行 |
+
+C6 可直接使用 [Multi 参数中的完整示例](parameter/multi.md#c6-samples)。先阅读[升级指南](migration.md)，尤其注意新矩阵目录、C6 gzip 汇总及 ATAC 默认 cutsite 计数。正式 3.2 下载信息待发布确认。
 
 ## 使用前准备
 
-<div style="background-color: #e7f3fe; border-left: 6px solid #2196F3; padding: 15px; margin: 1.5em 0; border-radius: 4px;" markdown="block">
+> **开始前请确认：**
+> - 已完成 dnbc4tools 安装，参见[安装指南](./installation.md)。
+> - 命令中的 `$dnbc4tools` 需替换为实际安装路径（如 `/opt/software/dnbc4tools3.2/dnbc4tools`）。
+> - 反斜杠 `\` 仅用于多行展示以提高可读性，实际运行可写为单行。
 
-**开始前请确认：**
-<ul>
-  <li>已完成 dnbc4tools 安装，参见<a href="./installation.html">安装指南</a>。</li>
-  <li>命令中的 <code>$dnbc4tools</code> 需替换为实际安装路径（如 <code>/opt/software/dnbc4tools3.1/dnbc4tools</code>）。</li>
-  <li>反斜杠 <code>\</code> 仅用于换行展示，非必需。</li>
-</ul>
+<a id="file-naming-conventions"></a>
 
-</div>
-
-<div id="file-naming-conventions" style="background-color: #e7f3fe; border-left: 6px solid #2196F3; padding: 15px; margin: 1.5em 0; border-radius: 4px;" markdown="block">
-<p><strong><code>--fastqs</code> 自动识别命名规则</strong></p>
-当使用 <code>--fastqs</code> 目录输入方式时，流程会根据文件名自动识别双端文件，支持以下模式。若使用 <code>--fastq1/--fastq2</code> 或 RNA 的 <code>--cDNAfastq1/2</code>、<code>--oligofastq1/2</code> 逐项指定文件，则不要求文件名必须符合这些模式，但 R1/R2 文件顺序必须一一对应。
-<ul>
-  <li><strong>支持扩展名：</strong> <code>.fastq.gz</code>、<code>.fq.gz</code>、<code>.fastq</code>、<code>.fq</code></li>
-  <li><strong>R1 模式：</strong> <code>_R1_</code>、<code>_R1</code>、<code>_1</code>、<code>_read1</code></li>
-  <li><strong>R2 模式：</strong> <code>_R2_</code>、<code>_R2</code>、<code>_2</code>、<code>_read2</code></li>
-</ul>
-示例：<code>sample_R1.fastq.gz</code>、<code>sample_1.fastq.gz</code>、<code>sample_R1_001.fastq.gz</code> 均会被识别为 R1 文件。
-</div>
-
----
+> **`--fastqs` 自动识别命名规则**
+>
+> 当使用 `--fastqs` 目录输入方式时，流程会根据文件名自动识别双端文件，支持以下模式。若使用 `--fastq1/--fastq2` 或 RNA 的 `--cDNAfastq1/2`、`--oligofastq1/2` 逐项指定文件，则不要求文件名必须符合这些模式，但 R1/R2 文件顺序必须一一对应。
+> - **支持扩展名：** `.fastq.gz`、`.fq.gz`、`.fastq`、`.fq`
+> - **R1 模式：** `_R1_`、`_R1`、`_1`、`_read1`
+> - **R2 模式：** `_R2_`、`_R2`、`_2`、`_read2`
+>
+> 示例：`sample_R1.fastq.gz`、`sample_1.fastq.gz`、`sample_R1_001.fastq.gz` 均会被识别为 R1 文件。
 
 ## 单细胞 RNA 分析 <a id="single-cell-rna-analysis"></a>
 
@@ -100,12 +91,10 @@ $dnbc4tools rna run \
 ```
 
 推荐目录结构：
-<ul>
-  <li><code>/test/data/rna_fastqs/cDNA/*_R1*.fastq.gz</code>, <code>*_R2*.fastq.gz</code></li>
-  <li><code>/test/data/rna_fastqs/oligo/*_R1*.fastq.gz</code>, <code>*_R2*.fastq.gz</code></li>
-</ul>
+- `/test/data/rna_fastqs/cDNA/*_R1*.fastq.gz`, `*_R2*.fastq.gz`
+- `/test/data/rna_fastqs/oligo/*_R1*.fastq.gz`, `*_R2*.fastq.gz`
 
-使用 <code>--fastqs</code> 时，支持的自动识别模式见[`--fastqs` 自动识别命名规则](#file-naming-conventions)。
+使用 `--fastqs` 时，支持的自动识别模式见[`--fastqs` 自动识别命名规则](#file-naming-conventions)。
 
 **文件输入方式（--cDNAfastq1/2 --oligofastq1/2）**
 ```bash
@@ -118,8 +107,6 @@ $dnbc4tools rna run \
     --name test \
     --threads 30
 ```
-
----
 
 ## 单细胞 ATAC 分析 <a id="single-cell-atac-analysis"></a>
 
@@ -168,11 +155,9 @@ $dnbc4tools atac run \
     --threads 10
 ```
 推荐目录结构：
-<ul>
-  <li><code>/test/data/*_R1*.fastq.gz</code>, <code>*_R2*.fastq.gz</code></li>
-</ul>
+- `/test/data/*_R1*.fastq.gz`, `*_R2*.fastq.gz`
 
-使用 <code>--fastqs</code> 时，支持的自动识别模式见[`--fastqs` 自动识别命名规则](#file-naming-conventions)。
+使用 `--fastqs` 时，支持的自动识别模式见[`--fastqs` 自动识别命名规则](#file-naming-conventions)。
 
 **文件输入方式（--fastq1/2）**
 ```bash
@@ -184,23 +169,17 @@ $dnbc4tools atac run \
     --threads 10
 ```
 
----
-
 ## 单细胞 VDJ 分析 <a id="single-cell-vdj-analysis"></a>
 
 > 免疫受体组库分析（需先完成 5' RNA 分析）
 
-<div style="background-color: #fffbe6; border-left: 6px solid #ffc107; padding: 15px; margin: 1.5em 0; border-radius: 4px;" markdown="block">
-<strong>前置条件</strong>: 先完成 5' scRNA 分析以建立细胞与微珠对应关系。
-</div>
+> **前置条件**：先完成 5' scRNA 分析以建立细胞与微珠对应关系。
 
 ### 第一步： 5' RNA 分析
 
 **5' scRNA-seq 分析**
 
-<div style="background-color: #e7f3fe; border-left: 6px solid #2196F3; padding: 15px; margin: 1.5em 0; border-radius: 4px;" markdown="block">
-<strong>注意：</strong> 5' scRNA-seq 数据需增加 <code>--end5</code> 参数以指定文库类型。
-</div>
+> **注意**：5' scRNA-seq 数据需增加 `--end5` 参数以指定文库类型。
 
 ```bash
 $dnbc4tools rna run \
@@ -280,17 +259,13 @@ $dnbc4tools vdj run \
     --chain IG
 ```
 
----
-
 ## 多组学分析 <a id="integrated-multi-omics-analysis"></a>
 
 > 在同一流程中运行 RNA/ATAC/VDJ，并输出统一报告
 
 ### 第一步： 准备配置文件
 
-<div style="background-color: #e7f3fe; border-left: 6px solid #2196F3; padding: 15px; margin: 1.5em 0; border-radius: 4px;" markdown="block">
-<strong>配置说明</strong>：在 <code>[libraries]</code> 中，<code>fastqs</code> 应填写各组学文库对应的 FASTQ 目录路径；流程会在每个目录中自动识别 R1/R2 文件。 启用 VDJ 模块时，<code>[rna]</code> 分段需设置 <code>end5,true</code>。
-</div>
+> **配置说明**：在 `[libraries]` 中，`fastqs` 应填写各组学文库对应的 FASTQ 目录路径；流程会在每个目录中自动识别 R1/R2 文件。启用 VDJ 模块时，`[rna]` 分段需设置 `end5,true`。
 
 ```ini
 [libraries]
@@ -314,14 +289,12 @@ ref,human
 ref,human
 ```
 
-目录结构：
-<ul>
-  <li>RNA: <code>/test/data/rna/cDNA/</code> 和 <code>/test/data/rna/oligo/</code></li>
-  <li>ATAC: 成对 FASTQ 文件放在 <code>/test/data/atac/</code></li>
-  <li>VDJ-T: 成对 FASTQ 文件放在 <code>/test/data/vdj-t/</code></li>
-  <li>VDJ-B: 成对 FASTQ 文件放在 <code>/test/data/vdj-b/</code></li>
-</ul>
-  
+推荐目录结构：
+- **RNA**：`/test/data/rna/cDNA/` 和 `/test/data/rna/oligo/`
+- **ATAC**：成对 FASTQ 文件放在 `/test/data/atac/`
+- **VDJ-T**：成对 FASTQ 文件放在 `/test/data/vdj-t/`
+- **VDJ-B**：成对 FASTQ 文件放在 `/test/data/vdj-b/`
+
 
 ### 第二步： 运行多组学流程
 
@@ -331,8 +304,6 @@ $dnbc4tools multi run \
     --csv ./multi_config.csv \
     --threads 20
 ```
-
----
 
 ## 命令速查 <a id="command-reference"></a>
 
@@ -347,8 +318,6 @@ $dnbc4tools multi run \
 | **参考库构建** | `dnbc4tools atac mkref` | 构建 ATAC 参考库 |
 | **多组学** | `dnbc4tools multi run` | RNA/ATAC/VDJ 联合分析与统一报告 |
 | **GTF 处理** | `dnbc4tools tools mkgtf` | 过滤并处理 GTF 文件 |
-
----
 
 ## 相关文档
 

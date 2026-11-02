@@ -1,55 +1,20 @@
-<div align="right" style="margin-bottom: 20px; max-width: 1200px; margin-left: auto; margin-right: auto;" markdown="block">
+# scATAC Analysis Output
 
-[Home](../../index.md)
-
-</div>
-
-<div align="center" style="padding: 40px 20px; background: linear-gradient(135deg, #f5f5f7 0%, #ffffff 100%); border-radius: 12px; margin-bottom: 30px; max-width: 1200px; margin-left: auto; margin-right: auto;" markdown="block">
-
-<h1 style="font-size: 48px; font-weight: 600; color: #1d1d1f; margin: 0 0 16px 0; letter-spacing: -0.02em;"> scATAC Analysis Output</h1>
-
-<p style="font-size: 21px; color: rgba(0,0,0,0.6); margin: 0 0 30px 0; font-weight: 400;">Single-Cell ATAC Sequencing Output File Guide</p>
-
-<div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;" markdown="block">
-<a href="#directory-structure" style="background: #0071e3; color: white; padding: 8px 16px; border-radius: 980px; text-decoration: none; font-size: 14px;">Directory Structure</a>
-<a href="#file-details" style="background: transparent; color: #0071e3; padding: 8px 16px; border-radius: 980px; text-decoration: none; font-size: 14px; border: 1px solid #0071e3;">File Details</a>
-<a href="#peak-matrix-files" style="background: transparent; color: #0071e3; padding: 8px 16px; border-radius: 980px; text-decoration: none; font-size: 14px; border: 1px solid #0071e3;">Peak Matrix</a>
-<a href="#web-report-interpretation" style="background: transparent; color: #0071e3; padding: 8px 16px; border-radius: 980px; text-decoration: none; font-size: 14px; border: 1px solid #0071e3;">Report Interpretation</a>
-</div>
-
-</div>
-
-<div style="max-width: 1200px; margin: 0 auto;" markdown="block"><hr style="border: none; border-top: 1px solid #d2d2d7; margin: 24px 0;"></div>
-
-<div style="background: #f5f5f7; border-radius: 12px; padding: 24px; margin: 24px auto; max-width: 1200px;" markdown="block">
+Single-Cell ATAC Sequencing Output File Guide
 
 ## Overview <a id="overview"></a>
 
-<div align="center" markdown="block">
-
 After single-cell ATAC sequencing analysis is complete, a standardized structure of files and subdirectories is generated in the specified output directory for chromatin accessibility analysis and epigenomic research.
-
-</div>
 
 > **Tip**: All output files use standard formats compatible with mainstream single-cell epigenomic analysis tools (e.g., Signac, ArchR), adhering to internationally accepted data format standards.
 
-</div>
-
-<div style="max-width: 1200px; margin: 0 auto;" markdown="block"><hr style="border: none; border-top: 1px solid #d2d2d7; margin: 24px 0;"></div>
-
-<div style="background: #f5f5f7; border-radius: 12px; padding: 24px; margin: 24px auto; max-width: 1200px;" markdown="block">
-
 ## Directory Structure <a id="directory-structure"></a>
-
-</div>
-
-<div style="background: #ffffff; border-radius: 12px; padding: 20px; margin: 20px auto; max-width: 1200px; overflow-x: auto; border: 1px solid #e5e5e5; box-shadow: 0 1px 3px rgba(0,0,0,0.1);" markdown="block">
 
 ```
 .
 ├── alignment.fragments.sorted.tagged.bam       # QC-filtered alignment results (requires 'need_bam' parameter for analysis)
 ├── alignment.fragments.sorted.tagged.bam.bai   # Index file for the alignment results
-├── filter_peak_matrix/                         # Directory for the filtered peak matrix in MEX format
+├── filtered_peak_bc_matrix/                         # Directory for the filtered peak matrix in MEX format
 │   ├── barcodes.tsv.gz                         # Barcode information for filtered cells
 │   ├── matrix.mtx.gz                           # Peak signal data in sparse matrix format for filtered data
 │   └── peaks.bed.gz                            # Peak position information for filtered data
@@ -58,33 +23,25 @@ After single-cell ATAC sequencing analysis is complete, a standardized structure
 ├── filtered.fragments.tsv.gz                   # QC-filtered ATAC fragment file, containing only fragments from filtered cells
 ├── filtered.fragments.tsv.gz.tbi               # Tabix index for the filtered fragments file, for fast querying of genomic intervals
 ├── metrics_summary.xls                         # Summary table of analysis quality metrics
-├── raw_peak_matrix/                            # Directory for the raw peak matrix in MEX format
+├── raw_peak_bc_matrix/                            # Directory for the raw peak matrix in MEX format
 │   ├── barcodes.tsv.gz                         # Raw cell barcode information
 │   ├── matrix.mtx.gz                           # Raw peak signal data in sparse matrix format
 │   └── peaks.bed.gz                            # Raw peak position information
+├── raw_peak_bc_matrix.h5
+├── filtered_peak_bc_matrix.h5
 ├── singlecell.csv                              # Summary table of cell information
 └── *_scATAC_report.html                        # Analysis report in HTML format
 ```
 
-</div>
+<a id="v32-outputs"></a>
 
-<div style="max-width: 1200px; margin: 0 auto;" markdown="block"><hr style="border: none; border-top: 1px solid #d2d2d7; margin: 24px 0;"></div>
-
-<div style="background: #f5f5f7; border-radius: 12px; padding: 24px; margin: 24px auto; max-width: 1200px;" markdown="block">
+Raw and filtered peak matrices also have H5 exports. Matrix counts default to cutsites; cell calling, FRIP and TSS fractions retain unique-fragment statistics. BAM requires `--need_bam`; indexes can be BAI or CSI.
 
 ## File Details <a id="file-details"></a>
 
 ### ATAC Fragment and Peak Files <a id="atac-fragment-and-peak-files"></a>
 
-<div align="center" markdown="block">
-
 **Core Content**: ATAC-seq fragment information and peak identification results, containing complete chromatin accessibility data and cell barcode tags.
-
-</div>
-
-</div>
-
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border: 1px solid #e5e5e5; margin: 20px auto; max-width: 1200px; " markdown="block">
 
 #### fragments.tsv.gz
 
@@ -99,45 +56,39 @@ After single-cell ATAC sequencing analysis is complete, a standardized structure
     *   The file is in **BED-like** format, with each row representing a unique ATAC-seq fragment.
     *   The file contains the **5 columns of information** as shown in the table below:
 
-        <table style="width:100%; border-collapse: collapse; margin: 15px 0; border-radius: 8px; overflow: hidden;">
-        <thead style="background-color: #f5f5f7; border-bottom: 1px solid #d2d2d7;">
+        <table>
+        <thead>
         <tr>
-        <th width="20%" align="left" style="padding: 12px 16px; font-weight: 600; color: #1d1d1f;">Field Name</th>
-        <th width="80%" align="left" style="padding: 12px 16px; font-weight: 600; color: #1d1d1f;">Description</th>
+        <th width="20%">Field Name</th>
+        <th width="80%">Description</th>
         </tr>
         </thead>
         <tbody>
         <tr>
-        <td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;"><code>chrom</code></td>
-        <td style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;">The name of the reference genome chromosome, identifying the chromosomal location of the fragment.</td>
+        <td><code>chrom</code></td>
+        <td>The name of the reference genome chromosome, identifying the chromosomal location of the fragment.</td>
         </tr>
         <tr>
-        <td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;"><code>chromStart</code></td>
-        <td style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;">The adjusted start position of the fragment on the chromosome (0-based), corrected for the transposase cleavage site.</td>
+        <td><code>chromStart</code></td>
+        <td>The adjusted start position of the fragment on the chromosome (0-based), corrected for the transposase cleavage site.</td>
         </tr>
         <tr>
-        <td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;"><code>chromEnd</code></td>
-        <td style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;">The adjusted end position of the fragment on the chromosome (exclusive), corrected for the transposase cleavage site.</td>
+        <td><code>chromEnd</code></td>
+        <td>The adjusted end position of the fragment on the chromosome (exclusive), corrected for the transposase cleavage site.</td>
         </tr>
         <tr>
-        <td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;"><code>barcode</code></td>
-        <td style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;">The cell ID identifier, corresponding to the <code>CB</code> tag in the BAM file, used to assign the fragment to a specific cell.</td>
+        <td><code>barcode</code></td>
+        <td>The cell ID identifier, corresponding to the <code>CB</code> tag in the BAM file, used to assign the fragment to a specific cell.</td>
         </tr>
         <tr>
-        <td align="left" style="padding: 12px 16px;"><code>readSupport</code></td>
-        <td style="padding: 12px 16px;">The total number of read pairs associated with this fragment (including unique and duplicate reads).</td>
+        <td><code>readSupport</code></td>
+        <td>The total number of read pairs associated with this fragment (including unique and duplicate reads).</td>
         </tr>
         </tbody>
         </table>
 
 *   **Coordinate Adjustment**:
     *   To accurately locate the transposase cleavage site, the fragment intervals in the file are adjusted: the start position is shifted 4bp forward from the leftmost alignment position, and the end position is shifted 5bp backward from the rightmost alignment position.
-
-</div>
-
-<div style="max-width: 1200px; margin: 0 auto;" markdown="block"><hr style="border: none; border-top: 1px solid #d2d2d7; margin: 24px 0;"></div>
-
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border: 1px solid #e5e5e5; margin: 20px auto; max-width: 1200px; " markdown="block">
 
 #### fragments.tsv.gz.tbi
 
@@ -148,12 +99,6 @@ The Tabix index file for `fragments.tsv.gz`.
     *   **Tool Performance Optimization**: Used by tools like ArchR, Signac, and IGV to load and process data from specific regions.
 *   **Format**:
     *   A standard binary index file generated by the `tabix` tool.
-
-</div>
-
-<div style="max-width: 1200px; margin: 0 auto;" markdown="block"><hr style="border: none; border-top: 1px solid #d2d2d7; margin: 24px 0;"></div>
-
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border: 1px solid #e5e5e5; margin: 20px auto; max-width: 1200px; " markdown="block">
 
 #### filtered.fragments.tsv.gz
 
@@ -166,12 +111,6 @@ This is the ATAC-seq fragment file after cell quality control and filtering. It 
     *   The file format is identical to `fragments.tsv.gz` (compressed BED-like TSV) and contains the same 5 columns.
     *   It includes only fragments from barcodes identified as "real cells" by the cell filtering algorithm (e.g., based on TSS enrichment and number of fragments in peaks).
 
-</div>
-
-<div style="max-width: 1200px; margin: 0 auto;" markdown="block"><hr style="border: none; border-top: 1px solid #d2d2d7; margin: 24px 0;"></div>
-
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border: 1px solid #e5e5e5; margin: 20px auto; max-width: 1200px; " markdown="block">
-
 #### filtered.fragments.tsv.gz.tbi
 
 The Tabix index file for `filtered.fragments.tsv.gz`.
@@ -180,12 +119,6 @@ The Tabix index file for `filtered.fragments.tsv.gz`.
     *   **Downstream Analysis Support**: Ensures that downstream tools (like ArchR, Signac) can quickly access data from specific genomic regions when using the filtered fragment file.
 *   **Format**:
     *   A standard binary index file generated by the `tabix` tool.
-
-</div>
-
-<div style="max-width: 1200px; margin: 0 auto;" markdown="block"><hr style="border: none; border-top: 1px solid #d2d2d7; margin: 24px 0;"></div>
-
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border: 1px solid #e5e5e5; margin: 20px auto; max-width: 1200px; " markdown="block">
 
 #### alignment.fragments.sorted.tagged.bam
 
@@ -203,38 +136,32 @@ This is the ATAC-seq alignment result file containing all fragments that have a 
 *   **Key TAG Field Descriptions**:
     *   Cell and molecular barcode information is stored in the following TAG fields:
 
-        <table style="width:100%; border-collapse: collapse; margin: 15px 0; border-radius: 8px; overflow: hidden;">
-        <thead style="background-color: #f5f5f7; border-bottom: 1px solid #d2d2d7;">
+        <table>
+        <thead>
         <tr>
-        <th width="15%" align="left" style="padding: 12px 16px; font-weight: 600; color: #1d1d1f;">Tag</th>
-        <th width="15%" align="left" style="padding: 12px 16px; font-weight: 600; color: #1d1d1f;">Type</th>
-        <th width="70%" align="left" style="padding: 12px 16px; font-weight: 600; color: #1d1d1f;">Description</th>
+        <th width="15%">Tag</th>
+        <th width="15%">Type</th>
+        <th width="70%">Description</th>
         </tr>
         </thead>
         <tbody>
         <tr>
-        <td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;"><code>CB</code></td>
-        <td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;">Z</td>
-        <td style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;">Cell barcode identifier after error correction and cell merging.</td>
+        <td><code>CB</code></td>
+        <td>Z</td>
+        <td>Cell barcode identifier after error correction and cell merging.</td>
         </tr>
         <tr>
-        <td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;"><code>CC</code></td>
-        <td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;">Z</td>
-        <td style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;">Error-corrected cell barcode sequence.</td>
+        <td><code>CC</code></td>
+        <td>Z</td>
+        <td>Error-corrected cell barcode sequence.</td>
         </tr>
         <tr>
-        <td align="left" style="padding: 12px 16px;"><code>CR</code></td>
-        <td align="left" style="padding: 12px 16px;">Z</td>
-        <td style="padding: 12px 16px;">Cell barcode sequence as reported by the sequencer.</td>
+        <td><code>CR</code></td>
+        <td>Z</td>
+        <td>Cell barcode sequence as reported by the sequencer.</td>
         </tr>
         </tbody>
         </table>
-
-</div>
-
-<div style="max-width: 1200px; margin: 0 auto;" markdown="block"><hr style="border: none; border-top: 1px solid #d2d2d7; margin: 24px 0;"></div>
-
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border: 1px solid #e5e5e5; margin: 20px auto; max-width: 1200px; " markdown="block">
 
 #### alignment.fragments.sorted.tagged.bam.bai
 
@@ -246,25 +173,11 @@ The index file for `alignment.fragments.sorted.tagged.bam`.
 *   **Format**:
     *   Standard **BAI (BAM Index)** format generated by the `samtools index` command.
 
-</div>
-
-<div style="max-width: 1200px; margin: 0 auto;" markdown="block"><hr style="border: none; border-top: 1px solid #d2d2d7; margin: 24px 0;"></div>
-
-<div style="background: #f5f5f7; border-radius: 12px; padding: 24px; margin: 24px auto; max-width: 1200px;" markdown="block">
-
 ### Peak Matrix Files <a id="peak-matrix-files"></a>
-
-<div align="center" markdown="block">
 
 **Core Content**: The single-cell peak signal count matrix, divided into raw and quality-controlled filtered data, using the standard sparse matrix format.
 
-</div>
-
-</div>
-
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border: 1px solid #e5e5e5; margin: 20px auto; max-width: 1200px; " markdown="block">
-
-#### Filtered Peak Matrix (`filter_peak_matrix/`)
+#### Filtered Peak Matrix (`filtered_peak_bc_matrix/`)
 
 Contains the peak count matrix after high-quality cell filtering, serving as the core data for downstream quantitative analysis.
 
@@ -274,25 +187,25 @@ Contains the peak count matrix after high-quality cell filtering, serving as the
 
 *   **Content & Format**:
     *   Uses the standard **Matrix Market Exchange (MEX)** format, consisting of the following three compressed files:
-        <table style="width:100%; border-collapse: collapse; margin: 15px 0; border-radius: 8px; overflow: hidden;">
-        <thead style="background-color: #f5f5f7; border-bottom: 1px solid #d2d2d7;">
+        <table>
+        <thead>
         <tr>
-        <th width="25%" align="left" style="padding: 12px 16px; font-weight: 600; color: #1d1d1f;">Filename</th>
-        <th width="75%" align="left" style="padding: 12px 16px; font-weight: 600; color: #1d1d1f;">Description</th>
+        <th width="25%">Filename</th>
+        <th width="75%">Description</th>
         </tr>
         </thead>
         <tbody>
         <tr>
-        <td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;"><code>barcodes.tsv.gz</code></td>
-        <td style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;">A list of cell IDs, identifying high-quality cells that passed QC. Each line contains one cell ID, corresponding to a column in the matrix.</td>
+        <td><code>barcodes.tsv.gz</code></td>
+        <td>A list of cell IDs, identifying high-quality cells that passed QC. Each line contains one cell ID, corresponding to a column in the matrix.</td>
         </tr>
         <tr>
-        <td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;"><code>peaks.bed.gz</code></td>
-        <td style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;">A file with peak region coordinates in BED format. Contains chromosome, start, and end positions, corresponding to a row in the matrix.</td>
+        <td><code>peaks.bed.gz</code></td>
+        <td>A file with peak region coordinates in BED format. Contains chromosome, start, and end positions, corresponding to a row in the matrix.</td>
         </tr>
         <tr>
-        <td align="left" style="padding: 12px 16px;"><code>matrix.mtx.gz</code></td>
-        <td style="padding: 12px 16px;">The peak region count matrix in Matrix Market format. Contains matrix dimensions and the row, column, and value for non-zero elements.</td>
+        <td><code>matrix.mtx.gz</code></td>
+        <td>The peak region count matrix in Matrix Market format. Contains matrix dimensions and the row, column, and value for non-zero elements.</td>
         </tr>
         </tbody>
         </table>
@@ -301,13 +214,7 @@ Contains the peak count matrix after high-quality cell filtering, serving as the
     *   **Space-Efficient**: The sparse matrix format (`.mtx`) saves significant storage space by only storing non-zero elements.
     *   **Highly Compatible**: The MEX format is a standard in the single-cell community, compatible with almost all mainstream analysis tools like Seurat, Signac, Scanpy, etc.
 
-</div>
-
-<div style="max-width: 1200px; margin: 0 auto;" markdown="block"><hr style="border: none; border-top: 1px solid #d2d2d7; margin: 24px 0;"></div>
-
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border: 1px solid #e5e5e5; margin: 20px auto; max-width: 1200px; " markdown="block">
-
-#### Raw Peak Matrix (`raw_peak_matrix/`)
+#### Raw Peak Matrix (`raw_peak_bc_matrix/`)
 
 Contains the raw peak count matrix for all detected cell barcodes (without filtering).
 
@@ -316,26 +223,12 @@ Contains the raw peak count matrix for all detected cell barcodes (without filte
     *   **Data Integrity**: Preserves all original data, which can be used for deep mining or re-analysis if needed.
 
 *   **Content & Format**:
-    *   Uses the standard **Matrix Market Exchange (MEX)** format, with the same file composition as the `filter_peak_matrix/` directory.
+    *   Uses the standard **Matrix Market Exchange (MEX)** format, with the same file composition as the `filtered_peak_bc_matrix/` directory.
     *   Includes all detected barcodes, including high-quality cells, low-quality cells, and background droplets.
-
-</div>
-
-<div style="max-width: 1200px; margin: 0 auto;" markdown="block"><hr style="border: none; border-top: 1px solid #d2d2d7; margin: 24px 0;"></div>
-
-<div style="background: #f5f5f7; border-radius: 12px; padding: 24px; margin: 24px auto; max-width: 1200px;" markdown="block">
 
 ### Analysis Summary <a id="analysis-summary"></a>
 
-<div align="center" markdown="block">
-
 **Core Content**: A summary of experimental quality assessment and statistical metrics, providing complete data quality control information.
-
-</div>
-
-</div>
-
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border: 1px solid #e5e5e5; margin: 20px auto; max-width: 1200px; " markdown="block">
 
 #### metrics_summary.xls
 
@@ -347,33 +240,33 @@ An Excel-formatted summary table of key analysis metrics, providing a structured
 
 *   **Content & Format**:
     *   Contains key metrics from three main categories:
-        <table style="width:100%; border-collapse: collapse; margin: 15px 0; border-radius: 8px; overflow: hidden;">
-        <thead style="background-color: #f5f5f7; border-bottom: 1px solid #d2d2d7;">
+        <table>
+        <thead>
         <tr>
-        <th width="20%" align="left" style="padding: 12px 16px; font-weight: 600; color: #1d1d1f;">Metric Category</th>
-        <th width="80%" align="left" style="padding: 12px 16px; font-weight: 600; color: #1d1d1f;">Includes</th>
+        <th width="20%">Metric Category</th>
+        <th width="80%">Includes</th>
         </tr>
         </thead>
         <tbody>
         <tr>
-        <td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;"><strong>Basic Stats</strong></td>
-        <td style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;">Basic sequencing metrics like total read pairs, valid barcode ratio, Q30 base quality, etc.</td>
+        <td><strong>Basic Stats</strong></td>
+        <td>Basic sequencing metrics like total read pairs, valid barcode ratio, Q30 base quality, etc.</td>
         </tr>
         <tr>
-        <td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;"><strong>Cell Calling</strong></td>
-        <td style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;">Cell calling results like estimated number of cells, fraction of fragments in peaks, fraction of fragments in TSS, number of peaks detected, TSS enrichment, etc.</td>
+        <td><strong>Cell Calling</strong></td>
+        <td>Cell calling results like estimated number of cells, fraction of fragments in peaks, fraction of fragments in TSS, number of peaks detected, TSS enrichment, etc.</td>
         </tr>
         <tr>
-        <td align="left" style="padding: 12px 16px;"><strong>Alignment</strong></td>
-        <td style="padding: 12px 16px;">Alignment statistics like genome alignment rate, mitochondrial DNA ratio, etc.</td>
+        <td><strong>Alignment</strong></td>
+        <td>Alignment statistics like genome alignment rate, mitochondrial DNA ratio, etc.</td>
         </tr>
         </tbody>
         </table>
 
     *   Includes built-in recommended quality control thresholds for user convenience:
-        <details open style="margin-top: 15px;">
+        <details markdown="block" open>
         <summary><strong>Recommended Quality Thresholds:</strong></summary>
-        <ul style="margin-top: 10px;">
+        <ul>
         <li><strong>Valid Barcode Ratio</strong>: >70%</li>
         <li><strong>Q30 Base Quality</strong>: >75% (Barcode and UMI regions)</li>
         <li><strong>Genome Alignment Rate</strong>: >50%</li>
@@ -384,14 +277,9 @@ An Excel-formatted summary table of key analysis metrics, providing a structured
         </ul>
         </details>
 
-</div>
-
-<div style="max-width: 1200px; margin: 0 auto;" markdown="block"><hr style="border: none; border-top: 1px solid #d2d2d7; margin: 24px 0;"></div>
-
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border: 1px solid #e5e5e5; margin: 20px auto; max-width: 1200px; " markdown="block">
-
 #### singlecell.csv
 
+`singlecell.csv` includes `Cell,totalFrags,fragments,mt_region_fragments,chloroplast_region_fragments,TSS_region_fragments,blacklist_region_fragments,peaks_number,peak_region_fragments,peak_region_cutsites,is_cell_barcode,Cellbarcode`. The peak-region fragment and cutsite columns represent distinct counts. A missing cutsite statistic from an older tool is not zero.
 A CSV-formatted table of cell-level quality control information, recording detailed statistics for each cell barcode.
 
 *   **Core Purpose**:
@@ -401,12 +289,6 @@ A CSV-formatted table of cell-level quality control information, recording detai
 *   **Content & Format**:
     *   Each row represents one cell barcode.
     *   Key columns include: number of fragments, number of peaks, number of fragments in TSS/peak regions, whether it is identified as a high-quality cell, bead merging information, etc.
-
-</div>
-
-<div style="max-width: 1200px; margin: 0 auto;" markdown="block"><hr style="border: none; border-top: 1px solid #d2d2d7; margin: 24px 0;"></div>
-
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border: 1px solid #e5e5e5; margin: 20px auto; max-width: 1200px; " markdown="block">
 
 #### *_scATAC_report.html
 
@@ -421,46 +303,32 @@ An interactive HTML report for reviewing analysis results.
     *   Can be opened in any modern browser without an internet connection.
     *   For a detailed interpretation of the report, please refer to the [Web Report Interpretation](#web-report-interpretation) section below.
     *   Key content modules included are as follows:
-        <table style="width:100%; border-collapse: collapse; margin: 15px 0; border-radius: 8px; overflow: hidden;">
-        <thead style="background-color: #f5f5f7; border-bottom: 1px solid #d2d2d7;">
+        <table>
+        <thead>
         <tr>
-        <th width="25%" align="left" style="padding: 12px 16px; font-weight: 600; color: #1d1d1f;">Report Feature</th>
-        <th width="75%" align="left" style="padding: 12px 16px; font-weight: 600; color: #1d1d1f;">Description</th>
+        <th width="25%">Report Feature</th>
+        <th width="75%">Description</th>
         </tr>
         </thead>
         <tbody>
         <tr>
-        <td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;"><strong>Interactive Charts</strong></td>
-        <td style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;">Interactive visualizations for QC metrics, cell clustering, peak analysis, etc.</td>
+        <td><strong>Interactive Charts</strong></td>
+        <td>Interactive visualizations for QC metrics, cell clustering, peak analysis, etc.</td>
         </tr>
         <tr>
-        <td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;"><strong>Statistical Summary</strong></td>
-        <td style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;">A numerical summary and trend analysis of key performance indicators.</td>
+        <td><strong>Statistical Summary</strong></td>
+        <td>A numerical summary and trend analysis of key performance indicators.</td>
         </tr>
         <tr>
-        <td align="left" style="padding: 12px 16px;"><strong>Detailed Interpretation</strong></td>
-        <td style="padding: 12px 16px;">The biological significance and technical explanation of various metrics.</td>
+        <td><strong>Detailed Interpretation</strong></td>
+        <td>The biological significance and technical explanation of various metrics.</td>
         </tr>
         </tbody>
         </table>
 
-</div>
-
-<div style="max-width: 1200px; margin: 0 auto;" markdown="block"><hr style="border: none; border-top: 1px solid #d2d2d7; margin: 24px 0;"></div>
-
-<div style="background: #f5f5f7; border-radius: 12px; padding: 24px; margin: 24px auto; max-width: 1200px;" markdown="block">
-
 ## File Format Description <a id="file-format-description"></a>
 
-<div align="center" markdown="block">
-
 **Technical Specification**: A detailed description of the standard formats used for the output files.
-
-</div>
-
-</div>
-
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; margin: 20px auto; max-width: 1200px; border: 1px solid #e5e5e5; box-shadow: 0 1px 3px rgba(0,0,0,0.1);" markdown="block">
 
 #### Matrix Market Format (`.mtx.gz`) <a id="market-matrix-format-mtxgz"></a>
 
@@ -472,44 +340,32 @@ Market Exchange Format (MEX) is a standard format for storing sparse count matri
 
 *   **File Composition**:
     *   A complete MEX format dataset consists of the following **three files**:
-        <table style="width:100%; border-collapse: collapse; margin: 15px 0;">
+        <table>
         <thead>
         <tr>
-        <th width="25%" align="left"><strong>Filename</strong></th>
-        <th width="75%" align="left"><strong>Description</strong></th>
+        <th width="25%"><strong>Filename</strong></th>
+        <th width="75%"><strong>Description</strong></th>
         </tr>
         </thead>
         <tbody>
         <tr>
-        <td align="left"><code>matrix.mtx.gz</code></td>
+        <td><code>matrix.mtx.gz</code></td>
         <td>A compressed sparse matrix file. The header contains matrix dimensions, and each subsequent line records the position (row/column index) and value of a non-zero element.</td>
         </tr>
         <tr>
-        <td align="left"><code>barcodes.tsv.gz</code></td>
+        <td><code>barcodes.tsv.gz</code></td>
         <td>A compressed cell barcode file. Each line is a cell ID, and the line number corresponds to the matrix **column**.</td>
         </tr>
         <tr>
-        <td align="left"><code>peaks.bed.gz</code></td>
+        <td><code>peaks.bed.gz</code></td>
         <td>A compressed feature (peak) file. Each line is a peak's coordinates in BED format, and the line number corresponds to the matrix **row**.</td>
         </tr>
         </tbody>
         </table>
 
-</div>
-
-<div style="max-width: 1200px; margin: 0 auto;" markdown="block"><hr style="border: none; border-top: 1px solid #d2d2d7; margin: 24px 0;"></div>
-
-<br>
-
 ## Web Report Interpretation <a id="web-report-interpretation"></a>
 
-<div align="center" markdown="block">
-
 **Overview**: The HTML web report provides visual summaries and metric explanations for single-cell ATAC sequencing results, including key performance indicators for experimental quality and downstream analysis.
-
-</div>
-
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; margin: 20px auto; max-width: 1200px; border: 1px solid #e5e5e5; box-shadow: 0 1px 3px rgba(0,0,0,0.1);" markdown="block">
 
 The HTML web report is the main entry point for reviewing single-cell ATAC sequencing results. It covers cell calling, fragment quality, TSS enrichment, peak-related metrics, and clustering results, and helps users identify metrics that require further review.
 
@@ -517,86 +373,68 @@ The HTML web report is the main entry point for reviewing single-cell ATAC seque
 
 > **Note**: The following standards are for reference only. Actual quality assessment should consider factors such as sample type, cell state, and experimental goals. Since significant differences can exist between samples, we recommend interpreting the results in the context of your specific experimental background.
 
-</div>
-
 ### Main Report Content and Structure
 
-<div align="center" markdown="block">
 <img src="../images/html_scatac1.png" alt="scATAC Web Report" width="500">
-</div>
 
 ### Core Analysis Metrics Explained
 
-<div style="background: #f5f5f7; border-radius: 12px; padding: 24px; margin: 24px auto; max-width: 1200px;" markdown="block">
-
 #### Cell Metrics <a id="cell-metrics"></a>
-
-<div align="center" markdown="block">
 
 **Core Function**: Cell identification, quality assessment, and chromatin accessibility statistics, providing key indicators for the overall effectiveness of the experiment.
 
-</div>
-
-</div>
-
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border: 1px solid #e5e5e5; margin: 20px auto; max-width: 1200px; " markdown="block">
-
 **Quality Control Standards:**
 
-<table style="width:100%; border-collapse: collapse; margin: 15px 0; border-radius: 8px; overflow: hidden;">
-<thead style="background-color: #f5f5f7; border-bottom: 1px solid #d2d2d7;">
+<table>
+<thead>
 <tr>
-<th width="25%" align="left" style="padding: 12px 16px; font-weight: 600; color: #1d1d1f;">Metric Name</th>
-<th width="30%" align="left" style="padding: 12px 16px; font-weight: 600; color: #1d1d1f;">Recommended</th>
-<th width="30%" align="left" style="padding: 12px 16px; font-weight: 600; color: #1d1d1f;">Acceptable</th>
-<th width="15%" align="left" style="padding: 12px 16px; font-weight: 600; color: #1d1d1f;">Needs Improvement</th>
+<th width="25%">Metric Name</th>
+<th width="30%">Recommended</th>
+<th width="30%">Acceptable</th>
+<th width="15%">Needs Improvement</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;"><strong>Median fragments per cell</strong></td>
-<td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;">≥ 10,000</td>
-<td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;">2,000–10,000</td>
-<td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;">< 2,000</td>
+<td><strong>Median fragments per cell</strong></td>
+<td>≥ 10,000</td>
+<td>2,000–10,000</td>
+<td>< 2,000</td>
 </tr>
 <tr>
-<td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;"><strong>Median fraction of fragments overlapping peaks</strong></td>
-<td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;">≥ 30%</td>
-<td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;">15–30%</td>
-<td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;">< 15%</td>
+<td><strong>Median fraction of fragments overlapping peaks</strong></td>
+<td>≥ 30%</td>
+<td>15–30%</td>
+<td>< 15%</td>
 </tr>
 <tr>
-<td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;"><strong>Median fraction of fragments overlapping TSS</strong></td>
-<td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;">≥ 20%</td>
-<td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;">10–20%</td>
-<td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;">< 10%</td>
+<td><strong>Median fraction of fragments overlapping TSS</strong></td>
+<td>≥ 20%</td>
+<td>10–20%</td>
+<td>< 10%</td>
 </tr>
 <tr>
-<td align="left" style="padding: 12px 16px;"><strong>Fraction fragments in cells</strong></td>
-<td align="left" style="padding: 12px 16px;">≥ 50%</td>
-<td align="left" style="padding: 12px 16px;">20–50%</td>
-<td align="left" style="padding: 12px 16px;">< 20%</td>
+<td><strong>Fraction fragments in cells</strong></td>
+<td>≥ 50%</td>
+<td>20–50%</td>
+<td>< 20%</td>
 </tr>
 </tbody>
 </table>
 
-</div>
-
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border: 1px solid #e5e5e5; margin: 20px auto; max-width: 1200px; " markdown="block">
-
 **Detailed Metric Explanations:**
 
-<table style="width:100%; border-collapse: collapse; margin: 15px 0; border-radius: 8px; overflow: hidden;">
-<thead style="background-color: #f5f5f7; border-bottom: 1px solid #d2d2d7;">
+<table>
+<thead>
 <tr>
-<th width="30%" align="left" style="padding: 12px 16px; font-weight: 600; color: #1d1d1f;">Metric Name</th>
-<th width="70%" align="left" style="padding: 12px 16px; font-weight: 600; color: #1d1d1f;">Detailed Explanation & Technical Requirements</th>
+<th width="30%">Metric Name</th>
+<th width="70%">Detailed Explanation & Technical Requirements</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;"><strong>Estimated number of cells</strong></td>
-<td style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;">
+<td><strong>Estimated number of cells</strong></td>
+<td>
 <ul>
 <li><strong>Definition</strong>: The total number of valid cells identified from the sequencing data (as distinct from background noise or empty droplets).</li>
 <li><strong>Calculation Process</strong>: After merging barcodes from the same droplet, cells are filtered based on peak-overlapping fragment counts, TSS proportion, and related QC metrics.</li>
@@ -605,8 +443,8 @@ The HTML web report is the main entry point for reviewing single-cell ATAC seque
 </td>
 </tr>
 <tr>
-<td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;"><strong>Species</strong></td>
-<td style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;">
+<td><strong>Species</strong></td>
+<td>
 <ul>
 <li><strong>Definition</strong>: The species or reference genome version used for the analysis.</li>
 <li><strong>Use case</strong>: Confirms whether the reference genome used for analysis matches the sample species. This is a basic item for result review and troubleshooting.</li>
@@ -614,8 +452,8 @@ The HTML web report is the main entry point for reviewing single-cell ATAC seque
 </td>
 </tr>
 <tr>
-<td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;"><strong>Median fragments per cell</strong></td>
-<td style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;">
+<td><strong>Median fragments per cell</strong></td>
+<td>
 <ul>
 <li><strong>Definition</strong>: The median number of valid ATAC-seq fragments contained within a single cell.</li>
 <li><strong>Use case</strong>: Assesses the number of valid fragments available for open-chromatin analysis in each cell and reflects sequencing coverage.</li>
@@ -629,8 +467,8 @@ The HTML web report is the main entry point for reviewing single-cell ATAC seque
 </td>
 </tr>
 <tr>
-<td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;"><strong>Mean raw read pairs per cell</strong></td>
-<td style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;">
+<td><strong>Mean raw read pairs per cell</strong></td>
+<td>
 <ul>
 <li><strong>Definition</strong>: The average number of raw sequencing read pairs assigned to each cell.</li>
 <li><strong>Calculation</strong>: `Total Raw Read Pairs / Estimated Number of Cells`</li>
@@ -639,8 +477,8 @@ The HTML web report is the main entry point for reviewing single-cell ATAC seque
 </td>
 </tr>
 <tr>
-<td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;"><strong>Fraction overlapping peaks</strong></td>
-<td style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;">
+<td><strong>Fraction overlapping peaks</strong></td>
+<td>
 <ul>
 <li><strong>Definition</strong>: The proportion of a single cell's fragments that fall into identified open chromatin regions (Peaks).</li>
 <li><strong>Use case</strong>: Key metric for ATAC signal specificity. A higher proportion indicates that valid fragments are more concentrated in open chromatin regions and background noise is relatively lower.</li>
@@ -651,8 +489,8 @@ The HTML web report is the main entry point for reviewing single-cell ATAC seque
 </td>
 </tr>
 <tr>
-<td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;"><strong>Fraction overlapping TSS</strong></td>
-<td style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;">
+<td><strong>Fraction overlapping TSS</strong></td>
+<td>
 <ul>
 <li><strong>Definition</strong>: The proportion of a single cell's fragments that fall within the ±2kb region of a Transcription Start Site (TSS).</li>
 <li><strong>Use case</strong>: Assesses promoter-proximal open-chromatin signal and ATAC-seq library specificity.</li>
@@ -663,8 +501,8 @@ The HTML web report is the main entry point for reviewing single-cell ATAC seque
 </td>
 </tr>
 <tr>
-<td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;"><strong>Fraction of fragments in cells</strong></td>
-<td style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;">
+<td><strong>Fraction of fragments in cells</strong></td>
+<td>
 <ul>
 <li><strong>Definition</strong>: The proportion of all valid fragments that are successfully assigned to a high-quality cell ID.</li>
 <li><strong>Use case</strong>: Assesses how much valid fragment signal comes from high-quality cells and helps evaluate background fragments or empty-droplet effects.</li>
@@ -675,8 +513,8 @@ The HTML web report is the main entry point for reviewing single-cell ATAC seque
 </td>
 </tr>
 <tr>
-<td align="left" style="padding: 12px 16px;"><strong>Number of peaks</strong></td>
-<td style="padding: 12px 16px;">
+<td><strong>Number of peaks</strong></td>
+<td>
 <ul>
 <li><strong>Definition</strong>: The total number of open chromatin regions (peaks) identified across the genome after aggregating the signal from all cells.</li>
 <li><strong>Use case</strong>: Assesses the number of detectable open chromatin regions and the coverage of regulatory elements in the sample.</li>
@@ -688,80 +526,62 @@ The HTML web report is the main entry point for reviewing single-cell ATAC seque
 </tbody>
 </table>
 
-</div>
-
-<div style="max-width: 1200px; margin: 0 auto;" markdown="block"><hr style="border: none; border-top: 1px solid #d2d2d7; margin: 24px 0;"></div>
-
-<div style="background: #f5f5f7; border-radius: 12px; padding: 24px; margin: 24px auto; max-width: 1200px;" markdown="block">
-
 #### Sequencing Metrics <a id="sequencing-metrics"></a>
-
-<div align="center" markdown="block">
 
 **Core Function**: Basic quality assessment of sequencing data, including barcode identification rate, alignment quality, and sequencing accuracy.
 
-</div>
-
-</div>
-
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border: 1px solid #e5e5e5; margin: 20px auto; max-width: 1200px; " markdown="block">
-
 **Quality Control Standards:**
 
-<table style="width:100%; border-collapse: collapse; margin: 15px 0; border-radius: 8px; overflow: hidden;">
-<thead style="background-color: #f5f5f7; border-bottom: 1px solid #d2d2d7;">
+<table>
+<thead>
 <tr>
-<th width="25%" align="left" style="padding: 12px 16px; font-weight: 600; color: #1d1d1f;">Metric Category</th>
-<th width="25%" align="left" style="padding: 12px 16px; font-weight: 600; color: #1d1d1f;">Recommended</th>
-<th width="25%" align="left" style="padding: 12px 16px; font-weight: 600; color: #1d1d1f;">Acceptable</th>
-<th width="25%" align="left" style="padding: 12px 16px; font-weight: 600; color: #1d1d1f;">Needs Improvement</th>
+<th width="25%">Metric Category</th>
+<th width="25%">Recommended</th>
+<th width="25%">Acceptable</th>
+<th width="25%">Needs Improvement</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;"><strong>Valid barcodes</strong></td>
-<td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;">≥ 80%</td>
-<td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;">70–80%</td>
-<td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;">< 70%</td>
+<td><strong>Valid barcodes</strong></td>
+<td>≥ 80%</td>
+<td>70–80%</td>
+<td>< 70%</td>
 </tr>
 <tr>
-<td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;"><strong>Q30 bases in barcode</strong></td>
-<td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;">> 85%</td>
-<td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;">75–85%</td>
-<td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;">< 75%</td>
+<td><strong>Q30 bases in barcode</strong></td>
+<td>> 85%</td>
+<td>75–85%</td>
+<td>< 75%</td>
 </tr>
 <tr>
-<td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;"><strong>Q30 bases in read</strong></td>
-<td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;">> 85%</td>
-<td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;">75–85%</td>
-<td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;">< 75%</td>
+<td><strong>Q30 bases in read</strong></td>
+<td>> 85%</td>
+<td>75–85%</td>
+<td>< 75%</td>
 </tr>
 <tr>
-<td align="left" style="padding: 12px 16px;"><strong>Confidently mapped read pairs</strong></td>
-<td align="left" style="padding: 12px 16px;">> 80%</td>
-<td align="left" style="padding: 12px 16px;">50–80%</td>
-<td align="left" style="padding: 12px 16px;">< 50%</td>
+<td><strong>Confidently mapped read pairs</strong></td>
+<td>> 80%</td>
+<td>50–80%</td>
+<td>< 50%</td>
 </tr>
 </tbody>
 </table>
 
-</div>
-
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border: 1px solid #e5e5e5; margin: 20px auto; max-width: 1200px; " markdown="block">
-
 **Detailed Metric Explanations:**
 
-<table style="width:100%; border-collapse: collapse; margin: 15px 0; border-radius: 8px; overflow: hidden;">
-<thead style="background-color: #f5f5f7; border-bottom: 1px solid #d2d2d7;">
+<table>
+<thead>
 <tr>
-<th width="30%" align="left" style="padding: 12px 16px; font-weight: 600; color: #1d1d1f;">Metric Name</th>
-<th width="70%" align="left" style="padding: 12px 16px; font-weight: 600; color: #1d1d1f;">Detailed Explanation & Technical Requirements</th>
+<th width="30%">Metric Name</th>
+<th width="70%">Detailed Explanation & Technical Requirements</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;"><strong>Total number of read pairs</strong></td>
-<td style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;">
+<td><strong>Total number of read pairs</strong></td>
+<td>
 <ul>
 <li><strong>Definition</strong>: The total number of raw sequencing read pairs allocated to the sample.</li>
 <li><strong>Use case</strong>: Represents the total data volume of the sequencing run and serves as the baseline for evaluating sequencing depth and downstream QC metrics.</li>
@@ -769,8 +589,8 @@ The HTML web report is the main entry point for reviewing single-cell ATAC seque
 </td>
 </tr>
 <tr>
-<td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;"><strong>Valid barcodes</strong></td>
-<td style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;">
+<td><strong>Valid barcodes</strong></td>
+<td>
 <ul>
 <li><strong>Definition</strong>: The proportion of reads whose cell barcode sequence can be successfully matched to the predefined whitelist (with error correction).</li>
 <li><strong>Use case</strong>: Assesses whether cell barcode recognition is stable and whether fragments can be assigned to cells correctly.</li>
@@ -779,8 +599,8 @@ The HTML web report is the main entry point for reviewing single-cell ATAC seque
 </td>
 </tr>
 <tr>
-<td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;"><strong>Confidently mapped read pairs</strong></td>
-<td style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;">
+<td><strong>Confidently mapped read pairs</strong></td>
+<td>
 <ul>
 <li><strong>Definition</strong>: The proportion of all reads that successfully align to any location on the reference genome.</li>
 <li><strong>Interpretation</strong>:
@@ -790,8 +610,8 @@ The HTML web report is the main entry point for reviewing single-cell ATAC seque
 </td>
 </tr>
 <tr>
-<td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;"><strong>Mitochondrial reads ratio</strong></td>
-<td style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;">
+<td><strong>Mitochondrial reads ratio</strong></td>
+<td>
 <ul>
 <li><strong>Definition</strong>: The proportion of all aligned reads that map to the mitochondrial genome.</li>
 <li><strong>Use case</strong>: Assesses mitochondrial-derived fragment proportion and helps evaluate nuclei preparation and sample integrity.</li>
@@ -800,8 +620,8 @@ The HTML web report is the main entry point for reviewing single-cell ATAC seque
 </td>
 </tr>
 <tr>
-<td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;"><strong>Nucleosome-free regions</strong></td>
-<td style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;">
+<td><strong>Nucleosome-free regions</strong></td>
+<td>
 <ul>
 <li><strong>Definition</strong>: The proportion of fragments originating from open chromatin regions (that is, nucleosome-free regions).</li>
 <li><strong>Use case</strong>: Assesses the proportion of fragments from open chromatin and reflects valid ATAC-seq signal strength.</li>
@@ -810,8 +630,8 @@ The HTML web report is the main entry point for reviewing single-cell ATAC seque
 </td>
 </tr>
 <tr>
-<td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;"><strong>Mono-nucleosome regions</strong></td>
-<td style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;">
+<td><strong>Mono-nucleosome regions</strong></td>
+<td>
 <ul>
 <li><strong>Definition</strong>: The proportion of fragment regions containing a single nucleosome.</li>
 <li><strong>Use case</strong>: Assesses mono-nucleosome fragment proportion and, together with nucleosome-free regions, helps evaluate chromatin structure integrity.</li>
@@ -819,16 +639,16 @@ The HTML web report is the main entry point for reviewing single-cell ATAC seque
 </td>
 </tr>
 <tr>
-<td align="left" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;"><strong>Q30 bases in barcode</strong></td>
-<td style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;">
+<td><strong>Q30 bases in barcode</strong></td>
+<td>
 <ul>
 <li><strong>Definition</strong>: The proportion of bases with a sequencing quality score of Q30 or higher in the cell barcode sequence.</li>
 </ul>
 </td>
 </tr>
 <tr>
-<td align="left" style="padding: 12px 16px;"><strong>Q30 bases in read</strong></td>
-<td style="padding: 12px 16px;">
+<td><strong>Q30 bases in read</strong></td>
+<td>
 <ul>
 <li><strong>Definition</strong>: The proportion of bases with a sequencing quality score of Q30 or higher in the sequencing read.</li>
 </ul>
@@ -837,27 +657,13 @@ The HTML web report is the main entry point for reviewing single-cell ATAC seque
 </tbody>
 </table>
 
-</div>
-
-<div style="max-width: 1200px; margin: 0 auto;" markdown="block"><hr style="border: none; border-top: 1px solid #d2d2d7; margin: 24px 0;"></div>
-
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border: 1px solid #e5e5e5; margin: 20px auto; max-width: 1200px; " markdown="block">
-
 #### Visualization Chart 1 <a id="visualization-chart-1"></a>
-
-<div align="center" markdown="block">
 
 **Core Function**: Multi-dimensional visualization for cell quality control, fragment analysis, and chromatin accessibility assessment.
 
-</div>
-
-</div>
-
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border: 1px solid #e5e5e5; margin: 20px auto; max-width: 1200px; " markdown="block">
-
 #### Barcode Rank Plot
 
-**Chart Function**:  
+**Chart Function**:
 This plot ranks all cell barcodes by fragment count to distinguish high-quality true cells from background noise.
 
 **How to Interpret**:
@@ -873,13 +679,9 @@ This plot ranks all cell barcodes by fragment count to distinguish high-quality 
     *   Hover to inspect barcode rank and fragment count details.
     *   Blue color intensity reflects the local density of real cells.
 
-</div>
-
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border: 1px solid #e5e5e5; margin: 20px auto; max-width: 1200px; " markdown="block">
-
 #### Droplet Beads Distribution
 
-**Chart Function**:  
+**Chart Function**:
 Shows the distribution of captured cell barcodes (beads) within droplets identified as real cells.
 
 **How to Interpret**:
@@ -887,13 +689,9 @@ Shows the distribution of captured cell barcodes (beads) within droplets identif
 *   **Theoretical distribution**: Bead count per droplet is expected to approximately follow a **Poisson distribution**, reflecting random capture in microfluidics.
 *   **Practical factors**: The observed distribution is affected by sequencing saturation, droplet size uniformity, and cell concentration.
 
-</div>
-
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border: 1px solid #e5e5e5; margin: 20px auto; max-width: 1200px; " markdown="block">
-
 #### Cell Data Distribution
 
-**Chart Function**:  
+**Chart Function**:
 Three violin plots show the distributions of key QC metrics in high-quality cells: **Fragments**, **TSS Proportion**, and **Peak Proportion**.
 
 **How to Interpret**:
@@ -906,13 +704,9 @@ Three violin plots show the distributions of key QC metrics in high-quality cell
     *   **TSS Proportion**: Distribution of fragment fractions around TSS. A higher center indicates stronger transcription-associated accessibility.
     *   **Peak Proportion**: Distribution of fragment fractions in called peaks. A higher center indicates better signal-to-noise.
 
-</div>
-
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border: 1px solid #e5e5e5; margin: 20px auto; max-width: 1200px; " markdown="block">
-
 #### Fragment Length Distribution
 
-**Chart Function**:  
+**Chart Function**:
 Shows the insert length distribution of deduplicated ATAC-seq fragments, a key plot for assessing sample quality and chromatin structure integrity.
 
 **How to Interpret**:
@@ -925,15 +719,9 @@ Shows the insert length distribution of deduplicated ATAC-seq fragments, a key p
     *   **High-quality sample**: Clear ~200 bp periodic peaks with a prominent NFR peak, indicating intact nuclei and clear chromatin structure.
     *   **Low-quality sample**: Flat curve without periodicity, often indicating over-lysis or disrupted chromatin architecture.
 
-</div>
-
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border: 1px solid #e5e5e5; margin: 20px auto; max-width: 1200px; " markdown="block">
-
 #### Other Key Metrics <a id="other-key-metrics"></a>
 
-<div align="center" markdown="block">
 <img src="../images/html_scatac2.png" alt="scATAC Web Report" width="500">
-</div>
 
 ##### Percent duplicates
 
@@ -949,25 +737,13 @@ Shows the insert length distribution of deduplicated ATAC-seq fragments, a key p
 - **Use case**: In C4 ATAC, one droplet may contain multiple beads; the software uses bead-level fragment overlap (Jaccard index) to decide whether beads should be merged.
 - **Algorithm**: Automatically determined by Otsu's method. To ensure stability, if the computed threshold is < `0.02`, it is set to `0.02`.
 
-</div>
-
-<div style="background: #f5f5f7; border-radius: 12px; padding: 24px; margin: 24px auto; max-width: 1200px;" markdown="block">
-
 #### Visualization Chart 2 <a id="visualization-chart-2"></a>
-
-<div align="center" markdown="block">
 
 **Core Function**: Advanced visualizations for cell clustering, TSS enrichment patterns, saturation assessment, and bead similarity.
 
-</div>
-
-</div>
-
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border: 1px solid #e5e5e5; margin: 20px auto; max-width: 1200px; " markdown="block">
-
 #### Cluster Analysis
 
-**Chart Function**:  
+**Chart Function**:
 Cells with similar chromatin accessibility patterns are grouped in 2D space using UMAP + Louvain clustering to identify potential cell subpopulations.
 
 **How to Interpret**:
@@ -980,13 +756,9 @@ Cells with similar chromatin accessibility patterns are grouped in 2D space usin
     - Uses the same UMAP layout with a color gradient for per-cell fragment count.
     - Darker colors indicate higher fragment counts and usually better data quality.
 
-</div>
-
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border: 1px solid #e5e5e5; margin: 20px auto; max-width: 1200px; " markdown="block">
-
 #### TSS Enrichment Profile
 
-**Chart Function**:  
+**Chart Function**:
 Shows fragment insertion enrichment around transcription start sites (TSS), a core indicator of ATAC-seq signal specificity and quality.
 
 **How to Interpret**:
@@ -1001,13 +773,9 @@ Shows fragment insertion enrichment around transcription start sites (TSS), a co
     - **TSS Enrichment Score** quantifies this pattern; higher scores (e.g., >4-6) indicate better signal-to-noise.
     - Flat curves without a clear enrichment peak may suggest poor sample quality or library preparation issues.
 
-</div>
-
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border: 1px solid #e5e5e5; margin: 20px auto; max-width: 1200px; " markdown="block">
-
 #### Single Cell Targeting Plot
 
-**Chart Function**:  
+**Chart Function**:
 A scatter plot of two key QC metrics per cell, used to evaluate cell-calling performance.
 
 **How to Interpret**:
@@ -1020,13 +788,9 @@ A scatter plot of two key QC metrics per cell, used to evaluate cell-calling per
     - **Bottom-left**: Low fragment count + low TSS enrichment, usually background/noise and filtered out.
     - Ideally, high-quality cells and background should be clearly separable.
 
-</div>
-
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border: 1px solid #e5e5e5; margin: 20px auto; max-width: 1200px; " markdown="block">
-
 #### Saturation Curve
 
-**Chart Function**:  
+**Chart Function**:
 Evaluates sequencing depth sufficiency and library complexity, that is, whether additional sequencing can still identify substantial numbers of new unique fragments.
 
 **How to Interpret**:
@@ -1040,13 +804,9 @@ Evaluates sequencing depth sufficiency and library complexity, that is, whether 
 3. **Quality guidance**
     - A saturation (duplication-related) level around 20%-50% is often a practical balance between cost and completeness.
 
-</div>
-
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border: 1px solid #e5e5e5; margin: 20px auto; max-width: 1200px; " markdown="block">
-
 #### Bead Similarity Ranking
 
-**Chart Function**:  
+**Chart Function**:
 In C4 ATAC, this plot is used to merge multiple beads from the same droplet by ranking bead pairs using Jaccard similarity.
 
 **How to Interpret**:
@@ -1058,34 +818,10 @@ In C4 ATAC, this plot is used to merge multiple beads from the same droplet by r
     - **Blue region**: Similarity above the Otsu-derived threshold; bead pairs are considered from the same cell and merged.
     - **Gray region**: Similarity below threshold; bead pairs are treated as from different cells.
 
-</div>
-
-<div style="max-width: 1200px; margin: 0 auto;" markdown="block"><hr style="border: none; border-top: 1px solid #d2d2d7; margin: 24px 0;"></div>
-
-<div style="background: #f5f5f7; border-radius: 12px; padding: 24px; margin: 24px auto; max-width: 1200px;" markdown="block">
-
 ## Related Documentation
-
-</div>
-
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; margin: 20px auto; max-width: 1200px; border: 1px solid #e5e5e5; box-shadow: 0 1px 3px rgba(0,0,0,0.1);" markdown="block">
 
 | Document | Description |
 | :--- | :--- |
-| [scATAC Pipeline](../pipeline/scATAC.en.md) | Detailed scATAC analysis workflow |
-| [scATAC Parameters](../parameter/scATAC.en.md) | Command parameter reference |
-| [Output Files](./outs.en.md) | Return to output documentation index |
-
-</div>
-
-<div style="max-width: 1200px; margin: 0 auto;" markdown="block"><hr style="border: none; border-top: 1px solid #d2d2d7; margin: 24px 0;"></div>
-
-<div align="center" style="background: #f5f5f7; border-radius: 12px; padding: 30px; margin: 40px auto; max-width: 1200px;" markdown="block">
-
-> <strong>Feedback & Support</strong>
-> 
-> This document is continuously maintained. If you identify errors or additional information is required, please submit feedback via GitHub Issues.
-> 
-<strong>Document Version:</strong> 3.1 | <strong>Last Updated:</strong> May 15, 2026
-
-</div>
+| [scATAC Pipeline](../pipeline/scATAC.md) | Detailed scATAC analysis workflow |
+| [scATAC Parameters](../parameter/scATAC.md) | Command parameter reference |
+| [Output Files](./outs.md) | Return to output documentation index |

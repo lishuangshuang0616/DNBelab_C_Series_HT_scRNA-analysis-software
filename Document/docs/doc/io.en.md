@@ -1,24 +1,10 @@
-<div align="right" markdown="block">
-
-[Home](../index.md)
-
-</div>
-
 # Output Analysis Guide
-
-<div align="center" markdown="block">
 
 **How to analyze dnbc4tools output in R and Python**
 
 [scRNA](#scrna-analysis) • [scATAC](#scatac-analysis)
 
-</div>
-
----
-
 ## scRNA Analysis <a id="scrna-analysis"></a>
-
-<div style="background-color: #e7f3fe; border-left: 6px solid #2196F3; padding: 15px; margin: 1.5em 0; border-radius: 4px;" markdown="block">
 
 **R (Seurat)**
 
@@ -26,12 +12,8 @@ Load the filtered gene expression matrix using the `Read10X` function.
 
 ```r
 library(Seurat)
-counts.data <- Read10X(data.dir = "/outs/filter_matrix")
+counts.data <- Read10X(data.dir = "/outs/filtered_feature_bc_matrix")
 ```
-
-</div>
-
-<div style="background-color: #e7f3fe; border-left: 6px solid #2196F3; padding: 15px; margin: 1.5em 0; border-radius: 4px;" markdown="block">
 
 **Python (Scanpy)**
 
@@ -40,22 +22,38 @@ You can load the data using either the `h5ad` file or the MEX matrix directory.
 **1. Read h5ad format (recommended):**
 ```python
 import scanpy as sc
-adata = sc.read_h5ad('/outs/filter_feature.h5ad')
+adata = sc.read_h5ad('/outs/filtered_feature_bc_matrix.h5ad')
 ```
 
 **2. Read matrix format:**
 ```python
 import scanpy as sc
-adata = sc.read_10x_mtx('/outs/filter_matrix')
+adata = sc.read_10x_mtx('/outs/filtered_feature_bc_matrix')
 ```
 
-</div>
+## Importing C6 results <a id="c6-import"></a>
 
----
+Use individual sample directories for independent analysis. The global filtered H5AD contains combined counts without joint UMAP/clustering. Retain raw counts for downstream normalization.
+
+```python
+import scanpy as sc
+import pandas as pd
+
+sample_dir = "/results/c6_run/outs/rna/per_sample_outs/S1"
+adata = sc.read_10x_h5(f"{sample_dir}/filtered_feature_bc_matrix.h5")
+# The global table includes background; select called cells in bounded chunks.
+called_parts = []
+for chunk in pd.read_csv("/results/c6_run/outs/rna/singlecell.csv.gz", chunksize=100_000):
+    called = chunk["is_cell_barcode"].astype(str).str.lower().isin(["1", "true"])
+    called_parts.append(chunk.loc[called])
+called_cells = pd.concat(called_parts, ignore_index=True)
+```
+
+For sparse counts and gene/barcode metadata alone, use `sc.read_h5ad("/results/c6_run/outs/rna/filtered_feature_bc_matrix.h5ad")`. Retain complete barcode/probe suffixes in joins; a bead prefix alone does not identify the sample.
 
 ## scATAC Analysis <a id="scatac-analysis"></a>
 
-<div style="background-color: #e7f3fe; border-left: 6px solid #2196F3; padding: 15px; margin: 1.5em 0; border-radius: 4px;" markdown="block">
+ATAC matrices count cutsites by default. Metadata `peak_region_fragments` and `peak_region_cutsites` are distinct. Align metadata to filtered matrix barcodes rather than relying on row order. BAM indexes can be BAI or CSI.
 
 **R (Signac)**
 
@@ -75,10 +73,10 @@ read_signac_C4 <- function(mex_dir_path, fragments, singlecellmetadata){
     mtx_path <- paste(mex_dir_path, "matrix.mtx.gz", sep = '/')
     feature_path <- paste(mex_dir_path, "peaks.bed.gz", sep = '/')
     barcode_path <- paste(mex_dir_path, "barcodes.tsv.gz", sep = '/')
-    
+
     features <- readr::read_tsv(feature_path, col_names = F) %>% tidyr::unite(feature)
     barcodes <- readr::read_tsv(barcode_path, col_names = F) %>% tidyr::unite(barcode)
-    
+
     mtx <- Matrix::readMM(mtx_path) %>%
     magrittr::set_rownames(features$feature) %>%
     magrittr::set_colnames(barcodes$barcode)
@@ -88,7 +86,7 @@ read_signac_C4 <- function(mex_dir_path, fragments, singlecellmetadata){
         header = TRUE,
         row.names = 1
     )
-    
+
     chrom_assay <- CreateChromatinAssay(
         counts = mtx,
         sep = c("_", "_"),
@@ -105,10 +103,6 @@ read_signac_C4 <- function(mex_dir_path, fragments, singlecellmetadata){
     return(scATAC)
 }
 ```
-
-</div>
-
-<div style="background-color: #e7f3fe; border-left: 6px solid #2196F3; padding: 15px; margin: 1.5em 0; border-radius: 4px;" markdown="block">
 
 **R (ArchR)**
 
@@ -144,10 +138,6 @@ ArrowFiles <- createArrowFiles(
 )
 ```
 
-</div>
-
-<div style="background-color: #e7f3fe; border-left: 6px solid #2196F3; padding: 15px; margin: 1.5em 0; border-radius: 4px;" markdown="block">
-
 **Python (AnnData)**
 
 Load the filtered peak matrix into an AnnData object.
@@ -180,20 +170,14 @@ def read_atac_C4(path):
     return adata
 ```
 
-</div>
-
----
-
 ## Common Output Files <a id="common-output-files"></a>
 
 | File / Directory | Description | Analysis Type |
 | :--- | :--- | :--- |
-| `filter_matrix/` | Filtered gene expression matrix (MEX format). | scRNA-seq |
-| `filter_peak_matrix/` | Filtered peak accessibility matrix (MEX format). | scATAC-seq |
-| `filter_feature.h5ad` | Filtered matrix in AnnData format (Python-ready). | scRNA-seq |
+| `filtered_feature_bc_matrix/` | Filtered gene expression matrix (MEX format). | scRNA-seq |
+| `filtered_peak_bc_matrix/` | Filtered peak accessibility matrix (MEX format). | scATAC-seq |
+| `filtered_feature_bc_matrix.h5ad` | Filtered matrix in AnnData format (Python-ready). | scRNA-seq |
 | `fragments.tsv.gz` | Fragment file for ATAC analysis. | scATAC-seq |
 | `singlecell.csv` | Cell metadata and QC metrics. | All |
 
----
-
-*For detailed output descriptions, see the [Output Files Guide](outs/outs.en.md)*
+*For detailed output descriptions, see the [Output Files Guide](outs/outs.md)*

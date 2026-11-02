@@ -1,76 +1,23 @@
-<div align="right" style="margin-bottom: 20px; max-width: 1200px; margin-left: auto; margin-right: auto;">
+# 参数总览
 
-[首页](../../README.md)
+按分析类型查找命令、默认值与配置说明。参数页先给运行示例，完整帮助与高级设置可按需展开。
 
-</div>
-
-<div align="center" style="padding: 40px 20px; background: linear-gradient(135deg, #f5f5f7 0%, #ffffff 100%); border-radius: 12px; margin-bottom: 30px; max-width: 1200px; margin-left: auto; margin-right: auto;">
-
-<h1 style="font-size: 48px; font-weight: 600; color: #1d1d1f; margin: 0 0 16px 0; letter-spacing: -0.02em;">dnbc4tools 参数总览</h1>
-
-<p style="font-size: 21px; color: #86868b; margin: 0; font-weight: 400;">命令与参数说明</p>
-
-</div>
-
-<div style="max-width: 1200px; margin: 0 auto;"><hr style="border: none; border-top: 1px solid #d2d2d7; margin: 24px 0;"></div>
-
-<div style="background: #f5f5f7; border-radius: 12px; padding: 16px; margin: 24px auto; max-width: 1200px;">
-
-<strong>使用说明</strong>：每个参数文档均包含参数定义、默认值和典型用法示例。
-
-</div>
-
-<div style="max-width: 1200px; margin: 0 auto;"><hr style="border: none; border-top: 1px solid #d2d2d7; margin: 24px 0;"></div>
-
-<div style="background: #f5f5f7; border-radius: 12px; padding: 24px; margin: 24px auto; max-width: 1200px;">
-
-## 分析模块
-
-<div align="center">
-
-**使用说明**：按分析类型进入对应参数文档，查看每个命令的参数说明。
-
-</div>
-
-</div>
-
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; margin: 20px auto; max-width: 1200px; border: 1px solid #e5e5e5; box-shadow: 0 1px 3px rgba(0,0,0,0.1);" markdown="1">
-
-| 分析类型 | 说明与关键命令 | 文档 |
+| 模块 | 命令 | 参数文档 |
 | :--- | :--- | :--- |
-| **单细胞 RNA** | **基因表达分析参数。** <br> <ul><li>`run`: 主分析流程</li><li>`mkref`: 构建参考数据库</li><li>`multi`: 多样本汇总分析</li></ul> | [查看文档](./scRNA.md) |
-| **单细胞 ATAC** | **染色质开放性分析参数。** <br> <ul><li>`run`: 主分析流程</li><li>`mkref`: 构建参考数据库</li><li>`multi`: 多样本汇总分析</li></ul> | [查看文档](./scATAC.md) |
-| **单细胞 VDJ** | **免疫受体分析参数。** <br> <ul><li>`run`: 主分析流程</li></ul> | [查看文档](./scVDJ.md) |
-| **多组学** | **一体化多组学分析参数。** <br> <ul><li>`run`: RNA/ATAC/VDJ 联合流程</li></ul> | [查看文档](./multi.md) |
-| **工具命令** | **辅助工具参数。** <br> <ul><li>`mkgtf`: GTF 文件处理</li><li>`bam2fastq`: BAM 转 FASTQ</li><li>`chromsplit`: 染色体切分</li><li>`fqsubC4`: FASTQ 子序列提取</li></ul> | [查看文档](./tools.md) |
+| RNA | `rna run`、`rna mkref`、`rna multi` | [RNA 参数](scRNA.md) |
+| ATAC | `atac run`、`atac mkref`、`atac multi` | [ATAC 参数](scATAC.md) |
+| V(D)J | `vdj run` | [VDJ 参数](scVDJ.md) |
+| Multi / C6 | `multi run`，通过 CSV 配置 | [Multi 参数](multi.md) |
+| GTF 工具 | `tools mkgtf` | [工具参数](tools.md) |
 
-</div>
+## 选择正确的入口
 
-<div style="max-width: 1200px; margin: 0 auto;"><hr style="border: none; border-top: 1px solid #d2d2d7; margin: 24px 0;"></div>
+- 单份独立文库使用对应模块的 `run`。
+- `rna multi` / `atac multi` 只生成多份样本脚本；成功后再执行脚本。
+- `multi run` 实际执行多组学或 C6 流程。C6 需要真实的 scRNAC6 文库与 `[samples]` 配置。
 
-<div style="background: #f5f5f7; border-radius: 12px; padding: 24px; margin: 24px auto; max-width: 1200px;">
+## 配置前需要了解
 
-## 相关文档
+省略参数通常采用流程默认值，不等同于所有参数都接受字符串 `auto`。CLI 的布尔开关不带值；Multi CSV 的布尔值使用 `true/false`。样本级覆盖值与全局设置的规则以各参数页为准。
 
-</div>
-
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; margin: 20px auto; max-width: 1200px; border: 1px solid #e5e5e5; box-shadow: 0 1px 3px rgba(0,0,0,0.1);" markdown="1">
-
-| 文档 | 说明 |
-| :--- | :--- |
-| [流程说明](../pipeline/pipeline.md) | 各分析流程使用说明 |
-| [输出说明](../outs/outs.md) | 输出文件解读 |
-| [快速开始](../quickstart.md) | 入门操作指南 |
-| [安装指南](../installation.md) | 软件安装与环境要求 |
-
-</div>
-
-<div align="center" style="background: #f5f5f7; border-radius: 12px; padding: 30px; margin: 40px auto; max-width: 1200px;">
-
-> <strong>反馈与支持</strong>
-> 
-> 如需参数说明，请进入上方各模块文档。
-> 
-<strong>文档版本：</strong> 3.1 | <strong>最后更新：</strong> 2026 年 5 月 15 日
-
-</div>
+[分析流程](../pipeline/pipeline.md) · [输出说明](../outs/outs.md) · [快速开始](../quickstart.md)

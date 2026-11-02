@@ -1,54 +1,20 @@
-<div align="right" style="margin-bottom: 20px; max-width: 1200px; margin-left: auto; margin-right: auto;">
+# scATAC 分析输出
 
-[首页](../../README.md)
-
-</div>
-
-<div align="center" style="padding: 40px 20px; background: linear-gradient(135deg, #f5f5f7 0%, #ffffff 100%); border-radius: 12px; margin-bottom: 30px; max-width: 1200px; margin-left: auto; margin-right: auto;">
-
-<h1 style="font-size: 48px; font-weight: 600; color: #1d1d1f; margin: 0 0 16px 0; letter-spacing: -0.02em;"> scATAC 分析输出</h1>
-
-<p style="font-size: 21px; color: #86868b; margin: 0; font-weight: 400;">单细胞 ATAC 测序分析输出文件说明</p>
-
-<div style="margin-top: 24px;">
-
-[ 目录结构](#输出目录结构) • [文件详情](#详细文件说明) • [数据矩阵](#峰矩阵文件) • [分析结果](#分析指标汇总) • [报告解读](#网页报告释义)
-
-</div>
-
-</div>
-
-<div style="max-width: 1200px; margin: 0 auto;"><hr style="border: none; border-top: 1px solid #d2d2d7; margin: 24px 0;"></div>
-
-<div style="background: #f5f5f7; border-radius: 12px; padding: 24px; margin: 24px auto; max-width: 1200px;">
+单细胞 ATAC 测序分析输出文件说明
 
 ## 概述 <a id="概述"></a>
 
-<div align="center">
-
 单细胞 ATAC 测序分析完成后，会在指定的输出目录中生成标准化的文件和子目录结构，用于染色质可及性分析和表观基因组学研究。
-
-</div>
 
 > **提示**：所有输出文件均采用标准格式，兼容主流单细胞表观基因组分析工具（如 Signac、ArchR 等），并遵循国际通用数据格式规范。
 
-</div>
-
-<div style="max-width: 1200px; margin: 0 auto;"><hr style="border: none; border-top: 1px solid #d2d2d7; margin: 24px 0;"></div>
-
-<div style="background: #f5f5f7; border-radius: 12px; padding: 24px; margin: 24px auto; max-width: 1200px;">
-
 ## 输出目录结构 <a id="输出目录结构"></a>
-
-</div>
-
-<div style="background: #ffffff; border-radius: 12px; padding: 20px; margin: 20px auto; max-width: 1200px; overflow-x: auto; border: 1px solid #e5e5e5; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
 
 ```
 .
 ├── alignment.fragments.sorted.tagged.bam       # 质控后的比对结果（分析需添加need_bam参数）
 ├── alignment.fragments.sorted.tagged.bam.bai   # 比对结果索引文件
-├── filter_peak_matrix/                         # 过滤后的峰矩阵MEX格式目录
+├── filtered_peak_bc_matrix/                         # 过滤后的峰矩阵MEX格式目录
 │   ├── barcodes.tsv.gz                         # 过滤后的细胞条形码信息
 │   ├── matrix.mtx.gz                           # 过滤后的稀疏矩阵格式的峰信号数据
 │   └── peaks.bed.gz                            # 过滤后的峰位置信息
@@ -57,37 +23,25 @@
 ├── filtered.fragments.tsv.gz                   # 质量控制后的ATAC片段文件，仅包含通过细胞过滤的片段信息
 ├── filtered.fragments.tsv.gz.tbi               # 细胞过滤的片段文件的Tabix索引，支持基因组区间的快速查询
 ├── metrics_summary.xls                         # 分析质量指标汇总表
-├── raw_peak_matrix/                            # 原始峰矩阵MEX格式目录
+├── raw_peak_bc_matrix/                            # 原始峰矩阵MEX格式目录
 │   ├── barcodes.tsv.gz                         # 原始细胞条形码信息
 │   ├── matrix.mtx.gz                           # 原始稀疏矩阵格式的峰信号数据
 │   └── peaks.bed.gz                            # 原始峰位置信息
+├── raw_peak_bc_matrix.h5
+├── filtered_peak_bc_matrix.h5
 ├── singlecell.csv                              # 细胞信息汇总表
 └── *_scATAC_report.html                        # HTML格式的分析报告
 ```
 
-</div>
+<a id="v32-outputs"></a>
 
-<div style="max-width: 1200px; margin: 0 auto;"><hr style="border: none; border-top: 1px solid #d2d2d7; margin: 24px 0;"></div>
-
-<div style="background: #f5f5f7; border-radius: 12px; padding: 24px; margin: 24px auto; max-width: 1200px;">
+raw/filtered peak 矩阵同时提供 H5。矩阵默认统计 cutsite；cell calling、FRIP 和 TSS 比例仍按唯一 fragment 统计。BAM 需启用 `--need_bam`，索引可为 BAI 或 CSI。
 
 ## 文件详细说明 <a id="详细文件说明"></a>
 
-</div>
-
-<div style="background: #f5f5f7; border-radius: 12px; padding: 24px; margin: 24px auto; max-width: 1200px;">
-
 ### ATAC片段和峰文件 <a id="atac片段和峰文件"></a>
 
-<div align="center">
-
 **核心内容**: ATAC-seq 片段信息和峰识别结果，包含完整的染色质可及性数据和细胞条形码标记
-
-</div>
-
-</div>
-
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; margin: 20px auto; max-width: 1200px; border: 1px solid #e5e5e5; box-shadow: 0 1px 3px rgba(0,0,0,0.1);" markdown="1">
 
 #### fragments.tsv.gz
 
@@ -102,32 +56,32 @@
     *   文件为 **BED-like** 格式，每行代表一个唯一的 ATAC-seq 片段。
     *   文件具体包含的 **5列信息** 如下表所示：
 
-        <table style="width:100%; border-collapse: collapse; margin: 15px 0;">
+        <table>
         <thead>
         <tr>
-        <th width="20%" align="left"><strong>字段名</strong></th>
-        <th width="80%" align="left"><strong>详细描述</strong></th>
+        <th width="20%"><strong>字段名</strong></th>
+        <th width="80%"><strong>详细描述</strong></th>
         </tr>
         </thead>
         <tbody>
         <tr>
-        <td align="left"><code>chrom</code></td>
+        <td><code>chrom</code></td>
         <td>参考基因组染色体名称，标识片段所在的染色体位置</td>
         </tr>
         <tr>
-        <td align="left"><code>chromStart</code></td>
+        <td><code>chromStart</code></td>
         <td>片段在染色体上的调整起始位置（0-based坐标系统），经过转座酶切割位点修正</td>
         </tr>
         <tr>
-        <td align="left"><code>chromEnd</code></td>
+        <td><code>chromEnd</code></td>
         <td>片段在染色体上的调整结束位置（不包含该位置），经过转座酶切割位点修正</td>
         </tr>
         <tr>
-        <td align="left"><code>barcode</code></td>
+        <td><code>barcode</code></td>
         <td>细胞 ID 标识符，对应 BAM 文件中的<code>CB</code>标签，用于将片段归属到特定细胞</td>
         </tr>
         <tr>
-        <td align="left"><code>readSupport</code></td>
+        <td><code>readSupport</code></td>
         <td>与该片段相关的总读段对数（包括唯一和重复读段）</td>
         </tr>
         </tbody>
@@ -135,10 +89,6 @@
 
 *   **坐标调整**:
     *   为精确定位转座酶切位点，片段区间经过调整：起始位置从最左端比对位置向前移动4bp，结束位置从最右端比对位置向后移动5bp。
-
-</div>
-
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; margin: 20px auto; max-width: 1200px; border: 1px solid #e5e5e5; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
 
 #### fragments.tsv.gz.tbi
 
@@ -149,10 +99,6 @@
     *   **工具性能优化**: 被 ArchR、Signac、IGV 等工具用于加载和处理特定区域的数据。
 *   **格式**:
     *   由 `tabix` 工具生成的标准二进制索引文件。
-
-</div>
-
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; margin: 20px auto; max-width: 1200px; border: 1px solid #e5e5e5; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
 
 #### filtered.fragments.tsv.gz
 
@@ -165,10 +111,6 @@
     *   文件格式与 `fragments.tsv.gz` 完全相同（压缩的 BED-like TSV），包含相同的 5 列信息。
     *   仅包含通过细胞过滤算法（例如，基于 TSS 富集和峰区域覆盖的片段数）被识别为"真实细胞"的片段。
 
-</div>
-
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; margin: 20px auto; max-width: 1200px; border: 1px solid #e5e5e5; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
-
 #### filtered.fragments.tsv.gz.tbi
 
 `filtered.fragments.tsv.gz` 文件的 Tabix 索引。
@@ -177,10 +119,6 @@
     *   **下游分析支持**: 确保在使用过滤后的片段文件时，下游工具（如 ArchR, Signac）能够快速访问特定基因组区域的数据。
 *   **格式**:
     *   由 `tabix` 工具生成的标准二进制索引文件。
-
-</div>
-
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; margin: 20px auto; max-width: 1200px; border: 1px solid #e5e5e5; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
 
 #### alignment.fragments.sorted.tagged.bam
 
@@ -198,36 +136,32 @@
 *   **关键TAG字段说明**:
     *   细胞和分子条形码信息存储在以下TAG字段中：
 
-        <table style="width:100%; border-collapse: collapse; margin: 15px 0;">
+        <table>
         <thead>
         <tr>
-        <th width="15%" align="left"><strong>标签</strong></th>
-        <th width="15%" align="left"><strong>类型</strong></th>
-        <th width="70%" align="left"><strong>描述</strong></th>
+        <th width="15%"><strong>标签</strong></th>
+        <th width="15%"><strong>类型</strong></th>
+        <th width="70%"><strong>描述</strong></th>
         </tr>
         </thead>
         <tbody>
         <tr>
-        <td align="left"><code>CB</code></td>
-        <td align="left">Z</td>
+        <td><code>CB</code></td>
+        <td>Z</td>
         <td>经过错误校正和细胞合并处理后的细胞条形码标识符</td>
         </tr>
         <tr>
-        <td align="left"><code>CC</code></td>
-        <td align="left">Z</td>
+        <td><code>CC</code></td>
+        <td>Z</td>
         <td>经过错误校正的细胞条形码序列</td>
         </tr>
         <tr>
-        <td align="left"><code>CR</code></td>
-        <td align="left">Z</td>
+        <td><code>CR</code></td>
+        <td>Z</td>
         <td>测序仪报告的细胞条形码序列</td>
         </tr>
         </tbody>
         </table>
-
-</div>
-
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; margin: 20px auto; max-width: 1200px; border: 1px solid #e5e5e5; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
 
 #### alignment.fragments.sorted.tagged.bam.bai
 
@@ -239,23 +173,11 @@
 *   **格式**:
     *   由 `samtools index` 命令生成的标准 **BAI (BAM Index)** 格式。
 
-</div>
-
-<div style="background: #f5f5f7; border-radius: 12px; padding: 24px; margin: 24px auto; max-width: 1200px;">
-
 ### 峰矩阵文件 <a id="峰矩阵文件"></a>
-
-<div align="center">
 
 **核心内容**: 单细胞峰信号计数矩阵，分为原始数据和质控过滤后数据，采用标准稀疏矩阵格式
 
-</div>
-
-</div>
-
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; margin: 20px auto; max-width: 1200px; border: 1px solid #e5e5e5; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
-
-#### 过滤后的峰矩阵 (`filter_peak_matrix/`)
+#### 过滤后的峰矩阵 (`filtered_peak_bc_matrix/`)
 
 包含经过高质量细胞过滤后的峰计数矩阵，是进行下游定量分析的核心数据。
 
@@ -265,24 +187,24 @@
 
 *   **内容与格式**:
     *   采用标准的 **Matrix Market Exchange (MEX)** 格式，由以下三个压缩文件组成：
-        <table style="width:100%; border-collapse: collapse; margin: 15px 0;">
+        <table>
         <thead>
         <tr>
-        <th width="25%" align="left"><strong>文件名</strong></th>
-        <th width="75%" align="left"><strong>内容描述</strong></th>
+        <th width="25%"><strong>文件名</strong></th>
+        <th width="75%"><strong>内容描述</strong></th>
         </tr>
         </thead>
         <tbody>
         <tr>
-        <td align="left"><code>barcodes.tsv.gz</code></td>
+        <td><code>barcodes.tsv.gz</code></td>
         <td>细胞 ID 列表，标识通过质控筛选的高质量细胞。每行包含一个细胞 ID 信息，对应矩阵的列索引</td>
         </tr>
         <tr>
-        <td align="left"><code>peaks.bed.gz</code></td>
+        <td><code>peaks.bed.gz</code></td>
         <td>峰区域位置信息文件，采用BED格式存储。包含染色体、起始位置和结束位置，对应矩阵的行索引</td>
         </tr>
         <tr>
-        <td align="left"><code>matrix.mtx.gz</code></td>
+        <td><code>matrix.mtx.gz</code></td>
         <td>峰区域计数矩阵，采用 Matrix Market 格式。包含矩阵维度信息和非零元素的行、列索引及数值</td>
         </tr>
         </tbody>
@@ -292,11 +214,7 @@
     *   **空间高效**: 稀疏矩阵格式（`.mtx`）仅存储非零元素，极大节省了存储空间。
     *   **高度兼容**: MEX 格式是单细胞社区的标准（关于矩阵格式详见[Matrix Market 格式说明](#market-matrix-format-mtxgz)），兼容 Seurat, Signac, Scanpy 等几乎所有主流分析工具。
 
-</div>
-
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; margin: 20px auto; max-width: 1200px; border: 1px solid #e5e5e5; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
-
-#### 原始峰矩阵 (`raw_peak_matrix/`)
+#### 原始峰矩阵 (`raw_peak_bc_matrix/`)
 
 包含所有检测到的细胞条形码（未经过滤）的原始峰计数矩阵。
 
@@ -305,24 +223,12 @@
     *   **数据完整性**: 保留了所有原始数据，可用于进一步分析或在需要时重新分析。
 
 *   **内容与格式**:
-    *   采用标准的 **Matrix Market Exchange (MEX)** 格式，其文件组成与 `filter_peak_matrix/` 目录完全相同。
+    *   采用标准的 **Matrix Market Exchange (MEX)** 格式，其文件组成与 `filtered_peak_bc_matrix/` 目录完全相同。
     *   包含所有被检测到的条形码，包括高质量细胞、低质量细胞和背景液滴。
-
-</div>
-
-<div style="background: #f5f5f7; border-radius: 12px; padding: 24px; margin: 24px auto; max-width: 1200px;">
 
 ### 分析指标汇总 <a id="分析指标汇总"></a>
 
-<div align="center">
-
 **核心内容**: 实验质量评估和统计指标汇总，提供完整的数据质量控制信息
-
-</div>
-
-</div>
-
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; margin: 20px auto; max-width: 1200px; border: 1px solid #e5e5e5; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
 
 #### metrics_summary.xls
 
@@ -334,31 +240,31 @@
 
 *   **内容与格式**:
     *   包含三大类别的关键指标：
-        <table style="width:100%; border-collapse: collapse; margin: 15px 0;">
+        <table>
         <thead>
         <tr>
-        <th width="20%" align="left"><strong>指标类别</strong></th>
-        <th width="80%" align="left"><strong>包含内容</strong></th>
+        <th width="20%"><strong>指标类别</strong></th>
+        <th width="80%"><strong>包含内容</strong></th>
         </tr>
         </thead>
         <tbody>
         <tr>
-        <td align="left"><strong>基本统计</strong></td>
+        <td><strong>基本统计</strong></td>
         <td>总读段对数、有效条形码比例、Q30 碱基质量等基础测序指标</td>
         </tr>
         <tr>
-        <td align="left"><strong>细胞识别</strong></td>
+        <td><strong>细胞识别</strong></td>
         <td>估计细胞数量、峰区域片段占比、TSS 区域片段占比、峰检测数量、TSS 富集等细胞调用结果</td>
         </tr>
         <tr>
-        <td align="left"><strong>比对指标</strong></td>
+        <td><strong>比对指标</strong></td>
         <td>基因组比对率、线粒体比例等比对统计</td>
         </tr>
         </tbody>
         </table>
 
     *   内置推荐的质量控制标准，便于用户判断：
-        <details open>
+        <details markdown="block" open>
         <summary><strong>推荐质量阈值：</strong></summary>
         <ul>
         <li><strong>有效条形码比例</strong>: >70%</li>
@@ -371,12 +277,9 @@
         </ul>
         </details>
 
-</div>
-
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; margin: 20px auto; max-width: 1200px; border: 1px solid #e5e5e5; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
-
 #### singlecell.csv
 
+`singlecell.csv` 包含 `Cell,totalFrags,fragments,mt_region_fragments,chloroplast_region_fragments,TSS_region_fragments,blacklist_region_fragments,peaks_number,peak_region_fragments,peak_region_cutsites,is_cell_barcode,Cellbarcode`。`peak_region_fragments` 与 `peak_region_cutsites` 分别为片段和端点计数；只有配套工具输出该端点统计时才有值，缺失不应当作 0。
 采用 CSV 格式的单细胞级别质量控制信息表，记录了每个细胞条形码的详细统计数据。
 
 *   **核心用途**:
@@ -386,10 +289,6 @@
 *   **内容与格式**:
     *   每一行代表一个细胞条形码。
     *   主要列包括：片段数量、峰数量、TSS/peak区域片段数以及是否被判定为高质量细胞、磁珠合并信息等。
-
-</div>
-
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; margin: 20px auto; max-width: 1200px; border: 1px solid #e5e5e5; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
 
 #### *_scATAC_report.html
 
@@ -404,46 +303,32 @@
     *   无需网络，可在任何现代浏览器中打开。
     *   报告的详细解读请参考本文档下方的 [网页报告释义](#网页报告释义) 部分。
     *   包含的关键内容模块如下：
-        <table style="width:100%; border-collapse: collapse; margin: 15px 0;">
+        <table>
         <thead>
         <tr>
-        <th width="25%" align="left"><strong>报告特点</strong></th>
-        <th width="75%" align="left"><strong>内容描述</strong></th>
+        <th width="25%"><strong>报告特点</strong></th>
+        <th width="75%"><strong>内容描述</strong></th>
         </tr>
         </thead>
         <tbody>
         <tr>
-        <td align="left"><strong>交互式图表</strong></td>
+        <td><strong>交互式图表</strong></td>
         <td>质控指标、细胞聚类、峰分析等可交互可视化图表</td>
         </tr>
         <tr>
-        <td align="left"><strong>统计汇总</strong></td>
+        <td><strong>统计汇总</strong></td>
         <td>关键性能指标的数值汇总和趋势分析</td>
         </tr>
         <tr>
-        <td align="left"><strong>详细解读</strong></td>
+        <td><strong>详细解读</strong></td>
         <td>各项指标的生物学意义和技术解释</td>
         </tr>
         </tbody>
         </table>
 
-</div>
-
-<div style="max-width: 1200px; margin: 0 auto;"><hr style="border: none; border-top: 1px solid #d2d2d7; margin: 24px 0;"></div>
-
-<div style="background: #f5f5f7; border-radius: 12px; padding: 24px; margin: 24px auto; max-width: 1200px;">
-
 ## 文件格式说明 <a id="文件格式说明"></a>
 
-<div align="center">
-
 **技术规范**: 输出文件采用的标准格式详细说明
-
-</div>
-
-</div>
-
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; margin: 20px auto; max-width: 1200px; border: 1px solid #e5e5e5; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
 
 #### Matrix Market 格式 (`.mtx.gz`) <a id="market-matrix-format-mtxgz"></a>
 
@@ -455,46 +340,32 @@ Market Exchange Format (MEX) 是单细胞分析中用于存储稀疏计数矩阵
 
 *   **文件组成**:
     *   一个完整的MEX格式数据由以下 **三个文件** 构成：
-        <table style="width:100%; border-collapse: collapse; margin: 15px 0;">
+        <table>
         <thead>
         <tr>
-        <th width="25%" align="left"><strong>文件名</strong></th>
-        <th width="75%" align="left"><strong>描述</strong></th>
+        <th width="25%"><strong>文件名</strong></th>
+        <th width="75%"><strong>描述</strong></th>
         </tr>
         </thead>
         <tbody>
         <tr>
-        <td align="left"><code>matrix.mtx.gz</code></td>
+        <td><code>matrix.mtx.gz</code></td>
         <td>压缩的稀疏矩阵文件。文件头包含矩阵维度，后续每行记录一个非零元素的位置（行/列索引）和数值。</td>
         </tr>
         <tr>
-        <td align="left"><code>barcodes.tsv.gz</code></td>
+        <td><code>barcodes.tsv.gz</code></td>
         <td>压缩的细胞条形码文件。每行是一个细胞 ID，行号对应矩阵的<strong>列</strong>。</td>
         </tr>
         <tr>
-        <td align="left"><code>peaks.bed.gz</code></td>
+        <td><code>peaks.bed.gz</code></td>
         <td>压缩的特征（峰）文件。每行是一个峰的BED格式坐标，行号对应矩阵的<strong>行</strong>。</td>
         </tr>
         </tbody>
         </table>
 
-</div>
-
-<div style="max-width: 1200px; margin: 0 auto;"><hr style="border: none; border-top: 1px solid #d2d2d7; margin: 24px 0;"></div>
-
-<div style="background: #f5f5f7; border-radius: 12px; padding: 24px; margin: 24px auto; max-width: 1200px;">
-
 ## 网页报告释义 <a id="网页报告释义"></a>
 
-<div align="center">
-
 **概述**：HTML 网页报告提供单细胞 ATAC 测序结果的可视化摘要和指标说明，覆盖实验质量与下游分析相关的关键指标。
-
-</div>
-
-</div>
-
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; margin: 20px auto; max-width: 1200px; border: 1px solid #e5e5e5; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
 
 HTML 网页报告用于查看单细胞 ATAC 测序分析结果，覆盖细胞识别、片段质量、TSS 富集、peak 相关指标和聚类结果等内容。用户可通过交互式图表快速检查实验质量并定位需要进一步复核的指标。
 
@@ -502,70 +373,52 @@ HTML 网页报告用于查看单细胞 ATAC 测序分析结果，覆盖细胞识
 
 > **注意**: 以下标准仅供参考，实际质量评估应考虑组织类型、细胞状态和实验目标等多种因素。不同样本间存在显著差异，建议结合具体实验背景进行判断。
 
-</div>
-
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; margin: 20px auto; max-width: 1200px; border: 1px solid #e5e5e5; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
-
 ### 报告主要内容与结构
 
-<div align="center">
 <img src="../images/html_scatac1.png" alt="scATAC网页报告" width="500">
-</div>
-
-</div>
-
-<div style="background: #f5f5f7; border-radius: 12px; padding: 24px; margin: 24px auto; max-width: 1200px;">
 
 ### 核心分析指标详解
 
-</div>
-
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; margin: 20px auto; max-width: 1200px; border: 1px solid #e5e5e5; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
-
 #### 细胞指标 (Cell Metrics) <a id="细胞指标"></a>
 
-<div align="center">
-
 **核心功能**: 细胞识别、质量评估和染色质可及性统计，提供实验整体效果的关键指标
-
-</div>
 
 **质量控制标准：**
 > **注意**: 以下标准仅供参考，实际质量评估应考虑组织类型、细胞状态和实验目标等多种因素。不同样本间存在显著差异，建议结合具体实验背景进行判断。
 
-<table style="width:100%; border-collapse: collapse; margin: 15px 0;">
+<table>
 <thead>
 <tr>
-<th width="25%" align="left"><strong>指标名称</strong></th>
-<th width="30%" align="left"><strong>推荐值</strong></th>
-<th width="30%" align="left"><strong>可接受</strong></th>
-<th width="15%" align="left"><strong>需优化</strong></th>
+<th width="25%"><strong>指标名称</strong></th>
+<th width="30%"><strong>推荐值</strong></th>
+<th width="30%"><strong>可接受</strong></th>
+<th width="15%"><strong>需优化</strong></th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><strong>Median fragments per cell</strong></td>
-<td align="left">≥ 10,000</td>
-<td align="left">2,000–10,000</td>
-<td align="left">< 2,000</td>
+<td><strong>Median fragments per cell</strong></td>
+<td>≥ 10,000</td>
+<td>2,000–10,000</td>
+<td>< 2,000</td>
 </tr>
 <tr>
-<td align="left"><strong>Median fraction of fragments overlapping peaks</strong></td>
-<td align="left">≥ 30%</td>
-<td align="left">15–30%</td>
-<td align="left">< 15%</td>
+<td><strong>Median fraction of fragments overlapping peaks</strong></td>
+<td>≥ 30%</td>
+<td>15–30%</td>
+<td>< 15%</td>
 </tr>
 <tr>
-<td align="left"><strong>Median fraction of fragments overlapping TSS</strong></td>
-<td align="left">≥ 20%</td>
-<td align="left">10–20%</td>
-<td align="left">< 10%</td>
+<td><strong>Median fraction of fragments overlapping TSS</strong></td>
+<td>≥ 20%</td>
+<td>10–20%</td>
+<td>< 10%</td>
 </tr>
 <tr>
-<td align="left"><strong>Fraction fragments in cells</strong></td>
-<td align="left">≥ 50%</td>
-<td align="left">20–50%</td>
-<td align="left">< 20%</td>
+<td><strong>Fraction fragments in cells</strong></td>
+<td>≥ 50%</td>
+<td>20–50%</td>
+<td>< 20%</td>
 </tr>
 
 </tbody>
@@ -573,16 +426,16 @@ HTML 网页报告用于查看单细胞 ATAC 测序分析结果，覆盖细胞识
 
 **详细指标解释：**
 
-<table style="width:100%; border-collapse: collapse; margin: 15px 0;">
+<table>
 <thead>
 <tr>
-<th width="30%" align="left"><strong>指标名称</strong></th>
-<th width="70%" align="left"><strong>详细解释与技术要求</strong></th>
+<th width="30%"><strong>指标名称</strong></th>
+<th width="70%"><strong>详细解释与技术要求</strong></th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left">
+<td>
 <strong>Estimated number of cells</strong><br>
 <em>估计细胞数量</em>
 </td>
@@ -596,7 +449,7 @@ HTML 网页报告用于查看单细胞 ATAC 测序分析结果，覆盖细胞识
 </td>
 </tr>
 <tr>
-<td align="left">
+<td>
 <strong>Species</strong><br>
 <em>物种信息</em>
 </td>
@@ -608,7 +461,7 @@ HTML 网页报告用于查看单细胞 ATAC 测序分析结果，覆盖细胞识
 </td>
 </tr>
 <tr>
-<td align="left">
+<td>
 <strong>Median fragments per cell</strong><br>
 <em>每细胞中位片段数</em>
 </td>
@@ -627,7 +480,7 @@ HTML 网页报告用于查看单细胞 ATAC 测序分析结果，覆盖细胞识
 </td>
 </tr>
 <tr>
-<td align="left">
+<td>
 <strong>Mean raw read pairs per cell</strong><br>
 <em>每细胞平均原始读段对数</em>
 </td>
@@ -640,7 +493,7 @@ HTML 网页报告用于查看单细胞 ATAC 测序分析结果，覆盖细胞识
 </td>
 </tr>
 <tr>
-<td align="left">
+<td>
 <strong>Fraction overlapping peaks</strong><br>
 <em>片段重叠峰区域比例</em>
 </td>
@@ -655,7 +508,7 @@ HTML 网页报告用于查看单细胞 ATAC 测序分析结果，覆盖细胞识
 </td>
 </tr>
 <tr>
-<td align="left">
+<td>
 <strong>Fraction overlapping TSS</strong><br>
 <em>TSS 区域片段重叠比例</em>
 </td>
@@ -670,7 +523,7 @@ HTML 网页报告用于查看单细胞 ATAC 测序分析结果，覆盖细胞识
 </td>
 </tr>
 <tr>
-<td align="left">
+<td>
 <strong>Fraction of fragments in cells</strong><br>
 <em>细胞内片段比例</em>
 </td>
@@ -685,7 +538,7 @@ HTML 网页报告用于查看单细胞 ATAC 测序分析结果，覆盖细胞识
 </td>
 </tr>
 <tr>
-<td align="left">
+<td>
 <strong>Number of peaks</strong><br>
 <em>识别峰数量</em>
 </td>
@@ -701,70 +554,62 @@ HTML 网页报告用于查看单细胞 ATAC 测序分析结果，覆盖细胞识
 </tbody>
 </table>
 
-</div>
-
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; margin: 20px auto; max-width: 1200px; border: 1px solid #e5e5e5; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
-
 #### 测序指标 (Sequencing Metrics) <a id="测序指标"></a>
 
-<div align="center">
-
 **核心功能**: 测序数据的基础质量评估，包括条形码识别率、比对质量和测序准确性
-
-</div>
 
 **质量控制标准：**
 > **注意**: 以下标准仅供参考，实际质量评估应考虑组织类型、细胞状态和实验目标等多种因素。不同样本间存在显著差异，建议结合具体实验背景进行判断。
 
-<table style="width:100%; border-collapse: collapse; margin: 15px 0;">
+<table>
 <thead>
 <tr>
-<th width="25%" align="left"><strong>指标类别</strong></th>
-<th width="25%" align="left"><strong>推荐值</strong></th>
-<th width="25%" align="left"><strong>可接受</strong></th>
-<th width="25%" align="left"><strong>需优化</strong></th>
+<th width="25%"><strong>指标类别</strong></th>
+<th width="25%"><strong>推荐值</strong></th>
+<th width="25%"><strong>可接受</strong></th>
+<th width="25%"><strong>需优化</strong></th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><strong>Valid barcodes</strong></td>
-<td align="left">≥ 80%</td>
-<td align="left">70–80%</td>
-<td align="left">< 70%</td>
+<td><strong>Valid barcodes</strong></td>
+<td>≥ 80%</td>
+<td>70–80%</td>
+<td>< 70%</td>
 </tr>
 <tr>
-<td align="left"><strong>Q30 bases in barcode</strong></td>
-<td align="left">> 85%</td>
-<td align="left">75–85%</td>
-<td align="left">< 75%</td>
+<td><strong>Q30 bases in barcode</strong></td>
+<td>> 85%</td>
+<td>75–85%</td>
+<td>< 75%</td>
 </tr>
 <tr>
-<td align="left"><strong>Q30 bases in read</strong></td>
-<td align="left">> 85%</td>
-<td align="left">75–85%</td>
-<td align="left">< 75%</td>
+<td><strong>Q30 bases in read</strong></td>
+<td>> 85%</td>
+<td>75–85%</td>
+<td>< 75%</td>
 </tr>
 <tr>
-<td align="left"><strong>Confidently mapped read pairs</strong></td>
-<td align="left">> 80%</td>
-<td align="left">50–80%</td>
-<td align="left">< 50%</td>
+<td><strong>Confidently mapped read pairs</strong></td>
+<td>> 80%</td>
+<td>50–80%</td>
+<td>< 50%</td>
 </tr>
 </tbody>
 </table>
 
 **详细指标解释：**
 
-<table style="width:100%; border-collapse: collapse; margin: 15px 0;">
+<table>
 <thead>
 <tr>
-<th width="30%" align="left"><strong>指标名称</strong></th>
-<th width="70%" align="left"><strong>详细解释与技术要求</strong></th>
+<th width="30%"><strong>指标名称</strong></th>
+<th width="70%"><strong>详细解释与技术要求</strong></th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left">
+<td>
 <strong>Total number of reads pairs</strong><br>
 <em>测序读段对总数</em>
 </td>
@@ -776,7 +621,7 @@ HTML 网页报告用于查看单细胞 ATAC 测序分析结果，覆盖细胞识
 </td>
 </tr>
 <tr>
-<td align="left">
+<td>
 <strong>Valid barcodes</strong><br>
 <em>有效条形码比例</em>
 </td>
@@ -789,7 +634,7 @@ HTML 网页报告用于查看单细胞 ATAC 测序分析结果，覆盖细胞识
 </td>
 </tr>
 <tr>
-<td align="left">
+<td>
 <strong>Confidently mapped read pairs</strong><br>
 <em>基因组比对率</em>
 </td>
@@ -803,7 +648,7 @@ HTML 网页报告用于查看单细胞 ATAC 测序分析结果，覆盖细胞识
 </td>
 </tr>
 <tr>
-<td align="left">
+<td>
 <strong>Mitochondria reads ratio</strong><br>
 <em>线粒体 reads 比例</em>
 </td>
@@ -816,7 +661,7 @@ HTML 网页报告用于查看单细胞 ATAC 测序分析结果，覆盖细胞识
 </td>
 </tr>
 <tr>
-<td align="left">
+<td>
 <strong>Nucleosome-free regions</strong><br>
 <em>无核小体区域比例</em>
 </td>
@@ -829,7 +674,7 @@ HTML 网页报告用于查看单细胞 ATAC 测序分析结果，覆盖细胞识
 </td>
 </tr>
 <tr>
-<td align="left">
+<td>
 <strong>Mono-nucleosome regions</strong><br>
 <em>单核小体区域比例</em>
 </td>
@@ -841,7 +686,7 @@ HTML 网页报告用于查看单细胞 ATAC 测序分析结果，覆盖细胞识
 </td>
 </tr>
 <tr>
-<td align="left">
+<td>
 <strong>Q30 bases in barcode</strong><br>
 <em>条形码 Q30 碱基比例</em>
 </td>
@@ -853,7 +698,7 @@ HTML 网页报告用于查看单细胞 ATAC 测序分析结果，覆盖细胞识
 </td>
 </tr>
 <tr>
-<td align="left">
+<td>
 <strong>Q30 bases in read</strong><br>
 <em>读段 Q30 碱基比例</em>
 </td>
@@ -867,21 +712,9 @@ HTML 网页报告用于查看单细胞 ATAC 测序分析结果，覆盖细胞识
 </tbody>
 </table>
 
-</div>
-
-<div style="background: #f5f5f7; border-radius: 12px; padding: 24px; margin: 24px auto; max-width: 1200px;">
-
 #### 可视化图表1 <a id="可视化图表1"></a>
 
-<div align="center">
-
 **核心功能**: 细胞质量控制、片段分析和染色质可及性评估的多维度可视化展示
-
-</div>
-
-</div>
-
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; margin: 20px auto; max-width: 1200px; border: 1px solid #e5e5e5; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
 
 #### 细胞排序图 (Barcode Rank Plot)
 
@@ -901,10 +734,6 @@ HTML 网页报告用于查看单细胞 ATAC 测序分析结果，覆盖细胞识
     *   鼠标悬停可查看细胞的详细排序和片段数。
     *   蓝色区域的颜色深浅代表该区域内真实细胞的密度。
 
-</div>
-
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; margin: 20px auto; max-width: 1200px; border: 1px solid #e5e5e5; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
-
 #### 液滴磁珠分布图 (Droplet Beads Distribution)
 
 **图表功能**：
@@ -914,10 +743,6 @@ HTML 网页报告用于查看单细胞 ATAC 测序分析结果，覆盖细胞识
 
 *   **理论分布**: 液滴中磁珠的数量分布理论上符合**泊松分布**，这反映了微反应体系中随机捕获过程的统计特性。
 *   **实际影响**: 最终的分布会受到测序饱和度、液滴大小均一性、细胞浓度等实验因素的影响。
-
-</div>
-
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; margin: 20px auto; max-width: 1200px; border: 1px solid #e5e5e5; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
 
 #### 细胞数据分布图 (Cell Data Distribution)
 
@@ -934,10 +759,6 @@ HTML 网页报告用于查看单细胞 ATAC 测序分析结果，覆盖细胞识
     *   **TSS 富集比例 (TSS Proportion)**: 展示 TSS 区域片段占比的分布。分布的中心越高，说明细胞整体的转录活性信号越好。
     *   **Peak 区域片段比例 (Peak Proportion)**: 展示峰区域片段占比的分布。分布的中心越高，说明信噪比越高。
 
-</div>
-
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; margin: 20px auto; max-width: 1200px; border: 1px solid #e5e5e5; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
-
 #### 片段长度分布图 (Fragment Length Distribution)
 
 **图表功能**：
@@ -953,49 +774,31 @@ HTML 网页报告用于查看单细胞 ATAC 测序分析结果，覆盖细胞识
     *   **优质样本**: 具有清晰的、以约200bp为周期的阶梯状山峰，且第一个峰（NFR）显著。这表明细胞核完整性好，染色质结构清晰。
     *   **质量不佳**: 曲线平坦，没有明显的周期性峰，通常意味着样本过度裂解，染色质结构被破坏。
 
-</div>
-
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; margin: 20px auto; max-width: 1200px; border: 1px solid #e5e5e5; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
-
 #### 其他核心指标 (Additional Key Metrics) <a id="其他核心指标"></a>
 
-<div align="center">
 <img src="../images/html_scatac2.png" alt="scATAC网页报告" width="500">
-</div>
 
 ##### Percent duplicates（重复序列百分比）
 
-- **定义**: 被认定为 PCR 重复的片段所占比例。  
-- **使用场景**: 用于判断文库复杂度和测序饱和度，辅助评估是否需要继续加深测序。  
+- **定义**: 被认定为 PCR 重复的片段所占比例。
+- **使用场景**: 用于判断文库复杂度和测序饱和度，辅助评估是否需要继续加深测序。
 - **判读建议**:
   - **高重复率**（如 >20-30%）通常表示测序深度已接近饱和，继续加深测序的收益可能有限。
   - **极低重复率**（如 <10%）可能表示测序深度不足，可考虑增加测序以获得更多唯一片段。
 
 ##### Jaccard threshold（Jaccard 相似度阈值）
 
-- **定义**: 用于判断任意两个磁珠（Beads）是否来自同一细胞液滴的相似度阈值。  
-- **使用场景**: 在 C4 ATAC 技术中，一个液滴可能包含多个磁珠，软件会根据磁珠间捕获片段的 Jaccard Index 判断是否合并。  
+- **定义**: 用于判断任意两个磁珠（Beads）是否来自同一细胞液滴的相似度阈值。
+- **使用场景**: 在 C4 ATAC 技术中，一个液滴可能包含多个磁珠，软件会根据磁珠间捕获片段的 Jaccard Index 判断是否合并。
 - **算法说明**: 该阈值由 Otsu 算法自动确定，以获得较优区分效果。为保证分析质量，当计算值低于 `0.02` 时，系统会自动设为 `0.02`。
-
-</div>
-
-<div style="background: #f5f5f7; border-radius: 12px; padding: 24px; margin: 24px auto; max-width: 1200px;">
 
 #### 可视化图表2 <a id="可视化图表2"></a>
 
-<div align="center">
-
 **核心功能**: 细胞聚类分析、TSS 富集模式、饱和度评估和磁珠相似性的高级可视化展示
-
-</div>
-
-</div>
-
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; margin: 20px auto; max-width: 1200px; border: 1px solid #e5e5e5; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
 
 #### 细胞聚类分析图 (Cluster Analysis)
 
-**图表功能**：  
+**图表功能**：
 通过 UMAP 降维和 Louvain 聚类算法，将具有相似染色质可及性模式的细胞投影到二维空间，以识别潜在细胞亚群。
 
 **如何解读**：
@@ -1008,13 +811,9 @@ HTML 网页报告用于查看单细胞 ATAC 测序分析结果，覆盖细胞识
     - 在相同 UMAP 空间上，用颜色梯度展示每个细胞总片段数。
     - 颜色越深，片段数越多，通常表示该细胞数据质量更高，可辅助判断聚类可靠性。
 
-</div>
-
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; margin: 20px auto; max-width: 1200px; border: 1px solid #e5e5e5; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
-
 #### 转录起始位点（TSS）富集图 (TSS Enrichment Profile)
 
-**图表功能**：  
+**图表功能**：
 展示所有基因转录起始位点（TSS）附近的 ATAC-seq 片段切割位点富集情况，是衡量 ATAC-seq 信噪比和数据质量的核心指标之一。
 
 **如何解读**：
@@ -1029,13 +828,9 @@ HTML 网页报告用于查看单细胞 ATAC 测序分析结果，覆盖细胞识
     - **TSS Enrichment Score** 为该图的量化指标，分数越高（如 >4-6）通常表示信噪比越好、数据质量越高。
     - 若曲线较平坦、无明显富集峰，通常提示样本质量较差或实验流程存在问题。
 
-</div>
-
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; margin: 20px auto; max-width: 1200px; border: 1px solid #e5e5e5; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
-
 #### 单细胞靶向图 (Single Cell Targeting Plot)
 
-**图表功能**：  
+**图表功能**：
 通过散点图展示每个细胞的两个关键质量指标，用于评估细胞识别（Cell Calling）算法效果。
 
 **如何解读**：
@@ -1048,13 +843,9 @@ HTML 网页报告用于查看单细胞 ATAC 测序分析结果，覆盖细胞识
     - **左下角**: 低片段数 + 低 TSS 富集分数，通常为背景噪音或空液滴，分析中会被过滤。
     - 理想情况下，真实细胞与背景噪音之间应存在清晰分界。
 
-</div>
-
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; margin: 20px auto; max-width: 1200px; border: 1px solid #e5e5e5; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
-
 #### 饱和度曲线图 (Saturation Curve)
 
-**图表功能**：  
+**图表功能**：
 评估测序深度是否充分及文库复杂度，即继续增加测序量是否还能发现更多新的（Unique）片段。
 
 **如何解读**：
@@ -1068,13 +859,9 @@ HTML 网页报告用于查看单细胞 ATAC 测序分析结果，覆盖细胞识
 3. **质量评估**
     - 饱和度（重复率）是该图的量化指标。实践中可将 20%-50% 作为成本与数据完整性之间的常用平衡区间。
 
-</div>
-
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; margin: 20px auto; max-width: 1200px; border: 1px solid #e5e5e5; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
-
 #### 磁珠相似性排序图 (Bead Similarity Ranking)
 
-**图表功能**：  
+**图表功能**：
 用于 C4 ATAC 技术场景下，通过 Jaccard 相似度合并来自同一细胞液滴的多个磁珠（Beads）。
 
 **如何解读**：
@@ -1086,32 +873,10 @@ HTML 网页报告用于查看单细胞 ATAC 测序分析结果，覆盖细胞识
     - **蓝色区域**: Jaccard 相似度高于 Otsu 算法自动计算阈值，通常判定为同一细胞来源，片段会在分析中合并。
     - **灰色区域**: Jaccard 相似度低于阈值，通常判定为不同细胞来源，不进行合并。
 
-</div>
-
-<div style="max-width: 1200px; margin: 0 auto;"><hr style="border: none; border-top: 1px solid #d2d2d7; margin: 24px 0;"></div>
-
-<div style="background: #f5f5f7; border-radius: 12px; padding: 24px; margin: 24px auto; max-width: 1200px;">
-
 ## 相关文档
-
-</div>
-
-<div style="background: #ffffff; border-radius: 12px; padding: 24px; margin: 20px auto; max-width: 1200px; border: 1px solid #e5e5e5; box-shadow: 0 1px 3px rgba(0,0,0,0.1);" markdown="1">
 
 | 文档 | 说明 |
 | :--- | :--- |
 | [scATAC 流程](../pipeline/scATAC.md) | scATAC 分析流程详细说明 |
 | [scATAC 参数](../parameter/scATAC.md) | 命令参数参考文档 |
 | [输出文件](./outs.md) | 返回总输出文档索引 |
-
-</div>
-
-<div align="center" style="background: #f5f5f7; border-radius: 12px; padding: 30px; margin: 40px auto; max-width: 1200px;">
-
-> <strong>反馈与支持</strong>
-> 
-> 本文档持续维护更新。若发现内容错误或需要补充信息，请通过 GitHub Issues 反馈。
-> 
-<strong>文档版本：</strong> 3.1 | <strong>最后更新：</strong> 2026 年 5 月 15 日
-
-</div>

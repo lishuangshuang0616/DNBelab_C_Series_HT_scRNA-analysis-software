@@ -27,14 +27,14 @@ A high-performance single-cell analysis toolkit for DNBelab C Series™ data. CL
 
 ---
 
-## What's New in v3.1
+## What's New in v3.2
 
-- **Multi-omics Analysis** — Single-sample multi-omics workflow supporting RNA + VDJ combined analysis
-- **Consistent Cell Analysis** — New `--consistent_cells` parameter for reproducible downstream processing
-- **Bug Fixes** — Fixed calculation errors in cell metrics and dual-species database handling
-- **Performance** — Optimized processing speed for `bam2fastq` and `fqsubC4` tools
+- C6 probe-barcoded RNA with per-sample calling, analysis and RNA reports.
+- Updated RNA/ATAC matrix and H5 outputs, compressed C6 summaries and ATAC cutsite defaults.
+- Validated CLI options, run diagnostics and automatic BAM resource scheduling.
+- Bilingual documentation defaults to **3.2**, with a header selector for the complete **3.1** archive.
 
-[**Full Release Notes**](https://mgi-tech-bioinformatics.github.io/DNBelab_C_Series_HT_scRNA-analysis-software/Document/site/doc/release.html)
+See the [Upgrade Guide](./doc/migration.en.md) and [Release Notes](./doc/release.en.md).
 
 ---
 
@@ -47,10 +47,10 @@ A high-performance single-cell analysis toolkit for DNBelab C Series™ data. CL
 
 ## Version Note
 
-This is the stable release version (**v3.1**).
-Users on beta or RC versions are recommended to update.
+This branch contains the **3.2 source manual**. Formal release package details await confirmation.
+The documentation header can switch to the archived **3.1** manual.
 
-For version **2.1.3**, switch to the [`version2.0`](https://github.com/MGI-tech-bioinformatics/DNBelab_C_Series_HT_scRNA-analysis-software/tree/version2.0) branch.
+For version **2.1.3**, use the [`version2.0`](https://github.com/MGI-tech-bioinformatics/DNBelab_C_Series_HT_scRNA-analysis-software/tree/version2.0) branch.
 
 ---
 

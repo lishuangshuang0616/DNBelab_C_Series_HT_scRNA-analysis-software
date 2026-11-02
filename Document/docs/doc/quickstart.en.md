@@ -1,46 +1,39 @@
-<div align="right" markdown="block">
-
-[Home](../index.md)
-
-</div>
-
 # Quick Start Guide
-
-<div align="center" markdown="block">
 
 **Operational Quick-Start for dnbc4tools**
 
 [RNA-seq](#single-cell-rna-analysis) • [ATAC-seq](#single-cell-atac-analysis) • [VDJ-seq](#single-cell-vdj-analysis) • [Multi-omics](#integrated-multi-omics-analysis)
 
-</div>
+<a id="file-naming-conventions"></a>
 
----
+## Choose a workflow
+
+| Task | Entry point |
+| :--- | :--- |
+| Ordinary single-sample RNA / ATAC / VDJ | `rna run` / `atac run` / `vdj run` |
+| Integrated multi-omics | `multi run --csv config.csv` |
+| C6 probe-barcoded samples | `multi run --csv c6.csv` with `[samples]` and RNA chemistry `scRNAC6` |
+| Independent RNA / ATAC batch jobs | `rna multi` / `atac multi` generate scripts to execute separately |
+
+Start C6 with the [complete Multi configuration example](parameter/multi.md#c6-samples). Read the [Upgrade Guide](migration.md) for new matrix paths, C6 gzip summaries and default ATAC cutsite counting. Formal 3.2 download details await release confirmation.
 
 ## Prerequisites
 
-<div style="background-color: #e7f3fe; border-left: 6px solid #2196F3; padding: 15px; margin: 1.5em 0; border-radius: 4px;" markdown="block">
+> **Before you begin:**
+> - Ensure dnbc4tools is installed. See the [Installation Guide](./installation.md).
+> - In all commands, replace `$dnbc4tools` with your actual installation path (e.g., `/opt/software/dnbc4tools3.2/dnbc4tools`).
+> - The backslash `\` is used to split a single command across multiple lines for readability. It is optional.
 
-**Before you begin:**
-<ul>
-  <li>Ensure dnbc4tools is installed. See the <a href="./installation.en.html">Installation Guide</a>.</li>
-  <li>In all commands, replace <code>$dnbc4tools</code> with your actual installation path (e.g., <code>/opt/software/dnbc4tools3.1/dnbc4tools</code>).</li>
-  <li>The backslash <code>\</code> is used to split a single command across multiple lines for readability. It is optional.</li>
-</ul>
+<a id="file-naming-conventions"></a>
 
-</div>
-
-<div id="file-naming-conventions" style="background-color: #e7f3fe; border-left: 6px solid #2196F3; padding: 15px; margin: 1.5em 0; border-radius: 4px;" markdown="block">
-<p><strong><code>--fastqs</code> automatic file naming conventions</strong></p>
-When using directory-based input with <code>--fastqs</code>, the pipeline automatically detects paired-end files based on file names. The following patterns are supported. When files are specified explicitly with <code>--fastq1/--fastq2</code>, or with RNA-specific <code>--cDNAfastq1/2</code> and <code>--oligofastq1/2</code>, these naming patterns are not required, but the R1/R2 file order must match exactly.
-<ul>
-  <li><strong>Supported extensions:</strong> <code>.fastq.gz</code>, <code>.fq.gz</code>, <code>.fastq</code>, <code>.fq</code></li>
-  <li><strong>R1 patterns:</strong> <code>_R1_</code>, <code>_R1</code>, <code>_1</code>, <code>_read1</code></li>
-  <li><strong>R2 patterns:</strong> <code>_R2_</code>, <code>_R2</code>, <code>_2</code>, <code>_read2</code></li>
-</ul>
-Examples: <code>sample_R1.fastq.gz</code>, <code>sample_1.fastq.gz</code>, <code>sample_R1_001.fastq.gz</code> are all recognized as R1 files.
-</div>
-
----
+> **`--fastqs` automatic file naming conventions**
+>
+> When using directory-based input with `--fastqs`, the pipeline automatically detects paired-end files based on file names. The following patterns are supported. When files are specified explicitly with `--fastq1/--fastq2`, or with RNA-specific `--cDNAfastq1/2` and `--oligofastq1/2`, these naming patterns are not required, but the R1/R2 file order must match exactly.
+> - **Supported extensions:** `.fastq.gz`, `.fq.gz`, `.fastq`, `.fq`
+> - **R1 patterns:** `_R1_`, `_R1`, `_1`, `_read1`
+> - **R2 patterns:** `_R2_`, `_R2`, `_2`, `_read2`
+>
+> Examples: `sample_R1.fastq.gz`, `sample_1.fastq.gz`, `sample_R1_001.fastq.gz` are all recognized as R1 files.
 
 ## Single-Cell RNA Analysis <a id="single-cell-rna-analysis"></a>
 
@@ -99,11 +92,9 @@ $dnbc4tools rna run \
     --threads 30
 ```
 
-Directory structure recommendation:
-<ul>
-  <li><code>/test/data/rna_fastqs/cDNA/*_R1*.fastq.gz</code>, <code>*_R2*.fastq.gz</code></li>
-  <li><code>/test/data/rna_fastqs/oligo/*_R1*.fastq.gz</code>, <code>*_R2*.fastq.gz</code></li>
-</ul>
+Recommended directory structure:
+- `/test/data/rna_fastqs/cDNA/*_R1*.fastq.gz`, `*_R2*.fastq.gz`
+- `/test/data/rna_fastqs/oligo/*_R1*.fastq.gz`, `*_R2*.fastq.gz`
 
 For directory-based `--fastqs` input, see [`--fastqs` Automatic File Naming Conventions](#file-naming-conventions) for supported patterns.
 
@@ -118,8 +109,6 @@ $dnbc4tools rna run \
     --name test \
     --threads 30
 ```
-
----
 
 ## Single-Cell ATAC Analysis <a id="single-cell-atac-analysis"></a>
 
@@ -167,10 +156,8 @@ $dnbc4tools atac run \
     --name test \
     --threads 10
 ```
-Directory structure recommendation:
-<ul>
-  <li><code>/test/data/*_R1*.fastq.gz</code>, <code>*_R2*.fastq.gz</code></li>
-</ul>
+Recommended directory structure:
+- `/test/data/*_R1*.fastq.gz`, `*_R2*.fastq.gz`
 
 For directory-based `--fastqs` input, see [`--fastqs` Automatic File Naming Conventions](#file-naming-conventions) for supported patterns.
 
@@ -184,23 +171,17 @@ $dnbc4tools atac run \
     --threads 10
 ```
 
----
-
 ## Single-Cell VDJ Analysis <a id="single-cell-vdj-analysis"></a>
 
 > Immune receptor repertoire profiling (requires 5' RNA-seq data)
 
-<div style="background-color: #fffbe6; border-left: 6px solid #ffc107; padding: 15px; margin: 1.5em 0; border-radius: 4px;" markdown="block">
-<strong>Prerequisite</strong>: Complete 5' scRNA analysis first to establish cell-bead correspondence.
-</div>
+> **Prerequisite**: Complete 5' scRNA analysis first to establish cell-bead correspondence.
 
 ### Step 1: 5' RNA Analysis
 
 **5' scRNA-seq Analysis**
 
-<div style="background-color: #e7f3fe; border-left: 6px solid #2196F3; padding: 15px; margin: 1.5em 0; border-radius: 4px;" markdown="block">
-<strong>Note:</strong> For 5' scRNA-seq data, you must add the <code>--end5</code> parameter to specify the library chemistry.
-</div>
+> **Note**: For 5' scRNA-seq data, add the `--end5` parameter to specify the library chemistry.
 
 ```bash
 $dnbc4tools rna run \
@@ -280,17 +261,13 @@ $dnbc4tools vdj run \
     --chain IG
 ```
 
----
-
 ## Multi-omics Analysis <a id="integrated-multi-omics-analysis"></a>
 
 > Run RNA/ATAC/VDJ pipelines in one integrated workflow and generate a unified report
 
 ### Step 1: Prepare Config File
 
-<div style="background-color: #e7f3fe; border-left: 6px solid #2196F3; padding: 15px; margin: 1.5em 0; border-radius: 4px;" markdown="block">
-<strong>Configuration note</strong>: In <code>[libraries]</code>, <code>fastqs</code> should be the FASTQ directory path for each omics library; the pipeline will auto-detect R1/R2 files in each directory. When VDJ modules are enabled, set <code>end5,true</code> in the <code>[rna]</code> section.
-</div>
+> **Configuration note**: In `[libraries]`, `fastqs` should be the FASTQ directory path for each omics library; the pipeline will auto-detect R1/R2 files in each directory. When VDJ modules are enabled, set `end5,true` in the `[rna]` section.
 
 ```ini
 [libraries]
@@ -314,14 +291,12 @@ ref,human
 ref,human
 ```
 
-Directory structure:
-<ul>
-  <li>RNA: <code>/test/data/rna/cDNA/</code> and <code>/test/data/rna/oligo/</code></li>
-  <li>ATAC: paired FASTQ files under <code>/test/data/atac/</code></li>
-  <li>VDJ-T: paired FASTQ files under <code>/test/data/vdj-t/</code></li>
-  <li>VDJ-B: paired FASTQ files under <code>/test/data/vdj-b/</code></li>
-</ul>
-  
+Recommended directory structure:
+- **RNA**: `/test/data/rna/cDNA/` and `/test/data/rna/oligo/`
+- **ATAC**: paired FASTQ files under `/test/data/atac/`
+- **VDJ-T**: paired FASTQ files under `/test/data/vdj-t/`
+- **VDJ-B**: paired FASTQ files under `/test/data/vdj-b/`
+
 
 ### Step 2: Run Multi-omics Pipeline
 
@@ -331,8 +306,6 @@ $dnbc4tools multi run \
     --csv ./multi_config.csv \
     --threads 20
 ```
-
----
 
 ## Command Reference <a id="command-reference"></a>
 
@@ -348,13 +321,11 @@ $dnbc4tools multi run \
 | **Multi-omics** | `dnbc4tools multi run` | Integrated RNA/ATAC/VDJ analysis and unified report |
 | **GTF Processing** | `dnbc4tools tools mkgtf` | Filter and process GTF files |
 
----
-
 ## Related Documentation
 
 | Resource | Description |
 | :--- | :--- |
-| [Pipelines](pipeline/pipeline.en.md) | Analysis workflow guides |
-| [Parameters](parameter/parameter.en.md) | Command reference and configuration options |
-| [Outputs](outs/outs.en.md) | Understanding result files and reports |
+| [Pipelines](pipeline/pipeline.md) | Analysis workflow guides |
+| [Parameters](parameter/parameter.md) | Command reference and configuration options |
+| [Outputs](outs/outs.md) | Understanding result files and reports |
 | [GitHub Issues](https://github.com/MGI-tech-bioinformatics/DNBelab_C_Series_HT_scRNA-analysis-software/issues) | Report bugs or request features |
