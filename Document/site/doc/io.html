@@ -11,10 +11,10 @@
       
       
       
-        <link rel="prev" href="outs/multi.html">
+        <link rel="prev" href="outs/c6.html">
       
       
-        <link rel="next" href="migration.html">
+        <link rel="next" href="release.html">
       
       
         
@@ -545,6 +545,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="pipeline/c6.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    C6 多样本
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -726,6 +754,34 @@
     
   
     多组学
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="parameter/c6.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    C6 多样本
   
 
     
@@ -961,6 +1017,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="outs/c6.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    C6 多样本
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -1089,60 +1173,6 @@
   
   
     <li class="md-nav__item">
-      <a href="migration.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    升级指南
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="troubleshooting.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    运行与排错
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
       <a href="release.html" class="md-nav__link">
         
   
@@ -1205,10 +1235,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_12" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" >
         
           
-          <label class="md-nav__link" for="__nav_12" id="__nav_12_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="0">
             
   
   
@@ -1226,8 +1256,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_12_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_12">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -1236,6 +1266,62 @@
 
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="migration.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    升级指南
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="troubleshooting.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    运行与排错
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
             
               
                 
@@ -1468,9 +1554,11 @@
 </code></pre></div>
 <p><strong>R (ArchR)</strong></p>
 <p>使用 <code>fragments.tsv.gz</code>（原始片段）或 <code>filtered.fragments.tsv.gz</code>（细胞过滤后片段）创建 Arrow 文件。</p>
-<p><strong>说明：</strong>
-- 仅使用 ArchR 过滤： 指向原始 <code>fragments.tsv.gz</code>，并使用 <code>filterTSS</code>/<code>filterFrags</code> 阈值控制过滤。
-- 联合过滤： 指向 dnbc4tools 细胞过滤后的 <code>filtered.fragments.tsv.gz</code>，再叠加 ArchR 阈值过滤。</p>
+<p><strong>说明：</strong></p>
+<ul>
+<li>仅使用 ArchR 过滤： 指向原始 <code>fragments.tsv.gz</code>，并使用 <code>filterTSS</code>/<code>filterFrags</code> 阈值控制过滤。</li>
+<li>联合过滤： 指向 dnbc4tools 细胞过滤后的 <code>filtered.fragments.tsv.gz</code>，再叠加 ArchR 阈值过滤。</li>
+</ul>
 <div class="highlight"><pre><span></span><code><span class="c1"># 方案 A：仅使用 ArchR 过滤（原始 fragments）</span>
 <span class="nf">library</span><span class="p">(</span><span class="n">ArchR</span><span class="p">)</span>
 <span class="n">ArrowFiles</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">createArrowFiles</span><span class="p">(</span>

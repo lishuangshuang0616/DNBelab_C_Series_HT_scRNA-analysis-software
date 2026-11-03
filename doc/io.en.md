@@ -109,6 +109,7 @@ read_signac_C4 <- function(mex_dir_path, fragments, singlecellmetadata){
 Create Arrow files from either `fragments.tsv.gz` (raw fragments) or `filtered.fragments.tsv.gz` (cell-filtered fragments).
 
 **Note:**
+
 - ArchR-only filtering: point to the raw `fragments.tsv.gz` and rely on `filterTSS`/`filterFrags` thresholds.
 - Combined filtering: point to `filtered.fragments.tsv.gz` generated after dnbc4tools cell filtering, then apply ArchR thresholds as an additional filter.
 

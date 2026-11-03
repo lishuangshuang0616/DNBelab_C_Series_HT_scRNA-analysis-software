@@ -7,7 +7,8 @@
 | RNA | 基因表达矩阵、H5/H5AD、细胞表、聚类与 RNA 报告 | [RNA 输出](scRNA.md) |
 | ATAC | peak 矩阵、片段文件、细胞质控与 ATAC 报告 | [ATAC 输出](scATAC.md) |
 | V(D)J | contig 序列、注释、克隆型与 VDJ 报告 | [VDJ 输出](scVDJ.md) |
-| Multi / C6 | 组合报告、模态目录，以及 C6 的逐样本矩阵与报告 | [Multi 输出](multi.md) |
+| 多组学 (Multi) | 组合报告、模态输出目录（RNA / ATAC / VDJ） | [多组学输出](multi.md) |
+| C6 多样本 | 根目录全局合并矩阵、`singlecell.csv.gz`、逐样本矩阵与独立报告 | [C6 输出](c6.md) |
 
 ## 读取结果时注意
 

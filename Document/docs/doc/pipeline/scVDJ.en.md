@@ -8,9 +8,13 @@ This document provides a detailed guide for analyzing single-cell VDJ sequencing
 
 **Workflow**: 5' Transcriptome Analysis → VDJ Library Processing → Sequence Assembly & Annotation → Cell Filtering → Clonotype Analysis → Analysis Report
 
-  <img src="../images/scVDJ_pipeline.png" alt="scVDJpipeline" width="700">
+<div align="center" style="margin: 1.5em 0;" markdown="block">
+  <img src="../images/scVDJ_pipeline.png" alt="scVDJ Analysis Pipeline Overview" width="800" style="max-width: 100%; height: auto;">
+</div>
 
- <strong>Usage Note</strong>: <code>$dnbc4tools</code> represents the executable path and must be replaced with the actual installation path. The backslash `\` is used to split a command across multiple lines for readability.
+<div style="background-color: #e7f3fe; border-left: 6px solid #2196F3; padding: 15px; margin: 1.5em 0; border-radius: 4px;" markdown="block">
+<strong>Usage Note:</strong> <code>$dnbc4tools</code> represents the executable path and must be replaced with the actual installation path. The backslash <code>\</code> is used to split commands across multiple lines for readability.
+</div>
 
 ## File Preparation <a id="file-preparation"></a>
 
@@ -32,34 +36,22 @@ $dnbc4tools rna run \
 	--end5
 ```
 
- <strong>Note</strong>: 5' transcriptome analysis is a prerequisite for VDJ analysis and must be completed first.
+<div style="background-color: #fffbe6; border-left: 6px solid #ffc107; padding: 15px; margin: 1.5em 0; border-radius: 4px;" markdown="block">
+<strong>Prerequisite:</strong> 5' transcriptome analysis is a mandatory prerequisite for VDJ analysis. It must be completed first to generate the cell-bead mapping table <code>singlecell.csv</code>.
+</div>
 
 ### Required Files for VDJ Analysis
 
 The analysis requires the following files:
 
-<table>
-  <thead>
-    <tr>
-      <th>File Type</th>
-      <th>Description</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><b>FASTQ Files</b></td>
-      <td>VDJ library sequencing data containing TCR or BCR sequence information.</td>
-    </tr>
-    <tr>
-      <td><b>singlecell.csv File</b></td>
-      <td>The cell information file from the 5' transcriptome analysis results.</td>
-    </tr>
-  </tbody>
-</table>
+| File Type | Description |
+| :--- | :--- |
+| **FASTQ Files** | VDJ library sequencing data containing TCR or BCR sequence reads |
+| **singlecell.csv File** | Cell information file from 5' transcriptome analysis, containing cell calling status and bead aggregation mappings |
 
 The analysis requires the `singlecell.csv` file from the 5' transcriptome analysis output directory. This file contains merged information from the `cell` and `barcode` columns, as well as an `is_cell_barcode` column (1 for a cell, 0 for a non-cell), which is used to identify valid cells.
 
- <strong>Note</strong>: Ensure the path to the <code>singlecell.csv</code> file is correct, as this file is crucial for linking the transcriptome and VDJ analyses.
+> **Note**: Ensure the path to the `singlecell.csv` file is correct, as this file is crucial for linking the transcriptome and VDJ analyses.
 
 Example file content:
 
@@ -90,7 +82,7 @@ The main VDJ pipeline combines single-cell VDJ library data with the 5' transcri
 
 To run TCR analysis for a single sample, two input methods are supported:
 
-**Method 1: Directory (Recommended)**
+**Method 1: Directory Input (Recommended)**
 
 ```shell
 $dnbc4tools vdj run \
@@ -110,7 +102,7 @@ Directory structure example:
 └── sample_tcr_R2.fastq.gz
 ```
 
-**Method 2: Individual Parameters**
+**Method 2: Explicit Individual FASTQ Inputs**
 
 ```shell
 $dnbc4tools vdj run \
@@ -127,7 +119,7 @@ $dnbc4tools vdj run \
 
 To run BCR analysis for a single sample, two input methods are supported:
 
-**Method 1: Directory (Recommended)**
+**Method 1: Directory Input (Recommended)**
 
 ```shell
 $dnbc4tools vdj run \
@@ -147,7 +139,7 @@ Directory structure example:
 └── sample_bcr_R2.fastq.gz
 ```
 
-**Method 2: Individual Parameters**
+**Method 2: Explicit Individual FASTQ Inputs**
 
 ```shell
 $dnbc4tools vdj run \
@@ -160,57 +152,66 @@ $dnbc4tools vdj run \
   --threads 10
 ```
 
-Input directory requirements:
-
-- The `--fastqs` path should point to the FASTQ directory for the current VDJ library.
-- R1/R2 FASTQ pairs should be placed directly under this directory.
-- Automatic detection relies on R1/R2 markers in file names. The recommended naming patterns are `_R1`/`_R2` or `_R1_`/`_R2_`.
-- TCR and BCR data should be run separately and should not be mixed in the same input directory.
+> **Input Directory Requirements**:
+>
+> - The `--fastqs` path should point to the FASTQ directory for the current VDJ library.
+> - R1/R2 FASTQ pairs should be placed directly under this directory.
+> - Automatic detection relies on R1/R2 markers in file names. The recommended naming patterns are `_R1`/`_R2` or `_R1_`/`_R2_`.
+> - TCR and BCR data should be run separately and should not be mixed in the same input directory.
 
 ### Execution Process
 
 After auto-detecting the dark reaction, the software begins the analysis. Here is an example:
 
 ```shell
-──────────────────────────── Parsed FASTQ Inputs — 2025-11-12 15:13:16 ─────────────────────────────
-┌───────┬──────────────────────────────────────────────────────────────────────────────────────────┐
-│ Type  │ Path                                                                                     │
-├───────┼──────────────────────────────────────────────────────────────────────────────────────────┤
-│ Read 1 │ /data/vdjt/sample_tcr_R1.fastq.gz                                                        │
-│ Read 2 │ /data/vdjt/sample_tcr_R2.fastq.gz                                                        │
-└───────┴──────────────────────────────────────────────────────────────────────────────────────────┘
-────────────────────────────────────────────────────────────────────────────────────────────────────
+====================================================================================================
+Running VDJ-B pipeline — 2026-11-02 18:00:13
+====================================================================================================
 
-──────────────────────────── Chemistry Detection — 2025-11-12 15:13:20 ─────────────────────────────
-┌─────────────────────────────────┬────────────────────────────────────────────────────────────────┐
-│ Type                            │ Result                                                         │
-├─────────────────────────────────┼────────────────────────────────────────────────────────────────┤
-│ Read 1                           │ darkreaction                                                   │
-└─────────────────────────────────┴────────────────────────────────────────────────────────────────┘
-────────────────────────────────────────────────────────────────────────────────────────────────────
+====================================================================================================
+Parsed FASTQ Inputs - 2026-11-02 18:00:13
+====================================================================================================
+Type         | Path                                                                                 
+-------------+--------------------------------------------------------------------------------------
+Read1        | /data/vdjb/sample_bcr_R1.fastq.gz                                                    
+Read2        | /data/vdjb/sample_bcr_R2.fastq.gz                                                    
+====================================================================================================
 
- 2025-11-12 15:13:20 Starting VDJ library filtering...
+
+====================================================================================================
+Chemistry Configuration - 2026-11-02 18:00:14
+====================================================================================================
+Type         | Result                                                                               
+-------------+--------------------------------------------------------------------------------------
+VDJ          | custom sequence structure                                                            
+====================================================================================================
+
+
+2026-11-02 18:00:14 Validating VDJ reference...
 ...done
 
- 2025-11-12 15:15:46 Preparing input data for VDJ assembly...
+2026-11-02 18:00:14 Starting VDJ library filtering...
 ...done
 
- 2025-11-12 15:18:14 Performing VDJ sequence assembly and gene segment annotation...
+2026-11-02 18:03:46 Correcting VDJ barcodes and translating bead identities...
 ...done
 
- 2025-11-12 16:03:18 Performing cell calling for VDJ data...
+2026-11-02 18:04:06 Preparing input data for VDJ assembly...
 ...done
 
- 2025-11-12 16:04:02 Generating VDJ clonotype analysis...
+2026-11-02 18:07:16 Performing VDJ sequence assembly and gene segment annotation...
 ...done
 
- 2025-11-12 16:05:02 Converting VDJ results from cellbarcode to cell ID...
+2026-11-02 18:26:09 Performing cell calling for VDJ data...
 ...done
 
- 2025-11-12 16:05:15 Generating analysis report and summary statistics...
+2026-11-02 18:27:36 Generating VDJ clonotype analysis...
 ...done
 
- 2025-11-12 16:05:44 Analysis Finished. Elapsed Time: 0:52:24
+2026-11-02 18:28:30 Converting VDJ results from cellbarcode to cell ID...
+...done
+
+2026-11-02 18:28:31 Analysis Finished. Elapsed Time: 0:28:17
 ```
 
 A successful run will end with `Analysis Finished`.
@@ -235,15 +236,3 @@ Upon completion, `outs` (outputs) and `logs` directories will be generated. The 
 ├── filtered_contig.fasta.fai
 └── metrics_summary.xls
 ```
-
-## Related Documentation
-
-| Resource | Description |
-| :--- | :--- |
-| [Output File Usage](../io.md) | Understanding output file structure and formats |
-| [Analysis Parameters](../parameter/scVDJ.md) | Complete parameter reference and descriptions |
-| [Output Descriptions](../outs/scVDJ.md) | Detailed interpretation of analysis results |
-
-## Frequently Asked Questions
-
-This section will be expanded as common usage questions are collected. For the current version, use the run log, parameter reference, and output file documentation as the primary troubleshooting references.

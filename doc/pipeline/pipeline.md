@@ -2,19 +2,16 @@
 
 从输入准备、参考库构建到结果交付，按实验类型选择流程。
 
-| 实验类型 | 主要步骤 | 流程文档 |
+| 模块 | 主要步骤 | 流程文档 |
 | :--- | :--- | :--- |
 | RNA | cDNA/oligo 质控 → 比对与计数 → 细胞识别 → 聚类与报告 | [RNA 流程](scRNA.md) |
-| ATAC | 片段处理 → 微球合并 → 叫峰与矩阵 → 细胞质控与聚类 | [ATAC 流程](scATAC.md) |
+| ATAC | 片段处理 → 微球合并 → 峰检测与矩阵 → 细胞质控与聚类 | [ATAC 流程](scATAC.md) |
 | V(D)J | 质控 → 组装 → 注释与过滤 → 克隆型与报告 | [VDJ 流程](scVDJ.md) |
-| 普通多组学 | CSV 配置 → 模态调度 → 结果归档 → 组合报告 | [Multi 流程](multi.md) |
-| C6 多样本 RNA | 共享文库 → probe barcode 分配 → 逐样本细胞识别与分析 | [C6 工作流](multi.md#c6-workflow) |
+| 多组学 (Multi) | CSV 配置 → 模态调度 → 结果归档 → 组合报告 | [Multi 流程](multi.md) |
+| C6 多样本 | 共享文库 → Sample Barcode 解复用 → 逐样本独立细胞识别与交付 | [C6 流程](c6.md) |
 
-## 开始分析
+## 流程选择建议
 
-1. 按[安装指南](../installation.md)准备匹配的软件与原生工具。
-2. 确认 FASTQ 配对、试剂和参考，按[快速开始](../quickstart.md)运行一份样本。
-3. 在[参数文档](../parameter/parameter.md)中查找需要覆盖的设置。
-4. 使用[输出文档](../outs/outs.md)核对矩阵、指标和报告。
-
-升级旧版结果时，先查看[升级指南](../migration.md)；运行失败时查看[排错说明](../troubleshooting.md)。
+- **独立单组学**：独立测序的文库直接进入对应单组学流程（`scRNA`、`scATAC` 或 `scVDJ`）。其中 `scVDJ` 依赖前置 5' 转录组生成的 `singlecell.csv`。
+- **普通多组学 (Multi)**：同一批样本同时测了 RNA、ATAC 或 VDJ，使用单个 CSV 配置文件统一调度各模块并生成组合报告。
+- **C6 多样本 RNA**：使用 Sample Barcode 混合建库的测序数据，通过含 `[samples]` 的配置文件自动完成拆分、逐样本独立定量与报告交付。

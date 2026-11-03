@@ -1,57 +1,107 @@
 # DNBelab C Series™ 软件安装指南
 
-[环境要求](#system-requirements) · [发行状态](#software-download) · [安装与验证](#installation-process)
+本指南介绍 DNBelab C Series™ HT 单细胞分析软件（dnbc4tools）的系统环境要求、安装包获取、解压部署与功能验证方法。
 
 ## 环境要求 <a id="system-requirements"></a>
 
-| 类别 | 要求 |
-| :--- | :--- |
-| 生产分析平台 | Linux x86-64；原生工具必须与部署平台匹配 |
-| 内存和线程 | 依据数据量、参考基因组和样本数规划；沿用 3.1 的起始建议：至少 50 GB RAM、8 核，较大任务建议 128 GB、16 核及以上 |
-| 磁盘 | 同时容纳 FASTQ、参考、矩阵、BAM 与处理中间文件；建议 SSD |
-| Python | 源码与轻量 CLI 支持 Python 3.8+；科学计算依赖使用经过验证的锁定环境 |
-| ATAC 依赖 | 部署环境提供 MACS2、bgzip、tabix；完整目录发行包可附带这些工具 |
+运行 dnbc4tools 需要满足以下基础运行环境：
 
-## 3.2 发行状态 <a id="software-download"></a>
+| 配置项 | 最低要求 | 推荐配置 | 说明 |
+| :--- | :--- | :--- | :--- |
+| **操作系统** | 64 位 Linux | CentOS 7.x+ / Ubuntu 20.04+ | 兼容主流 64 位 Linux 发行版 |
+| **CPU / 架构** | 8 核（x86-64） | 16 核及以上 | 需支持 x86-64 架构处理器 |
+| **内存 (RAM)** | 50 GB | 128 GB 及以上 | 实际资源消耗依据分析样本数与数据量而定 |
+| **磁盘存储** | 保证项目数据空间 | 高速 NVMe / SSD | 用于存放 FASTQ、参考基因组与分析中间结果 |
 
-当前文档根据 3.2 源码更新，源码变更记录仍标为未发布。正式安装包、下载地址、文件大小、发布日期与校验值待确认。请勿将 3.1 安装包重命名后当作 3.2 使用。
+---
 
-已有完整 3.2 安装目录时，使用该发行包指定的启动入口。需要 3.1 下载和安装说明时，可在顶部切换到 3.1 文档。更早版本见[历史安装指南](installation_previous.md)。
+## 软件下载 <a id="software-download"></a>
 
-## 安装与验证 <a id="installation-process"></a>
+### dnbc4tools 3.2
 
-### 使用完整发行目录
+*dnbc4tools* 以自包含的 `tar.gz` 软件包形式发布，内置全套预编译依赖，无需复杂配置即可在主流 Linux 系统中开箱即用。
 
-保留完整目录结构，包括 Python 包、配置、报告模板、`software/` 中的原生可执行文件和清单。当前源码构建器的目录入口为 `bin/dnbc4tools`；部署包也兼容外层 `dnbc4tools` 启动程序。请使用实际提供的入口路径。
-
-```bash
-/path/to/dnbc4tools-release/bin/dnbc4tools --version
-/path/to/dnbc4tools-release/bin/dnbc4tools --help
-/path/to/dnbc4tools-release/bin/dnbc4tools multi run --help
-```
-
-版本应为 `3.2`。帮助命令成功仅验证入口，不代表完整分析通过。
-
-### 从源码组装目录包（维护者）
-
-在 `dnbc4tools_py` 源码根目录和已验证的分析环境运行：
+* **软件包名称**：`dnbc4tools-3.2.tar.gz`（Linux x86-64）
+* **发布状态**：待正式发布提供下载链接与校验值
 
 ```bash
-python -m pip install -r requirements-runtime.txt
-python scripts/build_release.py . /path/to/dnbc4tools-release
-python scripts/check_release.py /path/to/dnbc4tools-release   --launcher /path/to/dnbc4tools-release/bin/dnbc4tools   --require-clean-source --require-runtime-tools
+# 使用 wget 下载（待正式发布提供链接）
+wget -O dnbc4tools-3.2.tar.gz "<下载链接>"
+
+# 使用 curl 下载
+curl -o dnbc4tools-3.2.tar.gz "<下载链接>"
 ```
 
-目标目录须不存在。构建器复制当前配置、模板和软件，并生成启动程序。原生工具必须先在目标 Linux 平台构建并同步，清单中的大小、SHA-256 和源码身份也应同步更新。
+<div style="margin-top: 15px;" markdown="block">
+  <strong>需要历史版本？</strong><br>
+  3.1 完整文档可通过顶部版本菜单切换查阅；更早版本下载和安装说明请参考 <a href="./installation_previous.html">历史版本安装指南</a>。
+</div>
 
-C6 的附加接口检查：
+---
+
+## 安装流程 <a id="installation-process"></a>
+
+### 第一步：解压安装包
+
+将安装包解压到您的目标安装目录（示例为 `/opt/software`）：
 
 ```bash
-python scripts/check_release.py /path/to/dnbc4tools-release   --require-c6-optimizations
+# 进入目标安装目录
+cd /opt/software
+
+# 解压安装包
+tar -xzvf dnbc4tools-3.2.tar.gz
 ```
 
-这些检查验证安装内容与接口，不能替代真实数据分析回归。新的 gzip 汇总还需支持 `--gzip` 的 `c4_summary`。BAM 调度、矩阵和 VDJ 输入的变化需要配套原生工具，不能只更新 Python。
+### 第二步：确认目录结构
 
-## 开始分析 <a id="verification--testing"></a>
+解压完成后，软件包目录结构如下：
 
-参考[快速开始](quickstart.md)、[升级指南](migration.md)和[运行与排错](troubleshooting.md)。对照旧版本结果时使用新的输出目录或样本名。
+```text
+dnbc4tools3.2/
+├── dnbc4tools          # 主程序可执行入口
+├── external/           # 内置第三方工具依赖
+├── lib/                # 动态链接库文件
+├── misc/               # 配置文件与辅助资源
+└── sourceC4.bash       # 环境变量配置脚本
+```
+
+---
+
+## 安装验证 <a id="verification--testing"></a>
+
+### 基础功能测试
+
+进入解压目录，直接执行主程序验证安装状态：
+
+```bash
+# 进入程序目录
+cd /opt/software/dnbc4tools3.2
+
+# 运行主程序查看帮助信息
+./dnbc4tools
+```
+
+命令成功输出如下版本与帮助信息即代表安装就绪：
+
+```text
+dnbc4tools 3.2
+
+Single-cell analysis toolkit for RNA, ATAC, V(D)J, and multi-omics workflows
+
+Usage: dnbc4tools <COMMAND>
+
+Commands:
+  
+    rna          Single-cell RNA-seq analysis
+    atac         Single-cell ATAC-seq analysis
+    vdj          Single-cell V(D)J immune profiling
+    tools        Utility commands and file processing
+    multi        Integrated multi-omics analysis
+
+Options:
+  -h, --help     show this help message and exit
+  -v, --version  show program's version number and exit
+```
+
+安装验证完成后，即可参考[快速开始](./quickstart.md)开始您的第一个单细胞分析任务。

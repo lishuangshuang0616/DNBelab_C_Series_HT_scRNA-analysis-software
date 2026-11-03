@@ -8,67 +8,41 @@ This document provides a detailed guide for analyzing single-cell ATAC sequencin
 
 **Workflow**: Raw Data → Quality Control → Alignment → Bead Merging → Peak Calling → Cell Identification → Dimensionality Reduction & Clustering → Analysis Report
 
-  <img src="../images/scATAC_pipeline.png" alt="scATACpipeline" width="700">
+<div align="center" style="margin: 1.5em 0;" markdown="block">
+  <img src="../images/scATAC_pipeline.png" alt="scATAC Analysis Pipeline Overview" width="800" style="max-width: 100%; height: auto;">
+</div>
 
- <strong>Usage Note</strong>: <code>$dnbc4tools</code> represents the executable path and must be replaced with the actual installation path. The backslash `\` is used to split a command across multiple lines for readability.
+<div style="background-color: #e7f3fe; border-left: 6px solid #2196F3; padding: 15px; margin: 1.5em 0; border-radius: 4px;" markdown="block">
+<strong>Usage Note:</strong> <code>$dnbc4tools</code> represents the executable path and must be replaced with the actual installation path. The backslash <code>\</code> is used to split a command across multiple lines for readability.
+</div>
 
 ## File Preparation <a id="file-preparation"></a>
 
 The analysis requires FASTQ files:
 
-<table>
-  <thead>
-    <tr>
-      <th>File Type</th>
-      <th>Description</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><b>ATAC Library</b></td>
-      <td>Sequencing data containing cell barcodes and chromatin accessibility information.</td>
-    </tr>
-  </tbody>
-</table>
+| File Type | Description |
+| :--- | :--- |
+| **ATAC Library** | Sequencing data containing cell barcodes and chromatin accessibility information |
 
- <strong>Note</strong>: Ensure that the FASTQ files are of good quality and record their paths for subsequent analysis.
+> **Note**: Ensure that the FASTQ files are of good quality and record their paths for subsequent analysis.
 
 ## Reference Data <a id="reference-data"></a>
 
 ### Reference Database Input Files
 
-<table>
-  <thead>
-    <tr>
-      <th>File Type</th>
-      <th>Format</th>
-      <th>Description</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><b>Genome File</b></td>
-      <td>FASTA</td>
-      <td>Contains the complete genome sequence of a species, including chromosomes, mitochondria, and other genetic information, typically the primary assembly. This file provides the foundation for genome analysis and alignment.</td>
-    </tr>
-    <tr>
-      <td><b>Annotation File</b></td>
-      <td>GTF</td>
-      <td>Contains detailed information about genes, transcripts, exons, and other functional regions in the genome. This file identifies the location, type, and related attributes of genes.</td>
-    </tr>
-  </tbody>
-</table>
+| File Type | Format | Description |
+| :--- | :--- | :--- |
+| **Genome File** | FASTA | Contains the complete genome sequence of a species, including chromosomes, mitochondria, and other genetic information, typically the primary assembly. This file provides the foundation for genome analysis and alignment. |
+| **Annotation File** | GTF | Contains detailed information about genes, transcripts, exons, and other functional regions in the genome. This file identifies the location, type, and related attributes of genes. |
 
- <strong>Recommended Data Source</strong>: It is recommended to use files from the <a href="https://www.ensembl.org/index.html">Ensembl database</a>. Ensembl's GTF files contain optional tags that facilitate filtering with <code>dnbc4tools tools mkgtf</code>.
+> **Recommended Data Source**: It is recommended to use files from the [Ensembl database](https://www.ensembl.org/index.html). Ensembl's GTF files contain optional tags that facilitate filtering with `dnbc4tools tools mkgtf`.
 
-**GTF File Requirements:**
-
-<ul>
-  <li>Must contain annotations of type <code>gene</code> or <code>transcript</code> as well as <code>exon</code>.</li>
-  <li>Attributes must include <code>gene_id</code> or <code>gene_name</code> and <code>transcript_id</code> or <code>transcript_name</code>.</li>
-  <li>The GFF file format is not supported.</li>
-  <li>The genome file and annotation file must be from corresponding versions.</li>
-</ul>
+> **GTF File Requirements**:
+>
+> - Must contain annotations of type `gene` or `transcript` as well as `exon`.
+> - Attributes must include `gene_id` or `gene_name` and `transcript_id` or `transcript_name`.
+> - The GFF file format is not supported.
+> - The genome file and annotation file must be from corresponding versions.
 
 ### GTF File Processing (Optional)
 
@@ -76,16 +50,39 @@ For details on GTF file filtering, please [refer to the scRNA analysis pipeline]
 
 ### Reference Database Construction
 
-Before running the `dnbc4tools atac run` analysis, a reference database must be built. This step requires an annotation file (GTF) and a reference genome (FASTA) to create index files for read alignment and statistical analysis.
+Before running the `dnbc4tools atac run` analysis, a reference database must be built. This step uses the annotation file (GTF) and reference genome (FASTA) to create Chromap alignment indexes and genomic region files for read alignment and statistical analysis.
 
-**Command:**
+#### Single-Species Reference Construction (e.g., Mouse)
 
 ```shell
+# Build single-species reference database
 $dnbc4tools atac mkref \
   --fasta genome.fa \
   --ingtf genes.gtf \
-  --species Mus_musculus
+  --species Mus_musculus \
+  --genomeDir /database/scATAC/Mus_musculus
 ```
+
+#### Dual-Species Mixed Reference Construction (Human + Mouse)
+
+Applicable for human-mouse mixed-cell validation experiments:
+
+```shell
+# Build dual-species mixed reference database (Human + Mouse; --prefix is unsupported for mixed species)
+# Prepare FASTA and filtered GTF files for both species, separating multiple inputs with commas
+$dnbc4tools atac mkref \
+  --fasta GRCh38.primary_assembly.genome.fa,GRCm38.primary_assembly.genome.fa \
+  --ingtf hg38.filtered.gtf,mm10.filtered.gtf \
+  --species hg38,mm10 \
+  --genomeDir /database/scATAC/hg38_mm10
+```
+
+> **Dual-Species Notes**:
+>
+> - `--fasta`: Provide genome FASTA file paths for both species, separated by a comma `,`.
+> - `--ingtf`: Provide filtered GTF annotation paths for both species, separated by a comma `,` (order must strictly match `--fasta`).
+> - `--species`: Declare concise identifiers for each species (e.g. `hg38,mm10`).
+> - **Important Restriction**: When constructing a dual-species reference, the `--prefix` argument is **not supported** (due to differing chromosome naming rules between species).
 
 **Output Directory:**
 
@@ -174,19 +171,18 @@ The main pipeline can be used in two ways:
 ### Single-Sample Analysis
 
 The ATAC main analysis pipeline processes single-cell ATAC library data from a single sample. The core workflow includes:
-<ol>
-  <li><strong>Data Processing</strong>: Perform quality control and alignment to generate the <code>fragments</code> file for all beads.</li>
-  <li><strong>Peak Calling</strong>: Run peak calling on aggregated data to identify open chromatin regions.</li>
-  <li><strong>Cell Identification</strong>: Identify valid cells using fragment information within peak regions.</li>
-  <li><strong>Advanced Analysis</strong>: Perform cell filtering, dimensionality reduction, and clustering.</li>
-  <li><strong>Report Generation</strong>: Integrate outputs from all steps and generate the HTML report plus other result files.</li>
-</ol>
+
+1. **Data Processing**: Perform quality control and alignment to generate the `fragments` file for all beads.
+2. **Peak Calling**: Run peak calling on aggregated data to identify open chromatin regions.
+3. **Cell Identification**: Identify valid cells using fragment information within peak regions.
+4. **Advanced Analysis**: Perform cell filtering, dimensionality reduction, and clustering.
+5. **Report Generation**: Integrate outputs from all steps and generate the HTML report plus other result files.
 
 Two input methods are supported:
 
-**Method 1: Directory (Recommended)**
+**Method 1: Directory Input (Recommended)**
 
-```shell
+```bash
 $dnbc4tools atac run \
   --name sample \
   --fastqs /data \
@@ -195,7 +191,7 @@ $dnbc4tools atac run \
 ```
 
 Directory structure example:
-```
+```text
 /data/
 ├── sample_R1.fastq.gz
 └── sample_R2.fastq.gz
@@ -208,9 +204,9 @@ Directory requirements:
 - Automatic detection relies on R1/R2 markers in file names. The recommended naming patterns are `_R1`/`_R2` or `_R1_`/`_R2_`.
 - Do not mix data from different samples or different libraries in the same input directory.
 
-**Method 2: Individual Parameters**
+**Method 2: Explicit Individual FASTQ Inputs**
 
-```shell
+```bash
 $dnbc4tools atac run \
   --name sample \
   --fastq1 /data/sample_R1.fastq.gz \
@@ -219,50 +215,63 @@ $dnbc4tools atac run \
   --threads 10
 ```
 
+### Execution Process
+
 After auto-detecting the reagent version and dark reaction, the software begins the analysis. Here is an example:
 
 ```shell
-
-──────────────────────────── Parsed FASTQ Inputs — 2025-11-12 15:05:39 ─────────────────────────────
+──────────────────────────── Parsed FASTQ Inputs — 2026-11-03 16:26:21 ─────────────────────────────
 ┌───────┬──────────────────────────────────────────────────────────────────────────────────────────┐
 │ Type  │ Path                                                                                     │
 ├───────┼──────────────────────────────────────────────────────────────────────────────────────────┤
-│ Read 1 │ /data/sample_R1.fastq.gz                                                                 │
-│ Read 2 │ /data/sample_R2.fastq.gz                                                                 │
+│ Read1 │ /data/sample_R1.fastq.gz                                                                 │
+│ Read2 │ /data/sample_R2.fastq.gz                                                                 │
 └───────┴──────────────────────────────────────────────────────────────────────────────────────────┘
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 
-──────────────────────────── Chemistry Detection — 2025-11-12 15:05:49 ─────────────────────────────
+──────────────────────────── Chemistry Detection — 2026-11-03 16:26:23 ─────────────────────────────
 ┌─────────────────────────────────┬────────────────────────────────────────────────────────────────┐
 │ Type                            │ Result                                                         │
 ├─────────────────────────────────┼────────────────────────────────────────────────────────────────┤
-│ Read 1                           │ darkreaction                                                   │
-│ Read 2                           │ darkreaction                                                   │
+│ Read1                           │ darkreaction                                                   │
+│ Read2                           │ darkreaction                                                   │
 └─────────────────────────────────┴────────────────────────────────────────────────────────────────┘
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 
- 2025-11-12 15:05:49 Performing raw data quality control and alignment...
+ 2026-11-03 16:26:23 Validating ATAC reference...
 ...done
 
- 2025-11-12 15:24:56 Calculating bead similarity and merging beads within droplets...
+ 2026-11-03 16:26:53 Performing raw data quality control and alignment...
 ...done
 
- 2025-11-12 15:28:00 Processing fragments for peak calling...
+ 2026-11-03 16:42:28 Calculating bead similarity and merging beads within droplets...
 ...done
 
- 2025-11-12 15:31:22 Generating raw peak count matrix...
+ 2026-11-03 16:47:43 Processing fragments for peak calling...
 ...done
 
- 2025-11-12 15:38:18 Generating cell-filtered peak count matrix...
+ 2026-11-03 16:57:49 Generating raw peak count matrix...
 ...done
 
- 2025-11-12 15:43:23 Performing dimensionality reduction and clustering...
+ 2026-11-03 16:59:56 Calling cells for ATAC data...
 ...done
 
- 2025-11-12 15:50:03 Generating analysis report and summary statistics...
+ 2026-11-03 17:01:31 Generating cell-filtered peak count matrix...
 ...done
 
- 2025-11-12 15:50:19 Analysis Finished. Elapsed Time: 0:44:30
+ 2026-11-03 17:01:53 Generating filtered fragments and TSS enrichment...
+...done
+
+ 2026-11-03 17:02:39 Calculating sequencing saturation metrics...
+...done
+
+ 2026-11-03 17:03:48 Performing dimensionality reduction and clustering...
+...done
+
+ 2026-11-03 17:05:41 Generating analysis report and summary statistics...
+...done
+
+ 2026-11-03 17:06:20 Analysis Finished. Elapsed Time: 0:39:58
 ```
 
 A successful run will end with `Analysis Finished`.
@@ -280,28 +289,12 @@ $dnbc4tools atac multi \
 
 The `sample.tsv` file is tab-separated (`\t`) and contains two columns:
 
-<table>
-  <thead>
-    <tr>
-      <th>Column</th>
-      <th>Content</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>1</td>
-      <td>Sample Name</td>
-    </tr>
-    <tr>
-      <td>2</td>
-      <td>Library Sequencing Data</td>
-    </tr>
-  </tbody>
-</table>
+| Column | Content | Description |
+| :---: | :--- | :--- |
+| 1 | Sample Name | Unique sample identifier (e.g., `sample1`) |
+| 2 | Library Sequencing Data | Paired FASTQs, `R1;R2` format, multiple files per read separated by commas `,` |
 
- <strong>Note</strong>:
-- Multiple FASTQ files should be separated by commas (`,`).
-- R1 and R2 files should be separated by semicolons (`;`).
+> **Note**: Multiple FASTQ files within one end should be separated by commas (`,`), and R1/R2 files by semicolons (`;`).
 
 ```tsv
 sample1	/data/sample1_R1.fq.gz;/data/sample1_R2.fq.gz
@@ -326,14 +319,6 @@ $cat sample1.sh
 
 You can then execute these scripts to run the main analysis.
 
-### Calling and matrix counts <a id="v32-defaults"></a>
-
-Cell calling defaults to **ordmag**. Peak calling uses **all merged deduplicated fragments**, with Tn5-adjusted **cutsite** signal. The peak matrix also defaults to endpoint counts; calling, FRIP and TSS fractions continue to use unique fragments.
-
-`frags_cutoff=0` and `tss_cutoff=0` disable their additional final thresholds; low-targeting filtering still applies by default. Bead merging uses its own candidate threshold (`merge_cutoff=500`). See [ATAC parameters](../parameter/scATAC.md#v32-defaults) for explicit overrides.
-
-Downstream normalization uses TF-IDF method 1. Neighbors and UMAP use original LSI dimensions 2–30; clustering uses Leiden.
-
 ## Results Interpretation <a id="results-interpretation"></a>
 
 Upon completion, `outs` (outputs) and `logs` directories will be generated.
@@ -354,15 +339,3 @@ Upon completion, `outs` (outputs) and `logs` directories will be generated.
 │   └── peaks.bed.gz
 └── singlecell.csv
 ```
-
-## Related Documentation
-
-| Resource | Description |
-| :--- | :--- |
-| [Output File Usage](../io.md) | Understanding output file structure and formats |
-| [Analysis Parameters](../parameter/scATAC.md) | Complete parameter reference and descriptions |
-| [Output Descriptions](../outs/scATAC.md) | Detailed interpretation of analysis results |
-
-## Frequently Asked Questions
-
-This section will be expanded as common usage questions are collected. For the current version, use the run log, parameter reference, and output file documentation as the primary troubleshooting references.

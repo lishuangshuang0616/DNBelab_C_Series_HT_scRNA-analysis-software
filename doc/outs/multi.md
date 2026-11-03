@@ -34,71 +34,11 @@
 - **内容**：对应模块的标准输出（矩阵、统计表、模块报告等）。
 - **用途**：用于下游模块化分析或单组学复用。
 
-## C6 多样本 RNA 输出 <a id="c6-outputs"></a>
+<a id="c6-outputs"></a>
 
-含 `[samples]` 的运行采用以下布局。普通单样本 Multi 使用上方的模态目录。
-
-```text
-<run>/outs/
-├── <run>_multi_report.html
-└── rna/
-    ├── raw_feature_bc_matrix/             # 含背景的全局矩阵
-    ├── raw_feature_bc_matrix.h5
-    ├── filtered_feature_bc_matrix/        # 全部 called cells
-    ├── filtered_feature_bc_matrix.h5
-    ├── filtered_feature_bc_matrix.h5ad    # 稀疏计数，无联合聚类
-    ├── singlecell.csv.gz                 # 完整六列表，含背景
-    ├── metrics_summary.xls               # 制表符分隔文本
-    ├── oligo.records.bam                 # 启用 BAM 时
-    ├── unassigned_alignments.bam         # 启用 BAM 时
-    ├── multi_sample/
-    │   ├── per_sample_metrics.csv
-    │   ├── sample_metrics_summary.xls
-    │   ├── barcode_assignment_metrics.json
-    │   └── high_occupancy_metrics.json
-    └── per_sample_outs/<sample>/
-        ├── raw_feature_bc_matrix/
-        ├── raw_feature_bc_matrix.h5
-        ├── filtered_feature_bc_matrix/
-        ├── filtered_feature_bc_matrix.h5
-        ├── filtered_feature_bc_matrix.h5ad
-        ├── <sample>_scRNA_report.html
-        ├── metrics_summary.xls
-        ├── <sample>_alignments.bam         # 启用 BAM 时
-        └── analysis/                     # 样本级聚类、marker 等
-```
-
-BAM 随实际基因组范围附带 `.bai` 或 `.csi`；`no_bam=true` 不交付样本 BAM、Unassigned BAM 或 oligo BAM。双物种时可额外交付全局 `analysis/cell_classification.csv`；单物种不创建空的全局 analysis 目录。子样本分析文件按实际成功状态交付，空或失败样本不交付残留的旧分析结果。
-
-全局不交付联合 cluster/marker、`QC_Cluster.h5ad` 或运行级 RNA HTML。全局 H5AD 只提供合并计数；每个样本有自己的分析与完整 RNA 报告。处理目录 `SAMPLE_SPLIT`、`MULTI_CELL_CALLING`、`tempN` 及报告缓存不属于公共交付结构。
-
-### `singlecell.csv.gz`
-
-| 列 | 含义 |
-| :--- | :--- |
-| `cell` | 合并后 cell 标识；异常缺失映射背景可为空 |
-| `reads` | 对应分组汇总的 reads 计数 |
-| `gene` / `umi` | 该分组的检测基因与 UMI 数 |
-| `is_cell_barcode` | 有效细胞标记 |
-| `barcode` | 原始 barcode 成员信息，保留 probe 后缀 |
-
-完整表保留背景及零 UMI 行；正 UMI 行降序，零 UMI 行在末尾保持原组序。无需先手工解压，读取方式见[结果读取](../io.md#c6-import)。
-
-### 报告与指标分母
-
-| 内容 | 使用范围和解释 |
-| :--- | :--- |
-| 根目录 Multi 报告 | 批次概览、Library QC 与 Samples 比较；C6 chemistry 显示 `scRNAC6` |
-| 逐样本 RNA 报告 | 该样本的细胞、聚类、marker、比对和饱和度结果；缺失值显示 N/A |
-| Assigned Reads | 已分配到该样本的 read pairs，不是全库原始 reads |
-| Mean Reads per Cell | Assigned Reads / Cells；细胞数为 0 或缺失时不计算 |
-| Fraction reads in cells | 该样本细胞内可信转录组 reads / 该样本全部有效 barcode 的可信转录组 reads |
-| 样本 Mapping Quality | 使用该样本 All Reads 范围；不能混入 Filtered Cells 的比例 |
-| 逐样本 cDNA Valid barcodes | Assigned Reads > 0 时为 100%，只描述已分配集合；为零或缺失时 N/A |
-| Q30 / Valid UMI / Corrected barcodes / Oligo QC | 来自全库共享测量，不能解释为样本独立 QC；指标表保留 `cDNA QC scope` |
-| cell/probe barcode 有效率 | 分别来自纠错阶段的真实统计，不从联合有效率推算；缺失时 N/A |
-
-`.xls` 汇总是制表符分隔文本。`sample_metrics_summary.xls` 每个配置样本一行，保留空/失败样本；All Reads 与 Filtered Cells 两组比对比例分别使用各自分母。旧 HTML 不会自动更新，模板修复后需要重生成报告。
+> **提示：C6 多样本输出结果**
+>
+> 基于 Sample Barcode 混合的 C6 多样本分析输出结果与目录结构已独立成章，详情请参阅 [C6 多样本分析输出说明](c6.md)。
 
 ## 网页报告释义 <a id="网页报告释义"></a>
 

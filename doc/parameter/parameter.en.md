@@ -1,23 +1,24 @@
-# Parameter reference
+# Parameter Overview
 
-Choose a module to find commands, defaults and configuration rules. Each reference starts with examples; full help and advanced options can be expanded when needed.
+Find commands, configuration specifications, and default parameter settings by module. Each module documentation page provides complete parameter quick references, detailed options, and full CLI help.
 
-| Module | Commands | Reference |
-| :--- | :--- | :--- |
-| RNA | `rna run`, `rna mkref`, `rna multi` | [RNA parameters](scRNA.md) |
-| ATAC | `atac run`, `atac mkref`, `atac multi` | [ATAC parameters](scATAC.md) |
-| V(D)J | `vdj run` | [VDJ parameters](scVDJ.md) |
-| Multi / C6 | `multi run`, configured by CSV | [Multi parameters](multi.md) |
-| GTF tools | `tools mkgtf` | [Tools](tools.md) |
+| Module | Primary Commands | Use Case | Parameter Reference |
+| :--- | :--- | :--- | :--- |
+| **scRNA** | `rna run`, `rna mkref`, `rna multi` | Single-cell RNA (3' / 5') profiling, reference building, and batch script generation | [RNA Parameters](scRNA.md) |
+| **scATAC** | `atac run`, `atac mkref`, `atac multi` | Chromatin accessibility analysis, Chromap index & reference building, batch processing | [ATAC Parameters](scATAC.md) |
+| **scVDJ** | `vdj run` | Full-length TCR/BCR immune repertoire assembly and clonotype profiling | [VDJ Parameters](scVDJ.md) |
+| **Multi-omics** | `multi run` (with sectioned CSV) | Simultaneous multi-modal analysis (RNA + ATAC + VDJ) with unified orchestration and combined reporting | [Multi Parameters](multi.md) |
+| **C6 Multiplexed** | `multi run` (with `[samples]`) | Sample Barcode demultiplexing, per-sample cell calling, and independent matrix generation | [C6 Parameters](c6.md) |
+| **GTF Tools** | `tools mkgtf` | GTF annotation filtering, gene type filtering, and format validation | [Tools](tools.md) |
 
-## Choose an entry point
+## Entry Point Recommendations
 
-- Use a module's `run` for an independent library.
-- `rna multi` / `atac multi` only generate sample scripts. Execute them after successful generation.
-- `multi run` executes multi-omics or C6 analysis. C6 requires a real scRNAC6 library and `[samples]` configuration.
+- **Individual Sample Analysis**: For an independent library, run the corresponding module command directly (e.g., `rna run`, `atac run`, `vdj run`).
+- **Batch Script Generation**: `rna multi` and `atac multi` generate independent shell scripts for each sample based on a tab-separated list; verify scripts before launching.
+- **Multi-Omics and Multiplexing**: Use `multi run` exclusively. Configure via a CSV file: declare `[rna]`, `[atac]`, `[vdj-*]` sections for multi-modal assays, and add `[samples]` for C6 probe demultiplexing.
 
-## Before configuring
+## Key Configuration Principles
 
-Omitting an option normally uses its workflow default; not every option accepts the string `auto`. CLI boolean switches take no value; Multi CSV uses `true/false`. See each reference for global and sample-override rules.
-
-[Workflows](../pipeline/pipeline.md) · [Outputs](../outs/outs.md) · [Quick Start](../quickstart.md)
+- **Default Values**: Omitted options adopt recommended pipeline defaults. Note that not all options accept the explicit literal string `auto`.
+- **Parameter Types**: CLI boolean switches are flags that take no values (e.g., `--no_bam`, `--end5`), whereas in Multi CSV files, boolean values must be explicitly written as `true` or `false`.
+- **Precedence & Overrides**: In multi-sample and multi-omics runs, when sample-level overrides conflict with global settings, the inheritance rules defined in each module's parameter documentation apply.

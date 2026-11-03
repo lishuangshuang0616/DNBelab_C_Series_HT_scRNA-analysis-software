@@ -2,12 +2,13 @@
 
 DNBelab C Series HT 工具命令参数说明
 
-当前 `dnbc4tools tools` 的公开子命令为 `mkgtf`。下文的 `bam2fastq`、`chromsplit`、`fqsubC4` 为独立工具示例，是否可用取决于部署环境，不是 `dnbc4tools tools` 的子命令。
+当前 `dnbc4tools tools` 的公开子命令为 `mkgtf`。下文的 `bam2fastq`、`chromsplit`、`fqsubC4` 为独立辅助工具示例，是否可用取决于部署环境，不是 `dnbc4tools tools` 的子命令。
+
 ## GTF 文件操作 (mkgtf) <a id="gtf-文件操作-mkgtf"></a>
 
-> <strong>核心功能</strong>
+> **核心功能**
 >
-> GTF 文件操作工具，支持基因类型统计、按规则过滤和文件格式校验。为单细胞分析提供标准化的基因注释数据。
+> GTF 文件操作工具，支持基因类型统计、按规则过滤和文件格式校验与修复。为单细胞转录组分析提供标准化的基因注释数据。
 
 ### 用法 <a id="usage-mkgtf"></a>
 
@@ -15,8 +16,7 @@ DNBelab C Series HT 工具命令参数说明
 dnbc4tools tools mkgtf --ingtf genes.gtf --output genes.filtered.gtf
 ```
 
-<details markdown="block" class="cli-help">
-<summary>查看完整命令行帮助</summary>
+### 完整命令行帮助
 
 ```shell
 $ dnbc4tools tools mkgtf --help
@@ -27,24 +27,20 @@ Filter and process GTF annotation files.
 Usage: dnbc4tools tools mkgtf [OPTIONS]
 
 options:
-  --help                   show this help message and exit
+  --help           show this help message and exit
 
 Basic Settings:
-  --action <STR>           Operation type: 'mkgtf' (filter by gene types), 'stats' (count statistics), 'check'
-                           (validate format) [default: mkgtf] (e.g., `stats`).
-  --ingtf <FILE>           Path to input GTF annotation file (required) (e.g., `genes.gtf`).
-  --output <FILE>          Path to output file (required unless --action stats). If omitted for "stats", statistics
-                           are printed to stdout.
+  --action <STR>   Operation type: 'mkgtf' (filter by gene types), 'stats' (count statistics), 'check' (validate
+                   format) [default: mkgtf] (e.g., `stats`).
+  --ingtf <FILE>   Path to input GTF annotation file (required) (e.g., `genes.gtf`).
+  --output <FILE>  Path to output file (required unless --action stats). If omitted for "stats", statistics are
+                   printed to stdout.
 
 Analysis Settings:
-  --conflict-policy <STR>  Policy for gene/transcript parent conflicts during `--action check`.
-                           `error` stops rather than guessing. `warn` reports conflicts
-                           and copies the source GTF unchanged without structural correction. [default: error].
-  --include <STR>          Comma-separated list of gene types to include. Supports wildcards (e.g., 'IG_*' will match
-                           'IG_V_gene', 'IG_C_gene'). [default: protein_coding,lncRNA,lincRNA,antisense,IG_*,TR_*].
-  --type <STR>             Attribute name for gene type classification (e.g., gene_biotype, gene_type).
-  --feature <STR>          Feature type to process from GTF. Use 'transcript' if no 'gene' entries exist [default:
-                           gene].
+  --include <STR>  Comma-separated list of gene types to include. Supports wildcards (e.g., 'IG_*' will match
+                   'IG_V_gene', 'IG_C_gene'). [default: protein_coding,lncRNA,lincRNA,antisense,IG_*,TR_*].
+  --type <STR>     Attribute name for gene type classification (e.g., gene_biotype, gene_type).
+  --feature <STR>  Feature type to process from GTF. Use 'transcript' if no 'gene' entries exist [default: gene].
 
 Usage Examples:
   Statistics:   dnbc4tools tools mkgtf --action stats --ingtf genes.gtf
@@ -52,163 +48,60 @@ Usage Examples:
   Validation:   dnbc4tools tools mkgtf --action check --ingtf genes.gtf --output corrected.gtf
 ```
 
-</details>
+### 参数速查表
 
-### 必需参数
+| 参数 | 类型 | 默认值 | 说明 |
+| :--- | :--- | :--- | :--- |
+| `--ingtf` | 文件路径 | **必需** | 输入的标准 GTF 注释文件路径（不支持 GFF/GFF3 格式） |
+| `--output` | 文件路径 | 条件必需 | 处理结果输出文件路径（`--action mkgtf` 和 `check` 模式必需；`stats` 模式可省略并输出至标准输出） |
+| `--action` | 选项 | `mkgtf` | 操作模式：`mkgtf`（按基因类型过滤）、`stats`（类型分布统计）、`check`（格式自检与修复） |
+| `--include` | 字符串 | 预设类型集 | 仅在 `mkgtf` 模式下生效。要保留的基因生物学类型列表（逗号分隔，支持通配符 `*`） |
+| `--type` | 字符串 | `auto` | GTF 属性中用于标识基因类型的键名（如 `gene_biotype`、`gene_type`） |
+| `--feature` | 字符串 | `gene` | 从 GTF 中提取的目标层级（通常为 `gene`；若无 gene 行可设为 `transcript`） |
+| `--conflict-policy` | 选项 | `error` | 在 `check` 模式下的父级冲突策略：`error`（遇 gene/transcript 冲突报错中断）或 `warn`（告警并原样保留） |
 
-#### `--ingtf` (必需)
+---
 
-指定输入的GTF基因注释文件路径。
+### 操作模式深度解析
 
-<ul>
-  <li><strong>格式要求：</strong> 标准GTF格式，不支持GFF或GFF3格式。</li>
-</ul>
+#### 1. 过滤模式 (`--action mkgtf`)
 
-**默认值：** 无
+从包含多种非编码或假基因注释的完整 GTF 中提取感兴趣的高信度基因集合，有效减少跨基因的多重比对，提高比对唯一性：
 
-**示例：**
-
-```text
---ingtf Homo_sapiens.GRCh38.108.gtf
+```bash
+dnbc4tools tools mkgtf \
+  --action mkgtf \
+  --ingtf Homo_sapiens.GRCh38.108.gtf \
+  --output Homo_sapiens.filtered.gtf \
+  --include "protein_coding,lncRNA,IG_*,TR_*"
 ```
 
-#### `--output` (必需)
+- **通配符支持**：如 `IG_*` 匹配 `IG_V_gene`、`IG_C_gene`、`IG_J_gene` 等所有免疫球蛋白基因类型。
+- **默认保留集**：`protein_coding,lncRNA,lincRNA,antisense,IG_*,TR_*`。
 
-指定处理结果的输出文件。
+#### 2. 统计模式 (`--action stats`)
 
-<ul>
-  <li><strong>功能：</strong> 根据操作模式生成不同类型的输出文件。</li>
-  <li><strong>条件要求：</strong> 当 <code>--action mkgtf</code> 或 <code>--action check</code> 时必须提供；当 <code>--action stats</code> 时可省略，统计结果会输出到标准输出。</li>
-  <li><strong>自动创建：</strong> 如果指定的输出目录不存在，将会被自动创建。</li>
-</ul>
+统计 GTF 中各类基因生物学类型的数量分布，帮助评估注释源文件的组成与分类标签名称：
 
-**默认值：** 无
-
-**示例：**
-
-```text
-# 当 action 为 'mkgtf' (过滤)
---output ./filtered_genes.gtf
-```
-
-```text
-# 当 action 为 'stats' (统计)
---output ./gene_statistics.txt
-```
-
-```text
-# 当 action 为 'check' (校验)
---output ./corrected.gtf
-```
-
-### 可选参数
-
-#### `--action` (可选)
-
-`check` 模式默认 `--conflict-policy error`，发现 gene/transcript 父级冲突即停止；`warn` 记录冲突并原样复制源文件。输入和输出不得指向同一文件。
-
-选择要执行的操作类型。
-
-<ul>
-  <li><strong><code>mkgtf</code>:</strong> (默认) 根据基因类型过滤GTF 文件。</li>
-  <li><strong><code>stats</code>:</strong> 统计GTF 文件中的基因类型。</li>
-  <li><strong><code>check</code>:</strong> 校验并修复GTF 文件格式。</li>
-</ul>
-
-**默认值：** `mkgtf`
-
-**示例：**
-
-```text
---action stats
-```
-
-#### `--conflict-policy`
-
-可选 `error`（默认）或 `warn`，用于 `--action check`。父级冲突的处理方式见上文。
-
-#### `--include` (可选)
-
-在 `mkgtf` 模式下，指定要保留的基因类型，多个类型以逗号分隔。
-
-<ul>
-  <li><strong>功能：</strong> 用于精确筛选您感兴趣的基因集合。</li>
-  <li><strong>通配符：</strong> 支持通配符匹配（例如 <code>IG_*</code> 可匹配 <code>IG_V_gene</code>、<code>IG_C_gene</code>）。</li>
-</ul>
-
-**默认值：** `protein_coding,lncRNA,lincRNA,antisense,IG_*,TR_*`
-
-**示例：**
-
-```text
---include protein_coding,lncRNA
-```
-
-#### `--type` (可选)
-
-指定GTF属性中用于标识基因类型的标签。
-
-<ul>
-  <li><strong>功能：</strong> 适配不同来源GTF 文件的注释风格。</li>
-  <li><strong>自动识别：</strong> 使用 <code>auto</code> 时，程序会自动检测常见标签（如 <code>gene_biotype</code>、<code>gene_type</code>）。</li>
-</ul>
-
-**默认值：** `auto`
-
-**示例：**
-
-```text
---type gene_type
-```
-
-#### `--feature` (可选)
-
-指定从GTF 文件的哪一列（feature）提取信息。
-
-<ul>
-  <li><strong>功能：</strong> 通常用于指定操作对象是基因级别还是转录本级别。</li>
-  <li><strong>备选：</strong> 如果GTF 文件中没有 `gene` 行，建议选择 `transcript`。</li>
-</ul>
-
-**默认值：** `gene`
-
-**示例：**
-
-```text
---feature transcript
-```
-
-**使用示例**
-
-<ul>
-  <li><strong>统计基因类型</strong></li>
-</ul>
-
-```shell
+```bash
 dnbc4tools tools mkgtf --action stats --ingtf genes.gtf
 ```
 
-<ul>
-  <li><strong>过滤基因类型</strong></li>
-</ul>
+#### 3. 校验与修复模式 (`--action check`)
 
-```shell
-dnbc4tools tools mkgtf --action mkgtf --ingtf genes.gtf --output genes.filter.gtf
+检查 GTF 文件规范性，自动修复缺失的父级特征（如缺少 `gene` 行但有 `transcript` 行时自动推导补齐）：
+
+```bash
+dnbc4tools tools mkgtf --action check --ingtf raw_genes.gtf --output corrected.gtf
 ```
 
-<ul>
-  <li><strong>校验并修复 GTF 文件</strong></li>
-</ul>
+---
 
-```shell
-dnbc4tools tools mkgtf --action check --ingtf genes.gtf --output corrected.gtf
-```
+## BAM 转 FASTQ (bam2fastq) <a id="bam-转-fastq-bam2fastq"></a>
 
-##  BAM 转 FASTQ (bam2fastq) <a id="bam-转-fastq-bam2fastq"></a>
-
->  <strong>转换工具</strong>
+> **转换工具**
 >
-> BAM 文件转换工具，专用于将 C4 RNA BAM 文件转换成 FASTQ 文件。支持多线程并行处理和可配置的输出方式。
+> 专用于将单细胞 RNA 比对后的 BAM 文件无损反向转换提取为 FASTQ 文件，支持多线程加速与基因组区域截取。
 
 ### 用法 <a id="usage-bam2fastq"></a>
 
@@ -223,172 +116,47 @@ Arguments:
   <OUTPUT>  Directory where FASTQ files will be written
 
 Options:
-  --threads <THREADS>        Number of CPU threads for parallel processing (default: all available cores) [default: 8]
+  --threads <THREADS>        Number of CPU threads for parallel processing [default: 8]
   --locus <REGION>           Process reads from a specific genomic region (format: chr1:1000-2000)
   --reads-per-fastq <READS>  Maximum number of reads per FASTQ file. All reads go to a single file if not specified.
-      --max-memory <MEMORY>      Maximum memory to use in MB. Auto-determined if not specified.
-      --no-compress              Disable gzip compression for output FASTQ files
+  --max-memory <MEMORY>      Maximum memory to use in MB. Auto-determined if not specified.
+  --no-compress              Disable gzip compression for output FASTQ files
   --help                     Print help
   --version                  Print version
 ```
 
-### 必需参数
+### 参数速查表
 
-#### `<BAM>` (必需)
+| 参数 / 选项 | 类型 | 默认值 | 说明 |
+| :--- | :--- | :--- | :--- |
+| `<BAM>` | 文件路径 | **必需 (位置参数)** | 输入的有效 BAM 文件路径（须已构建 `.bai` 索引；双端须按序列名排序） |
+| `<OUTPUT>` | 目录路径 | **必需 (位置参数)** | 转换输出 FASTQ 文件的目标目录（不存在时自动创建） |
+| `--threads` | 整数 | `8` | 用于并行解码与写出的 CPU 线程数 |
+| `--locus` | 字符串 | 无 | 仅提取特定基因组区域的读段（格式为 `chr1:1000-2000`） |
+| `--reads-per-fastq` | 整数 | 全部单文件 | 每个输出 FASTQ 文件的最大读段数量，超过则自动分卷 |
+| `--max-memory` | 整数 (MB) | 自动判断 | 工具允许使用的最大内存预算 |
+| `--no-compress` | 标志开关 | 关闭 | 禁用 gzip 压缩（直接输出 `.fastq` 以获得最高写出速度） |
 
-指定输入的BAM 文件路径。
-
-<ul>
-  <li><strong>格式要求：</strong> 必须是有效的C4 RNA BAM 文件，支持单端和双端数据。</li>
-  <li><strong>索引要求：</strong> BAM 文件必须已经索引（即旁边存在对应的.bai文件）。</li>
-  <li><strong>双端数据注意：</strong> 如果是双端数据，需要先使用 <code>samtools sort -n</code> 根据序列名排序后再进行处理。</li>
-</ul>
-
-**默认值：** 无
-
-**示例：**
-
-```text
-/path/outs/anno_decon_sorted.bam
-```
-
-#### `<OUTPUT>` (必需)
-
-指定输出 FASTQ 文件的目录。
-
-<ul>
-  <li><strong>功能：</strong> 所有转换后的FASTQ 文件将保存在此目录。</li>
-  <li><strong>自动创建：</strong> 如果目录不存在，将会被自动创建。</li>
-</ul>
-
-**默认值：** 无
-
-**示例：**
-
-```text
-/path/to/output_dir
-```
-
-### 可选参数
-
-#### `--threads` (可选)
-
-设置用于并行处理的CPU 线程数。
-
-<ul>
-  <li><strong>性能说明：</strong> 增加线程数通常可提升BAM解码与写出效率，但受磁盘I/O带宽限制。</li>
-  <li><strong>建议：</strong> 默认值为 <code>所有可用的核心数量</code>；I/O性能较强时可增大该值，机械硬盘环境建议保守设置。</li>
-</ul>
-
-**默认值：** `所有可用的核心数量`
-
-**示例：**
-
-```text
---threads 8
-```
-
-#### `--locus` (可选)
-
-仅处理来自特定基因组区域的读段。
-
-<ul>
-  <li><strong>格式：</strong> 标准基因组坐标格式 (<code>染色体:起始-结束</code>)。</li>
-  <li><strong>应用：</strong> 用于靶向分析特定基因或染色体区域。</li>
-</ul>
-
-**默认值：** 无
-
-**示例：**
-
-```text
---locus chr1:1000-2000
-```
-
-#### `--reads-per-fastq` (可选)
-
-设置每个输出 FASTQ 文件的最大读段数量。
-
-<ul>
-  <li><strong>分割策略：</strong> 自动将大文件分割为多个小文件，便于下游处理。</li>
-  <li><strong>默认行为：</strong> 如果不指定，所有读段将写入单个文件。</li>
-</ul>
-
-**默认值：** 无
-
-**示例：**
-
-```text
---reads-per-fastq 10000000
-```
-
-#### `--max-memory <MEMORY>` (可选)
-
-设定工具可使用的最大内存（单位：MB）。
-
-<ul>
-  <li><strong>功能：</strong> 控制工具的内存消耗，防止因内存不足导致程序失败。</li>
-  <li><strong>自动确定：</strong> 如果不指定，工具将根据系统可用资源自动分配。</li>
-</ul>
-
-**默认值：** 自动确定
-
-**示例：**
-
-```text
---max-memory 8192
-```
-
-#### `--no-compress` (标志)
-
-禁用对输出 FASTQ 文件的 gzip 压缩，以提高分析速度。
-
-<ul>
-  <li><strong>性能瓶颈：</strong> 程序的主要速度瓶颈在于写入压缩文件。</li>
-  <li><strong>注意：</strong> 得益于软件的并行加速压缩，目前的默认压缩写入速度已获得提升，降低压缩写入对运行时间的影响。</li>
-</ul>
-
-**默认值：** 不设置
-
-**使用示例**
-
-<ul>
-  <li><strong>基本转换</strong></li>
-</ul>
+### 常用示例
 
 ```shell
-bam2fastq input.bam ./output_dir
+# 基础转换
+bam2fastq anno_decon_sorted.bam ./fastq_out
+
+# 提取指定染色体区域并多线程压缩
+bam2fastq --threads 16 --locus chr1:1000000-5000000 anno_decon_sorted.bam ./fastq_out
+
+# 按每千万条 reads 分卷输出
+bam2fastq --reads-per-fastq 10000000 anno_decon_sorted.bam ./fastq_out
 ```
 
-<ul>
-  <li><strong>多线程高速转换</strong></li>
-</ul>
-
-```shell
-bam2fastq --threads 8 input.bam ./output_dir
-```
-
-<ul>
-  <li><strong>区域特异性转换</strong></li>
-</ul>
-
-```shell
-bam2fastq --locus chr1:1000000-2000000 --threads 4 input.bam ./output_dir
-```
-
-<ul>
-  <li><strong>大文件分割转换</strong></li>
-</ul>
-
-```shell
-bam2fastq --reads-per-fastq 5000000 --threads 4 input.bam ./output_dir
-```
+---
 
 ## 染色体分割 (chromsplit) <a id="染色体分割-chromsplit"></a>
 
->  <strong>核心功能</strong>
+> **核心功能**
 >
-> 基因组序列分割工具，可结合注释信息选择分割位点以维护基因注释完整性。主要用于 ATAC 建库时控制染色体长度不超过 2^29-1 的限制要求。
+> 基因组长染色体序列切分工具。结合 GTF 注释在非编码或基因间区（N-stretch / intergenic）寻找安全断点，主要用于处理超过 Chromap 或下游软件上限（如 $2^{29}-1$ bp）的超长染色体。
 
 ### 用法
 
@@ -402,155 +170,41 @@ Options:
   --fasta <FA>               Input genome sequence file in FASTA format
   --gtf <GTF>                Optional GTF/GFF annotation file for the genome
   --prefix <PREFIX>          Prefix for output files (.fa and .cutsite.tsv will be appended)
-      --min_length <MIN_LENGTH>  Minimum length of output scaffold fragments (in base pairs) [default: 300000000]
-      --max_length <MAX_LENGTH>  Maximum length of output scaffold fragments (in base pairs) [default: 500000000]
-      --cut_site <CUT_SITE>      Optional cut site file containing predefined split positions
-  --help                     Print help (see more with '--help')
+  --min_length <MIN_LENGTH>  Minimum length of output scaffold fragments [default: 300000000]
+  --max_length <MAX_LENGTH>  Maximum length of output scaffold fragments [default: 500000000]
+  --cut_site <CUT_SITE>      Optional cut site file containing predefined split positions
+  --help                     Print help
   --version                  Print version
 ```
 
-### 必需参数
+### 参数速查表
 
-#### `--fasta <FA>` (必需)
+| 参数 | 类型 | 默认值 | 说明 |
+| :--- | :--- | :--- | :--- |
+| `--fasta` | 文件路径 | **必需** | 输入的大基因组 FASTA 序列文件 |
+| `--prefix` | 字符串 | **必需** | 输出文件前缀（自动生成 `<prefix>.fa` 与 `<prefix>.cutsite.tsv`） |
+| `--gtf` | 文件路径 | 无 | 可选的基因注释文件（确保分割点避开外显子并同步输出位移后的新注释） |
+| `--min_length` | 整数 (bp) | `300000000` | 切分后输出 scaffold 片段的最小长度限制 |
+| `--max_length` | 整数 (bp) | `500000000` | 切分后输出 scaffold 片段的最大长度限制 |
+| `--cut_site` | 文件路径 | 无 | 包含预先指定切点坐标的文本文件 |
 
-指定输入的基因组序列文件。
-
-<ul>
-  <li><strong>格式要求：</strong> 标准FASTA格式 (.fa, .fasta, .fna)。</li>
-  <li><strong>内容：</strong> 包含完整的染色体或scaffold序列。</li>
-</ul>
-
-**默认值：** 无
-
-**示例：**
-
-```text
---fasta genome.fasta
-```
-
-#### `--prefix <PREFIX>` (必需)
-
-指定输出文件的前缀。
-
-<ul>
-  <li><strong>输出文件：</strong> 工具会自动生成 <code>&lt;prefix&gt;.fa</code>, <code>&lt;prefix&gt;.cutsite.tsv</code> 等文件。</li>
-  <li><strong>文件管理：</strong> 便于批量处理和结果追踪。</li>
-</ul>
-
-**默认值：** 无
-
-**示例：**
-
-```text
---prefix split_genome
-```
-
-### 可选参数
-
-#### `--gtf <GTF>` (可选)
-
-指定基因注释文件（GTF/GFF格式）。
-
-<ul>
-  <li><strong>注释辅助分割：</strong> 提供注释文件可确保分割点位于基因间区域，保护基因完整性。</li>
-  <li><strong>注释同步：</strong> 工具会自动调整并输出坐标同步后的新注释文件。</li>
-</ul>
-
-**默认值：** 无
-
-**示例：**
-
-```text
---gtf annotation.gtf
-```
-
-#### `--min_length <MIN_LENGTH>` (可选)
-
-设置输出片段的最小长度（单位：bp）。
-
-<ul>
-  <li><strong>功能：</strong> 控制分割后片段的最小长度，避免片段过短而影响后续分析。</li>
-</ul>
-
-**默认值：** `300000000`
-
-**示例：**
-
-```text
---min_length 300000000
-```
-
-#### `--max_length <MAX_LENGTH>` (可选)
-
-设置输出片段的最大长度（单位：bp）。
-
-<ul>
-  <li><strong>技术限制：</strong> 主要用于确保片段长度符合ATAC建库等下游分析的要求 (通常 < 2^29-1 bp)。</li>
-</ul>
-
-**默认值：** `500000000`
-
-**示例：**
-
-```text
---max_length 500000000
-```
-
-#### `--cut_site <CUT_SITE>` (可选)
-
-提供一个包含预定义分割位置的文本文件。
-
-<ul>
-  <li><strong>精确控制：</strong> 优先使用文件中指定的位点进行分割，实现对分割位置的精确控制。</li>
-</ul>
-
-**默认值：** 无
-
-**示例：**
-
-```text
---cut_site predefined_cuts.txt
-```
-
-**使用示例**
-
-<ul>
-  <li><strong>基本分割</strong></li>
-</ul>
+### 常用示例
 
 ```shell
-chromsplit --fasta genome.fasta --prefix split_result
+# 结合 GTF 注释进行安全切分，保护基因结构完整性
+chromsplit --fasta large_genome.fasta --gtf genes.gtf --prefix genome_split
+
+# 指定自定义切分长度区间 (200Mb - 400Mb)
+chromsplit --fasta large_genome.fasta --prefix custom_split --min_length 200000000 --max_length 400000000
 ```
 
-<ul>
-  <li><strong>带注释文件的注释辅助分割</strong></li>
-</ul>
+---
 
-```shell
-chromsplit --fasta genome.fasta --gtf annotation.gtf --prefix split_genome
-```
+## FASTQ 切割 (fqsubC4) <a id="fastq-切割-fqsubc4"></a>
 
-<ul>
-  <li><strong>自定义长度分割</strong></li>
-</ul>
-
-```shell
-chromsplit --fasta genome.fasta --prefix custom_split --min_length 300000000 --max_length 500000000
-```
-
-<ul>
-  <li><strong>使用预定义分割位点</strong></li>
-</ul>
-
-```shell
-chromsplit --fasta genome.fasta --gtf annotation.gtf --prefix precise_split --cut_site custom_cuts.txt
-```
-
-##  FASTQ 切割 (fqsubC4) <a id="fastq-切割-fqsubc4"></a>
-
-> <strong>核心功能</strong>
+> **核心功能**
 >
-> FASTQ 序列区域提取工具，支持精确的序列位置截取。可用于解决多次加测数据格式不一致问题，并统一 C4 测序数据的序列结构。
+> 高性能 FASTQ 序列区间提取与重构工具。支持按碱基坐标精准截取 Barcode、UMI 或 Insert 序列，用于多批次加测格式统一与非标文库重构。
 
 ### 用法
 
@@ -562,99 +216,29 @@ Usage: fqsubC4 [OPTIONS] --input <FILE> --output <FILE> --regions <REGIONS>
 
 Options:
   --input <FILE>       Path to input FASTQ file (supports both uncompressed and gzipped formats)
-  --output <FILE>      Path to output FASTQ file （output will be automatically compressed if filename ends with .gz）
+  --output <FILE>      Path to output FASTQ file (automatically compressed if ending in .gz)
   --regions <REGIONS>  Comma-separated regions in format start:end (e.g., 7:16,23:32,38:47)
   --threads <THREADS>  Number of threads to use for parallel processing [default: 8]
-  --help               Print help (see more with '--help')
+  --help               Print help
   --version            Print version
 ```
 
-### 必需参数
+### 参数速查表
 
-#### `--input <FILE>` (必需)
+| 参数 | 类型 | 默认值 | 说明 |
+| :--- | :--- | :--- | :--- |
+| `--input` | 文件路径 | **必需** | 输入的 FASTQ 文件路径（支持 `.fq`、`.fastq`、`.fq.gz`、`.fastq.gz`） |
+| `--output` | 文件路径 | **必需** | 输出截取后的 FASTQ 文件路径（若以 `.gz` 结尾则自动进行并行 gzip 压缩） |
+| `--regions` | 字符串 | **必需** | 提取的碱基区间定义，格式为 `start:end`，多段用逗号分隔（1-based 坐标） |
+| `--threads` | 整数 | `8` | 用于并行读取、提取和压缩写出的 CPU 线程数 |
 
-指定输入的 FASTQ 文件路径。
-
-<ul>
-  <li><strong>格式支持：</strong> 支持未压缩 (.fq, .fastq) 和 gzip 压缩 (.fq.gz, .fastq.gz) 格式。</li>
-  <li><strong>自动识别：</strong> 工具会根据文件扩展名自动判断压缩格式。</li>
-</ul>
-
-**默认值：** 无
-
-**示例：**
-
-```text
---input sample_R1.fastq.gz
-```
-
-#### `--output <FILE>` (必需)
-
-指定输出的FASTQ 文件路径。
-
-<ul>
-  <li><strong>自动压缩：</strong> 如果输出文件名以 <code>.gz</code> 结尾，输出文件将被自动压缩。推荐使用压缩格式，可以有效减少磁盘I/O和存储空间。</li>
-</ul>
-
-**默认值：** 无
-
-**示例：**
-
-```text
---output extracted_R1.fastq.gz
-```
-
-#### `--regions <REGIONS>` (必需)
-
-指定要从序列中提取的区域。
-
-<ul>
-  <li><strong>格式规范：</strong> 使用 <code>start:end</code> 格式，多个区域用逗号分隔。</li>
-  <li><strong>坐标系统：</strong> 坐标为1-based（序列的第一个碱基位置为1）。</li>
-  <li><strong>应用：</strong> 用于提取Barcode、UMI，或对序列进行修剪。</li>
-</ul>
-
-**默认值：** 无
-
-**示例：**
-
-```text
---regions 7:16,23:32,38:47
-```
-
-### 可选参数
-
-#### `--threads <THREADS>` (可选)
-
-设置并行处理线程数。
-
-<ul>
-  <li><strong>功能：</strong> 提升读取、截取和写出阶段的并行能力，适用于大文件加速处理。</li>
-  <li><strong>建议：</strong> 默认值为 <code>所有可用的核心数量</code>；建议根据CPU 核心数和磁盘I/O性能进行调整。</li>
-</ul>
-
-**默认值：** `所有可用的核心数量`
-
-**示例：**
-
-```text
---threads 8
-```
-
-**使用示例**
-
-<ul>
-  <li><strong>基本区域提取</strong></li>
-</ul>
+### 常用示例
 
 ```shell
-fqsubC4 --input sample.fastq.gz --output extracted.fastq.gz --regions "7:16,23:32"
+# 从包含暗反应或前导碱基的序列中截取两个条形码片段并输出为压缩文件
+fqsubC4 \
+  --input sample_raw_R1.fq.gz \
+  --output extracted_R1.fq.gz \
+  --regions "7:16,23:32" \
+  --threads 8
 ```
-
-## 相关文档
-
-| 资源 | 描述 |
-| :--- | :--- |
-| [工具参数总览](./parameter.md) | 所有工具参数概览 |
-| [输出文件总览](../outs/outs.md) | 输出文件详细解读 |
-| [流程文档总览](../pipeline/pipeline.md) | 分析流程指南 |

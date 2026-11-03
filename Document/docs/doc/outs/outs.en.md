@@ -7,7 +7,8 @@ Find output directories, field definitions and report metrics by module. Indepen
 | RNA | Expression matrices, H5/H5AD, cell table, clustering and RNA report | [RNA outputs](scRNA.md) |
 | ATAC | Peak matrices, fragments, cell QC and ATAC report | [ATAC outputs](scATAC.md) |
 | V(D)J | Contig sequences, annotations, clonotypes and VDJ report | [VDJ outputs](scVDJ.md) |
-| Multi / C6 | Combined report, modality directories, C6 sample matrices/reports | [Multi outputs](multi.md) |
+| Multi-omics | Combined report, modality directories (RNA / ATAC / VDJ) | [Multi outputs](multi.md) |
+| C6 Multiplexed | Root combined matrices, `singlecell.csv.gz`, per-sample matrices and reports | [C6 outputs](c6.md) |
 
 ## When reading results
 

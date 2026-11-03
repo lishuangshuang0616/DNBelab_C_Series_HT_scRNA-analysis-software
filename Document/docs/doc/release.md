@@ -12,9 +12,9 @@
 
 ### 3.2 更新内容 <a id="32-source"></a>
 
-- 新增 C6 probe barcode 样本分配、逐样本 cell calling / 分析、独立 RNA 报告与批次比较。
+- 新增基于 Sample Barcode 混合的 C6 样本分配、逐样本 cell calling / 分析、独立 RNA 报告与批次比较。
 - 统一 RNA/ATAC 矩阵目录并提供 H5；C6 交付完整 `singlecell.csv.gz`，保留背景及零 UMI 行。
-- 明确 ATAC 默认 ordmag calling、cutsite 叫峰信号及矩阵、全部合并片段叫峰、可选最终 fragment/TSS 阈值与 low-targeting 过滤。
+- 明确 ATAC 默认 ordmag calling、cutsite 峰检测信号及矩阵、全部合并片段峰检测、可选最终 fragment/TSS 阈值与 low-targeting 过滤。
 - 增加经校验的 STAR 参数、GTF 父级冲突策略，统一参数类型与暗反应规则。
 - 增加预检、结构化错误、运行锁/检查点；批量脚本发布避免覆盖，BAM 资源自动调度。
 - Rust 汇总、矩阵与 BAM 流程减少重复处理，使用有界中间数据处理；实际性能依赖任务，不承诺统一加速倍数。

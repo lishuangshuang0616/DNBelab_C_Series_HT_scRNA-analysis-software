@@ -1,79 +1,90 @@
 # Quick Start Guide
 
-**Operational Quick-Start for dnbc4tools**
+This guide provides end-to-end operational walkthroughs for the DNBelab C Series™ single-cell analysis suite (dnbc4tools), covering system prerequisites, reference genome indexing, single-modality pipelines, integrated multi-omics orchestration, C6 multiplexed single-cell RNA analysis, and batch analysis script generation.
 
-[RNA-seq](#single-cell-rna-analysis) • [ATAC-seq](#single-cell-atac-analysis) • [VDJ-seq](#single-cell-vdj-analysis) • [Multi-omics](#integrated-multi-omics-analysis)
+---
 
-<a id="file-naming-conventions"></a>
+## Choose a Workflow <a id="choose-workflow"></a>
 
-## Choose a workflow
+Select the appropriate command entry point according to your experimental design and library preparation:
 
-| Task | Entry point |
-| :--- | :--- |
-| Ordinary single-sample RNA / ATAC / VDJ | `rna run` / `atac run` / `vdj run` |
-| Integrated multi-omics | `multi run --csv config.csv` |
-| C6 probe-barcoded samples | `multi run --csv c6.csv` with `[samples]` and RNA chemistry `scRNAC6` |
-| Independent RNA / ATAC batch jobs | `rna multi` / `atac multi` generate scripts to execute separately |
+| Workflow | Command Entry Point | Scope & Description |
+| :--- | :--- | :--- |
+| [**Single-Cell RNA Analysis**](#single-cell-rna-analysis) | `dnbc4tools rna run` | Single-sample gene expression quantification, EmptyDrops cell calling, and clustering |
+| [**Single-Cell ATAC Analysis**](#single-cell-atac-analysis) | `dnbc4tools atac run` | Single-sample chromatin accessibility analysis, peak calling, and QC |
+| [**Single-Cell V(D)J Analysis**](#single-cell-vdj-analysis) | `dnbc4tools vdj run` | De novo TCR / BCR immune repertoire assembly, annotation, and clonotyping |
+| [**Integrated Multi-Omics**](#integrated-multi-omics-analysis) | `dnbc4tools multi run --csv multi.csv` | Unified orchestration and cross-modality reporting for RNA + ATAC + VDJ |
+| [**C6 Multiplexed RNA**](#c6-multi-sample-analysis) | `dnbc4tools multi run --csv sample.config.csv` | Sample Barcode pooled RNA-seq de-multiplexing and per-sample dedicated delivery |
+| [**Batch Script Generation**](#batch-script-generation) | `dnbc4tools <rna/atac> multi` | Batch-generate standalone analysis scripts for queued HPC scheduling |
 
-Start C6 with the [complete Multi configuration example](parameter/multi.md#c6-samples). Read the [Upgrade Guide](migration.md) for new matrix paths, C6 gzip summaries and default ATAC cutsite counting. Formal 3.2 download details await release confirmation.
+---
 
-## Prerequisites
+## Prerequisites <a id="prerequisites"></a>
 
-> **Before you begin:**
-> - Ensure dnbc4tools is installed. See the [Installation Guide](./installation.md).
-> - In all commands, replace `$dnbc4tools` with your actual installation path (e.g., `/opt/software/dnbc4tools3.2/dnbc4tools`).
-> - The backslash `\` is used to split a single command across multiple lines for readability. It is optional.
+<div style="background-color: #e7f3fe; border-left: 6px solid #2196F3; padding: 15px; margin: 1.5em 0; border-radius: 4px;" markdown="block">
+<strong>Before you begin:</strong>
+<ul style="margin-bottom: 0;">
+  <li>Verify software installation and CLI availability. See the <a href="./installation.html">Installation Guide</a>.</li>
+  <li>Replace <code>$dnbc4tools</code> in all example commands with your actual executable path (e.g., <code>/opt/software/dnbc4tools3.2/dnbc4tools</code>).</li>
+  <li>The backslash <code>\</code> is used solely for multi-line layout in documentation and can be executed as a single continuous command line in your shell.</li>
+</ul>
+</div>
 
-<a id="file-naming-conventions"></a>
+### `--fastqs` Directory Auto-Detection Rules <a id="file-naming-conventions"></a>
 
-> **`--fastqs` automatic file naming conventions**
->
-> When using directory-based input with `--fastqs`, the pipeline automatically detects paired-end files based on file names. The following patterns are supported. When files are specified explicitly with `--fastq1/--fastq2`, or with RNA-specific `--cDNAfastq1/2` and `--oligofastq1/2`, these naming patterns are not required, but the R1/R2 file order must match exactly.
-> - **Supported extensions:** `.fastq.gz`, `.fq.gz`, `.fastq`, `.fq`
-> - **R1 patterns:** `_R1_`, `_R1`, `_1`, `_read1`
-> - **R2 patterns:** `_R2_`, `_R2`, `_2`, `_read2`
->
-> Examples: `sample_R1.fastq.gz`, `sample_1.fastq.gz`, `sample_R1_001.fastq.gz` are all recognized as R1 files.
+When using directory-based input via `--fastqs <dir>`, the pipeline automatically scans the folder and pairs paired-end reads matching the following patterns:
+
+| Read End | Match Pattern | Example Filenames |
+| :--- | :--- | :--- |
+| **Read 1 (R1)** | Contains `_R1_`, `_R1`, `_1`, or `_read1` | `sample_R1.fastq.gz`, `sample_1.fq.gz`, `sample_R1_001.fastq.gz` |
+| **Read 2 (R2)** | Contains `_R2_`, `_R2`, `_2`, or `_read2` | `sample_R2.fastq.gz`, `sample_2.fq.gz`, `sample_R2_001.fastq.gz` |
+
+* **Supported Extensions**: `.fastq.gz`, `.fq.gz`, `.fastq`, `.fq`
+* **Explicit File Arguments Bypass Naming Restrictions**: If files are provided via explicit flags (e.g., `--fastq1/--fastq2` or RNA `--cDNAfastq1/2`, `--oligofastq1/2`), file names do not need to follow these patterns, but the list ordering between paired reads must match strictly.
+
+---
 
 ## Single-Cell RNA Analysis <a id="single-cell-rna-analysis"></a>
 
-> Gene expression profiling at single-cell resolution
+Designed for standard single-sample 3′ or 5′ single-cell transcriptomic profiling and clustering.
 
 ### Step 1: Build Reference Genome
 
+Using Human, Mouse, and Human-Mouse dual-species as common references:
+
 **Human (GRCh38)**
 ```bash
-# Download reference files
+# 1. Download GENCODE annotation and genomic FASTA
 wget http://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_32/GRCh38.primary_assembly.genome.fa.gz
 wget http://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_32/gencode.v32.primary_assembly.annotation.gtf.gz
 
-# Extract files
+# 2. Decompress files
 gzip -d GRCh38.primary_assembly.genome.fa.gz
 gzip -d gencode.v32.primary_assembly.annotation.gtf.gz
 
-# Build reference
+# 3. Filter GTF and generate STAR genome index
 $dnbc4tools tools mkgtf --ingtf gencode.v32.primary_assembly.annotation.gtf --output genes.filtered.gtf
 $dnbc4tools rna mkref --ingtf genes.filtered.gtf --fasta GRCh38.primary_assembly.genome.fa --threads 10 --species Homo_sapiens
 ```
 
-**Mouse (GRCm38)**
+**Mouse (Mus musculus, GRCm38)**
 ```bash
-# Download reference files
+# 1. Download annotation and FASTA
 wget http://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_mouse/release_M23/GRCm38.primary_assembly.genome.fa.gz
 wget http://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_mouse/release_M23/gencode.vM23.primary_assembly.annotation.gtf.gz
 
-# Extract files
+# 2. Decompress files
 gzip -d GRCm38.primary_assembly.genome.fa.gz
 gzip -d gencode.vM23.primary_assembly.annotation.gtf.gz
 
-# Build reference
+# 3. Filter GTF and generate STAR genome index
 $dnbc4tools tools mkgtf --ingtf gencode.vM23.primary_assembly.annotation.gtf --output genes.filtered.gtf
 $dnbc4tools rna mkref --ingtf genes.filtered.gtf --fasta GRCm38.primary_assembly.genome.fa --threads 10 --species Mus_musculus
 ```
 
-**Human-Mouse Mixed Reference**
+**Human-Mouse Mixed-Species Reference**
 ```bash
-# Prepare both references as above, then:
+# Combine FASTA and GTF after preparing both species
 $dnbc4tools rna mkref \
     --fasta GRCh38.primary_assembly.genome.fa,GRCm38.primary_assembly.genome.fa \
     --ingtf hg38/genes.filtered.gtf,mm10/genes.filtered.gtf \
@@ -81,193 +92,242 @@ $dnbc4tools rna mkref \
     --threads 10
 ```
 
-### Step 2: Run Analysis
+### Step 2: Run RNA Pipeline
 
-**Directory-based Input (`--fastqs`)**
+Organize your sequencing files under structured subdirectories containing `cDNA/` and `oligo/`. The pipeline will automatically identify and pair FASTQ files:
+
+```text
+/test/data/rna_fastqs/          # Root directory passed to --fastqs
+├── cDNA/                       # Transcriptomic cDNA sequencing reads
+│   ├── sample_cDNA_R1.fastq.gz
+│   └── sample_cDNA_R2.fastq.gz
+└── oligo/                      # Bead/barcode Oligo sequencing reads
+    ├── sample_oligo_R1.fastq.gz
+    └── sample_oligo_R2.fastq.gz
+```
+
+**Method 1: Directory Input (Recommended)**
+
 ```bash
 $dnbc4tools rna run \
     --fastqs /test/data/rna_fastqs \
-    --genomeDir /database/scRNA/Mus_musculus/mm10 \
-    --name test \
+    --genomeDir /database/scRNA/Homo_sapiens \
+    --name test_rna \
     --threads 30
 ```
 
-Recommended directory structure:
-- `/test/data/rna_fastqs/cDNA/*_R1*.fastq.gz`, `*_R2*.fastq.gz`
-- `/test/data/rna_fastqs/oligo/*_R1*.fastq.gz`, `*_R2*.fastq.gz`
+**Method 2: Explicit Individual FASTQ Inputs**
 
-For directory-based `--fastqs` input, see [`--fastqs` Automatic File Naming Conventions](#file-naming-conventions) for supported patterns.
+When sequencing files are not grouped into `cDNA/` and `oligo/` subdirectories, or are distributed across separate storage paths, specify each input file explicitly using dedicated arguments (comma-separated lists supported):
 
-**File-specific Input (--cDNAfastq1/2 --oligofastq1/2)**
 ```bash
 $dnbc4tools rna run \
-    --cDNAfastq1 /test/data/rna_fastqs/cDNA/test_R1.fastq.gz \
-    --cDNAfastq2 /test/data/rna_fastqs/cDNA/test_R2.fastq.gz \
-    --oligofastq1 /test/data/rna_fastqs/oligo/test_1_1.fq.gz,/test/data/rna_fastqs/oligo/test_2_1.fq.gz \
-    --oligofastq2 /test/data/rna_fastqs/oligo/test_1_2.fq.gz,/test/data/rna_fastqs/oligo/test_2_2.fq.gz \
-    --genomeDir /database/scRNA/Mus_musculus/mm10 \
-    --name test \
+    --cDNAfastq1 /test/data/cDNA/sample_R1.fastq.gz \
+    --cDNAfastq2 /test/data/cDNA/sample_R2.fastq.gz \
+    --oligofastq1 /test/data/oligo/sample_oligo_R1.fastq.gz \
+    --oligofastq2 /test/data/oligo/sample_oligo_R2.fastq.gz \
+    --genomeDir /database/scRNA/Homo_sapiens \
+    --name test_rna \
     --threads 30
 ```
+
+---
 
 ## Single-Cell ATAC Analysis <a id="single-cell-atac-analysis"></a>
 
-> Chromatin accessibility profiling at single-cell resolution
+Designed for single-cell chromatin accessibility analysis, peak calling, and transcription factor motif enrichment.
 
-### Step 1: Build Reference Genome
+### Step 1: Build ATAC Reference
 
 **Human (GRCh38)**
 ```bash
-# Download reference files
+# 1. Download GENCODE annotation and genomic FASTA
 wget http://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_32/GRCh38.primary_assembly.genome.fa.gz
 wget http://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_32/gencode.v32.primary_assembly.annotation.gtf.gz
 
-# Extract files
+# 2. Decompress files
 gzip -d GRCh38.primary_assembly.genome.fa.gz
 gzip -d gencode.v32.primary_assembly.annotation.gtf.gz
 
-# Build reference
+# 3. Filter GTF and build Chromap reference index
 $dnbc4tools tools mkgtf --ingtf gencode.v32.primary_assembly.annotation.gtf --output genes.filtered.gtf
 $dnbc4tools atac mkref --fasta GRCh38.primary_assembly.genome.fa --ingtf genes.filtered.gtf --species Homo_sapiens --prefix chr
 ```
 
-**Mouse (GRCm38)**
+**Mouse (Mus musculus, GRCm38)**
 ```bash
-# Download reference files
+# 1. Download annotation and FASTA
 wget http://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_mouse/release_M23/GRCm38.primary_assembly.genome.fa.gz
 wget http://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_mouse/release_M23/gencode.vM23.primary_assembly.annotation.gtf.gz
 
-# Extract files
+# 2. Decompress files
 gzip -d GRCm38.primary_assembly.genome.fa.gz
 gzip -d gencode.vM23.primary_assembly.annotation.gtf.gz
 
-# Build reference
+# 3. Filter GTF and build Chromap reference index
 $dnbc4tools tools mkgtf --ingtf gencode.vM23.primary_assembly.annotation.gtf --output genes.filtered.gtf
 $dnbc4tools atac mkref --fasta GRCm38.primary_assembly.genome.fa --ingtf genes.filtered.gtf --species Mus_musculus --prefix chr
 ```
 
-### Step 2: Run Analysis
-
-**Directory-based Input (`--fastqs`)**
+**Human-Mouse Mixed-Species Reference**
 ```bash
-$dnbc4tools atac run \
-    --fastqs /test/data \
-    --genomeDir /database/scATAC/Mus_musculus/mm10 \
-    --name test \
-    --threads 10
-```
-Recommended directory structure:
-- `/test/data/*_R1*.fastq.gz`, `*_R2*.fastq.gz`
-
-For directory-based `--fastqs` input, see [`--fastqs` Automatic File Naming Conventions](#file-naming-conventions) for supported patterns.
-
-**File-specific Input (--fastq1/2)**
-```bash
-$dnbc4tools atac run \
-    --fastq1 /test/data/test1_R1.fastq.gz,/test/data/test2_R1.fastq.gz \
-    --fastq2 /test/data/test1_R2.fastq.gz,/test/data/test2_R2.fastq.gz \
-    --genomeDir /database/scATAC/Mus_musculus/mm10 \
-    --name test \
-    --threads 10
+# Combine FASTA and filtered GTF after preparing both species (--prefix is not supported for mixed-species)
+$dnbc4tools atac mkref \
+    --fasta GRCh38.primary_assembly.genome.fa,GRCm38.primary_assembly.genome.fa \
+    --ingtf hg38/genes.filtered.gtf,mm10/genes.filtered.gtf \
+    --species hg38,mm10
 ```
 
-## Single-Cell VDJ Analysis <a id="single-cell-vdj-analysis"></a>
+### Step 2: Run ATAC Pipeline
 
-> Immune receptor repertoire profiling (requires 5' RNA-seq data)
+Place sequencing files in a designated folder or provide paired-end files explicitly:
 
-> **Prerequisite**: Complete 5' scRNA analysis first to establish cell-bead correspondence.
+```text
+/test/data/atac_fastqs/          # Root directory passed to --fastqs
+├── sample_R1.fastq.gz
+└── sample_R2.fastq.gz
+```
 
-### Step 1: 5' RNA Analysis
+**Method 1: Directory Input (Recommended)**
 
-**5' scRNA-seq Analysis**
+```bash
+$dnbc4tools atac run \
+    --fastqs /test/data/atac_fastqs \
+    --genomeDir /database/scATAC/Homo_sapiens \
+    --name test_atac \
+    --threads 10
+```
 
-> **Note**: For 5' scRNA-seq data, add the `--end5` parameter to specify the library chemistry.
+**Method 2: Explicit Individual FASTQ Inputs**
+
+```bash
+$dnbc4tools atac run \
+    --fastq1 /test/data/sample_R1.fastq.gz \
+    --fastq2 /test/data/sample_R2.fastq.gz \
+    --genomeDir /database/scATAC/Homo_sapiens \
+    --name test_atac \
+    --threads 10
+```
+
+---
+
+## Single-Cell V(D)J Analysis <a id="single-cell-vdj-analysis"></a>
+
+Designed for full-length TCR / BCR immune repertoire de novo assembly, annotation, and clonotyping.
+
+<div style="background-color: #fffbe6; border-left: 6px solid #ffc107; padding: 15px; margin: 1.5em 0; border-radius: 4px;" markdown="block">
+<strong>Prerequisite:</strong> VDJ analysis requires matched 5′ scRNA-seq data. You must first execute the RNA pipeline with the <code>--end5</code> flag to generate the cell-to-bead translation table <code>singlecell.csv</code>.
+</div>
+
+### Step 1: Run 5′ RNA Pipeline
 
 ```bash
 $dnbc4tools rna run \
-    --fastqs /test/rna/data \
+    --fastqs /test/data/rna_5p_fastqs \
     --genomeDir /database/scRNA/Homo_sapiens \
-    --name test \
+    --name test_rna_5p \
     --threads 30 \
     --end5
 ```
 
-### Step 2: VDJ Analysis
+### Step 2: Run V(D)J Pipeline
 
-**Directory-based Input (`--fastqs`)**
-```bash
-$dnbc4tools vdj run \
-    --fastqs /test/data \
-    --beadstrans /scRNA/test1/outs/singlecell.csv \
-    --ref human \
-    --name test_human_tcr \
-    --threads 20 \
-    --chain TR
+Organize your sequencing files under a designated directory or provide FASTQ files explicitly:
+
+```text
+/test/data/vdj_fastqs/          # Root directory passed to --fastqs
+├── sample_R1.fastq.gz
+└── sample_R2.fastq.gz
 ```
-Directory structure recommendation:
-<ul>
-  <li><code>/test/data/*_R1*.fastq.gz</code>, <code>*_R2*.fastq.gz</code></li>
-</ul>
 
-For directory-based `--fastqs` input, see [`--fastqs` Automatic File Naming Conventions](#file-naming-conventions) for supported patterns.
+**Method 1: Directory Input (Recommended)**
 
-**File-specific Input (--fastq1/2)**
-
-**TCR Analysis (Human)**
+*Human TCR Analysis*
 ```bash
 $dnbc4tools vdj run \
-    --fastq1 /test/data/test1_R1.fastq.gz,/test/data/test2_R1.fastq.gz \
-    --fastq2 /test/data/test1_R2.fastq.gz,/test/data/test2_R2.fastq.gz \
-    --beadstrans /scRNA/test1/outs/singlecell.csv \
+    --fastqs /test/data/tcr_fastqs \
+    --beadstrans ./test_rna_5p/outs/singlecell.csv \
     --ref human \
     --name test_human_tcr \
     --threads 20 \
     --chain TR
 ```
 
-**TCR Analysis (Mouse)**
+*Human BCR Analysis*
 ```bash
 $dnbc4tools vdj run \
-    --fastq1 /test/data_tcrmouse/test3_R1.fastq.gz,/test/data_tcrmouse/test4_R1.fastq.gz \
-    --fastq2 /test/data_tcrmouse/test3_R2.fastq.gz,/test/data_tcrmouse/test4_R2.fastq.gz \
-    --beadstrans /scRNA/test2/outs/singlecell.csv \
-    --ref mouse \
-    --name test_mouse_tcr \
-    --threads 20 \
-    --chain TR
-```
-
-**BCR Analysis (Human)**
-```bash
-$dnbc4tools vdj run \
-    --fastq1 /test/data_bcrhuman/test5_R1.fastq.gz,/test/data_bcrhuman/test6_R1.fastq.gz \
-    --fastq2 /test/data_bcrhuman/test5_R2.fastq.gz,/test/data_bcrhuman/test6_R2.fastq.gz \
-    --beadstrans /scRNA/test1/outs/singlecell.csv \
+    --fastqs /test/data/bcr_fastqs \
+    --beadstrans ./test_rna_5p/outs/singlecell.csv \
     --ref human \
     --name test_human_bcr \
     --threads 20 \
     --chain IG
 ```
 
-**BCR Analysis (Mouse)**
+**Method 2: Explicit Individual FASTQ Inputs**
+
+When files are located in separate storage paths, provide them via `--fastq1` and `--fastq2`:
+
+*Human TCR Analysis (Explicit Files)*
 ```bash
 $dnbc4tools vdj run \
-    --fastq1 /test/data_bcrmouse/test7_R1.fastq.gz,/test/data_bcrmouse/test8_R1.fastq.gz \
-    --fastq2 /test/data_bcrmouse/test7_R2.fastq.gz,/test/data_bcrmouse/test8_R2.fastq.gz \
-    --beadstrans /scRNA/test2/outs/singlecell.csv \
+    --fastq1 /test/data/tcr/sample_R1.fastq.gz \
+    --fastq2 /test/data/tcr/sample_R2.fastq.gz \
+    --beadstrans ./test_rna_5p/outs/singlecell.csv \
+    --ref human \
+    --name test_human_tcr \
+    --threads 20 \
+    --chain TR
+```
+
+*Human BCR Analysis (Explicit Files)*
+```bash
+$dnbc4tools vdj run \
+    --fastq1 /test/data/bcr/sample_R1.fastq.gz \
+    --fastq2 /test/data/bcr/sample_R2.fastq.gz \
+    --beadstrans ./test_rna_5p/outs/singlecell.csv \
+    --ref human \
+    --name test_human_bcr \
+    --threads 20 \
+    --chain IG
+```
+
+<details markdown="block">
+<summary>Click to expand: Mouse TCR and BCR Analysis Examples</summary>
+
+**Mouse TCR Analysis**
+
+```bash
+$dnbc4tools vdj run \
+    --fastqs /test/data/mouse_tcr_fastqs \
+    --beadstrans ./test_mouse_rna_5p/outs/singlecell.csv \
+    --ref mouse \
+    --name test_mouse_tcr \
+    --threads 20 \
+    --chain TR
+```
+
+**Mouse BCR Analysis**
+
+```bash
+$dnbc4tools vdj run \
+    --fastqs /test/data/mouse_bcr_fastqs \
+    --beadstrans ./test_mouse_rna_5p/outs/singlecell.csv \
     --ref mouse \
     --name test_mouse_bcr \
     --threads 20 \
     --chain IG
 ```
 
-## Multi-omics Analysis <a id="integrated-multi-omics-analysis"></a>
+</details>
 
-> Run RNA/ATAC/VDJ pipelines in one integrated workflow and generate a unified report
+---
 
-### Step 1: Prepare Config File
+## Integrated Multi-Omics Analysis <a id="integrated-multi-omics-analysis"></a>
 
-> **Configuration note**: In `[libraries]`, `fastqs` should be the FASTQ directory path for each omics library; the pipeline will auto-detect R1/R2 files in each directory. When VDJ modules are enabled, set `end5,true` in the `[rna]` section.
+Designed for experimental workflows profiling RNA, ATAC, and V(D)J simultaneously from the same biological sample, providing coordinated execution and a unified interactive report.
+
+### Step 1: Prepare Multi-Omics Configuration (`multi_config.csv`)
 
 ```ini
 [libraries]
@@ -291,14 +351,7 @@ ref,human
 ref,human
 ```
 
-Recommended directory structure:
-- **RNA**: `/test/data/rna/cDNA/` and `/test/data/rna/oligo/`
-- **ATAC**: paired FASTQ files under `/test/data/atac/`
-- **VDJ-T**: paired FASTQ files under `/test/data/vdj-t/`
-- **VDJ-B**: paired FASTQ files under `/test/data/vdj-b/`
-
-
-### Step 2: Run Multi-omics Pipeline
+### Step 2: Execute Multi-Omics Pipeline
 
 ```bash
 $dnbc4tools multi run \
@@ -307,25 +360,105 @@ $dnbc4tools multi run \
     --threads 20
 ```
 
-## Command Reference <a id="command-reference"></a>
+Upon completion, the comprehensive interactive report `test_multi_multi_report.html` and individual omics subdirectories are delivered directly under `./test_multi/outs/`.
 
-### Essential Commands Summary
+---
 
-| Workflow | Command | Purpose |
-| :--- | :--- | :--- |
-| **RNA Analysis** | `dnbc4tools rna run` | Complete RNA-seq pipeline |
-| **ATAC Analysis** | `dnbc4tools atac run` | Complete ATAC-seq pipeline |
-| **VDJ Analysis** | `dnbc4tools vdj run` | TCR/BCR repertoire analysis |
-| **Reference Building** | `dnbc4tools rna mkref` | Build RNA reference database |
-| **Reference Building** | `dnbc4tools atac mkref` | Build ATAC reference database |
-| **Multi-omics** | `dnbc4tools multi run` | Integrated RNA/ATAC/VDJ analysis and unified report |
-| **GTF Processing** | `dnbc4tools tools mkgtf` | Filter and process GTF files |
+## C6 Multiplexed Single-Cell RNA Analysis <a id="c6-multi-sample-analysis"></a>
 
-## Related Documentation
+Designed for high-throughput experiments where multiple biological samples are pooled and tagged with Sample Barcodes before sequencing. The bioinformatics pipeline demultiplexes reads automatically and delivers isolated outputs for each individual sample.
 
-| Resource | Description |
-| :--- | :--- |
-| [Pipelines](pipeline/pipeline.md) | Analysis workflow guides |
-| [Parameters](parameter/parameter.md) | Command reference and configuration options |
-| [Outputs](outs/outs.md) | Understanding result files and reports |
-| [GitHub Issues](https://github.com/MGI-tech-bioinformatics/DNBelab_C_Series_HT_scRNA-analysis-software/issues) | Report bugs or request features |
+### Step 1: Prepare C6 Configuration (`sample.config.csv`)
+
+Create a configuration file containing `[rna]`, `[libraries]`, and `[samples]` sections:
+
+```csv
+[rna]
+genomeDir,/database/scRNA/Homo_sapiens
+no_bam,true
+
+[libraries]
+fastqs,feature_types
+/test/data/c6_pooled_data,rna
+
+[samples]
+sample_id,probe_barcode_ids
+Sample_01,BC01
+Sample_02,BC02;BC03
+```
+
+> **Configuration Notes:**
+> 
+> * **`[samples]` Section**: Specifies each biological sample name and its assigned Sample Barcode tag(s). If multiple barcodes belong to a single sample, separate them with semicolons `;` (e.g., `BC02;BC03`).
+> * **Sequencing Data Directory**: `/test/data/c6_pooled_data` must contain the pooled `cDNA/` and `oligo/` subdirectories and FASTQ files.
+
+### Step 2: Execute C6 Pipeline
+
+```bash
+$dnbc4tools multi run \
+    --name test_c6 \
+    --csv ./sample.config.csv \
+    --threads 40
+```
+
+### Step 3: Core Deliverables
+
+Upon completion, outputs are archived under `./test_c6/outs/`:
+
+* **Batch Summary Report**: `test_c6_multi_report.html`, providing comparative cell yields, sequencing saturation, and throughput metrics across all demultiplexed samples;
+* **Global Combined Feature-Barcode Matrix**: `rna/filtered_feature_bc_matrix/` (delivered in MEX, H5, and H5AD formats);
+* **Global Single-Cell Bead Metrics**: `rna/singlecell.csv.gz` (streamed gzip compression with `is_cell_barcode` cell annotations);
+* **Per-Sample Isolated Outputs**: `rna/per_sample_outs/<sample>/`, containing independent expression matrices, dedicated alignment BAM files (`<sample>_alignments.bam`), and interactive HTML reports.
+
+---
+
+## Batch Script Generation <a id="batch-script-generation"></a>
+
+Designed for scaling up analysis across dozens of independent single-cell samples. By providing a tab-separated sample list, dnbc4tools automatically generates standalone shell scripts for each sample, ready to run directly or queue through workload managers such as Slurm or SGE.
+
+### Step 1: Prepare Sample Manifest
+
+**RNA Sample Manifest (`rna_samples.tsv`)**
+
+Tab-delimited with 3 columns: `sample_id`, `cDNA_R1;cDNA_R2`, `oligo_R1;oligo_R2` (comma-separated for multi-lane files per read):
+
+```text
+Sample1	sample1_cDNA_R1.fq.gz;sample1_cDNA_R2.fq.gz	sample1_oligo_R1.fq.gz;sample1_oligo_R2.fq.gz
+Sample2	sample2_cDNA_R1.fq.gz;sample2_cDNA_R2.fq.gz	sample2_oligo_R1.fq.gz;sample2_oligo_R2.fq.gz
+```
+
+**ATAC Sample Manifest (`atac_samples.tsv`)**
+
+Tab-delimited with 2 columns: `sample_id`, `FASTQ_R1;FASTQ_R2` (comma-separated for multi-lane files per read):
+
+```text
+Sample1	sample1_R1.fq.gz;sample1_R2.fq.gz
+Sample2	sample2_R1.fq.gz;sample2_R2.fq.gz
+```
+
+### Step 2: Generate Analysis Scripts
+
+```bash
+# Batch generate RNA execution scripts
+$dnbc4tools rna multi \
+    --list ./rna_samples.tsv \
+    --genomeDir /database/scRNA/Homo_sapiens \
+    --threads 20
+
+# Batch generate ATAC execution scripts
+$dnbc4tools atac multi \
+    --list ./atac_samples.tsv \
+    --genomeDir /database/scATAC/Homo_sapiens \
+    --threads 20
+```
+
+> **Execution Behavior:**
+> The `multi` command generates standalone `.sh` scripts (e.g., `run_Sample1.sh`) in the current working directory without automatically starting computational workloads. Execute generated scripts on demand (e.g., `sh run_Sample1.sh`) or submit them to your HPC cluster queue.
+
+---
+
+After completing the quick start walkthroughs, consult detailed documentation for advanced options:
+
+* Explore underlying pipeline workflows: [Pipeline Overview](./pipeline/pipeline.md)
+* Learn comprehensive parameters and CLI options: [Parameters Overview](./parameter/parameter.md)
+* Understand structured deliverable files: [Output Deliverables Overview](./outs/outs.md)

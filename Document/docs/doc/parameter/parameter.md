@@ -1,23 +1,24 @@
 # 参数总览
 
-按分析类型查找命令、默认值与配置说明。参数页先给运行示例，完整帮助与高级设置可按需展开。
+按分析类型查找命令、参数规范与默认值配置说明。各模块详细参数页面提供完整的参数速查表、参数明细与命令行帮助。
 
-| 模块 | 命令 | 参数文档 |
-| :--- | :--- | :--- |
-| RNA | `rna run`、`rna mkref`、`rna multi` | [RNA 参数](scRNA.md) |
-| ATAC | `atac run`、`atac mkref`、`atac multi` | [ATAC 参数](scATAC.md) |
-| V(D)J | `vdj run` | [VDJ 参数](scVDJ.md) |
-| Multi / C6 | `multi run`，通过 CSV 配置 | [Multi 参数](multi.md) |
-| GTF 工具 | `tools mkgtf` | [工具参数](tools.md) |
+| 模块 | 核心命令 | 适用场景 | 详细参数文档 |
+| :--- | :--- | :--- | :--- |
+| **scRNA** | `rna run`、`rna mkref`、`rna multi` | 单细胞转录组（3' / 5'）分析、参考库构建与批量脚本生成 | [RNA 参数](scRNA.md) |
+| **scATAC** | `atac run`、`atac mkref`、`atac multi` | 染色质可及性分析、Chromap 索引与参考构建、批量处理 | [ATAC 参数](scATAC.md) |
+| **scVDJ** | `vdj run` | TCR/BCR 全长免疫组库组装与克隆型分析 | [VDJ 参数](scVDJ.md) |
+| **多组学 (Multi)** | `multi run`（分段配置 CSV） | 同一样本多模态（RNA + ATAC + VDJ）统一调度与跨组学整合报告 | [Multi 参数](multi.md) |
+| **C6 多样本** | `multi run`（含 `[samples]` 配置） | 基于 Sample Barcode 混样测序的 C6 拆分与逐样本独立分析 | [C6 参数](c6.md) |
+| **GTF 工具** | `tools mkgtf` | GTF 注释过滤、基因类型筛选与格式规范性验证 | [工具参数](tools.md) |
 
-## 选择正确的入口
+## 入口选择建议
 
-- 单份独立文库使用对应模块的 `run`。
-- `rna multi` / `atac multi` 只生成多份样本脚本；成功后再执行脚本。
-- `multi run` 实际执行多组学或 C6 流程。C6 需要真实的 scRNAC6 文库与 `[samples]` 配置。
+- **独立单样本分析**：独立文库直接使用对应模块的 `run` 命令（如 `rna run`、`atac run`、`vdj run`）。
+- **批量脚本生成**：`rna multi` 与 `atac multi` 用于根据制表符分隔列表一次性生成各样本的独立执行脚本；生成确认无误后再调度执行。
+- **多组学及多样本混合**：统一使用 `multi run` 命令。根据需求编写 CSV 配置文件：多模态实验声明 `[rna]`、`[atac]`、`[vdj-*]` 等区块；C6 实验追加 `[samples]` 区块进行条形码分配。
 
-## 配置前需要了解
+## 参数配置核心原则
 
-省略参数通常采用流程默认值，不等同于所有参数都接受字符串 `auto`。CLI 的布尔开关不带值；Multi CSV 的布尔值使用 `true/false`。样本级覆盖值与全局设置的规则以各参数页为准。
-
-[分析流程](../pipeline/pipeline.md) · [输出说明](../outs/outs.md) · [快速开始](../quickstart.md)
+- **默认值机制**：省略的可选参数均采用推荐默认值，但注意并非所有参数都接受显式传入字符串 `auto`。
+- **参数类型规范**：CLI 命令行中的布尔开关（flag）无需传值（如 `--no_bam`、`--end5`）；而在 Multi CSV 配置文件中，布尔值需明确写作 `true` 或 `false`。
+- **优先级与覆盖**：在多样本或多组学流程中，样本级特定配置与全局设置冲突时，以具体参数页面的分段继承与覆盖规则为准。

@@ -70,6 +70,7 @@ plugins:
             scATAC: scATAC
             scVDJ: scVDJ
             多组学: Multi
+            C6 多样本: C6
             工具: Tools
             旧版安装: Previous Installation
             JSON 规范: JSON Spec
@@ -104,12 +105,14 @@ nav:
       - scATAC: doc/pipeline/scATAC.md
       - scVDJ: doc/pipeline/scVDJ.md
       - 多组学: doc/pipeline/multi.md
+      - C6 多样本: doc/pipeline/c6.md
   - 参数:
       - 总览: doc/parameter/parameter.md
       - scRNA: doc/parameter/scRNA.md
       - scATAC: doc/parameter/scATAC.md
       - scVDJ: doc/parameter/scVDJ.md
       - 多组学: doc/parameter/multi.md
+      - C6 多样本: doc/parameter/c6.md
       - 工具: doc/parameter/tools.md
   - 输出:
       - 总览: doc/outs/outs.md
@@ -117,11 +120,12 @@ nav:
       - scATAC: doc/outs/scATAC.md
       - scVDJ: doc/outs/scVDJ.md
       - 多组学: doc/outs/multi.md
+      - C6 多样本: doc/outs/c6.md
   - 结果分析: doc/io.md
-  - 升级指南: doc/migration.md
-  - 运行与排错: doc/troubleshooting.md
   - 版本说明: doc/release.md
   - 数据集: doc/dataset.md
   - 附加:
+      - 升级指南: doc/migration.md
+      - 运行与排错: doc/troubleshooting.md
       - 旧版安装: doc/installation_previous.md
       - JSON 规范: doc/json.md

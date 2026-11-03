@@ -11,10 +11,10 @@
       
       
       
-        <link rel="prev" href="outs/multi.html">
+        <link rel="prev" href="outs/c6.html">
       
       
-        <link rel="next" href="migration.html">
+        <link rel="next" href="release.html">
       
       
         
@@ -545,6 +545,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="pipeline/c6.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    C6
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -726,6 +754,34 @@
     
   
     Multi
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="parameter/c6.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    C6
   
 
     
@@ -961,6 +1017,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="outs/c6.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    C6
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -1089,60 +1173,6 @@
   
   
     <li class="md-nav__item">
-      <a href="migration.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Upgrade Guide
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="troubleshooting.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Running & Troubleshooting
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
       <a href="release.html" class="md-nav__link">
         
   
@@ -1205,10 +1235,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_12" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" >
         
           
-          <label class="md-nav__link" for="__nav_12" id="__nav_12_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="0">
             
   
   
@@ -1226,8 +1256,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_12_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_12">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -1236,6 +1266,62 @@
 
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="migration.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Upgrade Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="troubleshooting.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Running & Troubleshooting
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
             
               
                 
@@ -1468,9 +1554,11 @@
 </code></pre></div>
 <p><strong>R (ArchR)</strong></p>
 <p>Create Arrow files from either <code>fragments.tsv.gz</code> (raw fragments) or <code>filtered.fragments.tsv.gz</code> (cell-filtered fragments).</p>
-<p><strong>Note:</strong>
-- ArchR-only filtering: point to the raw <code>fragments.tsv.gz</code> and rely on <code>filterTSS</code>/<code>filterFrags</code> thresholds.
-- Combined filtering: point to <code>filtered.fragments.tsv.gz</code> generated after dnbc4tools cell filtering, then apply ArchR thresholds as an additional filter.</p>
+<p><strong>Note:</strong></p>
+<ul>
+<li>ArchR-only filtering: point to the raw <code>fragments.tsv.gz</code> and rely on <code>filterTSS</code>/<code>filterFrags</code> thresholds.</li>
+<li>Combined filtering: point to <code>filtered.fragments.tsv.gz</code> generated after dnbc4tools cell filtering, then apply ArchR thresholds as an additional filter.</li>
+</ul>
 <div class="highlight"><pre><span></span><code><span class="c1"># Option A: ArchR-only filtering (raw fragments)</span>
 <span class="nf">library</span><span class="p">(</span><span class="n">ArchR</span><span class="p">)</span>
 <span class="n">ArrowFiles</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">createArrowFiles</span><span class="p">(</span>

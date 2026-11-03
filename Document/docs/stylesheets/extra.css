@@ -37,6 +37,7 @@
   --mod-atac: #7c3aed;
   --mod-vdj: #059669;
   --mod-multi: #d97706;
+  --mod-c6: #0284c7;
 }
 
 [data-md-color-scheme="slate"] {
@@ -69,6 +70,7 @@
   --mod-atac: #a78bfa;
   --mod-vdj: #34d399;
   --mod-multi: #fbbf24;
+  --mod-c6: #38bdf8;
 }
 
 /* --------------------------------------------------------------------------
@@ -292,36 +294,256 @@ html {
 }
 
 /* --------------------------------------------------------------------------
-   Code blocks & CLI Terminal Styling
+   Code blocks & CLI Terminal Styling (Clean Minimalist Engineering Style)
    -------------------------------------------------------------------------- */
+.md-typeset pre,
+.md-typeset code,
+.md-typeset kbd {
+  font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Monaco, Consolas, "Liberation Mono", monospace !important;
+}
+
+.md-typeset .highlight {
+  margin: 1.1rem 0 !important;
+  position: relative !important;
+}
+
+/* Quiet, clean, flat code block (Default: Light Theme) */
 .md-typeset pre {
-  border-radius: 8px;
-  border: 1px solid var(--dn-border);
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
-  position: relative;
+  position: relative !important;
+  margin: 1.1rem 0 !important;
+  padding: 0 !important;
+  border: 1px solid #d0d7de !important;
+  border-radius: 6px !important;
+  background-color: #f6f8fa !important;
+  box-shadow: none !important;
+  overflow: hidden !important;
 }
 
+.md-typeset .highlight pre {
+  margin: 0 !important;
+}
+
+/* Remove all simulated window chrome / traffic light dots */
+.md-typeset pre::before {
+  display: none !important;
+  content: none !important;
+}
+
+/* Code Content Body */
+.md-typeset pre > code {
+  display: block !important;
+  padding: 0.8rem 1.05rem !important;
+  font-size: 0.69rem !important; /* Compact, refined typography */
+  line-height: 1.52 !important;
+  color: #1f2328 !important;
+  background-color: transparent !important;
+  overflow-x: auto !important;
+}
+
+/* Dark Theme Code Block (Slate) */
 [data-md-color-scheme="slate"] .md-typeset pre {
-  border-color: #2b3a50;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
+  border-color: #30363d !important;
+  background-color: #161b22 !important;
+  box-shadow: none !important;
 }
 
-/* Inline code pill styling */
-.md-typeset :not(pre) > code {
-  background-color: var(--dn-brand-soft);
-  color: var(--dn-brand-strong);
-  border: 1px solid var(--dn-brand-border);
-  border-radius: 4px;
-  padding: 0.12em 0.38em;
-  font-size: 0.88em;
+[data-md-color-scheme="slate"] .md-typeset pre > code {
+  color: #e6edf3 !important;
+  background-color: transparent !important;
+}
+
+/* Slim scrollbar for wide code blocks */
+.md-typeset pre > code::-webkit-scrollbar {
+  height: 5px;
+  width: 5px;
+}
+
+.md-typeset pre > code::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.md-typeset pre > code::-webkit-scrollbar-thumb {
+  background-color: rgba(140, 149, 159, 0.3);
+  border-radius: 3px;
+}
+
+.md-typeset pre > code::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(140, 149, 159, 0.55);
+}
+
+[data-md-color-scheme="slate"] .md-typeset pre > code::-webkit-scrollbar-thumb {
+  background-color: rgba(110, 118, 129, 0.35);
+}
+
+[data-md-color-scheme="slate"] .md-typeset pre > code::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(110, 118, 129, 0.6);
+}
+
+/* Understated, quiet clipboard button */
+.md-typeset .md-clipboard {
+  position: absolute !important;
+  top: 0.45rem !important;
+  right: 0.45rem !important;
+  width: 24px !important;
+  height: 24px !important;
+  border-radius: 5px !important;
+  border: 1px solid rgba(27, 31, 36, 0.15) !important;
+  background-color: rgba(255, 255, 255, 0.8) !important;
+  color: #656d76 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  cursor: pointer !important;
+  opacity: 0.55;
+  transition: opacity 0.15s ease, background-color 0.15s ease !important;
+  z-index: 2;
+}
+
+.md-typeset pre:hover .md-clipboard,
+.md-typeset .highlight:hover .md-clipboard {
+  opacity: 1;
+}
+
+.md-typeset .md-clipboard:hover {
+  color: var(--doc-accent) !important;
+  border-color: var(--doc-accent) !important;
+  background-color: #ffffff !important;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08) !important;
+}
+
+[data-md-color-scheme="slate"] .md-typeset .md-clipboard {
+  background-color: rgba(33, 38, 45, 0.8) !important;
+  border-color: #30363d !important;
+  color: #8b949e !important;
+}
+
+[data-md-color-scheme="slate"] .md-typeset .md-clipboard:hover {
+  background-color: #30363d !important;
+  border-color: #8b949e !important;
+  color: #f0f6fc !important;
+}
+
+/* ==========================================================================
+   Restrained Natural Syntax Highlighting (Light Theme)
+   ========================================================================== */
+.md-typeset pre code .c,
+.md-typeset pre code .c1,
+.md-typeset pre code .cm {
+  color: #6e7781 !important; /* Neutral muted comments */
+  font-style: italic;
+}
+
+.md-typeset pre code .k,
+.md-typeset pre code .kd,
+.md-typeset pre code .kn,
+.md-typeset pre code .kr {
+  color: #cf222e !important; /* Classic crimson keywords */
   font-weight: 500;
+}
+
+.md-typeset pre code .s,
+.md-typeset pre code .s1,
+.md-typeset pre code .s2,
+.md-typeset pre code .se,
+.md-typeset pre code .sd {
+  color: #0a3069 !important; /* Deep navy strings */
+}
+
+.md-typeset pre code .m,
+.md-typeset pre code .mi,
+.md-typeset pre code .mf {
+  color: #0550ae !important; /* Calm blue numbers */
+}
+
+.md-typeset pre code .nb,
+.md-typeset pre code .bp {
+  color: #8250df !important; /* Purple built-ins */
+}
+
+.md-typeset pre code .na,
+.md-typeset pre code .nf,
+.md-typeset pre code .fm {
+  color: #8250df !important; /* Purple functions */
+}
+
+.md-typeset pre code .o,
+.md-typeset pre code .ow {
+  color: #24292f !important;
+}
+
+.md-typeset pre code .w {
+  color: #1f2328 !important;
+}
+
+/* ==========================================================================
+   Restrained Natural Syntax Highlighting (Dark Theme)
+   ========================================================================== */
+[data-md-color-scheme="slate"] .md-typeset pre code .c,
+[data-md-color-scheme="slate"] .md-typeset pre code .c1,
+[data-md-color-scheme="slate"] .md-typeset pre code .cm {
+  color: #8b949e !important;
+}
+
+[data-md-color-scheme="slate"] .md-typeset pre code .k,
+[data-md-color-scheme="slate"] .md-typeset pre code .kd,
+[data-md-color-scheme="slate"] .md-typeset pre code .kn,
+[data-md-color-scheme="slate"] .md-typeset pre code .kr {
+  color: #ff7b72 !important;
+}
+
+[data-md-color-scheme="slate"] .md-typeset pre code .s,
+[data-md-color-scheme="slate"] .md-typeset pre code .s1,
+[data-md-color-scheme="slate"] .md-typeset pre code .s2,
+[data-md-color-scheme="slate"] .md-typeset pre code .se,
+[data-md-color-scheme="slate"] .md-typeset pre code .sd {
+  color: #a5d6ff !important;
+}
+
+[data-md-color-scheme="slate"] .md-typeset pre code .m,
+[data-md-color-scheme="slate"] .md-typeset pre code .mi,
+[data-md-color-scheme="slate"] .md-typeset pre code .mf {
+  color: #79c0ff !important;
+}
+
+[data-md-color-scheme="slate"] .md-typeset pre code .nb,
+[data-md-color-scheme="slate"] .md-typeset pre code .bp {
+  color: #d2a8ff !important;
+}
+
+[data-md-color-scheme="slate"] .md-typeset pre code .na,
+[data-md-color-scheme="slate"] .md-typeset pre code .nf,
+[data-md-color-scheme="slate"] .md-typeset pre code .fm {
+  color: #d2a8ff !important;
+}
+
+[data-md-color-scheme="slate"] .md-typeset pre code .o,
+[data-md-color-scheme="slate"] .md-typeset pre code .ow {
+  color: #c9d1d9 !important;
+}
+
+[data-md-color-scheme="slate"] .md-typeset pre code .w {
+  color: #e6edf3 !important;
+}
+
+/* Inline code pill styling (Natural GitHub style) */
+.md-typeset :not(pre) > code {
+  font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace !important;
+  background-color: rgba(175, 184, 193, 0.2) !important;
+  color: #1f2328 !important;
+  border: none !important;
+  border-radius: 4px !important;
+  padding: 0.14em 0.36em !important;
+  font-size: 0.81em !important;
+  font-weight: 400 !important;
   word-break: break-word;
+  box-shadow: none !important;
 }
 
 [data-md-color-scheme="slate"] .md-typeset :not(pre) > code {
-  background-color: rgba(154, 180, 255, 0.12);
-  color: #b8ccff;
-  border-color: rgba(154, 180, 255, 0.22);
+  background-color: rgba(110, 118, 129, 0.4) !important;
+  color: #e6edf3 !important;
+  border: none !important;
+  box-shadow: none !important;
 }
 
 /* --------------------------------------------------------------------------
@@ -372,15 +594,6 @@ html {
   font-size: 0.92em;
 }
 
-/* Clipboard button */
-.md-typeset .md-clipboard {
-  color: var(--dn-text-muted);
-  transition: color 0.15s ease, opacity 0.15s ease;
-}
-
-.md-typeset .md-clipboard:hover {
-  color: var(--doc-accent);
-}
 
 /* --------------------------------------------------------------------------
    Admonitions & Semantic Callouts
@@ -436,24 +649,171 @@ html {
   margin: 1.2rem 0;
 }
 
-/* Details & Collapsible */
+/* ==========================================================================
+   Details & Collapsible (Modern Interactive Accordion)
+   ========================================================================== */
 .md-typeset details {
-  border: 1px solid var(--doc-line);
-  border-radius: 8px;
-  padding: 0.65rem 1rem;
-  margin: 1.2rem 0;
-  background: transparent;
+  display: block !important;
+  font-size: 0.8rem !important;
+  line-height: 1.65 !important;
+  border: 1px solid var(--doc-line) !important;
+  border-radius: 8px !important;
+  padding: 0 !important;
+  margin: 1.25rem 0 !important;
+  background: var(--doc-surface) !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04) !important;
+  overflow: hidden !important;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
-.md-typeset summary {
-  cursor: pointer;
-  color: var(--doc-accent);
-  font-weight: 600;
-  line-height: 1.6;
+.md-typeset details:hover {
+  border-color: rgba(47, 79, 181, 0.35) !important;
 }
 
+.md-typeset details[open] {
+  border-color: var(--dn-brand-border) !important;
+  box-shadow: 0 4px 14px rgba(47, 79, 181, 0.08) !important;
+}
+
+/* Strip all Material default pseudo icons and indicators on summary */
+html .md-typeset summary:before,
+.md-typeset summary:before,
+html .md-typeset summary:after,
+.md-typeset summary:after {
+  display: none !important;
+  content: none !important;
+  mask-image: none !important;
+  -webkit-mask-image: none !important;
+}
+
+html .md-typeset details > summary,
+.md-typeset details > summary {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  padding: 0.72rem 1.15rem !important;
+  margin: 0 !important;
+  background: var(--dn-brand-soft) !important;
+  color: var(--doc-accent) !important;
+  font-size: 0.84rem !important;
+  font-weight: 600 !important;
+  line-height: 1.5 !important;
+  cursor: pointer !important;
+  list-style: none !important;
+  user-select: none !important;
+  border: none !important;
+  border-left: 3.5px solid var(--doc-accent) !important;
+  border-radius: 0 !important;
+  position: relative !important;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+html .md-typeset details > summary::-webkit-details-marker,
+.md-typeset details > summary::-webkit-details-marker {
+  display: none !important;
+}
+
+html .md-typeset details > summary::marker,
+.md-typeset details > summary::marker {
+  display: none !important;
+}
+
+/* Custom crisp chevron indicator */
+html .md-typeset details > summary::before,
+.md-typeset details > summary::before {
+  display: inline-block !important;
+  content: "" !important;
+  width: 6px !important;
+  height: 6px !important;
+  margin-right: 0.7rem !important;
+  margin-left: 0.1rem !important;
+  border-right: 2px solid var(--doc-accent) !important;
+  border-bottom: 2px solid var(--doc-accent) !important;
+  border-top: none !important;
+  border-left: none !important;
+  background: transparent !important;
+  transform: rotate(-45deg) !important;
+  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), margin-top 0.2s ease !important;
+  flex-shrink: 0 !important;
+}
+
+html .md-typeset details[open] > summary::before,
+.md-typeset details[open] > summary::before {
+  transform: rotate(45deg) !important;
+  margin-top: -2px !important;
+}
+
+html .md-typeset details > summary:hover,
+.md-typeset details > summary:hover {
+  background: rgba(47, 79, 181, 0.11) !important;
+}
+
+[data-md-color-scheme="slate"] html .md-typeset details > summary,
+[data-md-color-scheme="slate"] .md-typeset details > summary {
+  background: rgba(154, 180, 255, 0.08) !important;
+  color: var(--doc-accent) !important;
+  border-left-color: var(--doc-accent) !important;
+}
+
+[data-md-color-scheme="slate"] html .md-typeset details > summary:hover,
+[data-md-color-scheme="slate"] .md-typeset details > summary:hover {
+  background: rgba(154, 180, 255, 0.15) !important;
+}
+
+html .md-typeset details[open] > summary,
 .md-typeset details[open] > summary {
-  margin-bottom: 0.8rem;
+  border-bottom: 1px solid var(--doc-line) !important;
+}
+
+/* Content spacing inside details */
+html .md-typeset details > :not(summary),
+.md-typeset details > :not(summary) {
+  margin-left: 1.25rem !important;
+  margin-right: 1.25rem !important;
+}
+
+html .md-typeset details > :nth-child(2),
+.md-typeset details > :nth-child(2) {
+  margin-top: 1rem !important;
+}
+
+html .md-typeset details > :last-child,
+.md-typeset details > :last-child {
+  margin-bottom: 1rem !important;
+}
+
+/* Typography inside details - comfortable readable font size */
+.md-typeset details p,
+.md-typeset details li,
+.md-typeset details td,
+.md-typeset details th,
+.md-typeset details span {
+  font-size: 0.8rem !important;
+  line-height: 1.68 !important;
+}
+
+.md-typeset details .highlight,
+.md-typeset details pre {
+  margin: 0.8rem 0 !important;
+}
+
+.md-typeset details code {
+  font-size: 0.85em !important;
+}
+
+.md-typeset details pre > code {
+  font-size: 0.69rem !important;
+  line-height: 1.52 !important;
+}
+
+.md-typeset details table {
+  margin: 0.85rem 0 !important;
+  font-size: 0.8rem !important;
+}
+
+.md-typeset details.cli-help pre > code {
+  max-height: 400px;
+  overflow-y: auto;
 }
 
 /* Images */
@@ -654,6 +1014,13 @@ html {
   border-color: var(--mod-multi);
 }
 
+.doc-module.mod-c6 {
+  border-top: 3.5px solid var(--mod-c6);
+}
+.doc-module.mod-c6:hover {
+  border-color: var(--mod-c6);
+}
+
 .doc-module-header {
   display: flex;
   align-items: center;
@@ -686,6 +1053,10 @@ html {
 .mod-multi .doc-module-tag {
   background: rgba(217, 119, 6, 0.1);
   color: var(--mod-multi);
+}
+.mod-c6 .doc-module-tag {
+  background: rgba(2, 132, 199, 0.1);
+  color: var(--mod-c6);
 }
 
 .md-typeset .doc-module h3 {
@@ -733,6 +1104,27 @@ html {
 /* --------------------------------------------------------------------------
    Dark Mode Adjustments (Slate theme)
    -------------------------------------------------------------------------- */
+[data-md-color-scheme="slate"] .doc-badge-pill {
+  background: var(--doc-accent);
+  color: #0a1128 !important;
+  font-weight: 700;
+  box-shadow: 0 2px 8px rgba(154, 180, 255, 0.25);
+}
+
+[data-md-color-scheme="slate"] .doc-btn-primary {
+  background: var(--doc-accent) !important;
+  color: #0a1128 !important;
+  border-color: var(--doc-accent);
+  box-shadow: 0 2px 8px rgba(154, 180, 255, 0.25);
+}
+
+[data-md-color-scheme="slate"] .doc-btn-primary:hover {
+  background: var(--doc-accent-hover) !important;
+  border-color: var(--doc-accent-hover);
+  color: #0a1128 !important;
+  box-shadow: 0 4px 14px rgba(154, 180, 255, 0.35);
+}
+
 [data-md-color-scheme="slate"] .doc-btn-outline {
   background: #141f32 !important;
   border-color: #2b3952;
@@ -761,8 +1153,177 @@ html {
 
 [data-md-color-scheme="slate"] .doc-pill-link:hover {
   background: var(--doc-accent);
-  color: #ffffff !important;
+  color: #0a1128 !important;
   border-color: var(--doc-accent);
+}
+
+/* --------------------------------------------------------------------------
+   Pipeline Step Cards / Flow Walkthrough (C6 & Pipelines)
+   -------------------------------------------------------------------------- */
+.pipeline-step-flow {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  margin: 1.5rem 0 2.2rem;
+}
+
+.c6-step-card {
+  position: relative;
+  background: var(--doc-surface);
+  border: 1px solid var(--doc-line);
+  border-left: 4.5px solid var(--mod-c6);
+  border-radius: 10px;
+  padding: 1.35rem 1.6rem 1.25rem;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.03);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.c6-step-card:hover {
+  border-color: var(--mod-c6);
+  box-shadow: 0 6px 18px rgba(2, 132, 199, 0.12);
+  transform: translateY(-2px);
+}
+
+.c6-step-card .step-badge {
+  display: inline-flex;
+  align-items: center;
+  font-family: var(--md-code-font-family, monospace);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0.2rem 0.55rem;
+  border-radius: 4px;
+  background: rgba(2, 132, 199, 0.12);
+  color: #0284c7;
+  margin-bottom: 0.5rem;
+}
+
+.c6-step-card h3 {
+  margin: 0 0 0.75rem 0 !important;
+  font-size: 1.08rem !important;
+  font-weight: 700 !important;
+  color: var(--dn-text-strong) !important;
+}
+
+.c6-step-card ul {
+  margin: 0.4rem 0 0.8rem 0;
+  padding-left: 1.25rem;
+}
+
+.c6-step-card li {
+  margin-bottom: 0.45rem;
+  font-size: 0.85rem;
+  line-height: 1.65;
+  color: var(--dn-text-body);
+}
+
+.c6-step-card li strong {
+  color: var(--dn-text-strong);
+}
+
+.c6-step-card .step-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  margin-top: 0.85rem;
+  padding-top: 0.75rem;
+  border-top: 1px dashed var(--doc-line);
+}
+
+.c6-step-card .step-tag {
+  font-size: 0.72rem;
+  font-weight: 500;
+  padding: 0.15rem 0.55rem;
+  border-radius: 9999px;
+  background: var(--dn-surface-soft);
+  color: var(--dn-text-muted);
+  border: 1px solid var(--dn-border);
+}
+
+[data-md-color-scheme="slate"] .c6-step-card {
+  background: #111a2e;
+  border-color: #24334a;
+  border-left-color: #38bdf8;
+}
+
+[data-md-color-scheme="slate"] .c6-step-card:hover {
+  border-color: #38bdf8;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+}
+
+[data-md-color-scheme="slate"] .c6-step-card .step-badge {
+  background: rgba(56, 189, 248, 0.15);
+  color: #38bdf8;
+}
+
+[data-md-color-scheme="slate"] .c6-step-card .step-tag {
+  background: #17243c;
+  color: #94a3b8;
+  border-color: #2b3d5b;
+}
+
+/* Checklist Callout Box */
+.doc-checklist {
+  border: 1px solid var(--doc-line);
+  border-left: 4px solid var(--doc-accent);
+  border-radius: 8px;
+  background: var(--dn-brand-soft);
+  padding: 1.15rem 1.45rem;
+  margin: 1.25rem 0;
+}
+
+.doc-checklist-title {
+  font-weight: 700;
+  font-size: 0.92rem;
+  color: var(--doc-accent);
+  margin-bottom: 0.65rem;
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.doc-checklist ul {
+  list-style: none !important;
+  padding-left: 0 !important;
+  margin: 0 !important;
+}
+
+.doc-checklist li {
+  position: relative;
+  padding-left: 1.6rem;
+  margin-bottom: 0.45rem;
+  font-size: 0.85rem;
+  line-height: 1.6;
+  color: var(--dn-text-body);
+}
+
+.doc-checklist li::before {
+  content: "✓";
+  position: absolute;
+  left: 0;
+  top: 0;
+  color: #059669;
+  font-weight: 800;
+  font-size: 0.95rem;
+}
+
+[data-md-color-scheme="slate"] .doc-checklist {
+  background: #141f32;
+  border-color: #2b3952;
+  border-left-color: var(--doc-accent);
+}
+
+[data-md-color-scheme="slate"] .doc-checklist-title {
+  color: var(--doc-accent);
+}
+
+[data-md-color-scheme="slate"] .doc-checklist li {
+  color: var(--dn-text-body);
+}
+
+[data-md-color-scheme="slate"] .doc-checklist li::before {
+  color: #34d399;
 }
 
 /* --------------------------------------------------------------------------

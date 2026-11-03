@@ -109,6 +109,7 @@ read_signac_C4 <- function(mex_dir_path, fragments, singlecellmetadata){
 使用 `fragments.tsv.gz`（原始片段）或 `filtered.fragments.tsv.gz`（细胞过滤后片段）创建 Arrow 文件。
 
 **说明：**
+
 - 仅使用 ArchR 过滤： 指向原始 `fragments.tsv.gz`，并使用 `filterTSS`/`filterFrags` 阈值控制过滤。
 - 联合过滤： 指向 dnbc4tools 细胞过滤后的 `filtered.fragments.tsv.gz`，再叠加 ArchR 阈值过滤。
 

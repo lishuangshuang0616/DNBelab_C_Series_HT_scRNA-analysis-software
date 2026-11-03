@@ -33,7 +33,7 @@
   <span class="doc-module-tag">scATAC</span>
   <h3>ATAC 染色质可及性</h3>
 </div>
-<p>染色质开放区分析、叫峰（Peak Calling）、Fragment 过滤与质控分析。</p>
+<p>染色质开放区分析、峰检测（Peak Calling）、Fragment 过滤与质控分析。</p>
 <div class="doc-module-links">
 <a class="doc-pill-link" href="doc/pipeline/scATAC.html">流程</a>
 <a class="doc-pill-link" href="doc/parameter/scATAC.html">参数说明</a>
@@ -54,14 +54,26 @@
 </div>
 <div class="doc-module mod-multi">
 <div class="doc-module-header">
-  <span class="doc-module-tag">Multi / C6</span>
-  <h3>多组学与 C6 多样本</h3>
+  <span class="doc-module-tag">Multi</span>
+  <h3>多组学联合分析</h3>
 </div>
-<p>RNA + ATAC 多组学联合运行，以及 probe barcode C6 多样本单细胞分析与报告。</p>
+<p>单细胞 RNA、ATAC 与 V(D)J 多组学文库统一调度、质量控制与跨组学交互式组合报告。</p>
 <div class="doc-module-links">
 <a class="doc-pill-link" href="doc/pipeline/multi.html">流程</a>
 <a class="doc-pill-link" href="doc/parameter/multi.html">参数说明</a>
 <a class="doc-pill-link" href="doc/outs/multi.html">输出结果</a>
+</div>
+</div>
+<div class="doc-module mod-c6">
+<div class="doc-module-header">
+  <span class="doc-module-tag">C6</span>
+  <h3>C6 多样本 RNA 分析</h3>
+</div>
+<p>基于 Sample Barcode 混合的高通量多样本单细胞转录组分析，支持样本解复用与逐样本专属分析交付。</p>
+<div class="doc-module-links">
+<a class="doc-pill-link" href="doc/pipeline/c6.html">流程</a>
+<a class="doc-pill-link" href="doc/parameter/c6.html">参数说明</a>
+<a class="doc-pill-link" href="doc/outs/c6.html">输出结果</a>
 </div>
 </div>
 </div>
@@ -71,10 +83,10 @@
 | 我想…… | 快速直达 | 重点说明 |
 | :--- | :--- | :--- |
 | **运行第一份样本** | [快速开始指南 →](doc/quickstart.md) | 包含人/小鼠参考库构建与端到端示例脚本 |
-| **配置 C6 多样本实验** | [Multi 参数配置 →](doc/parameter/multi.md#c6-samples) | 支持 `[samples]` 配置与多样本表达矩阵拆分 |
+| **配置 C6 多样本实验** | [C6 参数配置 →](doc/parameter/c6.md) | 支持 `[samples]` 配置与多样本表达矩阵拆分 |
 | **在 R / Python 中读取分析结果** | [结果分析与矩阵加载 →](doc/io.md) | 提供 Seurat、Scanpy 读取示例代码 |
 | **了解 3.1 升至 3.2 的变更** | [版本升级指南 →](doc/migration.md) | 涵盖目录结构变更、C6 汇总与兼容性注意事项 |
-| **排查运行报错与性能调优** | [运行与排错常见问题 →](doc/troubleshooting.md) | 内存占用、STAR 比对参数及线程数推荐 |
+| **排查运行报错与性能调优** | [运行与排错指南 →](doc/troubleshooting.md) | 内存占用、STAR 比对参数及线程数推荐 |
 | **获取测试数据集** | [示例数据集下载 →](doc/dataset.md) | 包含官方公共测试 FASTQ 数据与参考基因组 |
 
 ## 版本与更新说明

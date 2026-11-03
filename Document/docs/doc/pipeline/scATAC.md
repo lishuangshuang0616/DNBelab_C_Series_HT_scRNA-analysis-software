@@ -8,28 +8,21 @@
 
 **工作流程**：原始数据 → 质量控制 → 比对 → 磁珠合并 → Peak调用 → 细胞识别 → 降维聚类 → 分析报告
 
-![scATAC 分析流程概览](../images/scATAC_pipeline.png)
+<div align="center" style="margin: 1.5em 0;" markdown="block">
+  <img src="../images/scATAC_pipeline.png" alt="scATAC 分析流程概览" width="800" style="max-width: 100%; height: auto;">
+</div>
 
-> **使用说明**：`$dnbc4tools` 代表可执行程序路径，需替换为您的实际安装路径。本文示例使用换行符 `\` 分隔命令以提高可读性，实际分析时可写为单行。
+<div style="background-color: #e7f3fe; border-left: 6px solid #2196F3; padding: 15px; margin: 1.5em 0; border-radius: 4px;" markdown="block">
+<strong>使用说明：</strong> <code>$dnbc4tools</code> 代表可执行程序路径，需替换为您的实际安装路径。本文示例使用换行符 <code>\</code> 分隔命令以提高可读性，实际分析时可写为单行。
+</div>
 
 ## 文件准备 <a id="文件准备"></a>
 
 分析需要 FASTQ 文件：
 
-<table>
-  <thead>
-    <tr>
-      <th>文件类型</th>
-      <th>说明</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><b>ATAC 文库</b></td>
-      <td>包含 Cell Barcode 和染色质开放区域信息的测序数据</td>
-    </tr>
-  </tbody>
-</table>
+| 文件类型 | 说明 |
+| :--- | :--- |
+| **ATAC 文库** | 包含 Cell Barcode 和染色质开放区域信息的测序数据 |
 
 > **注意**：确保 FASTQ 文件质量良好，并记录好文件路径用于后续分析。
 
@@ -37,35 +30,19 @@
 
 ### 参考数据库输入文件
 
-<table>
-  <thead>
-    <tr>
-      <th>文件类型</th>
-      <th>格式</th>
-      <th>说明</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><b>基因组文件</b></td>
-      <td>FASTA</td>
-      <td>包含特定物种的完整基因组序列，包括染色体、线粒体及其他遗传信息，通常为主装配版本。这些文件为基因组分析和比对提供基础数据。</td>
-    </tr>
-    <tr>
-      <td><b>注释文件</b></td>
-      <td>GTF</td>
-      <td>包含基因组中基因、转录本、外显子及其他功能区域的详细信息。该文件标识基因的位置、类型及其相关属性。</td>
-    </tr>
-  </tbody>
-</table>
+| 文件类型 | 格式 | 说明 |
+| :--- | :--- | :--- |
+| **基因组文件** | FASTA | 包含特定物种的完整基因组序列，包括染色体、线粒体及其他遗传信息，通常为主装配版本。这些文件为基因组分析和比对提供基础数据。 |
+| **注释文件** | GTF | 包含基因组中基因、转录本、外显子及其他功能区域的详细信息。该文件标识基因的位置、类型及其相关属性。 |
 
 > **推荐数据来源**：优先使用 [Ensembl 数据库](https://www.ensembl.org/index.html) 提供的文件。Ensembl 的 GTF 文件包含可选标签，便于通过 `dnbc4tools tools mkgtf` 进行过滤。
 
-**GTF 文件要求：**
-- 必须包含 `gene` 或 `transcript` 类型以及 `exon` 类型的注释。
-- 属性中必须包含 `gene_id` 或 `gene_name` 以及 `transcript_id` 或 `transcript_name`。
-- 不支持 GFF 文件格式。
-- 基因组文件与注释文件需版本对应。
+> **GTF 文件要求**：
+>
+> - 必须包含 `gene` 或 `transcript` 类型以及 `exon` 类型的注释。
+> - 属性中必须包含 `gene_id` 或 `gene_name` 以及 `transcript_id` 或 `transcript_name`。
+> - 不支持 GFF 文件格式。
+> - 基因组文件与注释文件需版本对应。
 
 ### GTF 文件处理（可选）
 
@@ -75,14 +52,37 @@
 
 在运行 `dnbc4tools atac run` 分析之前，需要先构建参考数据库。此步骤使用注释文件（GTF）和参考基因组（FASTA）构建索引文件，用于测序 reads 的比对和统计分析。
 
-**运行命令：**
+#### 单物种参考数据库构建（以小鼠为例）
 
 ```shell
+# 构建单物种参考数据库
 $dnbc4tools atac mkref \
   --fasta genome.fa \
   --ingtf genes.gtf \
-  --species Mus_musculus
+  --species Mus_musculus \
+  --genomeDir /database/scATAC/Mus_musculus
 ```
+
+#### 双物种混合参考数据库构建（人鼠混合）
+
+适用于人-鼠细胞混合验证实验的联合参考数据库构建：
+
+```shell
+# 构建人-鼠双物种混合参考数据库（双物种不支持 --prefix 参数）
+# 准备好两物种 FASTA 与过滤后的 GTF 文件，多个文件与物种标识使用逗号分隔
+$dnbc4tools atac mkref \
+  --fasta GRCh38.primary_assembly.genome.fa,GRCm38.primary_assembly.genome.fa \
+  --ingtf hg38.filtered.gtf,mm10.filtered.gtf \
+  --species hg38,mm10 \
+  --genomeDir /database/scATAC/hg38_mm10
+```
+
+> **双物种建库说明**：
+>
+> - `--fasta`：提供待混合物种的基因组 FASTA 路径，使用逗号 `,` 分隔。
+> - `--ingtf`：提供各物种过滤后的 GTF 注释文件路径，使用逗号 `,` 分隔（顺序需与 `--fasta` 严格对应）。
+> - `--species`：声明各物种的简短标识符（如 `hg38,mm10`），用于在合并基因组中区分物种。
+> - **重要限制**：双物种联合构建时**不支持** `--prefix` 参数（因不同物种染色体前缀命名规则不同）。
 
 **输出目录：**
 
@@ -172,6 +172,7 @@ $dnbc4tools atac mkref \
 ### 单样本分析
 
 ATAC 主分析流程使用单个样本单细胞 ATAC 文库测序数据。该流程的核心步骤包括：
+
 1. **数据处理**：执行质控与比对，生成所有磁珠的 `fragments` 文件。
 2. **Peak 调用**：基于聚合数据进行 peak calling，识别开放染色质区域。
 3. **细胞识别**：利用 peaks 区域的片段信息识别有效细胞。
@@ -180,9 +181,9 @@ ATAC 主分析流程使用单个样本单细胞 ATAC 文库测序数据。该流
 
 支持两种输入方式：
 
-**方式1：目录方式（推荐）**
+**方式一：目录输入方式（推荐）**
 
-```shell
+```bash
 $dnbc4tools atac run \
   --name sample \
   --fastqs /data \
@@ -190,7 +191,7 @@ $dnbc4tools atac run \
   --threads 10
 ```
 目录结构示例：
-```
+```text
 /data/
 ├── sample_R1.fastq.gz
 └── sample_R2.fastq.gz
@@ -203,9 +204,9 @@ $dnbc4tools atac run \
 - 自动识别依赖文件名中的 R1/R2 标识。建议使用 `_R1`/`_R2` 或 `_R1_`/`_R2_` 命名。
 - 不同样本或不同文库的数据不要混放到同一输入目录中。
 
-**方式2：单独参数方式**
+**方式二：独立显式指定 FASTQ 文件**
 
-```shell
+```bash
 $dnbc4tools atac run \
   --name sample \
   --fastq1 /data/sample_R1.fastq.gz \
@@ -214,49 +215,62 @@ $dnbc4tools atac run \
   --threads 10
 ```
 
+### 运行过程
+
 在对试剂版本和暗反应自动检测后，软件开始运行分析，以下是一个示例：
 ```shell
-
-──────────────────────────── Parsed FASTQ Inputs — 2025-11-12 15:05:39 ─────────────────────────────
+──────────────────────────── Parsed FASTQ Inputs — 2026-11-03 16:26:21 ─────────────────────────────
 ┌───────┬──────────────────────────────────────────────────────────────────────────────────────────┐
 │ Type  │ Path                                                                                     │
 ├───────┼──────────────────────────────────────────────────────────────────────────────────────────┤
-│ Read 1 │ /data/sample_R1.fastq.gz                                                                 │
-│ Read 2 │ /data/sample_R2.fastq.gz                                                                 │
+│ Read1 │ /data/sample_R1.fastq.gz                                                                 │
+│ Read2 │ /data/sample_R2.fastq.gz                                                                 │
 └───────┴──────────────────────────────────────────────────────────────────────────────────────────┘
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 
-──────────────────────────── Chemistry Detection — 2025-11-12 15:05:49 ─────────────────────────────
+──────────────────────────── Chemistry Detection — 2026-11-03 16:26:23 ─────────────────────────────
 ┌─────────────────────────────────┬────────────────────────────────────────────────────────────────┐
 │ Type                            │ Result                                                         │
 ├─────────────────────────────────┼────────────────────────────────────────────────────────────────┤
-│ Read 1                           │ darkreaction                                                   │
-│ Read 2                           │ darkreaction                                                   │
+│ Read1                           │ darkreaction                                                   │
+│ Read2                           │ darkreaction                                                   │
 └─────────────────────────────────┴────────────────────────────────────────────────────────────────┘
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 
- 2025-11-12 15:05:49 Performing raw data quality control and alignment...
+ 2026-11-03 16:26:23 Validating ATAC reference...
 ...done
 
- 2025-11-12 15:24:56 Calculating bead similarity and merging beads within droplets...
+ 2026-11-03 16:26:53 Performing raw data quality control and alignment...
 ...done
 
- 2025-11-12 15:28:00 Processing fragments for peak calling...
+ 2026-11-03 16:42:28 Calculating bead similarity and merging beads within droplets...
 ...done
 
- 2025-11-12 15:31:22 Generating raw peak count matrix...
+ 2026-11-03 16:47:43 Processing fragments for peak calling...
 ...done
 
- 2025-11-12 15:38:18 Generating cell-filtered peak count matrix...
+ 2026-11-03 16:57:49 Generating raw peak count matrix...
 ...done
 
- 2025-11-12 15:43:23 Performing dimensionality reduction and clustering...
+ 2026-11-03 16:59:56 Calling cells for ATAC data...
 ...done
 
- 2025-11-12 15:50:03 Generating analysis report and summary statistics...
+ 2026-11-03 17:01:31 Generating cell-filtered peak count matrix...
 ...done
 
- 2025-11-12 15:50:19 Analysis Finished. Elapsed Time: 0:44:30
+ 2026-11-03 17:01:53 Generating filtered fragments and TSS enrichment...
+...done
+
+ 2026-11-03 17:02:39 Calculating sequencing saturation metrics...
+...done
+
+ 2026-11-03 17:03:48 Performing dimensionality reduction and clustering...
+...done
+
+ 2026-11-03 17:05:41 Generating analysis report and summary statistics...
+...done
+
+ 2026-11-03 17:06:20 Analysis Finished. Elapsed Time: 0:39:58
 ```
 
 当出现 `Analysis Finished` 消息时，表示分析已成功完成。
@@ -274,24 +288,10 @@ $dnbc4tools atac multi \
 
 其中 `sample.tsv` 文件使用制表符 (`\t`) 分隔，包含两列：
 
-<table>
-  <thead>
-    <tr>
-      <th>列</th>
-      <th>内容</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>1</td>
-      <td>样本名称</td>
-    </tr>
-    <tr>
-      <td>2</td>
-      <td>文库测序数据</td>
-    </tr>
-  </tbody>
-</table>
+| 列序号 | 列内容 | 格式与说明 |
+| :---: | :--- | :--- |
+| 1 | 样本名称 | 样本唯一标识符（如 `sample1`） |
+| 2 | 文库测序数据 | 成对 FASTQ，`R1;R2` 格式，同端多文件用逗号 `,` 分隔 |
 
 > **注意**：多个 FASTQ 文件以逗号（`,`）分隔，R1 和 R2 文件以分号（`;`）分隔。
 
@@ -316,15 +316,7 @@ $cat sample1.sh
 /opt/software/dnbc4tools3.2/dnbc4tools atac run --name sample1 --fastq1 /data/sample1_R1.fq.gz --fastq2 /data/sample1_R2.fq.gz --genomeDir /database/scATAC/Mus_musculus --threads 10
 ```
 
-执行第四步进行主流程分析。
-
-### 细胞识别与矩阵计数 <a id="v32-defaults"></a>
-
-细胞识别默认 **ordmag**。叫峰使用**全部合并去重片段**，以 Tn5 调整后的 **cutsite** 为输入信号；peak 矩阵也默认统计端点。cell calling、FRIP 和 TSS 比例仍使用唯一 fragment 计数。
-
-`frags_cutoff=0`、`tss_cutoff=0` 分别关闭对应的附加最终阈值；默认仍应用 low-targeting 过滤。bead 合并使用独立的候选阈值 `merge_cutoff=500`。需要显式覆盖时，见 [ATAC 参数](../parameter/scATAC.md#v32-defaults)。
-
-下游使用 TF-IDF method 1，邻居图和 UMAP 使用原始 LSI 第 2–30 维，聚类使用 Leiden。
+随后可执行这些脚本进行主流程分析。
 
 ## 结果解析 <a id="结果解析"></a>
 
@@ -346,15 +338,3 @@ $cat sample1.sh
 │   └── peaks.bed.gz
 └── singlecell.csv
 ```
-
-## 相关文档
-
-| 资源 | 描述 |
-| :--- | :--- |
-| [输出文件使用方法](../io.md) | 了解输出文件结构和格式 |
-| [分析参数设置](../parameter/scATAC.md) | 查看完整参数选项和说明 |
-| [输出文件解释](../outs/scATAC.md) | 详细解读分析结果文件 |
-
-## 常见问题
-
-本节将根据常见使用问题持续补充。当前版本请优先参考运行日志、参数说明和输出文件说明进行排查。

@@ -40,7 +40,7 @@ outs/
 
 <a id="v32-outputs"></a>
 
-`filtered_feature_bc_matrix.h5ad` 保存过滤计数，`analysis/QC_Cluster.h5ad` 保存聚类结果。BAM 索引可为 BAI 或 CSI；`--no_bam` 同时跳过 cDNA 和 oligo BAM。多样本目录见 [C6 输出](multi.md#c6-outputs)。
+`filtered_feature_bc_matrix.h5ad` 保存过滤计数，`analysis/QC_Cluster.h5ad` 保存聚类结果。BAM 索引可为 BAI 或 CSI；`--no_bam` 同时跳过 cDNA 和 oligo BAM。多样本目录见 [C6 输出](c6.md)。
 
 ## 详细文件说明 <a id="详细文件说明"></a>
 

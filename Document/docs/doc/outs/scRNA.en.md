@@ -38,7 +38,7 @@ outs/
 
 <a id="v32-outputs"></a>
 
-`filtered_feature_bc_matrix.h5ad` holds filtered counts; `analysis/QC_Cluster.h5ad` holds the clustered object. BAM indexes can be BAI or CSI. `--no_bam` skips cDNA and oligo BAMs. For multiplexed output, see [C6 results](multi.md#c6-outputs).
+`filtered_feature_bc_matrix.h5ad` holds filtered counts; `analysis/QC_Cluster.h5ad` holds the clustered object. BAM indexes can be BAI or CSI. `--no_bam` skips cDNA and oligo BAMs. For multiplexed output, see [C6 outputs](c6.md).
 
 ## Detailed File Description <a id="detailed-file-description"></a>
 

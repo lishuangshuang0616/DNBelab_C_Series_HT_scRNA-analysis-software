@@ -1,11 +1,9 @@
-# Multi analysis parameters
+# Multi-Omics Analysis Parameters
 
-`dnbc4tools multi run` executes analysis from a sectioned CSV. Ordinary multi-omics and C6 multiplexed RNA share this entry point but have different inputs and output organization.
+`dnbc4tools multi run` executes unified multi-omics analysis (RNA, ATAC, and V(D)J) from a sectioned CSV configuration file.
 
-| Task | Configuration | Output organization |
-| :--- | :--- | :--- |
-| Ordinary RNA / ATAC / VDJ combination | Modality sections and `[libraries]` | One directory per modality |
-| C6 multiplexed RNA | Add `[samples]` to the RNA configuration | Probe-barcode assignment within a pooled library |
+> **Note**
+> For high-throughput single-cell RNA analysis based on Sample Barcode multiplexing, please refer to the dedicated [C6 Parameters Guide](c6.md).
 
 ## Run command <a id="integrated-workflow-run"></a>
 
@@ -22,10 +20,9 @@ dnbc4tools multi run \
 | `--name` | Yes | Run name; results are written to `<outdir>/<name>/` |
 | `--csv` | Yes | Sectioned CSV configuration |
 | `--outdir` | No | Analysis root, default current directory |
-| `--threads` | No | Total CPU thread budget |
+| `--threads` | No | Number of CPU threads to use [default: all available cores] |
 
-<details markdown="block" class="cli-help">
-<summary>Full CLI help</summary>
+### Complete CLI Help
 
 ```shell
 $ dnbc4tools multi run --help
@@ -33,6 +30,7 @@ dnbc4tools 3.2
 
 Process an integrated multi-omics sample.
 Coordinate RNA, ATAC, and V(D)J workflows within a single run.
+Support C6 probe-barcoded RNA sample demultiplexing via [samples].
 Generate a unified multi-omics report.
 
 Usage: dnbc4tools multi run [OPTIONS]
@@ -42,18 +40,17 @@ options:
 
 Basic Settings:
   --name <STR>     Unique identifier for the sample.
-  --csv <FILE>     CSV file containing pipeline configuration settings. With [samples], RNA chemistry is scRNAC6.
+  --csv <FILE>     CSV file containing pipeline configuration settings. Add [samples] for C6 RNA sample
+                   demultiplexing; RNA chemistry is fixed to scRNAC6 in this mode.
   --outdir <DIR>   Output directory path for analysis results.
-  --threads <INT>  Number of CPU threads to use.
+  --threads <INT>  Number of CPU threads to use [default: all available cores].
 ```
-
-</details>
 
 `rna multi` and `atac multi` only generate per-sample scripts. `multi run` executes analysis.
 
 ## CSV configuration rules <a id="csv-config-specification"></a>
 
-Modality sections use `key,value` rows. `[libraries]` and `[samples]` are tables with headers.
+Modality sections use `key,value` rows. `[libraries]` is a table with headers.
 
 | Section | Purpose |
 | :--- | :--- |
@@ -61,7 +58,6 @@ Modality sections use `key,value` rows. `[libraries]` and `[samples]` are tables
 | `[atac]` | ATAC reference, peak calling and filters |
 | `[vdj-t]` / `[vdj-b]` | TCR / BCR reference and assembly |
 | `[libraries]` | Required mapping of FASTQ directories to modalities |
-| `[samples]` | C6 samples and probe assignments; omit for ordinary libraries |
 
 Use `true/false` for booleans. Quote comma-containing values, for example `darkreaction,"R1,R1R2"`. Global `[rna] expectcells` and `[atac] jaccard_cutoff` accept `auto`. Absolute input paths are recommended.
 
@@ -90,63 +86,11 @@ For BCR, replace `[vdj-t]` / `vdj-t` with `[vdj-b]` / `vdj-b`. Add an `[atac]` s
 
 VDJ uses RNA cell information by default; set `beadstrans` for another cell table. Ordinary RNA + VDJ requires `end5,true`.
 
-## C6 multiplexed RNA configuration <a id="c6-samples"></a>
+<a id="c6-samples"></a>
 
-For experiments pooling biological samples in one **scRNAC6** library. Probe assignments must match the experiment; adding `[samples]` does not turn an ordinary RNA library into C6.
-
-### Minimal configuration
-
-```csv
-[rna]
-genomeDir,/database/scRNA/Human
-chemistry,scRNAC6
-darkreaction,auto
-no_bam,true
-
-[libraries]
-fastqs,feature_types
-/rawdata/c6_run,rna
-
-[samples]
-sample_id,probe_barcode_ids
-S1,BC01
-S2,BC02;BC03
-```
-
-Save as `c6.csv` and run:
-
-```bash
-dnbc4tools multi run --name c6_run --csv c6.csv --outdir ./results --threads 16
-```
-
-S2 uses two probes in this example. C6 chemistry is fixed to `scRNAC6`; omission or legacy `auto` normalizes to that name. `darkreaction=auto` detects dark cycles only.
-
-### Sample table and overrides
-
-| Column | Rule |
-| :--- | :--- |
-| `sample_id` | Required and unique; starts with a letter/digit and contains only letters, digits, `.`, `_`, `-`; `unassigned` and `non_multiplexed` are reserved |
-| `probe_barcode_ids` | Required valid built-in BC IDs or custom DNA sequences; use `;` or `\|` for multiple probes; no duplicate assignment |
-| `expectcells` / `forcecells` / `minumi` | Optional positive-integer overrides; blank inherits `[rna]`; these columns do not accept `auto` |
-
-For sample-specific settings, extend the table:
-
-```csv
-[samples]
-sample_id,probe_barcode_ids,expectcells,forcecells,minumi
-S1,BC01,3000,,1000
-S2,BC02;BC03,3000,,1000
-```
-
-### Experiment-wide settings
-
-| `[rna]` option | Default behavior |
-| :--- | :--- |
-| `high_occupancy_filter` | `true`, applied across the experiment; `false` still runs normal calling; not a samples column |
-| `sample_failure_policy` | `skip` records failures and continues; `fail` stops on sample failure |
-| `darkreaction` | `auto`; manual cDNA=`R1/unset`, oligo=`R1/R2/R1R2/unset`; do not mix auto and manual values |
-
-See [C6 outputs](../outs/multi.md#c6-outputs) for sample reports, file paths and metric denominators.
+> **Note: C6 Multiplexed Configuration**
+>
+> The configuration rules and `[samples]` syntax for C6 multiplexed RNA experiments have been moved to their own dedicated chapter. Please refer to [C6 Parameters](c6.md).
 
 ## Modality parameter mapping <a id="module-parameter-mapping"></a>
 
@@ -156,7 +100,7 @@ See [C6 outputs](../outs/multi.md#c6-outputs) for sample reports, file paths and
 | `[atac]` | `genomeDir`, `darkreaction`, `forcecells`, `frags_cutoff`, `tss_cutoff`, `jaccard_cutoff`, `merge_cutoff`, `peak_signal`, `need_bam`, `sample_read_pairs` | [ATAC](scATAC.md) |
 | `[vdj-t]` / `[vdj-b]` | `ref`, `beadstrans`, `darkreaction`, `customize`, `keep_all_cells`, `r2_only`, `enrichment_primers`, `sample_read_pairs` | [VDJ](scVDJ.md) |
 
-Ordinary RNA requires explicit chemistry and dark cycles together. C6 has fixed chemistry and can detect dark cycles independently. Repeat `customize` as required for libraries; keep one definition for other scalar options.
+Ordinary RNA requires explicit chemistry and dark cycles together. Repeat `customize` as required for libraries; keep one definition for other scalar options.
 
 ### BAM resources <a id="bam-resources"></a>
 
@@ -176,10 +120,7 @@ Routine runs need only a total thread budget. BAM concurrency is planned from CP
 | `bam_compression_level` | 0–9; omission retains the HTSlib default |
 | `bam_limit_memory` | Default `false`; `true` fails if even one worker cannot fit the estimate |
 
-Automatic mode reduces concurrency; if one worker still exceeds the estimate, it uses one worker with a warning. If memory detection is unavailable, it uses CPU/file-descriptor scheduling. These options have no effect with `no_bam=true`. See [Multi outputs](../outs/multi.md#c6-outputs) for delivery paths and metrics.
+Automatic mode reduces concurrency; if one worker still exceeds the estimate, it runs one worker with a warning. If memory detection is unavailable, it uses CPU/file-descriptor scheduling. These options have no effect with `no_bam=true`.
 
 </details>
 
-## Related documentation
-
-[Workflow](../pipeline/multi.md) · [Outputs and reports](../outs/multi.md) · [Upgrade Guide](../migration.md) · [Running & Troubleshooting](../troubleshooting.md)

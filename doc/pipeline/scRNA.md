@@ -8,32 +8,22 @@
 
 **工作流程**：原始数据 → 质量控制 → 比对 → 细胞识别 → 表达矩阵 → 分析报告
 
-![scRNA 分析流程概览](../images/scRNA_pipeline.png)
+<div align="center" style="margin: 1.5em 0;" markdown="block">
+  <img src="../images/scRNA_pipeline.png" alt="scRNA 分析流程概览" width="800" style="max-width: 100%; height: auto;">
+</div>
 
-> **使用说明**：`$dnbc4tools` 代表可执行程序路径，需替换为您的实际安装路径。本文示例使用换行符 `\` 分隔命令以提高可读性，实际分析时可写为单行。
+<div style="background-color: #e7f3fe; border-left: 6px solid #2196F3; padding: 15px; margin: 1.5em 0; border-radius: 4px;" markdown="block">
+<strong>使用说明：</strong> <code>$dnbc4tools</code> 代表可执行程序路径，需替换为您的实际安装路径。本文示例使用换行符 <code>\</code> 分隔命令以提高可读性，实际分析时可写为单行。
+</div>
 
 ## 文件准备 <a id="文件准备"></a>
 
 分析需要两种类型的 FASTQ 文件：
 
-<table>
-  <thead>
-    <tr>
-      <th>文件类型</th>
-      <th>说明</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><b>cDNA 文库</b></td>
-      <td>包含 Cell Barcode、UMI 和转录组信息的测序数据。</td>
-    </tr>
-    <tr>
-      <td><b>Oligo 文库</b></td>
-      <td>包含大小磁珠的 Cell Barcode 信息及小磁珠的 UMI 信息。</td>
-    </tr>
-  </tbody>
-</table>
+| 文件类型 | 说明 |
+| :--- | :--- |
+| **cDNA 文库** | 包含 Cell Barcode、UMI 和转录组信息的测序数据 |
+| **Oligo 文库** | 包含大小磁珠的 Cell Barcode 信息及小磁珠的 UMI 信息 |
 
 > **注意**：请确保 FASTQ 文件质量良好，并记录文件路径以备后续分析使用。
 
@@ -41,64 +31,31 @@
 
 ### 参考数据库输入文件
 
-<table>
-  <thead>
-    <tr>
-      <th>文件类型</th>
-      <th>格式</th>
-      <th>说明</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><b>基因组文件</b></td>
-      <td>FASTA</td>
-      <td>包含特定物种的完整基因组序列（通常是主装配版本），涵盖染色体、线粒体及其他遗传信息。该文件是基因组比对和分析的基础。</td>
-    </tr>
-    <tr>
-      <td><b>注释文件</b></td>
-      <td>GTF</td>
-      <td>详细描述基因组中的基因、转录本、外显子等功能区域。此文件明确了基因的位置、类型及相关属性。</td>
-    </tr>
-  </tbody>
-</table>
+| 文件类型 | 格式 | 说明 |
+| :--- | :--- | :--- |
+| **基因组文件** | FASTA | 包含特定物种的完整基因组序列（通常是主装配版本），涵盖染色体、线粒体及其他遗传信息。该文件是基因组比对和分析的基础。 |
+| **注释文件** | GTF | 详细描述基因组中的基因、转录本、外显子等功能区域。此文件明确了基因的位置、类型及相关属性。 |
 
 > **推荐数据来源**：优先使用 [Ensembl 数据库](https://www.ensembl.org/index.html) 提供的文件。Ensembl 的 GTF 文件包含可选标签，便于通过 `dnbc4tools tools mkgtf` 进行过滤。
 
-**GTF 文件要求：**
-- 必须包含 `gene` 或 `transcript` 类型以及 `exon` 类型的注释。
-- 属性中必须包含 `gene_id` 或 `gene_name` 以及 `transcript_id` 或 `transcript_name`。
-- 不支持 GFF 文件格式。
-- 基因组文件与注释文件需版本对应。
+> **GTF 文件要求**：
+>
+> - 必须包含 `gene` 或 `transcript` 类型以及 `exon` 类型的注释。
+> - 属性中必须包含 `gene_id` 或 `gene_name` 以及 `transcript_id` 或 `transcript_name`。
+> - 不支持 GFF 文件格式。
+> - 基因组文件与注释文件需版本对应。
 
 ### GTF 文件预处理（可选） <a id="gtf-file-processing-optional-zh"></a>
 
-从 ENSEMBL 和 UCSC 等网站下载的 GTF 文件通常包含多种类型的基因。根据您的研究兴趣选择特定的基因类型进行分析，可以有效减少基因注释的重叠，从而提高比对的唯一性。与多个基因非唯一比对的 reads 会被过滤。
+从 ENSEMBL 和 UCSC 等网站下载的 GTF 文件通常包含多种类型的基因。根据您的研究兴趣选择特定的基因类型进行分析，可以有效减少基因注释的重叠，从而提高比对的唯一性。与多个基因非唯一比对的 reads 会被过滤。详细参数规范请参阅 [GTF 工具参数说明](../parameter/tools.md)。
 
 我们提供以下三种 GTF 文件处理功能：
 
-<table>
-  <thead>
-    <tr>
-      <th>功能</th>
-      <th>说明</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><b>基因类型统计</b></td>
-      <td>统计 GTF 文件中各基因类型的数量。</td>
-    </tr>
-    <tr>
-      <td><b>GTF 文件校正</b></td>
-      <td>填补缺失信息，确保 GTF 文件符合分析要求。</td>
-    </tr>
-    <tr>
-      <td><b>基因类型过滤</b></td>
-      <td>根据研究需要筛选特定基因类型。</td>
-    </tr>
-  </tbody>
-</table>
+| 功能 | 说明 | 命令行入口 |
+| :--- | :--- | :--- |
+| **基因类型统计** | 统计 GTF 文件中各基因类型的数量 | `dnbc4tools tools mkgtf --action stats` |
+| **GTF 文件校正** | 填补缺失信息，确保 GTF 文件符合分析要求 | `dnbc4tools tools mkgtf --action check` |
+| **基因类型过滤** | 根据研究需要筛选特定基因类型 | `dnbc4tools tools mkgtf --type gene_biotype` |
 
 #### 基因类型统计
 
@@ -196,16 +153,37 @@ $dnbc4tools tools mkgtf \
 
 在执行 `dnbc4tools rna run` 分析前，必须先构建参考数据库。此步骤利用注释文件（GTF）和参考基因组（FASTA）创建索引，用于后续测序 reads 的比对和注释。
 
-**运行命令：**
+#### 单物种参考数据库构建（以人类为例）
 
 ```shell
-# 构建参考数据库
+# 构建单物种参考数据库
 $dnbc4tools rna mkref \
   --fasta genome.fa \
   --ingtf genes.filter.gtf \
   --species Homo_sapiens \
   --threads 20
 ```
+
+#### 双物种混合参考数据库构建（人鼠混合）
+
+适用于人-鼠细胞混合实验（如 PDX 模型或跨物种多重验证）的混合参考索引构建：
+
+```shell
+# 构建人-鼠双物种混合参考数据库
+# 准备好两物种 FASTA 与过滤后的 GTF 文件，多个文件与物种标识使用逗号分隔
+$dnbc4tools rna mkref \
+  --fasta GRCh38.primary_assembly.genome.fa,GRCm38.primary_assembly.genome.fa \
+  --ingtf hg38.filtered.gtf,mm10.filtered.gtf \
+  --species hg38,mm10 \
+  --threads 20
+```
+
+> **双物种建库说明**：
+>
+> - `--fasta`：提供待混合物种的基因组 FASTA 路径，使用逗号 `,` 分隔。
+> - `--ingtf`：提供各物种过滤后的 GTF 注释文件路径，使用逗号 `,` 分隔（顺序需与 `--fasta` 严格对应）。
+> - `--species`：声明各物种的简短标识符（如 `hg38,mm10`），用于在合并基因组中为染色体和基因添加物种前缀，防止重名混淆。
+> - **命名限制**：物种名称中切勿包含空格、路径斜杠或保留字 `_and_`。
 
 **输出目录：**
 
@@ -289,7 +267,7 @@ $dnbc4tools rna mkref \
  2026-04-03 17:13:37 RNA reference building finished.
 ```
 
-## 主流程分析 <a id="主流程分析"></a>
+## 主分析流程 <a id="主流程分析"></a>
 
 主流程分析包括单样本分析和多样本批处理两种使用方式：
 
@@ -299,6 +277,7 @@ $dnbc4tools rna mkref \
 ### 单样本分析
 
 RNA 主分析流程处理单个样本的 cDNA 和 Oligo 文库测序数据。该流程的核心步骤包括：
+
 1. **数据处理**：执行质量控制、比对和功能区域注释。
 2. **细胞识别**：合并磁珠，识别有效细胞。
 3. **矩阵生成**：生成原始及过滤后的基因表达矩阵。
@@ -307,9 +286,9 @@ RNA 主分析流程处理单个样本的 cDNA 和 Oligo 文库测序数据。该
 
 支持两种输入方式：
 
-**方式1：目录方式（推荐）**
+**方式一：目录输入方式（推荐）**
 
-```shell
+```bash
 $dnbc4tools rna run \
   --name sample \
   --fastqs /data \
@@ -318,7 +297,7 @@ $dnbc4tools rna run \
 ```
 
 目录结构示例：
-```
+```text
 /data/
 ├── cDNA/
 │   ├── sample_cDNA_R1.fastq.gz
@@ -337,9 +316,9 @@ $dnbc4tools rna run \
 - 自动识别依赖文件名中的 R1/R2 标识。建议使用 `_R1`/`_R2` 或 `_R1_`/`_R2_` 命名。
 - 不同样本或不同文库的数据不要混放到同一输入目录中。
 
-**方式2：单独参数方式**
+**方式二：独立显式指定 FASTQ 文件**
 
-```shell
+```bash
 $dnbc4tools rna run \
   --name sample \
   --cDNAfastq1 /data/cDNA/sample_cDNA_R1.fastq.gz \
@@ -350,68 +329,82 @@ $dnbc4tools rna run \
   --threads 30
 ```
 
+### 运行过程
+
 在对试剂版本和暗反应自动检测后，软件开始运行分析，以下是一个示例：
 
 ```shell
-──────────────────────────── Parsed FASTQ Inputs — 2025-11-12 15:00:24 ─────────────────────────────
+──────────────────────────── Parsed FASTQ Inputs — 2026-11-03 16:44:27 ─────────────────────────────
 ┌─────────────┬────────────────────────────────────────────────────────────────────────────────────┐
 │ Type        │ Path                                                                               │
 ├─────────────┼────────────────────────────────────────────────────────────────────────────────────┤
-│ cDNA Read 1 │ /data/cDNA/sample_cDNA_R1.fastq.gz                                                 │
-│ cDNA Read 2 │ /data/cDNA/sample_cDNA_R2.fastq.gz                                                 │
-│ oligo Read 1 │ /data/oligo/sample_oligo_1_R1.fastq.gz,/data/oligo/sample_oligo_2_R1.fastq.gz      │
-│ oligo Read 2 │ /data/oligo/sample_oligo_1_R2.fastq.gz,/data/oligo/sample_oligo_2_R2.fastq.gz      │
+│ cDNA Read1  │ /data/cDNA/sample_cDNA_R1.fastq.gz                                                 │
+│ cDNA Read2  │ /data/cDNA/sample_cDNA_R2.fastq.gz                                                 │
+│ oligo Read1 │ /data/oligo/sample_oligo_1_R1.fastq.gz,/data/oligo/sample_oligo_2_R1.fastq.gz      │
+│ oligo Read2 │ /data/oligo/sample_oligo_1_R2.fastq.gz,/data/oligo/sample_oligo_2_R2.fastq.gz      │
 └─────────────┴────────────────────────────────────────────────────────────────────────────────────┘
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 
-──────────────────────────── Chemistry Detection — 2025-11-12 15:00:31 ─────────────────────────────
+──────────────────────────── Chemistry Detection — 2026-11-03 16:44:28 ─────────────────────────────
 ┌───────────────────────────────────────────────┬──────────────────────────────────────────────────┐
 │ Type                                          │ Result                                           │
 ├───────────────────────────────────────────────┼──────────────────────────────────────────────────┤
-│ oligo Read 1                                   │ darkreaction                                     │
-│ oligo Read 2                                   │ darkreaction                                     │
+│ oligo Read1                                   │ darkreaction                                     │
+│ oligo Read2                                   │ darkreaction                                     │
 └───────────────────────────────────────────────┴──────────────────────────────────────────────────┘
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 
-──────────────────────────── Chemistry Detection — 2025-11-12 15:00:31 ─────────────────────────────
+──────────────────────────── Chemistry Detection — 2026-11-03 16:44:28 ─────────────────────────────
 ┌─────────────────────────────────────────────┬────────────────────────────────────────────────────┐
 │ Type                                        │ Result                                             │
 ├─────────────────────────────────────────────┼────────────────────────────────────────────────────┤
-│ cDNA Read 1                                  │ darkreaction                                       │
+│ cDNA Read1                                  │ darkreaction                                       │
 └─────────────────────────────────────────────┴────────────────────────────────────────────────────┘
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 
- 2025-11-12 15:00:31 Starting oligo library filtering...
+ 2026-11-03 16:44:28 Validating RNA reference...
 ...done
 
- 2025-11-12 15:05:53 Starting cDNA library filtering...
+ 2026-11-03 16:45:35 Starting oligo library filtering...
 ...done
 
- 2025-11-12 15:07:49 Performing read alignment and UMI counting...
+ 2026-11-03 16:48:11 Starting cDNA library filtering...
 ...done
 
- 2025-11-12 15:15:25 Calculating bead similarity and merging beads within droplets...
+ 2026-11-03 16:49:00 Correcting RNA barcodes and preparing alignment inputs...
 ...done
 
- 2025-11-12 15:15:41 Generating raw gene expression matrix...
+ 2026-11-03 16:49:35 Performing read alignment and UMI counting...
 ...done
 
- 2025-11-12 15:17:24 Generating cell-filtered gene expression matrix...
+ 2026-11-03 16:52:40 Calculating bead similarity and merging beads within droplets...
 ...done
 
- 2025-11-12 15:17:43 Calculating sequencing saturation metrics...
+ 2026-11-03 16:52:51 Generating raw gene expression matrix...
 ...done
 
- 2025-11-12 15:18:08 Generating position-sorted BAM file...
+ 2026-11-03 16:53:14 Calling cells and generating filtered cell barcodes...
 ...done
 
- 2025-11-12 15:24:46 Performing dimensionality reduction and clustering analysis...
+ 2026-11-03 16:53:40 Generating cell-filtered gene expression matrix...
 ...done
 
- 2025-11-12 15:27:21 Generating analysis report and summary statistics...
+ 2026-11-03 16:53:54 Calculating sequencing saturation metrics...
 ...done
 
- 2025-11-12 15:27:40 Analysis Finished. Elapsed Time: 0:27:16
+ 2026-11-03 16:54:02 Generating per-barcode alignment and expression metrics...
+...done
+
+ 2026-11-03 16:54:15 Generating position-sorted BAM file...
+...done
+
+ 2026-11-03 16:55:13 Performing dimensionality reduction and clustering analysis...
+...done
+
+ 2026-11-03 16:55:59 Generating analysis report and summary statistics...
+...done
+
+ 2026-11-03 16:56:18 Analysis Finished. Elapsed Time: 0:11:51
 ```
 
 当出现 `Analysis Finished` 消息时，表示分析已成功完成。
@@ -429,28 +422,11 @@ $dnbc4tools rna multi \
 
 其中 `sample.tsv` 文件使用制表符 (`\t`) 分隔，包含三列：
 
-<table>
-  <thead>
-    <tr>
-      <th>列</th>
-      <th>内容</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>1</td>
-      <td>样本名称</td>
-    </tr>
-    <tr>
-      <td>2</td>
-      <td>cDNA 文库测序数据</td>
-    </tr>
-    <tr>
-      <td>3</td>
-      <td>Oligo 文库测序数据</td>
-    </tr>
-  </tbody>
-</table>
+| 列序号 | 列内容 | 格式与说明 |
+| :---: | :--- | :--- |
+| 1 | 样本名称 | 样本唯一标识符（如 `sample1`） |
+| 2 | cDNA 文库测序数据 | 成对 FASTQ，`R1;R2` 格式，同端多文件用逗号 `,` 分隔 |
+| 3 | Oligo 文库测序数据 | 成对 FASTQ，`R1;R2` 格式，同端多文件用逗号 `,` 分隔 |
 
 > **注意**：多个 FASTQ 文件以逗号分隔，R1 和 R2 文件以分号分隔。
 
@@ -502,15 +478,3 @@ $cat sample1.sh
 ├── *_scRNA_report.html
 └── singlecell.csv
 ```
-
-## 相关文档
-
-| 资源 | 描述 |
-| :--- | :--- |
-| [输出文件使用方法](../io.md) | 了解输出文件结构和格式 |
-| [分析参数设置](../parameter/scRNA.md) | 完整的参数参考和说明 |
-| [输出文件解释](../outs/scRNA.md) | 分析结果的详细解读 |
-
-## 常见问题
-
-本节将根据常见使用问题持续补充。当前版本请优先参考运行日志、参数说明和输出文件说明进行排查。

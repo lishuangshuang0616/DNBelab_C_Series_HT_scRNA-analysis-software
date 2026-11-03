@@ -8,9 +8,13 @@
 
 **工作流程**：5' 端转录组分析 → VDJ 文库处理 → 序列组装注释 → 细胞过滤 → 克隆型分析 → 分析报告
 
-![scVDJ 分析流程概览](../images/scVDJ_pipeline.png)
+<div align="center" style="margin: 1.5em 0;" markdown="block">
+  <img src="../images/scVDJ_pipeline.png" alt="scVDJ 分析流程概览" width="800" style="max-width: 100%; height: auto;">
+</div>
 
-> **使用说明**：`$dnbc4tools` 代表可执行程序路径，需替换为您的实际安装路径。本文示例使用换行符 `\` 分隔命令以提高可读性，实际分析时可写为单行。
+<div style="background-color: #e7f3fe; border-left: 6px solid #2196F3; padding: 15px; margin: 1.5em 0; border-radius: 4px;" markdown="block">
+<strong>使用说明：</strong> <code>$dnbc4tools</code> 代表可执行程序路径，需替换为您的实际安装路径。本文示例使用换行符 <code>\</code> 分隔命令以提高可读性，实际分析时可写为单行。
+</div>
 
 ## 文件准备 <a id="文件准备"></a>
 
@@ -20,7 +24,7 @@
 
 为单个样本生成表达矩阵，以下是一个示例步骤或脚本模板：
 
-```shell
+```bash
 $dnbc4tools rna run \
 	--name sample_5rna \
 	--cDNAfastq1 /data/sample_cDNA_R1.fastq.gz \
@@ -32,30 +36,18 @@ $dnbc4tools rna run \
 	--end5
 ```
 
-> **注意**：5' 端转录组分析是 VDJ 分析的前提，需要先完成此步骤才能进行后续分析。
+<div style="background-color: #fffbe6; border-left: 6px solid #ffc107; padding: 15px; margin: 1.5em 0; border-radius: 4px;" markdown="block">
+<strong>前置条件：</strong> 5' 端转录组分析是 VDJ 分析的前提，需要先完成此步骤以获取细胞微球对应关系表 <code>singlecell.csv</code>。
+</div>
 
 ### VDJ 分析所需文件
 
 分析需要以下文件：
 
-<table>
-  <thead>
-    <tr>
-      <th>文件类型</th>
-      <th>说明</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><b>FASTQ 文件</b></td>
-      <td>VDJ 文库测序数据，包含 TCR 或 BCR 序列信息</td>
-    </tr>
-    <tr>
-      <td><b>singlecell.csv 文件</b></td>
-      <td>5' 端转录组分析结果中的细胞信息文件</td>
-    </tr>
-  </tbody>
-</table>
+| 文件类型 | 说明 |
+| :--- | :--- |
+| **FASTQ 文件** | VDJ 文库测序数据，包含 TCR 或 BCR 序列信息 |
+| **singlecell.csv 文件** | 5' 端转录组分析结果中的细胞信息文件，包含细胞有效判定与微球聚合关系 |
 
 分析需要 5' 端转录组分析结果目录中的 `singlecell.csv` 文件。该文件包含 `cell` 和 `barcode` 列的合并信息，以及 `is_cell_barcode` 列（1 表示细胞，0 表示非细胞），用于鉴定有效的细胞。
 
@@ -90,9 +82,9 @@ VDJ 主分析流程结合了单细胞 VDJ 文库测序数据和对应样本的 5
 
 为单个样本运行 TCR 分析，支持两种输入方式：
 
-**方式1：目录方式（推荐）**
+**方式一：目录输入方式（推荐）**
 
-```shell
+```bash
 $dnbc4tools vdj run \
   --name sample_tcr \
   --fastqs /data/vdjt \
@@ -110,9 +102,9 @@ $dnbc4tools vdj run \
 └── sample_tcr_R2.fastq.gz
 ```
 
-**方式2：单独参数方式**
+**方式二：独立显式指定 FASTQ 文件**
 
-```shell
+```bash
 $dnbc4tools vdj run \
   --name sample_tcr \
   --fastq1 /data/vdjt/sample_tcr_R1.fastq.gz \
@@ -127,9 +119,9 @@ $dnbc4tools vdj run \
 
 为单个样本运行 BCR 分析，支持两种输入方式：
 
-**方式1：目录方式（推荐）**
+**方式一：目录输入方式（推荐）**
 
-```shell
+```bash
 $dnbc4tools vdj run \
   --name sample_bcr \
   --fastqs /data/vdjb \
@@ -147,9 +139,9 @@ $dnbc4tools vdj run \
 └── sample_bcr_R2.fastq.gz
 ```
 
-**方式2：单独参数方式**
+**方式二：独立显式指定 FASTQ 文件**
 
-```shell
+```bash
 $dnbc4tools vdj run \
   --name sample_bcr \
   --fastq1 /data/vdjb/sample_bcr_R1.fastq.gz \
@@ -160,57 +152,66 @@ $dnbc4tools vdj run \
   --threads 10
 ```
 
-输入目录要求：
-
-- `--fastqs` 指向当前 VDJ 文库的 FASTQ 目录。
-- R1/R2 配对文件需直接放在该目录下。
-- 自动识别依赖文件名中的 R1/R2 标识。建议使用 `_R1`/`_R2` 或 `_R1_`/`_R2_` 命名。
-- TCR 与 BCR 数据应分别运行，不要混放到同一输入目录中。
+> **输入目录要求**：
+>
+> - `--fastqs` 指向当前 VDJ 文库的 FASTQ 目录。
+> - R1/R2 配对文件需直接放在该目录下。
+> - 自动识别依赖文件名中的 R1/R2 标识。建议使用 `_R1`/`_R2` 或 `_R1_`/`_R2_` 命名。
+> - TCR 与 BCR 数据应分别运行，不要混放到同一输入目录中。
 
 ### 运行过程
 
 在对暗反应自动检测后，软件开始运行分析，以下是一个示例：
 
 ```shell
-──────────────────────────── Parsed FASTQ Inputs — 2025-11-12 15:13:16 ─────────────────────────────
-┌───────┬──────────────────────────────────────────────────────────────────────────────────────────┐
-│ Type  │ Path                                                                                     │
-├───────┼──────────────────────────────────────────────────────────────────────────────────────────┤
-│ Read 1 │ /data/vdjt/sample_tcr_R1.fastq.gz                                                        │
-│ Read 2 │ /data/vdjt/sample_tcr_R2.fastq.gz                                                        │
-└───────┴──────────────────────────────────────────────────────────────────────────────────────────┘
-────────────────────────────────────────────────────────────────────────────────────────────────────
+====================================================================================================
+Running VDJ-B pipeline — 2026-11-02 18:00:13
+====================================================================================================
 
-──────────────────────────── Chemistry Detection — 2025-11-12 15:13:20 ─────────────────────────────
-┌─────────────────────────────────┬────────────────────────────────────────────────────────────────┐
-│ Type                            │ Result                                                         │
-├─────────────────────────────────┼────────────────────────────────────────────────────────────────┤
-│ Read 1                           │ darkreaction                                                   │
-└─────────────────────────────────┴────────────────────────────────────────────────────────────────┘
-────────────────────────────────────────────────────────────────────────────────────────────────────
+====================================================================================================
+Parsed FASTQ Inputs - 2026-11-02 18:00:13
+====================================================================================================
+Type         | Path                                                                                 
+-------------+--------------------------------------------------------------------------------------
+Read1        | /data/vdjb/sample_bcr_R1.fastq.gz                                                    
+Read2        | /data/vdjb/sample_bcr_R2.fastq.gz                                                    
+====================================================================================================
 
- 2025-11-12 15:13:20 Starting VDJ library filtering...
+
+====================================================================================================
+Chemistry Configuration - 2026-11-02 18:00:14
+====================================================================================================
+Type         | Result                                                                               
+-------------+--------------------------------------------------------------------------------------
+VDJ          | custom sequence structure                                                            
+====================================================================================================
+
+
+2026-11-02 18:00:14 Validating VDJ reference...
 ...done
 
- 2025-11-12 15:15:46 Preparing input data for VDJ assembly...
+2026-11-02 18:00:14 Starting VDJ library filtering...
 ...done
 
- 2025-11-12 15:18:14 Performing VDJ sequence assembly and gene segment annotation...
+2026-11-02 18:03:46 Correcting VDJ barcodes and translating bead identities...
 ...done
 
- 2025-11-12 16:03:18 Performing cell calling for VDJ data...
+2026-11-02 18:04:06 Preparing input data for VDJ assembly...
 ...done
 
- 2025-11-12 16:04:02 Generating VDJ clonotype analysis...
+2026-11-02 18:07:16 Performing VDJ sequence assembly and gene segment annotation...
 ...done
 
- 2025-11-12 16:05:02 Converting VDJ results from cellbarcode to cell ID...
+2026-11-02 18:26:09 Performing cell calling for VDJ data...
 ...done
 
- 2025-11-12 16:05:15 Generating analysis report and summary statistics...
+2026-11-02 18:27:36 Generating VDJ clonotype analysis...
 ...done
 
- 2025-11-12 16:05:44 Analysis Finished. Elapsed Time: 0:52:24
+2026-11-02 18:28:30 Converting VDJ results from cellbarcode to cell ID...
+...done
+
+2026-11-02 18:28:31 Analysis Finished. Elapsed Time: 0:28:17
 ```
 
 成功的运行会以 `Analysis Finished` 结束。
@@ -235,15 +236,3 @@ $dnbc4tools vdj run \
 ├── filtered_contig.fasta.fai
 └── metrics_summary.xls
 ```
-
-## 相关文档
-
-| 资源 | 描述 |
-| :--- | :--- |
-| [输出文件使用方法](../io.md) | 了解输出文件结构和格式 |
-| [分析参数设置](../parameter/scVDJ.md) | 查看完整参数选项和说明 |
-| [输出文件解释](../outs/scVDJ.md) | 详细解读分析结果文件 |
-
-## 常见问题
-
-本节将根据常见使用问题持续补充。当前版本请优先参考运行日志、参数说明和输出文件说明进行排查。

@@ -1,57 +1,107 @@
-# Installation
+# DNBelab C Series™ Software Installation
 
-[Requirements](#system-requirements) · [Release status](#software-download) · [Installation and checks](#installation-process)
+This guide describes the system requirements, software download, installation procedure, and verification steps for the DNBelab C Series™ HT Single-Cell Analysis Software (dnbc4tools).
 
-## Requirements <a id="system-requirements"></a>
+## System Requirements <a id="system-requirements"></a>
 
-| Area | Requirement |
-| :--- | :--- |
-| Production platform | Linux x86-64; native executables must match the deployment platform |
-| Memory and CPUs | Plan for dataset, reference and sample count. Retain the 3.1 starting guidance of 50 GB RAM and 8 cores; 128 GB and 16+ cores for larger tasks |
-| Storage | Space for FASTQs, references, matrices, BAM and intermediate files; SSD recommended |
-| Python | Source and lightweight CLI support Python 3.8+; use a validated, locked scientific environment |
-| ATAC dependencies | MACS2, bgzip and tabix must be available; a full directory release may bundle these tools |
+dnbc4tools requires the following system and hardware environment:
 
-## 3.2 release status <a id="software-download"></a>
+| Category | Minimum | Recommended | Notes |
+| :--- | :--- | :--- | :--- |
+| **Operating System** | 64-bit Linux | CentOS 7.x+ / Ubuntu 20.04+ | Compatible with mainstream 64-bit Linux distributions |
+| **CPU / Architecture** | 8 cores (x86-64) | 16+ cores | Requires x86-64 compatible processors |
+| **Memory (RAM)** | 50 GB | 128 GB or higher | Actual requirements depend on sample count and sequencing depth |
+| **Disk Storage** | Adequate data space | Fast NVMe / SSD | For FASTQ inputs, reference genomes, and intermediate analysis files |
 
-This manual follows the 3.2 source, whose change log still marks changes as unreleased. The formal package, download URL, size, release date and checksums await confirmation. Renaming a 3.1 archive does not install 3.2.
+---
 
-Use the launcher provided by your complete 3.2 release directory. For the 3.1 download and instructions, select 3.1 in the header. See [Previous Installation](installation_previous.md) for earlier versions.
+## Software Download <a id="software-download"></a>
 
-## Installation and checks <a id="installation-process"></a>
+### dnbc4tools 3.2
 
-### Complete directory releases
+*dnbc4tools* is distributed as a self-contained `tar.gz` package bundling all required precompiled dependencies, ready to run out of the box on standard Linux environments.
 
-Keep the Python package, configuration, report templates, native executables under `software/`, and their manifest together. The source builder creates `bin/dnbc4tools`; deployment layouts may also provide an outer `dnbc4tools` launcher. Use the entry point actually supplied.
-
-```bash
-/path/to/dnbc4tools-release/bin/dnbc4tools --version
-/path/to/dnbc4tools-release/bin/dnbc4tools --help
-/path/to/dnbc4tools-release/bin/dnbc4tools multi run --help
-```
-
-The version should be `3.2`. Successful help output checks the entry point, not a complete analysis.
-
-### Assemble a directory release (maintainers)
-
-Run in the `dnbc4tools_py` source root using a validated analysis environment:
+* **Package Name**: `dnbc4tools-3.2.tar.gz` (Linux x86-64)
+* **Release Status**: Download link and checksums will be provided upon official release
 
 ```bash
-python -m pip install -r requirements-runtime.txt
-python scripts/build_release.py . /path/to/dnbc4tools-release
-python scripts/check_release.py /path/to/dnbc4tools-release   --launcher /path/to/dnbc4tools-release/bin/dnbc4tools   --require-clean-source --require-runtime-tools
+# Download using wget (Link to be finalized upon formal release)
+wget -O dnbc4tools-3.2.tar.gz "<Download URL>"
+
+# Download using curl
+curl -o dnbc4tools-3.2.tar.gz "<Download URL>"
 ```
 
-The destination must not exist. The builder copies configuration, templates and software and generates a launcher. Build native executables for the target Linux platform first, synchronize them, and update their sizes, SHA-256 values and source identities in the manifest.
+<div style="margin-top: 15px;" markdown="block">
+  <strong>Looking for older versions?</strong><br>
+  Use the version switcher in the header to view the complete 3.1 manual. For earlier releases, please refer to the <a href="./installation_previous.html">Previous Installation Guide</a>.
+</div>
 
-Additional C6 interface checks:
+---
+
+## Installation Process <a id="installation-process"></a>
+
+### Step 1: Extract the Package
+
+Extract the dnbc4tools package to your preferred directory (example uses `/opt/software`):
 
 ```bash
-python scripts/check_release.py /path/to/dnbc4tools-release   --require-c6-optimizations
+# Navigate to target directory
+cd /opt/software
+
+# Extract the package
+tar -xzvf dnbc4tools-3.2.tar.gz
 ```
 
-These checks validate bundle contents and interfaces, not real-data equivalence. Compressed summaries also require `c4_summary --gzip`. BAM scheduling, matrix and VDJ input changes need matched native tools; Python updates alone are insufficient.
+### Step 2: Verify Directory Structure
 
-## Start an analysis <a id="verification--testing"></a>
+After extraction, the directory structure is organized as follows:
 
-See [Quick Start](quickstart.md), [Upgrade Guide](migration.md) and [Running & Troubleshooting](troubleshooting.md). Use new output directories or sample names for version comparisons.
+```text
+dnbc4tools3.2/
+├── dnbc4tools          # Main executable launcher
+├── external/           # Bundled third-party dependencies
+├── lib/                # Shared runtime libraries
+├── misc/               # Configuration and auxiliary resources
+└── sourceC4.bash       # Environment configuration script
+```
+
+---
+
+## Verification & Testing <a id="verification--testing"></a>
+
+### Basic Functionality Test
+
+Navigate to the extracted directory and run the main executable to confirm successful installation:
+
+```bash
+# Navigate to installation directory
+cd /opt/software/dnbc4tools3.2
+
+# Test command
+./dnbc4tools
+```
+
+The installation is successful when the following version and help message is displayed:
+
+```text
+dnbc4tools 3.2
+
+Single-cell analysis toolkit for RNA, ATAC, V(D)J, and multi-omics workflows
+
+Usage: dnbc4tools <COMMAND>
+
+Commands:
+  
+    rna          Single-cell RNA-seq analysis
+    atac         Single-cell ATAC-seq analysis
+    vdj          Single-cell V(D)J immune profiling
+    tools        Utility commands and file processing
+    multi        Integrated multi-omics analysis
+
+Options:
+  -h, --help     show this help message and exit
+  -v, --version  show program's version number and exit
+```
+
+After verifying the installation, you can proceed to the [Quick Start](quickstart.md) tutorial to run your first single-cell analysis.

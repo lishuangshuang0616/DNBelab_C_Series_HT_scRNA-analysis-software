@@ -1,12 +1,14 @@
-# Tool Command Parameters
+# Tools Parameters
 
-Configuration reference for DNBelab C Series HT tool commands
+DNBelab C Series HT Auxiliary Tools Parameter Reference
 
-`mkgtf` is the public subcommand of `dnbc4tools tools`. The standalone `bam2fastq`, `chromsplit` and `fqsubC4` examples below depend on separate deployment and are not subcommands of `dnbc4tools tools`.
-## GTF File Operations (mkgtf) <a id="gtf-file-operations-mkgtf"></a>
+The primary public subcommand under `dnbc4tools tools` is `mkgtf`. The auxiliary utilities `bam2fastq`, `chromsplit`, and `fqsubC4` described below are standalone executables whose availability depends on your environment.
 
-> <strong>Core Function</strong>
-> A GTF file operation tool for gene type statistics, rule-based filtering, and format validation. It provides standardized gene annotation data for single-cell analysis.
+## GTF Processing (mkgtf) <a id="gtf-文件操作-mkgtf"></a>
+
+> **Core Function**
+>
+> GTF annotation processing tool supporting gene type statistics, rule-based filtering, format validation, and automated repair for single-cell transcriptomic reference pipelines.
 
 ### Usage <a id="usage-mkgtf"></a>
 
@@ -14,8 +16,7 @@ Configuration reference for DNBelab C Series HT tool commands
 dnbc4tools tools mkgtf --ingtf genes.gtf --output genes.filtered.gtf
 ```
 
-<details markdown="block" class="cli-help">
-<summary>Full CLI help</summary>
+### Full Command-Line Help
 
 ```shell
 $ dnbc4tools tools mkgtf --help
@@ -26,24 +27,20 @@ Filter and process GTF annotation files.
 Usage: dnbc4tools tools mkgtf [OPTIONS]
 
 options:
-  --help                   show this help message and exit
+  --help           show this help message and exit
 
 Basic Settings:
-  --action <STR>           Operation type: 'mkgtf' (filter by gene types), 'stats' (count statistics), 'check'
-                           (validate format) [default: mkgtf] (e.g., `stats`).
-  --ingtf <FILE>           Path to input GTF annotation file (required) (e.g., `genes.gtf`).
-  --output <FILE>          Path to output file (required unless --action stats). If omitted for "stats", statistics
-                           are printed to stdout.
+  --action <STR>   Operation type: 'mkgtf' (filter by gene types), 'stats' (count statistics), 'check' (validate
+                   format) [default: mkgtf] (e.g., `stats`).
+  --ingtf <FILE>   Path to input GTF annotation file (required) (e.g., `genes.gtf`).
+  --output <FILE>  Path to output file (required unless --action stats). If omitted for "stats", statistics are
+                   printed to stdout.
 
 Analysis Settings:
-  --conflict-policy <STR>  Policy for gene/transcript parent conflicts during `--action check`.
-                           `error` stops rather than guessing. `warn` reports conflicts
-                           and copies the source GTF unchanged without structural correction. [default: error].
-  --include <STR>          Comma-separated list of gene types to include. Supports wildcards (e.g., 'IG_*' will match
-                           'IG_V_gene', 'IG_C_gene'). [default: protein_coding,lncRNA,lincRNA,antisense,IG_*,TR_*].
-  --type <STR>             Attribute name for gene type classification (e.g., gene_biotype, gene_type).
-  --feature <STR>          Feature type to process from GTF. Use 'transcript' if no 'gene' entries exist [default:
-                           gene].
+  --include <STR>  Comma-separated list of gene types to include. Supports wildcards (e.g., 'IG_*' will match
+                   'IG_V_gene', 'IG_C_gene'). [default: protein_coding,lncRNA,lincRNA,antisense,IG_*,TR_*].
+  --type <STR>     Attribute name for gene type classification (e.g., gene_biotype, gene_type).
+  --feature <STR>  Feature type to process from GTF. Use 'transcript' if no 'gene' entries exist [default: gene].
 
 Usage Examples:
   Statistics:   dnbc4tools tools mkgtf --action stats --ingtf genes.gtf
@@ -51,164 +48,60 @@ Usage Examples:
   Validation:   dnbc4tools tools mkgtf --action check --ingtf genes.gtf --output corrected.gtf
 ```
 
-</details>
+### Parameter Reference Tables
 
-### Parameter Description
+| Option | Type | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `--ingtf` | File path | **Required** | Path to the input standard GTF annotation file (GFF/GFF3 not supported) |
+| `--output` | File path | Conditional | Path to output file (required for `mkgtf` and `check`; prints to stdout for `stats`) |
+| `--action` | Choice | `mkgtf` | Operation mode: `mkgtf` (filter by type), `stats` (count distribution), `check` (validate & fix) |
+| `--include` | String | Default set | Comma-separated gene biotypes to retain (supports wildcards `*`, e.g., `IG_*`) |
+| `--type` | String | `auto` | Attribute key in GTF defining gene type classification (e.g., `gene_biotype`, `gene_type`) |
+| `--feature` | String | `gene` | Target feature level in GTF (usually `gene`; fallback to `transcript` if absent) |
+| `--conflict-policy` | Choice | `error` | Policy for parent gene/transcript conflicts in `check` mode: `error` (abort) or `warn` (log & retain) |
 
-### Required Parameters
+---
 
-#### `--ingtf` (Required)
+### Operating Modes Deep Dive
 
-Specify the path to the input GTF gene annotation file.
+#### 1. Filtering Mode (`--action mkgtf`)
 
-<ul>
-  <li><strong>Format Requirement:</strong> Standard GTF format. GFF or GFF3 formats are not supported.</li>
-</ul>
+Extracts trusted biotypes from full annotations containing pseudogenes or non-coding fragments, reducing non-unique mapping:
 
-**Default:** None
-
-**Example:**
-
-```text
---ingtf Homo_sapiens.GRCh38.108.gtf
+```bash
+dnbc4tools tools mkgtf \
+  --action mkgtf \
+  --ingtf Homo_sapiens.GRCh38.108.gtf \
+  --output Homo_sapiens.filtered.gtf \
+  --include "protein_coding,lncRNA,IG_*,TR_*"
 ```
 
-#### `--output` (Required)
+- **Wildcard Matching**: Pattern `IG_*` matches `IG_V_gene`, `IG_C_gene`, `IG_J_gene`, etc.
+- **Default Inclusion Set**: `protein_coding,lncRNA,lincRNA,antisense,IG_*,TR_*`.
 
-Specify the output file for the processing results.
+#### 2. Summary Mode (`--action stats`)
 
-<ul>
-  <li><strong>Function:</strong> Generates different types of output files depending on the operation mode.</li>
-  <li><strong>Conditional Requirement:</strong> Required when <code>--action mkgtf</code> or <code>--action check</code> is used; optional when <code>--action stats</code> is used (statistics will be printed to stdout).</li>
-  <li><strong>Auto-creation:</strong> The specified output directory will be created automatically if it does not exist.</li>
-</ul>
+Tallies gene counts across all biotypes to evaluate source annotation structure and determine correct attribute tags:
 
-**Default:** None
-
-**Examples:**
-
-```text
-# When action is 'mkgtf' (filter)
---output ./filtered_genes.gtf
-```
-
-```text
-# When action is 'stats' (statistics)
---output ./gene_statistics.txt
-```
-
-```text
-# When action is 'check' (validation)
---output ./corrected.gtf
-```
-
-### Optional Parameters
-
-#### `--action` (Optional)
-
-For `check`, `--conflict-policy error` stops on parent gene/transcript conflicts. `warn` reports conflicts and copies the source unchanged. Input and output must be different files.
-
-Select the type of operation to perform.
-
-<ul>
-  <li><strong><code>mkgtf</code>:</strong> (Default) Filter the GTF file based on gene types.</li>
-  <li><strong><code>stats</code>:</strong> Count the gene types in the GTF file.</li>
-  <li><strong><code>check</code>:</strong> Validate and fix the GTF file format.</li>
-</ul>
-
-**Default:** `mkgtf`
-
-**Example:**
-
-```text
---action stats
-```
-
-#### `--conflict-policy`
-
-`error` (default) or `warn`. Applies to `--action check`; see the conflict behavior above.
-
-#### `--include` (Optional)
-
-In `mkgtf` mode, specify the gene types to keep, separated by commas.
-
-<ul>
-  <li><strong>Function:</strong> Used to precisely filter for the gene sets you are interested in.</li>
-  <li><strong>Wildcard Support:</strong> Supports wildcard matching (e.g., <code>IG_*</code> can match <code>IG_V_gene</code>, <code>IG_C_gene</code>).</li>
-</ul>
-
-**Default:** `protein_coding,lncRNA,lincRNA,antisense,IG_*,TR_*`
-
-**Example:**
-
-```text
---include protein_coding,lncRNA
-```
-
-#### `--type` (Optional)
-
-Specify the tag in the GTF attributes used to identify the gene type.
-
-<ul>
-  <li><strong>Function:</strong> Adapts to the annotation style of GTF files from different sources.</li>
-  <li><strong>Auto-detection:</strong> If set to <code>auto</code>, the program automatically detects common tags (such as <code>gene_biotype</code> and <code>gene_type</code>).</li>
-</ul>
-
-**Default:** `auto`
-
-**Example:**
-
-```text
---type gene_type
-```
-
-#### `--feature` (Optional)
-
-Specify from which column (feature) of the GTF file to extract information.
-
-<ul>
-  <li><strong>Function:</strong> Typically used to specify whether the operation is at the gene or transcript level.</li>
-  <li><strong>Alternative:</strong> If there are no `gene` rows in the GTF file, it is recommended to select `transcript`.</li>
-</ul>
-
-**Default:** `gene`
-
-**Example:**
-
-```text
---feature transcript
-```
-
-**Usage Examples**
-
-<ul>
-  <li><strong>Count gene types</strong></li>
-</ul>
-
-```shell
+```bash
 dnbc4tools tools mkgtf --action stats --ingtf genes.gtf
 ```
 
-<ul>
-  <li><strong>Filter gene types</strong></li>
-</ul>
+#### 3. Validation & Repair Mode (`--action check`)
 
-```shell
-dnbc4tools tools mkgtf --action mkgtf --ingtf genes.gtf --output genes.filter.gtf
+Validates GTF integrity and automatically reconstructs missing parent features (e.g., inferring missing `gene` rows from existing `transcript` entries):
+
+```bash
+dnbc4tools tools mkgtf --action check --ingtf raw_genes.gtf --output corrected.gtf
 ```
 
-<ul>
-  <li><strong>Validate and fix GTF file</strong></li>
-</ul>
+---
 
-```shell
-dnbc4tools tools mkgtf --action check --ingtf genes.gtf --output corrected.gtf
-```
+## BAM to FASTQ (bam2fastq) <a id="bam-转-fastq-bam2fastq"></a>
 
-## BAM to FASTQ (bam2fastq) <a id="bam-to-fastq-bam2fastq"></a>
-
-> <strong>Professional Conversion Tool</strong>
-> A BAM-to-FASTQ conversion tool for C4 RNA BAM files. It supports multi-threaded processing and configurable output splitting.
+> **Conversion Utility**
+>
+> Converts aligned C4 RNA BAM files back into FASTQ format with multi-threaded parallel compression and targeted genomic slicing.
 
 ### Usage <a id="usage-bam2fastq"></a>
 
@@ -223,173 +116,47 @@ Arguments:
   <OUTPUT>  Directory where FASTQ files will be written
 
 Options:
-  --threads <THREADS>        Number of CPU threads for parallel processing (default: all available cores) [default: 8]
+  --threads <THREADS>        Number of CPU threads for parallel processing [default: 8]
   --locus <REGION>           Process reads from a specific genomic region (format: chr1:1000-2000)
   --reads-per-fastq <READS>  Maximum number of reads per FASTQ file. All reads go to a single file if not specified.
-      --max-memory <MEMORY>      Maximum memory to use in MB. Auto-determined if not specified.
-      --no-compress              Disable gzip compression for output FASTQ files
+  --max-memory <MEMORY>      Maximum memory to use in MB. Auto-determined if not specified.
+  --no-compress              Disable gzip compression for output FASTQ files
   --help                     Print help
   --version                  Print version
 ```
 
-### Parameter Description
+### Parameter Reference Tables
 
-### Required Parameters
+| Argument / Option | Type | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `<BAM>` | File path | **Required (Positional)** | Valid BAM file path (must have `.bai` index; paired-end must be queryname-sorted) |
+| `<OUTPUT>` | Directory | **Required (Positional)** | Target directory where FASTQ files will be written (created if absent) |
+| `--threads` | Integer | `8` | Number of CPU threads for parallel processing |
+| `--locus` | String | None | Extract reads only from a specific genomic region (`chr1:1000-2000`) |
+| `--reads-per-fastq` | Integer | All-in-one | Maximum number of reads per FASTQ chunk file |
+| `--max-memory` | Integer (MB) | Auto | Maximum memory budget in MB |
+| `--no-compress` | Flag | Disabled | Disable gzip compression (outputs `.fastq` directly for fastest I/O) |
 
-#### `<BAM>` (Required)
-
-Specify the path to the input BAM file.
-
-<ul>
-  <li><strong>Format Requirement:</strong> Must be a valid C4 RNA BAM file, supporting both single-end and paired-end data.</li>
-  <li><strong>Index Requirement:</strong> The BAM file must be indexed (i.e., a corresponding .bai file must exist alongside it).</li>
-  <li><strong>Paired-end Note:</strong> If it is paired-end data, you need to sort it by read name using <code>samtools sort -n</code> before processing.</li>
-</ul>
-
-**Default:** None
-
-**Example:**
-
-```text
-/path/to/your.bam
-```
-
-#### `<OUTPUT>` (Required)
-
-Specify the directory for the output FASTQ files.
-
-<ul>
-  <li><strong>Function:</strong> All converted FASTQ files will be saved in this directory.</li>
-  <li><strong>Auto-creation:</strong> The directory will be created automatically if it does not exist.</li>
-</ul>
-
-**Default:** None
-
-**Example:**
-
-```text
-/path/to/output_dir
-```
-
-### Optional Parameters
-
-#### `--threads` (Optional)
-
-Set the number of CPU threads for parallel processing.
-
-<ul>
-  <li><strong>Performance Note:</strong> Increasing thread count usually improves BAM decoding and writing performance, but actual gain is limited by disk I/O bandwidth.</li>
-  <li><strong>Recommendation:</strong> The default is <code>all available CPU cores</code>; increase it on high-I/O systems, and use a conservative value on HDD-based systems.</li>
-</ul>
-
-**Default:** `all available CPU cores`
-
-**Example:**
-
-```text
---threads 8
-```
-
-#### `--locus` (Optional)
-
-Process only reads from a specific genomic region.
-
-<ul>
-  <li><strong>Format:</strong> Standard genomic coordinate format (<code>chromosome:start-end</code>).</li>
-  <li><strong>Application:</strong> For targeted analysis of specific genes or chromosomal regions.</li>
-</ul>
-
-**Default:** None
-
-**Example:**
-
-```text
---locus chr1:1000-2000
-```
-
-#### `--reads-per-fastq` (Optional)
-
-Set the maximum number of reads per output FASTQ file.
-
-<ul>
-  <li><strong>Splitting Strategy:</strong> Automatically splits large files into smaller ones for easier downstream processing.</li>
-  <li><strong>Default Behavior:</strong> If not specified, all reads will be written to a single file.</li>
-</ul>
-
-**Default:** None
-
-**Example:**
-
-```text
---reads-per-fastq 10000000
-```
-
-#### `--max-memory <MEMORY>` (Optional)
-
-Set the maximum memory the tool can use (in MB).
-
-<ul>
-  <li><strong>Function:</strong> Controls the tool's memory consumption to prevent failures due to insufficient memory.</li>
-  <li><strong>Auto-determination:</strong> If not specified, the tool will automatically allocate memory based on available system resources.</li>
-</ul>
-
-**Default:** Auto-determined
-
-**Example:**
-
-```text
---max-memory 8192
-```
-
-#### `--no-compress` (Flag)
-
-Disable gzip compression for output FASTQ files to improve writing speed.
-
-<ul>
-  <li><strong>Performance Bottleneck:</strong> The main speed bottleneck of the program is writing compressed files.</li>
-  <li><strong>Note:</strong> Thanks to parallel accelerated compression, default compressed output performance has been improved, reducing the impact of compression on runtime.</li>
-</ul>
-
-**Default:** Not set
-
-**Usage Examples**
-
-<ul>
-  <li><strong>Basic conversion</strong></li>
-</ul>
+### Practical Examples
 
 ```shell
-bam2fastq input.bam ./output_dir
+# Standard conversion
+bam2fastq anno_decon_sorted.bam ./fastq_out
+
+# Extract specific region with parallel compression
+bam2fastq --threads 16 --locus chr1:1000000-5000000 anno_decon_sorted.bam ./fastq_out
+
+# Chunk into 10M reads per file
+bam2fastq --reads-per-fastq 10000000 anno_decon_sorted.bam ./fastq_out
 ```
 
-<ul>
-  <li><strong>High-speed multi-threaded conversion</strong></li>
-</ul>
+---
 
-```shell
-bam2fastq --threads 8 input.bam ./output_dir
-```
+## Chromosome Splitting (chromsplit) <a id="染色体分割-chromsplit"></a>
 
-<ul>
-  <li><strong>Region-specific conversion</strong></li>
-</ul>
-
-```shell
-bam2fastq --locus chr1:1000000-2000000 --threads 4 input.bam ./output_dir
-```
-
-<ul>
-  <li><strong>Large file splitting conversion</strong></li>
-</ul>
-
-```shell
-bam2fastq --reads-per-fastq 5000000 --threads 4 input.bam ./output_dir
-```
-
-## Chromosome Splitting (chromsplit) <a id="chromosome-splitting-chromsplit"></a>
-
-> <strong>Core Function</strong>
-> A professional genome sequence splitting tool that intelligently identifies split points to maintain gene annotation integrity. It is primarily used in ATAC library construction to ensure chromosome lengths do not exceed the 2^29-1 limit.
+> **Core Function**
+>
+> Splits large scaffold/chromosome sequences at N-stretches or intergenic regions based on optional GTF annotations to prevent fragment length from exceeding tool limits (e.g., $2^{29}-1$ bp).
 
 ### Usage
 
@@ -400,159 +167,44 @@ Split large genome sequences into smaller fragments at N-stretches or intergenic
 Usage: chromsplit [OPTIONS] --fasta <FA> --prefix <PREFIX>
 
 Options:
-  --fasta <FA>           Input genome sequence file in FASTA format
-  --gtf <GTF>            Optional GTF/GFF annotation file for the genome
-  --prefix <PREFIX>      Prefix for output files (.fa and .cutsite.tsv will be appended)
-      --min_length <MIN_LENGTH>  Minimum length of output scaffold fragments (in base pairs) [default: 300000000]
-      --max_length <MAX_LENGTH>  Maximum length of output scaffold fragments (in base pairs) [default: 500000000]
+  --fasta <FA>               Input genome sequence file in FASTA format
+  --gtf <GTF>                Optional GTF/GFF annotation file for the genome
+  --prefix <PREFIX>          Prefix for output files (.fa and .cutsite.tsv will be appended)
+  --min_length <MIN_LENGTH>  Minimum length of output scaffold fragments [default: 300000000]
+  --max_length <MAX_LENGTH>  Maximum length of output scaffold fragments [default: 500000000]
   --cut_site <CUT_SITE>      Optional cut site file containing predefined split positions
-  --help                     Print help (see more with '--help')
-  --version              Print version
+  --help                     Print help
+  --version                  Print version
 ```
 
-### Parameter Description
+### Parameter Reference Tables
 
-### Required Parameters
+| Option | Type | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `--fasta` | File path | **Required** | Input genome FASTA sequence file |
+| `--prefix` | String | **Required** | Prefix for output files (generates `<prefix>.fa` and `<prefix>.cutsite.tsv`) |
+| `--gtf` | File path | None | Optional GTF annotation to guide splitting across intergenic intervals |
+| `--min_length` | Integer (bp) | `300000000` | Minimum fragment length in base pairs |
+| `--max_length` | Integer (bp) | `500000000` | Maximum fragment length in base pairs |
+| `--cut_site` | File path | None | File containing custom pre-defined coordinate break points |
 
-#### `--fasta <FA>` (Required)
-
-Specify the input genome sequence file.
-
-<ul>
-  <li><strong>Format Requirement:</strong> Standard FASTA format (.fa, .fasta, .fna).</li>
-  <li><strong>Content:</strong> Must contain complete chromosome or scaffold sequences.</li>
-</ul>
-
-**Default:** None
-
-**Example:**
-
-```text
---fasta genome.fasta
-```
-
-#### `--prefix <PREFIX>` (Required)
-
-Specify the prefix for the output files.
-
-<ul>
-  <li><strong>Output Files:</strong> The tool will automatically generate files like <code>&lt;prefix&gt;.fa</code>, <code>&lt;prefix&gt;.cutsite.tsv</code>, etc.</li>
-  <li><strong>File Management:</strong> Facilitates batch processing and result tracking.</li>
-</ul>
-
-**Default:** None
-
-**Example:**
-
-```text
---prefix split_genome
-```
-
-### Optional Parameters
-
-#### `--gtf <GTF>` (Optional)
-
-Specify the gene annotation file (GTF/GFF format).
-
-<ul>
-  <li><strong>Intelligent Splitting:</strong> Providing an annotation file ensures that split points are located in intergenic regions, protecting gene integrity.</li>
-  <li><strong>Annotation Sync:</strong> The tool automatically adjusts and outputs a new annotation file with synchronized coordinates.</li>
-</ul>
-
-**Default:** None
-
-**Example:**
-
-```text
---gtf annotation.gtf
-```
-
-#### `--min_length <MIN_LENGTH>` (Optional)
-
-Set the minimum length of the output fragments (unit: bp).
-
-<ul>
-  <li><strong>Function:</strong> Ensures that the split fragments are not too small, which could affect subsequent analysis.</li>
-</ul>
-
-**Default:** `300000000`
-
-**Example:**
-
-```text
---min_length 300000000
-```
-
-#### `--max_length <MAX_LENGTH>` (Optional)
-
-Set the maximum length of the output fragments (unit: bp).
-
-<ul>
-  <li><strong>Technical Limitation:</strong> Primarily used to ensure fragment length meets requirements for downstream analyses like ATAC library construction (usually < 2^29-1 bp).</li>
-</ul>
-
-**Default:** `500000000`
-
-**Example:**
-
-```text
---max_length 500000000
-```
-
-#### `--cut_site <CUT_SITE>` (Optional)
-
-Provide a text file containing predefined split positions.
-
-<ul>
-  <li><strong>Precise Control:</strong> Prioritizes splitting at the specified positions in the file, allowing for precise control over split locations.</li>
-</ul>
-
-**Default:** None
-
-**Example:**
-
-```text
---cut_site predefined_cuts.txt
-```
-
-**Usage Examples**
-
-<ul>
-  <li><strong>Basic splitting</strong></li>
-</ul>
+### Practical Examples
 
 ```shell
-chromsplit --fasta genome.fasta --prefix split_result
+# Split genome using GTF to protect gene structure
+chromsplit --fasta large_genome.fasta --gtf genes.gtf --prefix genome_split
+
+# Custom fragment bounds (200Mb to 400Mb)
+chromsplit --fasta large_genome.fasta --prefix custom_split --min_length 200000000 --max_length 400000000
 ```
 
-<ul>
-  <li><strong>Intelligent splitting with annotation file</strong></li>
-</ul>
+---
 
-```shell
-chromsplit --fasta genome.fasta --gtf annotation.gtf --prefix split_genome
-```
+## FASTQ Substring Slicing (fqsubC4) <a id="fastq-切割-fqsubc4"></a>
 
-<ul>
-  <li><strong>Custom length splitting</strong></li>
-</ul>
-
-```shell
-chromsplit --fasta genome.fasta --prefix custom_split --min_length 300000000 --max_length 500000000
-```
-
-<ul>
-  <li><strong>Using predefined split positions</strong></li>
-</ul>
-
-```shell
-chromsplit --fasta genome.fasta --gtf annotation.gtf --prefix precise_split --cut_site custom_cuts.txt
-```
-
-## FASTQ Subsetting (fqsubC4) <a id="fastq-subsetting-fqsubc4"></a>
-
-> <strong>Core Function</strong>
-> A FASTQ region extraction tool for clipping sequence positions. It can be used to normalize sequence structures across sequencing batches.
+> **Core Function**
+>
+> High-performance FASTQ substring slicer. Extracts exact 1-based base coordinate intervals to unify barcode architectures across historical sequencing batches.
 
 ### Usage
 
@@ -564,108 +216,29 @@ Usage: fqsubC4 [OPTIONS] --input <FILE> --output <FILE> --regions <REGIONS>
 
 Options:
   --input <FILE>       Path to input FASTQ file (supports both uncompressed and gzipped formats)
-  --output <FILE>      Path to output FASTQ file (output will be automatically compressed if filename ends with .gz)
+  --output <FILE>      Path to output FASTQ file (automatically compressed if ending in .gz)
   --regions <REGIONS>  Comma-separated regions in format start:end (e.g., 7:16,23:32,38:47)
   --threads <THREADS>  Number of threads to use for parallel processing [default: 8]
-  --help               Print help (see more with '--help')
+  --help               Print help
   --version            Print version
 ```
 
-### Parameter Description
+### Parameter Reference Tables
 
-### Required Parameters
+| Option | Type | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `--input` | File path | **Required** | Input FASTQ file (supports `.fq`, `.fastq`, `.fq.gz`, `.fastq.gz`) |
+| `--output` | File path | **Required** | Output FASTQ path (automatically compressed if ending in `.gz`) |
+| `--regions` | String | **Required** | Comma-separated 1-based intervals in `start:end` format |
+| `--threads` | Integer | `8` | Number of CPU threads for parallel I/O and processing |
 
-#### `--input <FILE>` (Required)
-
-Specify the path to the input FASTQ file.
-
-<ul>
-  <li><strong>Format Support:</strong> Supports both uncompressed (.fq, .fastq) and gzipped (.fq.gz, .fastq.gz) formats.</li>
-  <li><strong>Auto-detection:</strong> The tool automatically determines the compression format based on the file extension.</li>
-</ul>
-
-**Default:** None
-
-**Example:**
-
-```text
---input sample_R1.fastq.gz
-```
-
-#### `--output <FILE>` (Required)
-
-Specify the path for the output FASTQ file.
-
-<ul>
-  <li><strong>Auto-compression:</strong> The output file will be automatically compressed if the filename ends with <code>.gz</code>.</li>
-  <li><strong>Recommendation:</strong> Compressed output is recommended to effectively reduce disk I/O and storage usage.</li>
-</ul>
-
-**Default:** None
-
-**Example:**
-
-```text
---output extracted_R1.fastq.gz
-```
-
-#### `--regions <REGIONS>` (Required)
-
-Specify the regions to be extracted from the sequences.
-
-<ul>
-  <li><strong>Format Specification:</strong> Use <code>start:end</code> format, with multiple regions separated by commas.</li>
-  <li><strong>Coordinate System:</strong> Coordinates are 1-based (the first base of the sequence is position 1).</li>
-  <li><strong>Application:</strong> Used for extracting Barcodes, UMIs, or for trimming sequences.</li>
-</ul>
-
-**Default:** None
-
-**Example:**
-
-```text
---regions 7:16,23:32,38:47
-```
-
-### Optional Parameters
-
-#### `--threads <THREADS>` (Optional)
-
-Set the number of threads for parallel processing.
-
-<ul>
-  <li><strong>Function:</strong> Improves parallelism in read, extraction, and write stages for faster processing of large files.</li>
-  <li><strong>Recommendation:</strong> The default is <code>all available CPU cores</code>; adjust according to CPU cores and disk I/O performance.</li>
-</ul>
-
-**Default:** `all available CPU cores`
-
-**Example:**
-
-```text
---threads 8
-```
-
-**Usage Example**
-
-<ul>
-  <li><strong>Basic region extraction</strong></li>
-</ul>
+### Practical Examples
 
 ```shell
-fqsubC4 --input sample.fastq.gz --output extracted.fastq.gz --regions "7:16,23:32"
+# Extract two barcode intervals from Read 1 and output compressed FASTQ
+fqsubC4 \
+  --input sample_raw_R1.fq.gz \
+  --output extracted_R1.fq.gz \
+  --regions "7:16,23:32" \
+  --threads 8
 ```
-
-## Related Documentation
-
-| Resource | Description |
-| :--- | :--- |
-| [Tools Overview](parameter.md) | Overview of all tool parameters |
-| [Outputs](../outs/outs.md) | Detailed output file interpretation |
-| [Pipelines](../pipeline/pipeline.md) | Analysis workflow guides |
-
-> <strong>Feedback & Support</strong>
->
-> This document is continuously maintained. If you identify errors or additional information is required, please submit feedback via GitHub Issues.
->
-> <strong>Document Version:</strong> 3.2 | <strong>Last Updated:</strong> October 23, 2026

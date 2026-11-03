@@ -34,71 +34,11 @@ The multi-omics workflow organizes key RNA / ATAC / VDJ results into one sample-
 - **Content**: Standard module outputs (matrices, metrics tables, module reports, etc.).
 - **Purpose**: Module-specific downstream analysis or single-omics reuse.
 
-## C6 multiplexed RNA outputs <a id="c6-outputs"></a>
+<a id="c6-outputs"></a>
 
-Runs with `[samples]` use this layout. Ordinary single-sample Multi uses the modality directories above.
-
-```text
-<run>/outs/
-├── <run>_multi_report.html
-└── rna/
-    ├── raw_feature_bc_matrix/             # Global, including background
-    ├── raw_feature_bc_matrix.h5
-    ├── filtered_feature_bc_matrix/        # All called cells
-    ├── filtered_feature_bc_matrix.h5
-    ├── filtered_feature_bc_matrix.h5ad    # Counts, no joint clustering
-    ├── singlecell.csv.gz                 # Complete six-column table
-    ├── metrics_summary.xls               # Tab-separated text
-    ├── oligo.records.bam                 # When BAM enabled
-    ├── unassigned_alignments.bam         # When BAM enabled
-    ├── multi_sample/
-    │   ├── per_sample_metrics.csv
-    │   ├── sample_metrics_summary.xls
-    │   ├── barcode_assignment_metrics.json
-    │   └── high_occupancy_metrics.json
-    └── per_sample_outs/<sample>/
-        ├── raw_feature_bc_matrix/
-        ├── raw_feature_bc_matrix.h5
-        ├── filtered_feature_bc_matrix/
-        ├── filtered_feature_bc_matrix.h5
-        ├── filtered_feature_bc_matrix.h5ad
-        ├── <sample>_scRNA_report.html
-        ├── metrics_summary.xls
-        ├── <sample>_alignments.bam         # When BAM enabled
-        └── analysis/                     # Sample clustering, markers, etc.
-```
-
-BAMs have `.bai` or `.csi` indexes as appropriate. `no_bam=true` omits sample, Unassigned and oligo BAMs. Mixed-species runs may add global `analysis/cell_classification.csv`; single-species runs do not publish an empty global analysis directory. Sample analysis outputs depend on successful completion; empty/failed samples do not publish stale analysis results.
-
-There is no global joint cluster/marker result, `QC_Cluster.h5ad` or run-level RNA HTML. Global H5AD contains combined counts; individual samples retain their own analysis and full RNA report. Processing directories such as `SAMPLE_SPLIT`, `MULTI_CELL_CALLING`, `tempN` and report caches are internal.
-
-### `singlecell.csv.gz`
-
-| Column | Meaning |
-| :--- | :--- |
-| `cell` | Merged cell identifier; unmapped background can have a missing identifier |
-| `reads` | Aggregated read count for the group |
-| `gene` / `umi` | Detected genes and UMIs for the group |
-| `is_cell_barcode` | Called-cell flag |
-| `barcode` | Original barcode members, including probe suffixes |
-
-The complete table retains background and zero-UMI rows. Positive-UMI rows descend by UMI; zero-UMI rows follow in group order. Read gzip directly; see [Result import](../io.md#c6-import).
-
-### Reports and metric denominators
-
-| Content | Scope and interpretation |
-| :--- | :--- |
-| Root Multi report | Batch overview, library QC and Samples comparisons; C6 chemistry is `scRNAC6` |
-| Individual RNA report | Sample cells, clustering, markers, mapping and saturation; missing metrics show N/A |
-| Assigned Reads | Read pairs assigned to that sample, not raw library reads |
-| Mean Reads per Cell | Assigned Reads / Cells; undefined when cells are zero or missing |
-| Fraction reads in cells | Sample confident-transcriptome reads in cells / confident-transcriptome reads across all valid sample barcodes |
-| Sample Mapping Quality | Sample All Reads scope, not Filtered Cells ratios |
-| Per-sample cDNA Valid barcodes | 100% if Assigned Reads > 0, describing only the assigned set; otherwise N/A |
-| Q30 / Valid UMI / Corrected barcodes / Oligo QC | Shared library measurements, not independent sample QC; metric exports retain `cDNA QC scope` |
-| Cell/probe barcode validity | Independent correction-stage measurements, not derived from joint validity; N/A if missing |
-
-`.xls` files are tab-separated text. `sample_metrics_summary.xls` keeps one row per configured sample, including empty/failed samples. All Reads and Filtered Cells mapping groups each use their own denominators. Existing HTML must be regenerated to adopt template fixes.
+> **Note: C6 Multiplexed RNA Outputs**
+>
+> Deliverables, directory structure, and QC metrics for C6 multiplexed RNA analysis have been moved to their own dedicated chapter. Please refer to [C6 Outputs](c6.md).
 
 ## Web Report Interpretation <a id="web-report-interpretation"></a>
 

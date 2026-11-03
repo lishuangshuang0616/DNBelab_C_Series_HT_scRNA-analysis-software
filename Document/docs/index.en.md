@@ -54,14 +54,26 @@ An end-to-end, high-performance single-cell analysis toolkit for DNBelab C Serie
 </div>
 <div class="doc-module mod-multi">
 <div class="doc-module-header">
-  <span class="doc-module-tag">Multi / C6</span>
-  <h3>Multi-Omics & C6 Multi-Sample</h3>
+  <span class="doc-module-tag">Multi</span>
+  <h3>Multi-Omics Analysis</h3>
 </div>
-<p>Joint RNA + ATAC pipelines and probe-barcoded C6 multi-sample analysis and reporting.</p>
+<p>Unified pipeline coordination for single-cell RNA, ATAC, and V(D)J libraries with cross-modality interactive reports.</p>
 <div class="doc-module-links">
 <a class="doc-pill-link" href="doc/pipeline/multi.html">Workflow</a>
 <a class="doc-pill-link" href="doc/parameter/multi.html">Parameters</a>
 <a class="doc-pill-link" href="doc/outs/multi.html">Outputs</a>
+</div>
+</div>
+<div class="doc-module mod-c6">
+<div class="doc-module-header">
+  <span class="doc-module-tag">C6</span>
+  <h3>C6 Multiplexed RNA</h3>
+</div>
+<p>High-throughput single-cell RNA-seq based on Sample Barcode multiplexing, featuring sample de-multiplexing and independent per-sample deliverables.</p>
+<div class="doc-module-links">
+<a class="doc-pill-link" href="doc/pipeline/c6.html">Workflow</a>
+<a class="doc-pill-link" href="doc/parameter/c6.html">Parameters</a>
+<a class="doc-pill-link" href="doc/outs/c6.html">Outputs</a>
 </div>
 </div>
 </div>
@@ -71,7 +83,7 @@ An end-to-end, high-performance single-cell analysis toolkit for DNBelab C Serie
 | I want to... | Quick Link | Notes |
 | :--- | :--- | :--- |
 | **Run my first sample** | [Quick Start Guide →](doc/quickstart.md) | Human / mouse reference build and end-to-end examples |
-| **Configure a C6 multi-sample experiment** | [Multi Configuration →](doc/parameter/multi.md#c6-samples) | `[samples]` section and multi-sample matrix demultiplexing |
+| **Configure a C6 multi-sample experiment** | [C6 Configuration →](doc/parameter/c6.md) | `[samples]` section and multi-sample matrix demultiplexing |
 | **Load matrices in R or Python** | [I/O Analysis & Matrix Loading →](doc/io.md) | Sample scripts for Seurat and Scanpy |
 | **Review changes from 3.1 to 3.2** | [Version Upgrade Guide →](doc/migration.md) | Matrix directory changes, C6 summaries, and compatibility |
 | **Troubleshoot pipeline failures** | [Running & Troubleshooting →](doc/troubleshooting.md) | Memory limits, STAR parameters, and thread tuning |

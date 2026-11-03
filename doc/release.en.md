@@ -12,7 +12,7 @@ The formal release date, installation package and checksums await confirmation. 
 
 ### 3.2 changes <a id="32-source"></a>
 
-- C6 probe-barcode sample assignment, per-sample calling/analysis, independent RNA reports and batch comparisons.
+- C6 Sample Barcode multiplexing support: sample assignment, per-sample calling/analysis, independent RNA reports and batch comparisons.
 - Canonical RNA/ATAC matrix paths with H5 exports; complete compressed C6 `singlecell.csv.gz`, including background and zero-UMI rows.
 - Explicit ATAC defaults: ordmag calling, cutsite peak signal/matrix, all merged fragments for peak input, optional final fragment/TSS thresholds and low-targeting filtering.
 - Validated STAR arguments, GTF conflict policy, consistent parameter types and dark-cycle rules.

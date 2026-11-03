@@ -4,40 +4,24 @@ Single-Cell Multi-omics Integrated Analysis Guide
 
 ## Overview <a id="overview"></a>
 
-The Multi-omics workflow orchestrates RNA / ATAC / VDJ sub-pipelines, enabling multi-omics joint analysis through a single configuration file and generating integrated reports for cross-omics inspection.
+The Multi-omics workflow unifies orchestration and generates combined reports; ATAC is analyzed independently and summarized, while RNA and VDJ support cell association analysis. A single configuration file coordinates all sub-pipelines and generates integrated reports for cross-omics inspection.
 
 **Workflow**: Configuration → Module Dispatch → Parallel Analysis → Status Aggregation → Integrated Report
 
- <strong>Usage Notes</strong>: <code>$dnbc4tools</code> represents the executable path and should be replaced with your actual installation path. Examples use line continuation characters <code>\</code> for readability; commands can also be written on a single line.
+<div align="center" style="margin: 1.5em 0;" markdown="block">
+  <img src="../images/multi_pipeline.png" alt="Multi-omics Pipeline Overview" width="800" style="max-width: 100%; height: auto;">
+</div>
+
+> **Usage Note**: `$dnbc4tools` represents the executable path and should be replaced with your actual installation path. The backslash `\` is used to split commands across multiple lines for readability; commands can also be executed on a single line.
 
 **Key Features**:
 
-<table>
-  <thead>
-    <tr>
-      <th>Feature</th>
-      <th>Description</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><b>Unified Orchestration</b></td>
-      <td>One entry command dispatches multiple omics modules (RNA / ATAC / VDJ)</td>
-    </tr>
-    <tr>
-      <td><b>Status Tracking</b></td>
-      <td>Module-level status management (success / failed / skipped / reused)</td>
-    </tr>
-    <tr>
-      <td><b>Integrated Report</b></td>
-      <td>Generates integrated HTML report supporting cross-omics browsing and comparison</td>
-    </tr>
-    <tr>
-      <td><b>Flexible Configuration</b></td>
-      <td>Supports arbitrary module combinations (single / dual / all modules)</td>
-    </tr>
-  </tbody>
-</table>
+| Feature | Description |
+| :--- | :--- |
+| **Unified Orchestration** | One entry command dispatches multiple omics modules (RNA / ATAC / VDJ) |
+| **Status Tracking** | Module-level status management (success / failed / skipped / reused) |
+| **Integrated Report** | Generates integrated HTML report supporting cross-omics browsing and comparison |
+| **Flexible Configuration** | Supports arbitrary module combinations (single / dual / all modules) |
 
 ## Input Configuration <a id="input-configuration"></a>
 
@@ -45,73 +29,66 @@ The Multi-omics workflow orchestrates RNA / ATAC / VDJ sub-pipelines, enabling m
 
 `multi run` uses a CSV configuration file to define module parameters and input data. Typical sections include:
 
-<table>
-  <thead>
-    <tr>
-      <th>Section</th>
-      <th>Purpose</th>
-      <th>Key Parameters</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><code>[rna]</code></td>
-      <td>RNA analysis module configuration</td>
-      <td><code>genomeDir</code>, <code>expectcells</code>, <code>no_bam</code>...</td>
-    </tr>
-    <tr>
-      <td><code>[atac]</code></td>
-      <td>ATAC analysis module configuration</td>
-      <td><code>genomeDir</code>, <code>frags_cutoff</code>, <code>need_bam</code>...</td>
-    </tr>
-    <tr>
-      <td><code>[vdj-t]</code></td>
-      <td>T-cell VDJ analysis configuration</td>
-      <td><code>ref</code>, <code>beadstrans</code>...</td>
-    </tr>
-    <tr>
-      <td><code>[vdj-b]</code></td>
-      <td>B-cell VDJ analysis configuration</td>
-      <td><code>ref</code>, <code>beadstrans</code>...</td>
-    </tr>
-    <tr>
-      <td><code>[libraries]</code></td>
-      <td>Input data mapping (required)</td>
-      <td><code>fastqs</code>, <code>feature_types</code></td>
-    </tr>
-  </tbody>
-</table>
+| Section | Purpose | Key Parameters |
+| :--- | :--- | :--- |
+| `[rna]` | RNA analysis module configuration | `genomeDir`, `expectcells`, `no_bam`... |
+| `[atac]` | ATAC analysis module configuration | `genomeDir`, `frags_cutoff`, `need_bam`... |
+| `[vdj-t]` | T-cell VDJ analysis configuration | `ref`, `beadstrans`... |
+| `[vdj-b]` | B-cell VDJ analysis configuration | `ref`, `beadstrans`... |
+| `[libraries]` | Input data mapping (required) | `fastqs`, `feature_types` |
 
- <strong>Detailed Configuration</strong>: Please refer to the <a href="../parameter/multi.html">Multi Parameter Documentation</a> for complete CSV configuration specifications and parameter mappings.
+> **Detailed Configuration**: Please refer to the [Multi Parameter Documentation](../parameter/multi.md) for complete CSV configuration specifications and parameter mappings.
 
-**`[libraries]` input directory requirements:**
+> **`[libraries]` Input Directory Guidelines**:
+>
+> - **`rna`**: `fastqs` points to the RNA FASTQ root directory, which must contain `cDNA/` and `oligo/` subdirectories.
+> - **`atac`**: `fastqs` points to the FASTQ directory for the ATAC library, with paired R1/R2 files placed directly under it.
+> - **`vdj-t` / `vdj-b`**: `fastqs` points to the TCR or BCR FASTQ library directory. TCR and BCR data must be configured separately.
+> - **File Pairing**: The pipeline automatically pairs files based on `_R1`/`_R2` or `_R1_`/`_R2_` naming patterns.
 
-<ul>
-  <li><code>rna</code>: <code>fastqs</code> should point to the RNA FASTQ root directory, which must contain <code>cDNA/</code> and <code>oligo/</code> subdirectories.</li>
-  <li><code>atac</code>: <code>fastqs</code> should point to the FASTQ directory for the current ATAC library, with R1/R2 files placed directly under that directory.</li>
-  <li><code>vdj-t</code> / <code>vdj-b</code>: <code>fastqs</code> should point to the FASTQ directory for the current VDJ library. TCR and BCR data should be configured separately.</li>
-  <li>Automatic detection relies on R1/R2 markers in file names. The recommended naming patterns are <code>_R1</code>/<code>_R2</code> or <code>_R1_</code>/<code>_R2_</code>.</li>
-</ul>
+### Configuration Examples
 
-### Minimal Configuration Example
-
-<details markdown="block" open>
-<summary> Configuration Example</summary>
+**Scenario 1: RNA + VDJ (TCR / BCR) Joint Analysis (Recommended)**
 
 ```csv
 [rna]
-genomeDir,/database/scRNA/Human
+genomeDir,/database/scRNA/Homo_sapiens
 end5,true
+no_bam,true
+
 [vdj-t]
 ref,human
 
 [libraries]
 fastqs,feature_types
-/rawdata/rna/demo,rna
-/rawdata/tcr/demo,vdj-t
+/rawdata/multi_sample/rna,rna
+/rawdata/multi_sample/tcr,vdj-t
 ```
 
-</details>
+**Scenario 2: Full Multi-Omics (RNA + ATAC + VDJ) Analysis**
+
+```csv
+[rna]
+genomeDir,/database/scRNA/Homo_sapiens
+end5,true
+no_bam,true
+
+[atac]
+genomeDir,/database/scATAC/Homo_sapiens
+
+[vdj-t]
+ref,human
+
+[vdj-b]
+ref,human
+
+[libraries]
+fastqs,feature_types
+/rawdata/multi_sample/rna,rna
+/rawdata/multi_sample/atac,atac
+/rawdata/multi_sample/tcr,vdj-t
+/rawdata/multi_sample/bcr,vdj-b
+```
 
 ### Running Command
 
@@ -125,159 +102,305 @@ $dnbc4tools multi run \
 
 **Parameter Description**:
 
-<table>
-  <thead>
-    <tr>
-      <th>Parameter</th>
-      <th>Required</th>
-      <th>Description</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><code>--csv</code></td>
-      <td><b>Yes</b></td>
-      <td>Path to CSV configuration file</td>
-    </tr>
-    <tr>
-      <td><code>--name</code></td>
-      <td><b>Yes</b></td>
-      <td>Sample name for output directory naming</td>
-    </tr>
-    <tr>
-      <td><code>--outdir</code></td>
-      <td>No</td>
-      <td>Output directory, defaults to current directory <code>./</code></td>
-    </tr>
-    <tr>
-      <td><code>--threads</code></td>
-      <td>No</td>
-      <td>Number of CPU threads, uses software default if not specified</td>
-    </tr>
-  </tbody>
-</table>
+| Parameter | Required | Description |
+| :--- | :---: | :--- |
+| `--csv` | **Yes** | Path to CSV configuration file |
+| `--name` | **Yes** | Sample name for output directory naming |
+| `--outdir` | No | Output directory, defaults to current directory `./` |
+| `--threads` | No | Number of CPU threads, uses software default if not specified |
 
 ### Pre-Run Checklist
 
- <strong>Please verify the following before running</strong>:
+<div class="doc-checklist" markdown="block">
 
-<ol>
-  <li><code>--csv</code> and <code>--name</code> parameters are properly provided</li>
-  <li>At least one omics module is enabled in the CSV file (corresponding section present)</li>
-  <li>Input paths in <code>[libraries]</code> exist and correctly match <code>feature_types</code></li>
-  <li>Required reference database parameters (e.g., <code>genomeDir</code>, <code>ref</code>) are complete with valid paths</li>
-</ol>
+<div class="doc-checklist-title" markdown="block">Multi-Omics Pre-Run Verification Checklist</div>
+
+- **Core Flags**: Both `--csv` configuration file path and `--name` sample identifier are supplied, and `--outdir` is writable.
+- **Enabled Sections**: The CSV file contains at least one active omics section (e.g. `[rna]`, `[vdj-t]`, `[atac]`).
+- **Data Path Mapping**: Input paths in `[libraries]` physically exist and accurately correspond to `feature_types` (`rna`/`atac`/`vdj-t`/`vdj-b`).
+- **Reference Readiness**: Database paths (e.g. `genomeDir`, `ref`) for all active modules are valid and version-compatible.
+
+</div>
 
 ## Main Pipeline <a id="main-pipeline"></a>
 
 ### Execution Flow
 
-<table>
-  <thead>
-    <tr>
-      <th>Stage</th>
-      <th>Description</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><b>1. Configuration Parsing</b></td>
-      <td>Reads CSV file, validates section integrity and parameter validity</td>
-    </tr>
-    <tr>
-      <td><b>2. Task Decomposition</b></td>
-      <td>Builds RNA / ATAC / VDJ sub-task queues based on enabled modules</td>
-    </tr>
-    <tr>
-      <td><b>3. Sub-Pipeline Execution</b></td>
-      <td>Sequentially invokes corresponding module commands, records runtime status</td>
-    </tr>
-    <tr>
-      <td><b>4. Status Aggregation</b></td>
-      <td>Aggregates return codes, runtime, skip/reuse status from each module</td>
-    </tr>
-    <tr>
-      <td><b>5. Report Generation</b></td>
-      <td>Generates multi-omics HTML integrated report combining core results from all modules</td>
-    </tr>
-  </tbody>
-</table>
+| Stage | Stage Name | Core Responsibility | Deliverable |
+| :---: | :--- | :--- | :--- |
+| `01` | **Config Parsing & QC** | Parses CSV sections, verifies library paths, and detects dark reactions | Validated configuration |
+| `02` | **Task Queue Building** | Constructs the execution flow based on enabled modules and checks reuse flags | Scheduled task queue |
+| `03` | **Sub-Pipeline Runs** | Sequentially executes core alignments, bead merging, and cell calling (RNA/VDJ/ATAC) | Module output folders |
+| `04` | **Status Aggregation** | Captures exit codes, runtimes, and skip/reuse status across all modules | `run_manifest.json` |
+| `05` | **Combined Reporting** | Integrates cross-omics barcode translation (e.g. RNA-VDJ) into an interactive report | `<sample>_multi_report.html` |
 
 ### Execution Highlights
 
-<strong>Core Principles</strong>:
-<ul>
-  <li>Multi handles "<b>orchestration and aggregation</b>"; module algorithms remain in each single-omics sub-pipeline</li>
-  <li>A module failure <b>will not</b> invalidate other completed modules but will be reflected in the final status summary</li>
-</ul>
+> **Core Principles**:
+> - Multi handles "**orchestration and aggregation**"; module algorithms remain in each single-omics sub-pipeline.
+> - A module failure **will not** invalidate other completed modules but will be reflected in the final status summary.
 
 ### Typical Runtime Log
 
 ```shell
-Warning: ATAC joint analysis is currently unsupported. Libraries will be analyzed independently and summarized in a single report.
+====================================================================================================
+Running checking libraries — 2026-11-02 16:43:37
+====================================================================================================
+✔ RNA Library check complete
+✔ VDJ-T Library check complete
+✔ VDJ-B Library check complete
+✔ ATAC Library check complete
 
-───────────────────────── Running checking libraries — 2026-04-08 13:39:42 ─────────────────────────
- RNA Library check complete
- VDJ-T Library check complete
- VDJ-B Library check complete
- ATAC Library check complete
+====================================================================================================
+Running RNA pipeline — 2026-11-02 16:43:56
+====================================================================================================
 
-──────────────────────────── Running RNA pipeline — 2026-04-08 13:40:10 ────────────────────────────
+====================================================================================================
+Parsed FASTQ Inputs - 2026-11-02 16:43:57
+====================================================================================================
+Type         | Path                                                                                 
+-------------+--------------------------------------------------------------------------------------
+cDNA Read1   | /rawdata/multi_sample/rna/sample_cDNA_R1.fastq.gz                                    
+cDNA Read2   | /rawdata/multi_sample/rna/sample_cDNA_R2.fastq.gz                                    
+oligo Read1  | /rawdata/multi_sample/rna/sample_oligo_R1.fastq.gz                                   
+oligo Read2  | /rawdata/multi_sample/rna/sample_oligo_R2.fastq.gz                                   
+====================================================================================================
 
-──────────────────────────── Parsed FASTQ Inputs — 2026-04-08 13:40:10 ─────────────────────────────
-┌─────────────┬────────────────────────────────────────────────────────────────────────────────────┐
-│ Type        │ Path                                                                               │
-├─────────────┼────────────────────────────────────────────────────────────────────────────────────┤
-│ cDNA Read 1 │ /data/cDNA/sample_cDNA_R1.fastq.gz                                                 │
-│ cDNA Read 2 │ /data/cDNA/sample_cDNA_R2.fastq.gz                                                 │
-│ oligo Read 1 │ /data/oligo/sample_oligo_1_R1.fastq.gz,/data/oligo/sample_oligo_2_R1.fastq.gz      │
-│ oligo Read 2 │ /data/oligo/sample_oligo_1_R2.fastq.gz,/data/oligo/sample_oligo_2_R2.fastq.gz      │
-└─────────────┴────────────────────────────────────────────────────────────────────────────────────┘
-────────────────────────────────────────────────────────────────────────────────────────────────────
 
-──────────────────────────── Chemistry Detection — 2026-04-08 13:40:24 ─────────────────────────────
-┌───────────────────────────────────────────────┬──────────────────────────────────────────────────┐
-│ Type                                          │ Result                                           │
-├───────────────────────────────────────────────┼──────────────────────────────────────────────────┤
-│ oligo Read 1                                   │ darkreaction                                     │
-│ oligo Read 2                                   │ darkreaction                                     │
-└───────────────────────────────────────────────┴──────────────────────────────────────────────────┘
-────────────────────────────────────────────────────────────────────────────────────────────────────
+====================================================================================================
+Chemistry Configuration - 2026-11-02 16:43:57
+====================================================================================================
+Type         | Result                                                                               
+-------------+--------------------------------------------------------------------------------------
+oligo        | custom sequence structure                                                            
+====================================================================================================
 
-──────────────────────────── Chemistry Detection — 2026-04-08 13:40:24 ─────────────────────────────
-┌─────────────────────────────────────────────┬────────────────────────────────────────────────────┐
-│ Type                                        │ Result                                             │
-├─────────────────────────────────────────────┼────────────────────────────────────────────────────┤
-│ cDNA Read 1                                  │ darkreaction                                       │
-└─────────────────────────────────────────────┴────────────────────────────────────────────────────┘
-────────────────────────────────────────────────────────────────────────────────────────────────────
 
- 2026-04-08 13:40:24 Starting oligo library filtering...
+====================================================================================================
+Chemistry Configuration - 2026-11-02 16:43:57
+====================================================================================================
+Type         | Result                                                                               
+-------------+--------------------------------------------------------------------------------------
+cDNA         | custom sequence structure                                                            
+====================================================================================================
 
- ...
+
+2026-11-02 16:43:57 Validating RNA reference...
+...done
+
+2026-11-02 16:45:31 Starting oligo library filtering...
+...done
+
+2026-11-02 16:48:22 Starting cDNA library filtering...
+...done
+
+2026-11-02 16:53:07 Correcting RNA barcodes and preparing alignment inputs...
+...done
+
+2026-11-02 16:53:18 Performing read alignment and UMI counting...
+...done
+
+2026-11-02 16:58:42 Calculating bead similarity and merging beads within droplets...
+...done
+
+2026-11-02 16:58:49 Generating raw gene expression matrix...
+...done
+
+2026-11-02 16:59:12 Calling cells and generating filtered cell barcodes...
+...done
+
+2026-11-02 17:00:07 Generating cell-filtered gene expression matrix...
+...done
+
+2026-11-02 17:00:21 Calculating sequencing saturation metrics...
+...done
+
+2026-11-02 17:00:29 Generating per-barcode alignment and expression metrics...
+...done
+
+2026-11-02 17:00:40 Generating position-sorted BAM file...
+...done
+
+2026-11-02 17:01:58 Performing dimensionality reduction and clustering analysis...
+...done
+
+2026-11-02 17:02:23 Analysis Finished. Elapsed Time: 0:18:26
+✔ Generated RNA intermediate report
+
+====================================================================================================
+Running ATAC pipeline — 2026-11-02 17:02:34
+====================================================================================================
+
+====================================================================================================
+Parsed FASTQ Inputs - 2026-11-02 17:02:35
+====================================================================================================
+Type         | Path                                                                                 
+-------------+--------------------------------------------------------------------------------------
+Read1        | /rawdata/multi_sample/atac/sample_atac_R1.fastq.gz                                   
+Read2        | /rawdata/multi_sample/atac/sample_atac_R2.fastq.gz                                   
+====================================================================================================
+
+
+====================================================================================================
+Chemistry Configuration - 2026-11-02 17:02:35
+====================================================================================================
+Type         | Result                                                                               
+-------------+--------------------------------------------------------------------------------------
+ATAC         | custom sequence structure                                                            
+====================================================================================================
+
+
+2026-11-02 17:02:35 Validating ATAC reference...
+...done
+
+2026-11-02 17:02:41 Performing raw data quality control and alignment...
+...done
+
+2026-11-02 17:11:32 Calculating bead similarity and merging beads within droplets...
+...done
+
+2026-11-02 17:14:39 Processing fragments for peak calling...
+...done
+
+2026-11-02 17:22:30 Generating raw peak count matrix...
+...done
+
+2026-11-02 17:24:06 Calling cells for ATAC data...
+...done
+
+2026-11-02 17:25:27 Generating cell-filtered peak count matrix...
+...done
+
+2026-11-02 17:25:45 Generating filtered fragments and TSS enrichment...
+...done
+
+2026-11-02 17:26:17 Calculating sequencing saturation metrics...
+...done
+
+2026-11-02 17:27:16 Performing dimensionality reduction and clustering...
+...done
+
+2026-11-02 17:28:48 Analysis Finished. Elapsed Time: 0:26:13
+✔ Generated ATAC intermediate report
+
+====================================================================================================
+Running VDJ-T pipeline — 2026-11-02 17:29:11
+====================================================================================================
+
+====================================================================================================
+Parsed FASTQ Inputs - 2026-11-02 17:29:12
+====================================================================================================
+Type         | Path                                                                                 
+-------------+--------------------------------------------------------------------------------------
+Read1        | /rawdata/multi_sample/tcr/sample_tcr_R1.fastq.gz                                     
+Read2        | /rawdata/multi_sample/tcr/sample_tcr_R2.fastq.gz                                     
+====================================================================================================
+
+
+====================================================================================================
+Chemistry Configuration - 2026-11-02 17:29:12
+====================================================================================================
+Type         | Result                                                                               
+-------------+--------------------------------------------------------------------------------------
+VDJ          | custom sequence structure                                                            
+====================================================================================================
+
+
+2026-11-02 17:29:12 Validating VDJ reference...
+...done
+
+2026-11-02 17:29:13 Starting VDJ library filtering...
+...done
+
+2026-11-02 17:33:57 Correcting VDJ barcodes and translating bead identities...
+...done
+
+2026-11-02 17:34:14 Preparing input data for VDJ assembly...
+...done
+
+2026-11-02 17:38:09 Performing VDJ sequence assembly and gene segment annotation...
+...done
+
+2026-11-02 17:58:52 Performing cell calling for VDJ data...
+...done
+
+2026-11-02 17:59:38 Generating VDJ clonotype analysis...
+...done
+
+2026-11-02 18:00:09 Converting VDJ results from cellbarcode to cell ID...
+...done
+
+2026-11-02 18:00:10 Analysis Finished. Elapsed Time: 0:30:57
+✔ Generated VDJ-T intermediate report
+
+====================================================================================================
+Running VDJ-B pipeline — 2026-11-02 18:00:13
+====================================================================================================
+
+====================================================================================================
+Parsed FASTQ Inputs - 2026-11-02 18:00:13
+====================================================================================================
+Type         | Path                                                                                 
+-------------+--------------------------------------------------------------------------------------
+Read1        | /rawdata/multi_sample/bcr/sample_bcr_R1.fastq.gz                                     
+Read2        | /rawdata/multi_sample/bcr/sample_bcr_R2.fastq.gz                                     
+====================================================================================================
+
+
+====================================================================================================
+Chemistry Configuration - 2026-11-02 18:00:14
+====================================================================================================
+Type         | Result                                                                               
+-------------+--------------------------------------------------------------------------------------
+VDJ          | custom sequence structure                                                            
+====================================================================================================
+
+
+2026-11-02 18:00:14 Validating VDJ reference...
+...done
+
+2026-11-02 18:00:14 Starting VDJ library filtering...
+...done
+
+2026-11-02 18:03:46 Correcting VDJ barcodes and translating bead identities...
+...done
+
+2026-11-02 18:04:06 Preparing input data for VDJ assembly...
+...done
+
+2026-11-02 18:07:16 Performing VDJ sequence assembly and gene segment annotation...
+...done
+
+2026-11-02 18:26:09 Performing cell calling for VDJ data...
+...done
+
+2026-11-02 18:27:36 Generating VDJ clonotype analysis...
+...done
+
+2026-11-02 18:28:30 Converting VDJ results from cellbarcode to cell ID...
+...done
+
+2026-11-02 18:28:31 Analysis Finished. Elapsed Time: 0:28:17
+✔ Generated VDJ-B intermediate report
+
+====================================================================================================
+Running combined report generation — 2026-11-02 18:28:34
+====================================================================================================
+Combined report sections:
+✔ rna: success
+✔ atac: success
+✔ vdj-t: success
+✔ vdj-b: success
+✔ Outputs organized in /data/result/demo/outs
+
+Analysis finished successfully!
 ```
 
-## C6 multiplexed RNA workflow <a id="c6-workflow"></a>
+<a id="c6-workflow"></a>
 
-A `[samples]` section activates the `scRNAC6` workflow in 3.2. Biological samples share cDNA/oligo FASTQs and a reference and are distinguished by probe barcodes. See the [C6 configuration](../parameter/multi.md#c6-samples).
-
-1. Validate libraries, samples and unique probe assignments; detect dark cycles and perform FASTQ QC and barcode correction.
-2. Align RNA and count UMIs. Sum RNA UMIs across probe suffixes for each 30 bp bead prefix; beads with at least 100 RNA UMIs become merge targets. Oligo supplies linkage evidence rather than the target threshold.
-3. Score bead similarity with the robust model, retain probe suffixes, call cells per sample, then apply experiment-wide high-occupancy filtering (enabled by default).
-4. Export combined raw/filtered matrices and complete `singlecell.csv.gz`; split sample matrices and run dimensional reduction, clustering, markers and available annotations independently.
-5. Deliver the root Multi report, individual RNA reports and matrices. When enabled, split BAMs per sample and retain Unassigned and shared oligo BAMs.
-
-The global `filtered_feature_bc_matrix.h5ad` contains sparse counts and gene/barcode metadata for all called cells. It has no joint PCA, UMAP, clustering or marker analysis. Start a separate combined analysis from that matrix if needed. The global `<run>_scRNA_report.html` is no longer delivered; complete RNA reports are in per-sample directories.
-
-C6 RNA is orchestrated in the current process; other configured modalities retain their own child workflows. Ordinary Multi library sections and RNA/ATAC/VDJ output organization remain applicable below.
-
-### Cell tables, reports and recovery
-
-The six-column C6 summary retains background and zero-UMI rows and is streamed through gzip. Positive-UMI rows descend by UMI; zero-UMI rows retain group order. Use `is_cell_barcode` to select called cells. Report readers use validated small caches or bounded chunks rather than inferring memory needs from compressed file size.
-
-Empty and failed samples have separate states. Zero cells do not imply successful clustering. Default `sample_failure_policy=skip` retains other successful samples; use `fail` to stop on failure. See [Running & Troubleshooting](../troubleshooting.md) for logs, checkpoints and integrity diagnostics.
-
-See [C6 outputs](../outs/multi.md#c6-outputs) for file paths and QC denominators.
+> **Note: C6 Multiplexed RNA Pipeline**
+>
+> The C6 multiplexed single-cell RNA analysis pipeline has been moved to its own dedicated chapter. Please refer to the [C6 Pipeline Guide](c6.md).
 
 ## Results <a id="results"></a>
 
@@ -304,49 +427,12 @@ After completion, results are organized under `<outdir>/<name>/`:
 
 ### Key Output Files
 
-<table>
-  <thead>
-    <tr>
-      <th>File/Directory</th>
-      <th>Description</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><code>outs/&lt;sample&gt;_multi_report.html</code></td>
-      <td>Multi-omics integrated report displaying core QC and analysis charts from all modules</td>
-    </tr>
-    <tr>
-      <td><code>outs/rna/</code></td>
-      <td>RNA module standard outputs (matrix, statistics, module report, etc.)</td>
-    </tr>
-    <tr>
-      <td><code>outs/atac/</code></td>
-      <td>ATAC module standard outputs (fragment files, peaks, module report, etc.)</td>
-    </tr>
-    <tr>
-      <td><code>outs/vdj-t/</code> / <code>outs/vdj-b/</code></td>
-      <td>VDJ module standard outputs (clonotypes, annotations, module report, etc.)</td>
-    </tr>
-    <tr>
-      <td><code>logs/run_manifest.json</code></td>
-      <td>Module runtime status summary including return codes, runtime, and reuse status</td>
-    </tr>
-  </tbody>
-</table>
-
- <strong>Detailed Output Description</strong>: Please refer to the <a href="../outs/multi.html">Multi Output Documentation</a> for detailed interpretation of the integrated report.
-
-## Related Documentation
-
-| Resource | Description |
+| File/Directory | Description |
 | :--- | :--- |
-| [Parameter Settings](../parameter/multi.md) | Complete parameter reference and descriptions |
-| [Output Descriptions](../outs/multi.md) | Detailed interpretation of analysis results |
-| [scRNA Pipeline](scRNA.md) | Single-cell RNA analysis workflow guide |
-| [scATAC Pipeline](scATAC.md) | Single-cell ATAC analysis workflow guide |
-| [scVDJ Pipeline](scVDJ.md) | Single-cell VDJ analysis workflow guide |
+| `outs/<sample>_multi_report.html` | Multi-omics integrated report displaying core QC and analysis charts from all modules |
+| `outs/rna/` | RNA module standard outputs (matrix, statistics, module report, etc.) |
+| `outs/atac/` | ATAC module standard outputs (fragment files, peaks, module report, etc.) |
+| `outs/vdj-t/` / `outs/vdj-b/` | VDJ module standard outputs (clonotypes, annotations, module report, etc.) |
+| `logs/run_manifest.json` | Module runtime status summary including return codes, runtime, and reuse status |
 
-## Frequently Asked Questions
-
-This section will be expanded as common usage questions are collected. For the current version, use the run log, parameter reference, and output file documentation as the primary troubleshooting references.
+> **Detailed Output Description**: Please refer to the [Multi Output Documentation](../outs/multi.md) for detailed interpretation of the integrated report.
