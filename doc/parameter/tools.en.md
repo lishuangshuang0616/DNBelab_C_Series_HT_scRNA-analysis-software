@@ -2,7 +2,7 @@
 
 DNBelab C Series HT Auxiliary Tools Parameter Reference
 
-The primary public subcommand under `dnbc4tools tools` is `mkgtf`. The auxiliary utilities `bam2fastq`, `chromsplit`, and `fqsubC4` described below are standalone executables whose availability depends on your environment.
+The public subcommand of `dnbc4tools tools` is `mkgtf`. The following `bam2fastq`, `chromsplit`, and `fqsubC4` are standalone auxiliary tools located in the software `misc` directory, not subcommands of `dnbc4tools tools`.
 
 ## GTF Processing (mkgtf) <a id="gtf-文件操作-mkgtf"></a>
 
@@ -58,7 +58,6 @@ Usage Examples:
 | `--include` | String | Default set | Comma-separated gene biotypes to retain (supports wildcards `*`, e.g., `IG_*`) |
 | `--type` | String | `auto` | Attribute key in GTF defining gene type classification (e.g., `gene_biotype`, `gene_type`) |
 | `--feature` | String | `gene` | Target feature level in GTF (usually `gene`; fallback to `transcript` if absent) |
-| `--conflict-policy` | Choice | `error` | Policy for parent gene/transcript conflicts in `check` mode: `error` (abort) or `warn` (log & retain) |
 
 ---
 
@@ -99,55 +98,76 @@ dnbc4tools tools mkgtf --action check --ingtf raw_genes.gtf --output corrected.g
 
 ## BAM to FASTQ (bam2fastq) <a id="bam-转-fastq-bam2fastq"></a>
 
-> **Conversion Utility**
+> **Conversion Utility (Located in Software `misc` Directory)**
 >
-> Converts aligned C4 RNA BAM files back into FASTQ format with multi-threaded parallel compression and targeted genomic slicing.
+> Converts C4 cDNA and C4/C6 oligo BAM files back into FASTQ format. Features coordinate/name-sorted input handling, automatic single/paired-end detection, C4 vs. C6 double-UMI layout recognition, multi-threaded parallel compression, and genomic locus extraction.
 
 ### Usage <a id="usage-bam2fastq"></a>
 
 ```shell
 $ bam2fastq --help
-BAM to FASTQ Converter for C4 Single Cell RNA seq Data
+A BAM to FASTQ converter for C4 cDNA and C4/C6 oligo data (DNBelab C4 / DNBC4tools)
 
 Usage: bam2fastq [OPTIONS] <BAM> <OUTPUT>
 
 Arguments:
   <BAM>     Path to the input BAM file
-  <OUTPUT>  Directory where FASTQ files will be written
+  <OUTPUT>  Output directory for FASTQ files
 
 Options:
-  --threads <THREADS>        Number of CPU threads for parallel processing [default: 8]
-  --locus <REGION>           Process reads from a specific genomic region (format: chr1:1000-2000)
-  --reads-per-fastq <READS>  Maximum number of reads per FASTQ file. All reads go to a single file if not specified.
-  --max-memory <MEMORY>      Maximum memory to use in MB. Auto-determined if not specified.
-  --no-compress              Disable gzip compression for output FASTQ files
-  --help                     Print help
-  --version                  Print version
+  -t, --threads <THREADS>            Number of CPU threads for parallel processing [default: auto, all available cores]
+  -r, --locus <REGION>               Process a zero-based, half-open region, e.g. chr1:1000-2000
+  -n, --reads-per-fastq <READS>      Maximum reads per output FASTQ file
+      --max-memory <MEMORY>          Working-memory target in MiB; defaults to half available system memory
+      --no-compress                  Disable gzip compression (outputs .fastq instead of .fastq.gz)
+      --library-type <TYPE>          Detect from BAM metadata/tags; override with cDNA or oligo [default: auto]
+      --oligo-layout <LAYOUT>        Detect oligo layout; override with c4 or c6 [default: auto]
+      --relaxed                      Skip unmatched/duplicate mate records with summary counts [default: true]
+      --auto-detect                  Detect cDNA paired-end status from sampled flags [default: true]
+      --bx-list <FILE>               Filter cDNA by a barcode list; requires BX-sorted BAM and .bam.bxi index
+      --traceback                    Show detailed error context and traceback [default: false]
+  -h, --help                         Print help
+  -V, --version                      Print version
 ```
 
 ### Parameter Reference Tables
 
 | Argument / Option | Type | Default | Description |
 | :--- | :--- | :--- | :--- |
-| `<BAM>` | File path | **Required (Positional)** | Valid BAM file path (must have `.bai` index; paired-end must be queryname-sorted) |
-| `<OUTPUT>` | Directory | **Required (Positional)** | Target directory where FASTQ files will be written (created if absent) |
-| `--threads` | Integer | `8` | Number of CPU threads for parallel processing |
-| `--locus` | String | None | Extract reads only from a specific genomic region (`chr1:1000-2000`) |
-| `--reads-per-fastq` | Integer | All-in-one | Maximum number of reads per FASTQ chunk file |
-| `--max-memory` | Integer (MB) | Auto | Maximum memory budget in MB |
-| `--no-compress` | Flag | Disabled | Disable gzip compression (outputs `.fastq` directly for fastest I/O) |
+| `<BAM>` | File path | **Required (Positional)** | Path to input BAM (coordinate-sorted or name-sorted cDNA BAM, or `c4_oligo` BAM) |
+| `<OUTPUT>` | Directory path | **Required (Positional)** | Directory where output FASTQ files will be written |
+| `-t, --threads` | Integer / `auto` | `auto` | Number of CPU threads for parallel processing (default: all available cores) |
+| `-r, --locus` | String | None | Process a zero-based, half-open region, e.g. `chr1:1000-2000` (requires `.bai` index) |
+| `-n, --reads-per-fastq` | Integer | None (single file) | Maximum reads per output FASTQ chunk file; splits output when exceeded |
+| `--max-memory` | Integer (MiB) | Auto | Working-memory target in MiB (defaults to half available system memory; not an RSS ceiling) |
+| `--no-compress` | Flag | Disabled | Disable gzip compression (outputs `.fastq` directly for fastest writing speed) |
+| `--library-type` | Choice | `auto` | Detect from BAM metadata/tags; override with `cDNA` or `oligo` |
+| `--oligo-layout` | Choice | `auto` | Detect oligo layout; override with `c4` or `c6` |
+| `--relaxed` | Boolean | `true` | Skip unmatched/duplicate mate records with summary counts; `false` requires complete pairs |
+| `--auto-detect` | Boolean | `true` | Detect cDNA paired-end status from sampled flags; `false` selects single-ended conversion |
+| `--bx-list` | File path | None | Filter cDNA by a barcode list (requires BX-sorted BAM and `.bam.bxi` index) |
+| `--traceback` | Flag | Disabled | Show detailed error context and traceback |
 
 ### Practical Examples
 
 ```shell
-# Standard conversion
-bam2fastq anno_decon_sorted.bam ./fastq_out
+# Basic conversion (auto-detects paired-end/single-end and library type, uses all available cores)
+bam2fastq sample.bam ./output/
 
-# Extract specific region with parallel compression
-bam2fastq --threads 16 --locus chr1:1000000-5000000 anno_decon_sorted.bam ./fastq_out
+# Custom thread budget
+bam2fastq -t 20 sample.bam ./output/
 
-# Chunk into 10M reads per file
-bam2fastq --reads-per-fastq 10000000 anno_decon_sorted.bam ./fastq_out
+# Extract specific genomic region (requires .bai index)
+bam2fastq -t 8 -r chr1:1000000-2000000 sample.bam ./output_chr1/
+
+# Disable compression for fastest write speed
+bam2fastq -t 8 --no-compress sample.bam ./output/
+
+# Chunk output into 50M reads per file
+bam2fastq -t 20 -n 50000000 sample.bam ./output/
+
+# Convert Oligo BAM (auto-detects C4 single-UMI vs C6 double-UMI layout)
+bam2fastq -t 20 oligo.records.bam ./output_oligo/
 ```
 
 ---

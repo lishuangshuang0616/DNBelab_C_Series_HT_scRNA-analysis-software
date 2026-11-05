@@ -1488,6 +1488,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../library_structure.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    文库结构
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../installation_previous.html" class="md-nav__link">
         
   
@@ -1798,65 +1826,107 @@
 </blockquote>
 <hr />
 <h2 id="_2">核心步骤解析 <a id="核心步骤解析"></a><a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
-<div class="pipeline-step-flow">
-<div class="c6-step-card">
-<p><span class="step-badge">STEP 01</span></p>
+<p>C6 混合建库与解复用分析涵盖从原始双文库输入到逐样本专属交付的 5 个关键阶段：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: center;">步骤</th>
+<th style="text-align: left;">阶段名称</th>
+<th style="text-align: left;">核心处理逻辑</th>
+<th style="text-align: left;">关键输入与产出交付物</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;"><strong>01</strong></td>
+<td style="text-align: left;"><strong>数据准备与输入校验</strong></td>
+<td style="text-align: left;">共享双文库解析；暗反应自动自检；校验 <code>[samples]</code> 分段映射</td>
+<td style="text-align: left;">共享 FASTQ、配置 CSV ➔ 规范化参数</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>02</strong></td>
+<td style="text-align: left;"><strong>条形码识别与样本分配</strong></td>
+<td style="text-align: left;">从 Oligo 提取 Sample Barcode 并基于白名单严格纠错匹配</td>
+<td style="text-align: left;">Oligo Reads ➔ 样本分配表、Unassigned 追踪</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>03</strong></td>
+<td style="text-align: left;"><strong>转录本比对与微球聚合</strong></td>
+<td style="text-align: left;">STAR 比对注释；基于相似度关联聚合同细胞微球；全局高占用过滤</td>
+<td style="text-align: left;">cDNA Reads ➔ 比对 BAM、Bead 聚合标签</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>04</strong></td>
+<td style="text-align: left;"><strong>逐样本独立细胞识别</strong></td>
+<td style="text-align: left;">各样本完全隔离独立执行 EmptyDrops；自适应阈值保护</td>
+<td style="text-align: left;">样本液滴集合 ➔ 各样本真实有效细胞集</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>05</strong></td>
+<td style="text-align: left;"><strong>结果归档与专属交付</strong></td>
+<td style="text-align: left;">逐样本专属矩阵/报告/BAM 拆分；全局联合矩阵与批次报告</td>
+<td style="text-align: left;"><code>per_sample_outs/</code> 交付包 + 全局汇总</td>
+</tr>
+</tbody>
+</table>
+<div class="c6-stepper">
+<div class="c6-step-item">
 <h3 id="_3">第一步：数据准备与输入校验 <a id="step-1"></a><a class="headerlink" href="#_3" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>测序文库</strong>：实验包含共享的一套 cDNA 文库与 Oligo 文库。</li>
 <li><strong>参数配置</strong>：使用分段式 CSV 文件（如 <code>sample.config.csv</code>），在 <code>[samples]</code> 区块中声明各个样本名称与 Sample Barcode 的分配映射关系。</li>
 <li><strong>暗反应自检</strong>：3.2 版本支持自动识别 cDNA 与 Oligo 的暗反应（Dark Cycles），无需人工干预。</li>
 </ul>
-<div class="step-tags">
-<p><span class="step-tag">共享双端文库</span>
-  <span class="step-tag">暗反应自检</span>
-  <span class="step-tag">分段 CSV 映射</span></p>
+<div class="c6-step-meta">
+<p><span class="c6-step-meta-label">核心机制</span>
+  <span class="c6-step-pill">共享双端文库</span>
+  <span class="c6-step-pill">暗反应自检</span>
+  <span class="c6-step-pill">分段 CSV 映射</span></p>
 </div>
 </div>
-<div class="c6-step-card">
-<p><span class="step-badge">STEP 02</span></p>
+<div class="c6-step-item">
 <h3 id="sample-barcode-assignment">第二步：条形码识别与样本分配 (Sample Barcode Assignment) <a id="step-2"></a><a class="headerlink" href="#sample-barcode-assignment" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>精准匹配</strong>：从 Oligo reads 中提取 Sample Barcode 序列，基于内置白名单执行严谨纠错匹配。</li>
 <li><strong>灵活映射</strong>：将每一个液滴分配到对应的生物学样本；支持单一条形码（如 <code>BC01</code>）或同一生物学样本分配多个条形码（如 <code>BC02;BC03</code>）。</li>
 <li><strong>未分配追踪</strong>：未识别 Sample Barcode 的读段计入 Unassigned 统计，确保全流程数据可追溯。</li>
 </ul>
-<div class="step-tags">
-<p><span class="step-tag">白名单纠错</span>
-  <span class="step-tag">多 Barcode 聚合</span>
-  <span class="step-tag">Unassigned 追踪</span></p>
+<div class="c6-step-meta">
+<p><span class="c6-step-meta-label">核心机制</span>
+  <span class="c6-step-pill">白名单纠错</span>
+  <span class="c6-step-pill">多 Barcode 聚合</span>
+  <span class="c6-step-pill">Unassigned 追踪</span></p>
 </div>
 </div>
-<div class="c6-step-card">
-<p><span class="step-badge">STEP 03</span></p>
+<div class="c6-step-item">
 <h3 id="bead-aggregation">第三步：转录本比对与微球聚合 (Bead Aggregation) <a id="step-3"></a><a class="headerlink" href="#bead-aggregation" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>高质量比对</strong>：使用优化配置的 STAR 流程对 cDNA 进行参考基因组比对与基因功能区注释。</li>
 <li><strong>跨微球聚合</strong>：基于 Bead 序列的相似性评分算法，将同一物理细胞被捕获到的微球关联聚合，并在合并标签中保留 Sample Barcode 后缀。</li>
 <li><strong>实验级高占用过滤</strong>：默认启用 <code>high_occupancy_filter=true</code>，在整个实验全局尺度剔除高占用异常液滴，保障下游各样本细胞纯度。</li>
 </ul>
-<div class="step-tags">
-<p><span class="step-tag">STAR 基因组比对</span>
-  <span class="step-tag">Bead 相似度聚合</span>
-  <span class="step-tag">全局高占用过滤</span></p>
+<div class="c6-step-meta">
+<p><span class="c6-step-meta-label">核心机制</span>
+  <span class="c6-step-pill">STAR 基因组比对</span>
+  <span class="c6-step-pill">Bead 相似度聚合</span>
+  <span class="c6-step-pill">全局高占用过滤</span></p>
 </div>
 </div>
-<div class="c6-step-card">
-<p><span class="step-badge">STEP 04</span></p>
+<div class="c6-step-item">
 <h3 id="per-sample-cell-calling">第四步：逐样本独立细胞识别 (Per-Sample Cell Calling) <a id="step-4"></a><a class="headerlink" href="#per-sample-cell-calling" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>独立细胞判定</strong>：分配至各样本的液滴<strong>相互独立执行细胞判定</strong>，彻底避免不同样本细胞载量悬殊时产生相互干扰。</li>
 <li><strong>智能截断与保护</strong>：自动估计模式下结合高灵敏度 EmptyDrops 算法，3.2 版本增设自适应阈值保护，防止由于单一样本背景过高导致的过拟合。</li>
 <li><strong>同 UMI 冲突纠错</strong>：同一细胞内比对到多个基因的歧义 UMI 依据 read 计数严格去噪，避免同源基因虚假共表达。</li>
 </ul>
-<div class="step-tags">
-<p><span class="step-tag">样本隔离判定</span>
-  <span class="step-tag">EmptyDrops 自适应保护</span>
-  <span class="step-tag">UMI 冲突纠错</span></p>
+<div class="c6-step-meta">
+<p><span class="c6-step-meta-label">核心机制</span>
+  <span class="c6-step-pill">样本隔离判定</span>
+  <span class="c6-step-pill">EmptyDrops 自适应保护</span>
+  <span class="c6-step-pill">UMI 冲突纠错</span></p>
 </div>
 </div>
-<div class="c6-step-card">
-<p><span class="step-badge">STEP 05</span></p>
+<div class="c6-step-item">
 <h3 id="_4">第五步：结果归档与专属交付 <a id="step-5"></a><a class="headerlink" href="#_4" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>逐样本专属分析</strong>：每个样本在 <code>per_sample_outs/&lt;sample&gt;/</code> 下独立交付完整的表达矩阵（MEX、H5、H5AD 格式）、降维聚类分析（PCA、UMAP、Marker 基因）与单独的交互式 HTML 报告。</li>
@@ -1864,11 +1934,12 @@
 <li><strong>全局合并矩阵</strong>：在根目录下提供包含全部样本有效细胞的联合表达矩阵，保留纯净原始计数，方便后续按需导入下游批次校正工具（如 Harmony 等）。</li>
 <li><strong>批次综合报告</strong>：生成全局 <code>&lt;run&gt;_multi_report.html</code>，集中展示各样本有效细胞数、测序饱和度对比及文库级质控指标。</li>
 </ul>
-<div class="step-tags">
-<p><span class="step-tag">专属 MEX/H5/H5AD</span>
-  <span class="step-tag">按样本拆分 BAM</span>
-  <span class="step-tag">全局联合矩阵</span>
-  <span class="step-tag">交互式双层报告</span></p>
+<div class="c6-step-meta">
+<p><span class="c6-step-meta-label">核心机制</span>
+  <span class="c6-step-pill">专属 MEX/H5/H5AD</span>
+  <span class="c6-step-pill">按样本拆分 BAM</span>
+  <span class="c6-step-pill">全局联合矩阵</span>
+  <span class="c6-step-pill">交互式双层报告</span></p>
 </div>
 </div>
 </div>

@@ -1499,6 +1499,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../library_structure.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    文库结构
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../installation_previous.html" class="md-nav__link">
         
   
@@ -1809,7 +1837,7 @@
 
 <h1 id="_1">工具命令参数<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h1>
 <p>DNBelab C Series HT 工具命令参数说明</p>
-<p>当前 <code>dnbc4tools tools</code> 的公开子命令为 <code>mkgtf</code>。下文的 <code>bam2fastq</code>、<code>chromsplit</code>、<code>fqsubC4</code> 为独立辅助工具示例，是否可用取决于部署环境，不是 <code>dnbc4tools tools</code> 的子命令。</p>
+<p>当前 <code>dnbc4tools tools</code> 的公开子命令为 <code>mkgtf</code>。下文的 <code>bam2fastq</code>、<code>chromsplit</code>、<code>fqsubC4</code> 为独立辅助工具，位于软件 <code>misc</code> 目录，不是 <code>dnbc4tools tools</code> 的子命令。</p>
 <h2 id="gtf-mkgtf">GTF 文件操作 (mkgtf) <a id="gtf-文件操作-mkgtf"></a><a class="headerlink" href="#gtf-mkgtf" title="Permanent link">&para;</a></h2>
 <blockquote>
 <p><strong>核心功能</strong></p>
@@ -1894,12 +1922,6 @@ Usage<span class="w"> </span>Examples:
 <td style="text-align: left;"><code>gene</code></td>
 <td style="text-align: left;">从 GTF 中提取的目标层级（通常为 <code>gene</code>；若无 gene 行可设为 <code>transcript</code>）</td>
 </tr>
-<tr>
-<td style="text-align: left;"><code>--conflict-policy</code></td>
-<td style="text-align: left;">选项</td>
-<td style="text-align: left;"><code>error</code></td>
-<td style="text-align: left;">在 <code>check</code> 模式下的父级冲突策略：<code>error</code>（遇 gene/transcript 冲突报错中断）或 <code>warn</code>（告警并原样保留）</td>
-</tr>
 </tbody>
 </table>
 <hr />
@@ -1927,27 +1949,33 @@ Usage<span class="w"> </span>Examples:
 <hr />
 <h2 id="bam-fastq-bam2fastq">BAM 转 FASTQ (bam2fastq) <a id="bam-转-fastq-bam2fastq"></a><a class="headerlink" href="#bam-fastq-bam2fastq" title="Permanent link">&para;</a></h2>
 <blockquote>
-<p><strong>转换工具</strong></p>
-<p>专用于将单细胞 RNA 比对后的 BAM 文件无损反向转换提取为 FASTQ 文件，支持多线程加速与基因组区域截取。</p>
+<p><strong>转换工具（位于软件 <code>misc</code> 目录）</strong></p>
+<p>专用于将单细胞 C4 cDNA 及 C4/C6 Oligo 比对 BAM 文件无损反向转换提取为 FASTQ 文件。支持坐标排序与序列名排序输入、单端/双端自动检测、C4/C6 Oligo 结构识别、多线程并行压缩与指定区间提取。</p>
 </blockquote>
 <h3 id="_6">用法 <a id="usage-bam2fastq"></a><a class="headerlink" href="#_6" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code>$<span class="w"> </span>bam2fastq<span class="w"> </span>--help
-BAM<span class="w"> </span>to<span class="w"> </span>FASTQ<span class="w"> </span>Converter<span class="w"> </span><span class="k">for</span><span class="w"> </span>C4<span class="w"> </span>Single<span class="w"> </span>Cell<span class="w"> </span>RNA<span class="w"> </span>seq<span class="w"> </span>Data
+A<span class="w"> </span>BAM<span class="w"> </span>to<span class="w"> </span>FASTQ<span class="w"> </span>converter<span class="w"> </span><span class="k">for</span><span class="w"> </span>C4<span class="w"> </span>cDNA<span class="w"> </span>and<span class="w"> </span>C4/C6<span class="w"> </span>oligo<span class="w"> </span>data<span class="w"> </span><span class="o">(</span>DNBelab<span class="w"> </span>C4<span class="w"> </span>/<span class="w"> </span>DNBC4tools<span class="o">)</span>
 
 Usage:<span class="w"> </span>bam2fastq<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span><span class="w"> </span>&lt;BAM&gt;<span class="w"> </span>&lt;OUTPUT&gt;
 
 Arguments:
 <span class="w">  </span>&lt;BAM&gt;<span class="w">     </span>Path<span class="w"> </span>to<span class="w"> </span>the<span class="w"> </span>input<span class="w"> </span>BAM<span class="w"> </span>file
-<span class="w">  </span>&lt;OUTPUT&gt;<span class="w">  </span>Directory<span class="w"> </span>where<span class="w"> </span>FASTQ<span class="w"> </span>files<span class="w"> </span>will<span class="w"> </span>be<span class="w"> </span>written
+<span class="w">  </span>&lt;OUTPUT&gt;<span class="w">  </span>Output<span class="w"> </span>directory<span class="w"> </span><span class="k">for</span><span class="w"> </span>FASTQ<span class="w"> </span>files
 
 Options:
-<span class="w">  </span>--threads<span class="w"> </span>&lt;THREADS&gt;<span class="w">        </span>Number<span class="w"> </span>of<span class="w"> </span>CPU<span class="w"> </span>threads<span class="w"> </span><span class="k">for</span><span class="w"> </span>parallel<span class="w"> </span>processing<span class="w"> </span><span class="o">[</span>default:<span class="w"> </span><span class="m">8</span><span class="o">]</span>
-<span class="w">  </span>--locus<span class="w"> </span>&lt;REGION&gt;<span class="w">           </span>Process<span class="w"> </span>reads<span class="w"> </span>from<span class="w"> </span>a<span class="w"> </span>specific<span class="w"> </span>genomic<span class="w"> </span>region<span class="w"> </span><span class="o">(</span>format:<span class="w"> </span>chr1:1000-2000<span class="o">)</span>
-<span class="w">  </span>--reads-per-fastq<span class="w"> </span>&lt;READS&gt;<span class="w">  </span>Maximum<span class="w"> </span>number<span class="w"> </span>of<span class="w"> </span>reads<span class="w"> </span>per<span class="w"> </span>FASTQ<span class="w"> </span>file.<span class="w"> </span>All<span class="w"> </span>reads<span class="w"> </span>go<span class="w"> </span>to<span class="w"> </span>a<span class="w"> </span>single<span class="w"> </span>file<span class="w"> </span><span class="k">if</span><span class="w"> </span>not<span class="w"> </span>specified.
-<span class="w">  </span>--max-memory<span class="w"> </span>&lt;MEMORY&gt;<span class="w">      </span>Maximum<span class="w"> </span>memory<span class="w"> </span>to<span class="w"> </span>use<span class="w"> </span><span class="k">in</span><span class="w"> </span>MB.<span class="w"> </span>Auto-determined<span class="w"> </span><span class="k">if</span><span class="w"> </span>not<span class="w"> </span>specified.
-<span class="w">  </span>--no-compress<span class="w">              </span>Disable<span class="w"> </span>gzip<span class="w"> </span>compression<span class="w"> </span><span class="k">for</span><span class="w"> </span>output<span class="w"> </span>FASTQ<span class="w"> </span>files
-<span class="w">  </span>--help<span class="w">                     </span>Print<span class="w"> </span><span class="nb">help</span>
-<span class="w">  </span>--version<span class="w">                  </span>Print<span class="w"> </span>version
+<span class="w">  </span>-t,<span class="w"> </span>--threads<span class="w"> </span>&lt;THREADS&gt;<span class="w">            </span>Number<span class="w"> </span>of<span class="w"> </span>CPU<span class="w"> </span>threads<span class="w"> </span><span class="k">for</span><span class="w"> </span>parallel<span class="w"> </span>processing<span class="w"> </span><span class="o">[</span>default:<span class="w"> </span>auto,<span class="w"> </span>all<span class="w"> </span>available<span class="w"> </span>cores<span class="o">]</span>
+<span class="w">  </span>-r,<span class="w"> </span>--locus<span class="w"> </span>&lt;REGION&gt;<span class="w">               </span>Process<span class="w"> </span>a<span class="w"> </span>zero-based,<span class="w"> </span>half-open<span class="w"> </span>region,<span class="w"> </span>e.g.<span class="w"> </span>chr1:1000-2000
+<span class="w">  </span>-n,<span class="w"> </span>--reads-per-fastq<span class="w"> </span>&lt;READS&gt;<span class="w">      </span>Maximum<span class="w"> </span>reads<span class="w"> </span>per<span class="w"> </span>output<span class="w"> </span>FASTQ<span class="w"> </span>file
+<span class="w">      </span>--max-memory<span class="w"> </span>&lt;MEMORY&gt;<span class="w">          </span>Working-memory<span class="w"> </span>target<span class="w"> </span><span class="k">in</span><span class="w"> </span>MiB<span class="p">;</span><span class="w"> </span>defaults<span class="w"> </span>to<span class="w"> </span>half<span class="w"> </span>available<span class="w"> </span>system<span class="w"> </span>memory
+<span class="w">      </span>--no-compress<span class="w">                  </span>Disable<span class="w"> </span>gzip<span class="w"> </span>compression<span class="w"> </span><span class="o">(</span>outputs<span class="w"> </span>.fastq<span class="w"> </span>instead<span class="w"> </span>of<span class="w"> </span>.fastq.gz<span class="o">)</span>
+<span class="w">      </span>--library-type<span class="w"> </span>&lt;TYPE&gt;<span class="w">          </span>Detect<span class="w"> </span>from<span class="w"> </span>BAM<span class="w"> </span>metadata/tags<span class="p">;</span><span class="w"> </span>override<span class="w"> </span>with<span class="w"> </span>cDNA<span class="w"> </span>or<span class="w"> </span>oligo<span class="w"> </span><span class="o">[</span>default:<span class="w"> </span>auto<span class="o">]</span>
+<span class="w">      </span>--oligo-layout<span class="w"> </span>&lt;LAYOUT&gt;<span class="w">        </span>Detect<span class="w"> </span>oligo<span class="w"> </span>layout<span class="p">;</span><span class="w"> </span>override<span class="w"> </span>with<span class="w"> </span>c4<span class="w"> </span>or<span class="w"> </span>c6<span class="w"> </span><span class="o">[</span>default:<span class="w"> </span>auto<span class="o">]</span>
+<span class="w">      </span>--relaxed<span class="w">                      </span>Skip<span class="w"> </span>unmatched/duplicate<span class="w"> </span>mate<span class="w"> </span>records<span class="w"> </span>with<span class="w"> </span>summary<span class="w"> </span>counts<span class="w"> </span><span class="o">[</span>default:<span class="w"> </span>true<span class="o">]</span>
+<span class="w">      </span>--auto-detect<span class="w">                  </span>Detect<span class="w"> </span>cDNA<span class="w"> </span>paired-end<span class="w"> </span>status<span class="w"> </span>from<span class="w"> </span>sampled<span class="w"> </span>flags<span class="w"> </span><span class="o">[</span>default:<span class="w"> </span>true<span class="o">]</span>
+<span class="w">      </span>--bx-list<span class="w"> </span>&lt;FILE&gt;<span class="w">               </span>Filter<span class="w"> </span>cDNA<span class="w"> </span>by<span class="w"> </span>a<span class="w"> </span>barcode<span class="w"> </span>list<span class="p">;</span><span class="w"> </span>requires<span class="w"> </span>BX-sorted<span class="w"> </span>BAM<span class="w"> </span>and<span class="w"> </span>.bam.bxi<span class="w"> </span>index
+<span class="w">      </span>--traceback<span class="w">                    </span>Show<span class="w"> </span>detailed<span class="w"> </span>error<span class="w"> </span>context<span class="w"> </span>and<span class="w"> </span>traceback<span class="w"> </span><span class="o">[</span>default:<span class="w"> </span>false<span class="o">]</span>
+<span class="w">  </span>-h,<span class="w"> </span>--help<span class="w">                         </span>Print<span class="w"> </span><span class="nb">help</span>
+<span class="w">  </span>-V,<span class="w"> </span>--version<span class="w">                      </span>Print<span class="w"> </span>version
 </code></pre></div>
 <h3 id="_7">参数速查表<a class="headerlink" href="#_7" title="Permanent link">&para;</a></h3>
 <table>
@@ -1964,37 +1992,37 @@ Options:
 <td style="text-align: left;"><code>&lt;BAM&gt;</code></td>
 <td style="text-align: left;">文件路径</td>
 <td style="text-align: left;"><strong>必需 (位置参数)</strong></td>
-<td style="text-align: left;">输入的有效 BAM 文件路径（须已构建 <code>.bai</code> 索引；双端须按序列名排序）</td>
+<td style="text-align: left;">输入的 BAM 文件路径（支持坐标排序或名称排序的 cDNA BAM 及 <code>c4_oligo</code> 生成的 Oligo BAM）</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>&lt;OUTPUT&gt;</code></td>
 <td style="text-align: left;">目录路径</td>
 <td style="text-align: left;"><strong>必需 (位置参数)</strong></td>
-<td style="text-align: left;">转换输出 FASTQ 文件的目标目录（不存在时自动创建）</td>
+<td style="text-align: left;">FASTQ 文件输出目录（自动按样本与分卷命名写出）</td>
 </tr>
 <tr>
-<td style="text-align: left;"><code>--threads</code></td>
-<td style="text-align: left;">整数</td>
-<td style="text-align: left;"><code>8</code></td>
-<td style="text-align: left;">用于并行解码与写出的 CPU 线程数</td>
+<td style="text-align: left;"><code>-t, --threads</code></td>
+<td style="text-align: left;">整数 / <code>auto</code></td>
+<td style="text-align: left;"><code>auto</code></td>
+<td style="text-align: left;">并行处理 CPU 线程数，默认使用系统全部可用核心</td>
 </tr>
 <tr>
-<td style="text-align: left;"><code>--locus</code></td>
+<td style="text-align: left;"><code>-r, --locus</code></td>
 <td style="text-align: left;">字符串</td>
 <td style="text-align: left;">无</td>
-<td style="text-align: left;">仅提取特定基因组区域的读段（格式为 <code>chr1:1000-2000</code>）</td>
+<td style="text-align: left;">处理指定的基因组区域（0-based 半开区间，如 <code>chr1:1000-2000</code>；需要 BAM <code>.bai</code> 索引）</td>
 </tr>
 <tr>
-<td style="text-align: left;"><code>--reads-per-fastq</code></td>
+<td style="text-align: left;"><code>-n, --reads-per-fastq</code></td>
 <td style="text-align: left;">整数</td>
 <td style="text-align: left;">全部单文件</td>
-<td style="text-align: left;">每个输出 FASTQ 文件的最大读段数量，超过则自动分卷</td>
+<td style="text-align: left;">单个输出 FASTQ 文件的最大读段数量，超过则自动分卷</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>--max-memory</code></td>
-<td style="text-align: left;">整数 (MB)</td>
+<td style="text-align: left;">整数 (MiB)</td>
 <td style="text-align: left;">自动判断</td>
-<td style="text-align: left;">工具允许使用的最大内存预算</td>
+<td style="text-align: left;">目标工作内存上限（MiB，默认系统可用内存的一半；非硬性 RSS 限制）</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>--no-compress</code></td>
@@ -2002,17 +2030,62 @@ Options:
 <td style="text-align: left;">关闭</td>
 <td style="text-align: left;">禁用 gzip 压缩（直接输出 <code>.fastq</code> 以获得最高写出速度）</td>
 </tr>
+<tr>
+<td style="text-align: left;"><code>--library-type</code></td>
+<td style="text-align: left;">选项</td>
+<td style="text-align: left;"><code>auto</code></td>
+<td style="text-align: left;">文库类型推断：<code>cDNA</code> 或 <code>oligo</code>。默认通过 BAM 头部及标签（<code>c4_oligo</code>、<code>OR/OY/OB/U2/Y2</code>）自动推断</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>--oligo-layout</code></td>
+<td style="text-align: left;">选项</td>
+<td style="text-align: left;"><code>auto</code></td>
+<td style="text-align: left;">Oligo 文库结构布局：<code>c4</code>（单 UMI 30bp Barcode）或 <code>c6</code>（双 UMI 结构）。默认自动检测</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>--relaxed</code></td>
+<td style="text-align: left;">布尔值</td>
+<td style="text-align: left;"><code>true</code></td>
+<td style="text-align: left;">是否跳过未配对/重复的配对记录并输出统计；设为 <code>false</code> 则要求严格完整配对</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>--auto-detect</code></td>
+<td style="text-align: left;">布尔值</td>
+<td style="text-align: left;"><code>true</code></td>
+<td style="text-align: left;">是否根据采样标记自动检测 cDNA 双端/单端状态；设为 <code>false</code> 则按单端转换</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>--bx-list</code></td>
+<td style="text-align: left;">文件路径</td>
+<td style="text-align: left;">无</td>
+<td style="text-align: left;">按条形码白名单过滤 cDNA；要求 BAM 经 BX 排序且具有 <code>.bam.bxi</code> 索引</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>--traceback</code></td>
+<td style="text-align: left;">标志开关</td>
+<td style="text-align: left;">关闭</td>
+<td style="text-align: left;">出错时输出详细上下文与回溯堆栈信息</td>
+</tr>
 </tbody>
 </table>
 <h3 id="_8">常用示例<a class="headerlink" href="#_8" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># 基础转换</span>
-bam2fastq<span class="w"> </span>anno_decon_sorted.bam<span class="w"> </span>./fastq_out
+<div class="highlight"><pre><span></span><code><span class="c1"># 基础转换（自动推断双端/单端与文库类型，使用全部可用核心）</span>
+bam2fastq<span class="w"> </span>sample.bam<span class="w"> </span>./output/
 
-<span class="c1"># 提取指定染色体区域并多线程压缩</span>
-bam2fastq<span class="w"> </span>--threads<span class="w"> </span><span class="m">16</span><span class="w"> </span>--locus<span class="w"> </span>chr1:1000000-5000000<span class="w"> </span>anno_decon_sorted.bam<span class="w"> </span>./fastq_out
+<span class="c1"># 指定线程数并输出至目标目录</span>
+bam2fastq<span class="w"> </span>-t<span class="w"> </span><span class="m">20</span><span class="w"> </span>sample.bam<span class="w"> </span>./output/
 
-<span class="c1"># 按每千万条 reads 分卷输出</span>
-bam2fastq<span class="w"> </span>--reads-per-fastq<span class="w"> </span><span class="m">10000000</span><span class="w"> </span>anno_decon_sorted.bam<span class="w"> </span>./fastq_out
+<span class="c1"># 提取指定染色体区域（需要 .bai 索引）</span>
+bam2fastq<span class="w"> </span>-t<span class="w"> </span><span class="m">8</span><span class="w"> </span>-r<span class="w"> </span>chr1:1000000-2000000<span class="w"> </span>sample.bam<span class="w"> </span>./output_chr1/
+
+<span class="c1"># 禁用压缩以获得最高写出速度</span>
+bam2fastq<span class="w"> </span>-t<span class="w"> </span><span class="m">8</span><span class="w"> </span>--no-compress<span class="w"> </span>sample.bam<span class="w"> </span>./output/
+
+<span class="c1"># 按每五千万条 reads 分卷输出</span>
+bam2fastq<span class="w"> </span>-t<span class="w"> </span><span class="m">20</span><span class="w"> </span>-n<span class="w"> </span><span class="m">50000000</span><span class="w"> </span>sample.bam<span class="w"> </span>./output/
+
+<span class="c1"># Oligo 文库转换（自动识别 C4 与 C6 双 UMI 布局）</span>
+bam2fastq<span class="w"> </span>-t<span class="w"> </span><span class="m">20</span><span class="w"> </span>oligo.records.bam<span class="w"> </span>./output_oligo/
 </code></pre></div>
 <hr />
 <h2 id="chromsplit">染色体分割 (chromsplit) <a id="染色体分割-chromsplit"></a><a class="headerlink" href="#chromsplit" title="Permanent link">&para;</a></h2>

@@ -12,7 +12,7 @@ dnbc4tools multi run \
   --name demo \
   --csv config.csv \
   --outdir ./results \
-  --threads 16
+  --threads 20
 ```
 
 | Option | Required | Meaning |
@@ -63,6 +63,10 @@ Use `true/false` for booleans. Quote comma-containing values, for example `darkr
 
 RNA input roots contain `cDNA/` and `oligo/`; ATAC and VDJ directories contain their paired FASTQs directly. See [FASTQ naming rules](../quickstart.md#file-naming-conventions).
 
+> **Tip: Sequencing Consistency & Batch Handling**
+> All FASTQ inputs in a single run must originate from the same library batch with identical sequencing modes and dark reaction settings; data from different libraries cannot be mixed.
+> If different sequencing batches of the same library batch exhibit differing dark reaction cycles or read lengths, use the FASTQ trimming tool [`fqsubC4`](tools.md#fastq-切割-fqsubc4) to trim reads to match the standard library structure (see [Library Structure](../library_structure.md)).
+
 ## Ordinary multi-omics configuration <a id="configuration-examples"></a>
 
 This minimal 5′ RNA + TCR configuration can be saved as `config.csv` and run with the command above.
@@ -97,30 +101,8 @@ VDJ uses RNA cell information by default; set `beadstrans` for another cell tabl
 | Section | Common settings | Full reference |
 | :--- | :--- | :--- |
 | `[rna]` | `genomeDir`, `chemistry`, `darkreaction`, `expectcells`, `forcecells`, `minumi`, `consistent_cells`, `calling_method`, `no_introns`, `end5`, `no_bam`, `star_parameters`, `sample_read_pairs` | [RNA](scRNA.md) |
-| `[atac]` | `genomeDir`, `darkreaction`, `forcecells`, `frags_cutoff`, `tss_cutoff`, `jaccard_cutoff`, `merge_cutoff`, `peak_signal`, `need_bam`, `sample_read_pairs` | [ATAC](scATAC.md) |
+| `[atac]` | `genomeDir`, `darkreaction`, `forcecells`, `frags_cutoff`, `tss_cutoff`, `jaccard_cutoff`, `merge_cutoff`, `need_bam`, `sample_read_pairs` | [ATAC](scATAC.md) |
 | `[vdj-t]` / `[vdj-b]` | `ref`, `beadstrans`, `darkreaction`, `customize`, `keep_all_cells`, `r2_only`, `enrichment_primers`, `sample_read_pairs` | [VDJ](scVDJ.md) |
 
 Ordinary RNA requires explicit chemistry and dark cycles together. Repeat `customize` as required for libraries; keep one definition for other scalar options.
-
-### BAM resources <a id="bam-resources"></a>
-
-Routine runs use automatic scheduling and need only a total CPU budget. Expand these overrides only when needed.
-
-<details markdown="block">
-<summary>BAM resource overrides</summary>
-
-Routine runs need only a total thread budget. BAM concurrency is planned from CPU, file descriptors and estimated available memory. Optional `[rna]` overrides:
-
-| Parameter | Meaning |
-| :--- | :--- |
-| `bam_workers` | Positive maximum number of concurrent chunk workers |
-| `bam_compression_threads` | Compression threads per chunk; jointly constrained by total CPU budget |
-| `bam_queue_depth` | Per-sample writer queue; defaults to twice the effective compression thread count |
-| `bam_max_memory_gb` | Estimated memory budget in GiB; not an RSS cap |
-| `bam_compression_level` | 0–9; omission retains the HTSlib default |
-| `bam_limit_memory` | Default `false`; `true` fails if even one worker cannot fit the estimate |
-
-Automatic mode reduces concurrency; if one worker still exceeds the estimate, it runs one worker with a warning. If memory detection is unavailable, it uses CPU/file-descriptor scheduling. These options have no effect with `no_bam=true`.
-
-</details>
 

@@ -1360,6 +1360,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../library_structure.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Library Structure
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../installation_previous.html" class="md-nav__link">
         
   
@@ -1542,7 +1570,7 @@
 <span class="w">  </span>--name<span class="w"> </span>sample1<span class="w"> </span>--fastqs<span class="w"> </span>/data/tcr<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--ref<span class="w"> </span>human<span class="w"> </span>--chain<span class="w"> </span>TR<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--beadstrans<span class="w"> </span>/results/rna/outs/singlecell.csv<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--threads<span class="w"> </span><span class="m">16</span>
+<span class="w">  </span>--threads<span class="w"> </span><span class="m">20</span>
 </code></pre></div>
 <h3 id="full-command-line-help">Full Command-Line Help<a class="headerlink" href="#full-command-line-help" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code>$<span class="w"> </span>dnbc4tools<span class="w"> </span>vdj<span class="w"> </span>run<span class="w"> </span>--help
@@ -1673,7 +1701,9 @@ Analysis<span class="w"> </span>Settings:
 </tbody>
 </table>
 <blockquote>
-<p><strong>Important:</strong> All sequencing files in a single run must originate from the same library preparation; files from different libraries cannot be merged.</p>
+<p><strong>Tip: Sequencing Consistency &amp; Batch Handling</strong>
+All FASTQ inputs in a single run must originate from the same library batch with identical sequencing modes and dark reaction settings; data from different libraries cannot be mixed.
+If different sequencing batches of the same library batch exhibit differing dark reaction cycles or read lengths, use the FASTQ trimming tool <a href="tools.html#fastq-切割-fqsubc4"><code>fqsubC4</code></a> to trim reads to match the standard library structure (see <a href="../library_structure.html#scvdj">Library Structure</a>).</p>
 </blockquote>
 <h4 id="library-chemistry-read-structure">Library Chemistry &amp; Read Structure<a class="headerlink" href="#library-chemistry-read-structure" title="Permanent link">&para;</a></h4>
 <table>
@@ -1753,11 +1783,9 @@ Analysis<span class="w"> </span>Settings:
 </ul>
 <h4 id="2-cross-omics-cell-linkage-via-beadstrans">2. Cross-Omics Cell Linkage via <code>--beadstrans</code><a class="headerlink" href="#2-cross-omics-cell-linkage-via-beadstrans" title="Permanent link">&para;</a></h4>
 <p><code>--beadstrans</code> is a pivotal parameter for multi-omics integration, linking V(D)J clonotypic assemblies directly to 5' scRNA expression profiles:</p>
-<div class="highlight"><pre><span></span><code>flowchart LR
-    RNA["5' scRNA Output&lt;br/&gt;outs/singlecell.csv"] --&gt;|--beadstrans| VDJ["dnbc4tools vdj run"]
-    VDJ --&gt; Link["Inherit Valid Cell Whitelist&lt;br/&gt;Inherit Bead Merging Map"]
-    Link --&gt; Matched["Expression Profiles Matched to TCR/BCR Clonotypes"]
-</code></pre></div>
+<div style="text-align: center; margin: 20px 0;">
+<p><img src="../images/vdj_beadstrans_linkage_en.svg" alt="scVDJ Cross-Omics Cell Linkage Architecture (--beadstrans)" style="max-width: 100%; border-radius: 8px; box-shadow: 0 4px 14px rgba(0,0,0,0.06);" /></p>
+</div>
 <ul>
 <li><strong>Input source</strong>: Provide the <code>outs/singlecell.csv</code> file generated from the corresponding 5' scRNA analysis (supports <code>.csv.gz</code> from C6 multi-sample pipelines).</li>
 <li><strong>Behavior when omitted</strong>: If <code>--beadstrans</code> is omitted, bead merging is skipped, and <code>--keep_all_cells</code> automatically engages to retain all assembled barcodes.</li>
@@ -1767,12 +1795,15 @@ Analysis<span class="w"> </span>Settings:
 <ul>
 <li><strong>Reference Database (<code>--ref</code>)</strong>:</li>
 <li>Built-in options: <code>human</code> or <code>mouse</code> (loads bundled V/D/J/C reference sequences).</li>
-<li>Custom database: Path to a custom directory containing <code>reference.json</code>, FASTA sequences, and primer files.</li>
+<li>Custom database: For other species, specify a custom directory path containing <code>reference.json</code>, V/D/J/C sequences, and primer configurations (compatible with Cell Ranger VDJ reference databases).</li>
 <li><strong>Receptor Type (<code>--chain</code>)</strong>:</li>
 <li><code>TR</code>: T-cell Receptor (TRA, TRB, TRG, TRD chains).</li>
 <li><code>IG</code>: Immunoglobulin (IGH, IGK, IGL chains).</li>
 </ul>
-<h4 id="4-dark-reaction-custom-read-structure">4. Dark Reaction &amp; Custom Read Structure<a class="headerlink" href="#4-dark-reaction-custom-read-structure" title="Permanent link">&para;</a></h4>
+<h4 id="4-dark-reaction-custom-read-structure">4. Dark Reaction &amp; Custom Read Structure <a id="darkreaction"></a><a class="headerlink" href="#4-dark-reaction-custom-read-structure" title="Permanent link">&para;</a></h4>
+<blockquote>
+<p><strong>Library Structure Reference</strong>: For complete VDJ library linker sequences, TSO regions, and dark reaction schematics, see <a href="../library_structure.html#scvdj">Library Structure</a>.</p>
+</blockquote>
 <ul>
 <li><strong>Dark Reaction (<code>--darkreaction</code>)</strong>: VDJ libraries support only Read 1 dark cycles or unset:</li>
 <li><code>auto</code>: Automatically inferred</li>

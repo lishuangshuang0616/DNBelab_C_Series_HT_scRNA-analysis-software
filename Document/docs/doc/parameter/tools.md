@@ -2,7 +2,7 @@
 
 DNBelab C Series HT 工具命令参数说明
 
-当前 `dnbc4tools tools` 的公开子命令为 `mkgtf`。下文的 `bam2fastq`、`chromsplit`、`fqsubC4` 为独立辅助工具示例，是否可用取决于部署环境，不是 `dnbc4tools tools` 的子命令。
+当前 `dnbc4tools tools` 的公开子命令为 `mkgtf`。下文的 `bam2fastq`、`chromsplit`、`fqsubC4` 为独立辅助工具，位于软件 `misc` 目录，不是 `dnbc4tools tools` 的子命令。
 
 ## GTF 文件操作 (mkgtf) <a id="gtf-文件操作-mkgtf"></a>
 
@@ -58,7 +58,6 @@ Usage Examples:
 | `--include` | 字符串 | 预设类型集 | 仅在 `mkgtf` 模式下生效。要保留的基因生物学类型列表（逗号分隔，支持通配符 `*`） |
 | `--type` | 字符串 | `auto` | GTF 属性中用于标识基因类型的键名（如 `gene_biotype`、`gene_type`） |
 | `--feature` | 字符串 | `gene` | 从 GTF 中提取的目标层级（通常为 `gene`；若无 gene 行可设为 `transcript`） |
-| `--conflict-policy` | 选项 | `error` | 在 `check` 模式下的父级冲突策略：`error`（遇 gene/transcript 冲突报错中断）或 `warn`（告警并原样保留） |
 
 ---
 
@@ -99,55 +98,76 @@ dnbc4tools tools mkgtf --action check --ingtf raw_genes.gtf --output corrected.g
 
 ## BAM 转 FASTQ (bam2fastq) <a id="bam-转-fastq-bam2fastq"></a>
 
-> **转换工具**
+> **转换工具（位于软件 `misc` 目录）**
 >
-> 专用于将单细胞 RNA 比对后的 BAM 文件无损反向转换提取为 FASTQ 文件，支持多线程加速与基因组区域截取。
+> 专用于将单细胞 C4 cDNA 及 C4/C6 Oligo 比对 BAM 文件无损反向转换提取为 FASTQ 文件。支持坐标排序与序列名排序输入、单端/双端自动检测、C4/C6 Oligo 结构识别、多线程并行压缩与指定区间提取。
 
 ### 用法 <a id="usage-bam2fastq"></a>
 
 ```shell
 $ bam2fastq --help
-BAM to FASTQ Converter for C4 Single Cell RNA seq Data
+A BAM to FASTQ converter for C4 cDNA and C4/C6 oligo data (DNBelab C4 / DNBC4tools)
 
 Usage: bam2fastq [OPTIONS] <BAM> <OUTPUT>
 
 Arguments:
   <BAM>     Path to the input BAM file
-  <OUTPUT>  Directory where FASTQ files will be written
+  <OUTPUT>  Output directory for FASTQ files
 
 Options:
-  --threads <THREADS>        Number of CPU threads for parallel processing [default: 8]
-  --locus <REGION>           Process reads from a specific genomic region (format: chr1:1000-2000)
-  --reads-per-fastq <READS>  Maximum number of reads per FASTQ file. All reads go to a single file if not specified.
-  --max-memory <MEMORY>      Maximum memory to use in MB. Auto-determined if not specified.
-  --no-compress              Disable gzip compression for output FASTQ files
-  --help                     Print help
-  --version                  Print version
+  -t, --threads <THREADS>            Number of CPU threads for parallel processing [default: auto, all available cores]
+  -r, --locus <REGION>               Process a zero-based, half-open region, e.g. chr1:1000-2000
+  -n, --reads-per-fastq <READS>      Maximum reads per output FASTQ file
+      --max-memory <MEMORY>          Working-memory target in MiB; defaults to half available system memory
+      --no-compress                  Disable gzip compression (outputs .fastq instead of .fastq.gz)
+      --library-type <TYPE>          Detect from BAM metadata/tags; override with cDNA or oligo [default: auto]
+      --oligo-layout <LAYOUT>        Detect oligo layout; override with c4 or c6 [default: auto]
+      --relaxed                      Skip unmatched/duplicate mate records with summary counts [default: true]
+      --auto-detect                  Detect cDNA paired-end status from sampled flags [default: true]
+      --bx-list <FILE>               Filter cDNA by a barcode list; requires BX-sorted BAM and .bam.bxi index
+      --traceback                    Show detailed error context and traceback [default: false]
+  -h, --help                         Print help
+  -V, --version                      Print version
 ```
 
 ### 参数速查表
 
 | 参数 / 选项 | 类型 | 默认值 | 说明 |
 | :--- | :--- | :--- | :--- |
-| `<BAM>` | 文件路径 | **必需 (位置参数)** | 输入的有效 BAM 文件路径（须已构建 `.bai` 索引；双端须按序列名排序） |
-| `<OUTPUT>` | 目录路径 | **必需 (位置参数)** | 转换输出 FASTQ 文件的目标目录（不存在时自动创建） |
-| `--threads` | 整数 | `8` | 用于并行解码与写出的 CPU 线程数 |
-| `--locus` | 字符串 | 无 | 仅提取特定基因组区域的读段（格式为 `chr1:1000-2000`） |
-| `--reads-per-fastq` | 整数 | 全部单文件 | 每个输出 FASTQ 文件的最大读段数量，超过则自动分卷 |
-| `--max-memory` | 整数 (MB) | 自动判断 | 工具允许使用的最大内存预算 |
+| `<BAM>` | 文件路径 | **必需 (位置参数)** | 输入的 BAM 文件路径（支持坐标排序或名称排序的 cDNA BAM 及 `c4_oligo` 生成的 Oligo BAM） |
+| `<OUTPUT>` | 目录路径 | **必需 (位置参数)** | FASTQ 文件输出目录（自动按样本与分卷命名写出） |
+| `-t, --threads` | 整数 / `auto` | `auto` | 并行处理 CPU 线程数，默认使用系统全部可用核心 |
+| `-r, --locus` | 字符串 | 无 | 处理指定的基因组区域（0-based 半开区间，如 `chr1:1000-2000`；需要 BAM `.bai` 索引） |
+| `-n, --reads-per-fastq` | 整数 | 全部单文件 | 单个输出 FASTQ 文件的最大读段数量，超过则自动分卷 |
+| `--max-memory` | 整数 (MiB) | 自动判断 | 目标工作内存上限（MiB，默认系统可用内存的一半；非硬性 RSS 限制） |
 | `--no-compress` | 标志开关 | 关闭 | 禁用 gzip 压缩（直接输出 `.fastq` 以获得最高写出速度） |
+| `--library-type` | 选项 | `auto` | 文库类型推断：`cDNA` 或 `oligo`。默认通过 BAM 头部及标签（`c4_oligo`、`OR/OY/OB/U2/Y2`）自动推断 |
+| `--oligo-layout` | 选项 | `auto` | Oligo 文库结构布局：`c4`（单 UMI 30bp Barcode）或 `c6`（双 UMI 结构）。默认自动检测 |
+| `--relaxed` | 布尔值 | `true` | 是否跳过未配对/重复的配对记录并输出统计；设为 `false` 则要求严格完整配对 |
+| `--auto-detect` | 布尔值 | `true` | 是否根据采样标记自动检测 cDNA 双端/单端状态；设为 `false` 则按单端转换 |
+| `--bx-list` | 文件路径 | 无 | 按条形码白名单过滤 cDNA；要求 BAM 经 BX 排序且具有 `.bam.bxi` 索引 |
+| `--traceback` | 标志开关 | 关闭 | 出错时输出详细上下文与回溯堆栈信息 |
 
 ### 常用示例
 
 ```shell
-# 基础转换
-bam2fastq anno_decon_sorted.bam ./fastq_out
+# 基础转换（自动推断双端/单端与文库类型，使用全部可用核心）
+bam2fastq sample.bam ./output/
 
-# 提取指定染色体区域并多线程压缩
-bam2fastq --threads 16 --locus chr1:1000000-5000000 anno_decon_sorted.bam ./fastq_out
+# 指定线程数并输出至目标目录
+bam2fastq -t 20 sample.bam ./output/
 
-# 按每千万条 reads 分卷输出
-bam2fastq --reads-per-fastq 10000000 anno_decon_sorted.bam ./fastq_out
+# 提取指定染色体区域（需要 .bai 索引）
+bam2fastq -t 8 -r chr1:1000000-2000000 sample.bam ./output_chr1/
+
+# 禁用压缩以获得最高写出速度
+bam2fastq -t 8 --no-compress sample.bam ./output/
+
+# 按每五千万条 reads 分卷输出
+bam2fastq -t 20 -n 50000000 sample.bam ./output/
+
+# Oligo 文库转换（自动识别 C4 与 C6 双 UMI 布局）
+bam2fastq -t 20 oligo.records.bam ./output_oligo/
 ```
 
 ---

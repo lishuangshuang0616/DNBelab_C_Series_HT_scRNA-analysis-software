@@ -6,7 +6,8 @@ DNBelab C Series HT scRNA Parameter Configuration Guide
 
 This document explains the parameter definitions, default behaviors, and standard usage patterns for `dnbc4tools rna` subcommands, including single-sample analysis (`run`), reference database construction (`mkref`), and multi-sample script generation (`multi`).
 
-**Tip:** Parameter specifications are based on the latest command-line help messages. Examples can be used directly as operational templates.
+> **Tip**
+> Parameter specifications are based on the latest command-line help messages. Examples can be used directly as operational templates.
 
 ## Main Analysis Workflow (run) <a id="v32-options"></a> <a id="主分析流程-run"></a>
 
@@ -17,7 +18,7 @@ dnbc4tools rna run \
   --name sample1 \
   --fastqs /data/rna \
   --genomeDir /reference/rna \
-  --threads 16
+  --threads 20
 ```
 
 ### Full Command-Line Help
@@ -95,7 +96,7 @@ Analysis Settings:
 | Option | Type | Default | Description |
 | :--- | :--- | :--- | :--- |
 | `--name` | String | **Required** | Unique sample identifier; used as output file prefix and report title (e.g., `sample_001`) |
-| `--genomeDir` | Directory | **Required** | Reference directory containing STAR index and annotations built via `rna mkref` |
+| `--genomeDir` | Directory | **Required** | Reference directory containing STAR index and annotations built via `rna mkref`, compatible with v2 references and Cell Ranger RNA reference databases |
 | `--outdir` | Directory | `./` | Root output directory for analysis results and HTML reports |
 | `--threads` | Integer | All cores | Number of CPU threads allocated for parallel processing |
 
@@ -111,7 +112,9 @@ Choose one input mode: directory-based (`--fastqs`) or explicit files (`--cDNAfa
 | `--oligofastq1` | File path | None | Oligo Read 1 file list (supports comma-separated paths or wildcards `*`) |
 | `--oligofastq2` | File path | None | Oligo Read 2 file list (order must strictly match `--oligofastq1`) |
 
-> **Important:** All sequencing files in a single analysis run must originate from the same library preparation and share consistent dark reaction cycles; files from different libraries cannot be merged.
+> **Tip: Sequencing Consistency & Batch Handling**
+> All FASTQ inputs in a single run must originate from the same library batch with identical sequencing modes and dark reaction settings; data from different libraries cannot be mixed.
+> If different sequencing batches of the same library batch exhibit differing dark reaction cycles or read lengths, use the FASTQ trimming tool [`fqsubC4`](tools.md#fastq-切割-fqsubc4) to trim reads to match the standard library structure (see [Library Structure](../library_structure.md#scrna)).
 
 #### Cell Calling & QC Settings
 
@@ -119,8 +122,8 @@ Choose one input mode: directory-based (`--fastqs`) or explicit files (`--cDNAfa
 | :--- | :--- | :--- | :--- |
 | `--calling_method` | `emptydrops` \| `barcoderanks` | `emptydrops` | Cell detection algorithm (`emptydrops`: expression test; `barcoderanks`: UMI inflection) |
 | `--expectcells` | Integer \| `auto` | `auto` | Expected number of recovered cells to guide algorithm thresholding |
-| `--forcecells` | Integer | None | Forces the pipeline to retain exactly this number of cells (highest priority, overrides auto-calling) |
-| `--minumi` | Integer | `1000` | Minimum UMI threshold per cell; barcodes below this cutoff are excluded |
+| `--forcecells` | Integer | None | Forces the pipeline to retain exactly this number of cells (highest priority, overrides auto-calling). Truncates the top N candidate cells sorted in descending order of total valid UMI counts |
+| `--minumi` | Integer | `1000` | Minimum UMI cutoff for evaluating candidate cells in EmptyDrops (only applies when `--calling_method emptydrops`). Droplets below this threshold do not enter the secondary ambient RNA profile likelihood test and cell rescue, and are treated directly as background. For low-coverage libraries or smaller cells with lower RNA content, lower this value (e.g., `500`) to rescue low-UMI cells |
 | `--consistent_cells` | CSV file | None | External cell whitelist or barcode merging constraint table (supports `.csv` / `.csv.gz`) |
 
 #### Library Chemistry & Read Structure
@@ -175,9 +178,10 @@ The pipeline offers two complementary cell identification methods:
 
 - **Steep drop**: Clear distinction between genuine cells and background droplets; default settings yield optimal results.
 - **Gradual decline / No clear inflection**: High ambient RNA contamination or damaged cells. Use conservative cell counts by setting `--expectcells` or increasing `--minumi 1500`.
+- **`--minumi` Candidate Evaluation Cutoff**: Only applies to the `emptydrops` method (default: 1000). It defines the lower UMI boundary for candidate droplets to be evaluated in the non-ambient likelihood test. Candidate droplets meeting this cutoff (and exceeding the ambient pool's maximum UMI) undergo Monte-Carlo simulation against the ambient RNA profile; droplets below this threshold are directly treated as ambient background and excluded from EmptyDrops testing and cell rescue. If shallow sequencing causes valid small cells to be missed, lower this parameter (e.g., `--minumi 500`).
 - **Cell count mismatch**:
   - *Too low*: Check if `--minumi` is overly stringent or if sequencing depth is low; try lowering to `--minumi 500`.
-  - *Too high*: Background noise droplets included; use `--forcecells <N>` to lock the target cell count directly.
+  - *Too high*: Background noise droplets included; use `--forcecells <N>` to lock the target cell count directly (the pipeline sorts candidate barcodes in descending order of total valid UMI counts and retains the top N cells).
 
 #### 3. External Cell Whitelist Constraints (`--consistent_cells`)
 
@@ -188,7 +192,7 @@ Injects prior cell information during barcode merging and cell identification (e
 | `cell` | Constrains final identified valid cell barcode list |
 | `cell,barcode` | Enforces explicit bead-to-cell merging mapping; **bypasses Oligo analysis and applies this mapping directly** |
 | `cell,is_cell_barcode` | Supplies candidate barcodes and explicitly flags whether each is a genuine cell |
-| `cell,barcode,is_cell_barcode` | Complete constraint schema (compatible with legacy 6-column summary tables) |
+| `cell,barcode,is_cell_barcode` | Simultaneously specifies cell-to-bead barcode mappings and sets explicit cell calling status per barcode via `is_cell_barcode` (1/0 or true/false; e.g., passing a QC `singlecell.csv` directly) |
 
 #### 4. Chemistry & Dark Reaction Configuration (`--chemistry` & `--darkreaction`)
 
@@ -201,28 +205,65 @@ Injects prior cell information during barcode merging and cell identification (e
     - Common combinations: `--darkreaction R1,R1R2`, `--darkreaction unset,unset`
   - **Rule**: If `--chemistry` is specified manually, `--darkreaction` must also be explicitly set.
 
-#### 5. Custom Read Structure (`--customize`)
+#### 5. Custom Read Structure (`--customize`) <a id="customize"></a>
 
-For non-standard library protocols, use `--customize` to define exact 1-based intervals for barcodes, UMIs, and reads.
+For non-standard, modified, or third-party library protocols, use `--customize` to define exact 1-based closed-interval intervals for barcodes, UMIs, and reads (cannot exceed sequencing read length).
+
+> **Library Structure Reference**: For complete library linker sequences, physical segment coordinates, and dark reaction schematics, see [Library Structure](../library_structure.md).
+
+##### Syntax Rules & Requirements
 
 - **Syntax**: `"<type>,<read>:<start>-<end>"`, delimited by semicolons `;`.
-  - `cb`: Cell Barcode
-  - `umi`: Unique Molecular Identifier
-  - `R1` / `R2`: Usable read sequence
+  - `cb`: Cell Barcode (composed of 2 or 3 segments);
+  - `umi`: Unique Molecular Identifier;
+  - `R1` / `R2`: Usable read sequence interval.
 - **Rule**: Must be passed **twice sequentially** for scRNA: first for cDNA, second for oligo.
 
+##### Scenario Comparisons: How to Strip Fixed Linker Sequences
+
+###### Example A: Non-Dark Reaction Mode (Full Sequencing, Stripping Fixed Linkers)
+In standard sequencing mode or sequencing without dark reactions, reads contain invariant linker sequences. If invariant bases are incorporated into barcodes, demultiplexing will fail. **Directly skipping linker intervals safely removes them**:
+
+- **cDNA Extraction Strategy**:
+  - Skip 1–6 bp (Linker 1), capture `cb,R1:7-16` (CB1 10bp)
+  - Skip 17–22 bp (Linker 2), capture `cb,R1:23-32` (CB2 10bp)
+  - Skip 33–37 bp (Linker 3), capture `umi,R1:38-47` (UMI 10bp)
+  - Read 2 maps to 1–100 bp transcript sequence: `R1,R2:1-100`
+  - Argument: `--customize "cb,R1:7-16;cb,R1:23-32;umi,R1:38-47;R1,R2:1-100"`
+- **Oligo Extraction Strategy**:
+  - Read 1 skips linkers: `cb,R1:7-16;cb,R1:23-32`
+  - Read 2 extracts first UMI (1–10 bp), then skips fixed linkers to extract Tag 1 (17–26 bp) and Tag 2 (33–42 bp): `R1,R2:1-10;R1,R2:17-26;R1,R2:33-42`
+  - Argument: `--customize "cb,R1:7-16;cb,R1:23-32;R1,R2:1-10;R1,R2:17-26;R1,R2:33-42"`
+
+Operational command:
 ```bash
-# cDNA: R1(1-10bp CB, 11-20bp CB, 21-30bp UMI), R2(1-100bp cDNA)
-# Oligo: R1(1-10bp CB, 11-20bp CB), R2(1-30bp Tag)
 dnbc4tools rna run \
-  --name custom_demo --genomeDir ./ref \
+  --name non_dark_demo --genomeDir /reference/rna \
+  --cDNAfastq1 cdna_R1.fq.gz --cDNAfastq2 cdna_R2.fq.gz \
+  --oligofastq1 oligo_R1.fq.gz --oligofastq2 oligo_R2.fq.gz \
+  --customize "cb,R1:7-16;cb,R1:23-32;umi,R1:38-47;R1,R2:1-100" \
+  --customize "cb,R1:7-16;cb,R1:23-32;R1,R2:1-10;R1,R2:17-26;R1,R2:33-42" \
+  --threads 20
+```
+
+###### Example B: Dark Reaction Mode (Hardware Skips Fixed Sequences)
+The sequencer has already skipped invariant linkers; output reads contain exclusively informative bases starting from base 1:
+
+- **cDNA Extraction**: `--customize "cb,R1:1-10;cb,R1:11-20;umi,R1:21-30;R1,R2:1-100"`
+- **Oligo Extraction**: `--customize "cb,R1:1-10;cb,R1:11-20;R1,R2:1-30"`
+
+Operational command:
+```bash
+dnbc4tools rna run \
+  --name dark_demo --genomeDir /reference/rna \
   --cDNAfastq1 cdna_R1.fq.gz --cDNAfastq2 cdna_R2.fq.gz \
   --oligofastq1 oligo_R1.fq.gz --oligofastq2 oligo_R2.fq.gz \
   --customize "cb,R1:1-10;cb,R1:11-20;umi,R1:21-30;R1,R2:1-100" \
-  --customize "cb,R1:1-10;cb,R1:11-20;R1,R2:1-30"
+  --customize "cb,R1:1-10;cb,R1:11-20;R1,R2:1-30" \
+  --threads 20
 ```
 
-#### 6. STAR Parameters & BAM Resource Scheduling
+#### 6. STAR Alignment Parameters (`--star_parameters`)
 
 Pass validated STAR alignment, filtering, or scoring parameters via `--star_parameters`:
 
@@ -230,23 +271,7 @@ Pass validated STAR alignment, filtering, or scoring parameters via `--star_para
 --star_parameters "--outFilterMismatchNmax 10 --outFilterMultimapNmax 1"
 ```
 
-<details markdown="block">
-<summary>Advanced Settings: BAM Resource Scheduling</summary>
-
-BAM generation is auto-scheduled based on CPU cores, file handles, and estimated RAM. You may override these with internal flags:
-
-| Parameter | Description |
-| :--- | :--- |
-| `--bam-workers` | Maximum concurrent chunk worker processes |
-| `--bam-compression-threads` | Compression threads allocated per chunk worker |
-| `--bam-queue-depth` | Queue depth buffer per sample writer |
-| `--bam-max-memory-gb` | Estimated memory budget in GiB (not an RSS ceiling) |
-| `--bam-compression-level` | Gzip compression level (0–9; defaults to HTSlib) |
-| `--bam-limit-memory` | Aborts execution if even one worker exceeds estimated budget |
-
-If disk space or speed is a priority and downstream BAM inspection is not required, use `--no_bam` to skip BAM output entirely.
-
-</details>
+> **Note:** Only STAR alignment options are accepted; pipeline-managed arguments (input/output paths, thread counts, genome index) and unknown options are rejected during preflight validation. If disk space or speed is a priority and downstream BAM inspection is not required, use `--no_bam` to skip BAM output entirely.
 
 ---
 
@@ -259,7 +284,7 @@ If disk space or speed is a priority and downstream BAM inspection is not requir
 ```bash
 dnbc4tools rna mkref \
   --fasta genome.fa --ingtf genes.gtf \
-  --species human --genomeDir /reference/rna --threads 16
+  --species human --genomeDir /reference/rna --threads 20
 ```
 
 ### Full Command-Line Help
@@ -318,7 +343,7 @@ Advanced Settings:
 | Option | Type | Default | Description |
 | :--- | :--- | :--- | :--- |
 | `--chrM` | String | Auto-detect | Mitochondrial chromosome name(s) in species order (e.g., `MT,chrM`) |
-| `--limitram` | Integer (GiB) | STAR default | RAM limit in GiB for STAR index construction |
+| `--limitram` | Integer (GiB) | STAR default | Maximum RAM limit during STAR genome index generation (in GiB); restricts memory usage during alignment, where lower memory allocation incurs higher processing time |
 | `--extra-args` | String | None | Validated additional parameters passed to STAR `genomeGenerate` |
 | `--noindex` | Flag | Disabled | Generates metadata and preprocessed annotations without building STAR index |
 
@@ -339,29 +364,31 @@ Advanced Settings:
     dnbc4tools rna mkref \
       --fasta human.fa,mouse.fa \
       --ingtf human.gtf,mouse.gtf \
-      --species human,mouse \
-      --genomeDir /ref/human_and_mouse
+      --species human,mouse
     ```
   - Gene names and chromosomes are automatically prefixed with the species name (e.g., `human_GAPDH`, `mouse_Actb`) for clean cross-species separation.
 
 #### 2. Directory Layout & `ref.json` Metadata
 
-A successfully built reference directory contains:
+A successfully built reference directory generates a standardized layout under `--genomeDir` (subdivided into `<species>/`, named `species1_and_species2` for dual-species references):
+
+- **Database Compatibility**: In addition to references built via `rna mkref` in the current version, `dnbc4tools rna run` is fully compatible with legacy v2 reference databases as well as standard Cell Ranger RNA reference directories (you can directly pass directories containing STAR index and annotations to `--genomeDir`).
 
 ```text
 genomeDir/
-├── fasta/
-│   └── genome.fa          # Unified processed FASTA sequence
-├── genes/
-│   └── genes.gtf          # Standardized gene annotation
-├── star/
-│   ├── SA                 # STAR genome index
-│   ├── SAindex            # STAR index parameters
-│   ├── chrLength.txt      # Chromosome lengths
-│   ├── chrName.txt        # Chromosome names
-│   ├── mtgene.list        # Mitochondrial gene list for QC
-│   └── genomeParameters.txt
-└── ref.json               # Reference configuration and provenance
+└── <species>/
+    ├── fasta/
+    │   └── genome.fa          # Unified processed FASTA sequence
+    ├── genes/
+    │   └── genes.gtf          # Standardized gene annotation
+    ├── star/
+    │   ├── SA                 # STAR genome index
+    │   ├── SAindex            # STAR index parameters
+    │   ├── chrLength.txt      # Chromosome lengths
+    │   ├── chrName.txt        # Chromosome names
+    │   ├── mtgene.list        # Mitochondrial gene list for QC
+    │   └── genomeParameters.txt
+    └── ref.json               # Reference configuration and provenance
 ```
 
 **Single-Species `ref.json` Example:**
@@ -415,7 +442,7 @@ genomeDir/
 ### Usage
 
 ```bash
-dnbc4tools rna multi --list samples.tsv --genomeDir /reference/rna --threads 16
+dnbc4tools rna multi --list samples.tsv --genomeDir /reference/rna --threads 20
 ```
 
 ### Full Command-Line Help

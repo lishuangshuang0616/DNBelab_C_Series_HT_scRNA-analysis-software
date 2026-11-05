@@ -1,0 +1,101 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 655" width="760" height="655" style="background:#ffffff; font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
+  <defs>
+    <filter id="shadow" x="-4%" y="-5%" width="108%" height="114%" filterUnits="userSpaceOnUse">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#0f172a" flood-opacity="0.04" />
+    </filter>
+    <marker id="arrow-down" viewBox="0 0 10 10" refX="5" refY="6" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 2 1 L 8 5 L 2 9 z" fill="#94a3b8" />
+    </marker>
+    <marker id="arrow-green" viewBox="0 0 10 10" refX="5" refY="6" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 2 1 L 8 5 L 2 9 z" fill="#10b981" />
+    </marker>
+  </defs>
+
+  <!-- Title Header -->
+  <g transform="translate(40, 32)">
+    <rect x="0" y="0" width="4" height="20" rx="2" fill="#7c3aed" />
+    <text x="14" y="16" font-size="17" font-weight="700" fill="#0f172a" letter-spacing="-0.01em">scATAC Bead Merging &amp; Multi-Level Cell Calling Workflow</text>
+    <text x="14" y="32" font-size="11" fill="#64748b">Step-by-step decision pipeline from raw sequencing beads to high-quality single-cell chromatin profiles</text>
+  </g>
+
+  <!-- Central Guide Line -->
+  <line x1="380" y1="78" x2="380" y2="590" stroke="#f1f5f9" stroke-width="2" />
+
+  <!-- STAGE 1: Raw Beads -->
+  <g transform="translate(130, 78)">
+    <rect x="0" y="0" width="500" height="64" rx="8" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.2" filter="url(#shadow)" />
+    <rect x="0" y="0" width="5" height="64" rx="2.5" fill="#94a3b8" />
+    <circle cx="30" cy="32" r="13" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1" />
+    <text x="30" y="36.5" font-size="11" font-weight="700" fill="#475569" text-anchor="middle">01</text>
+    <text x="56" y="26" font-size="13.5" font-weight="700" fill="#0f172a">Raw Bead Barcodes</text>
+    <text x="56" y="46" font-size="11" fill="#64748b">All captured barcodes (single beads, co-encapsulated beads, and ambient fragments)</text>
+  </g>
+
+  <!-- Transition 1 to 2: merge_cutoff -->
+  <path d="M 380 142 L 380 174" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#arrow-down)" />
+  <g transform="translate(380, 158)">
+    <rect x="-115" y="-10" width="230" height="20" rx="10" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1" />
+    <text x="0" y="4" font-size="10" font-family="ui-monospace, monospace" font-weight="600" fill="#475569" text-anchor="middle">--merge_cutoff 500 (Bead Pre-filtering)</text>
+  </g>
+
+  <!-- STAGE 2: Bead Merging -->
+  <g transform="translate(130, 178)">
+    <rect x="0" y="0" width="500" height="72" rx="8" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.2" filter="url(#shadow)" />
+    <rect x="0" y="0" width="5" height="72" rx="2.5" fill="#7c3aed" />
+    <circle cx="30" cy="36" r="13" fill="#f5f3ff" stroke="#ddd6fe" stroke-width="1" />
+    <text x="30" y="40.5" font-size="11" font-weight="700" fill="#7c3aed" text-anchor="middle">02</text>
+    <text x="56" y="26" font-size="13.5" font-weight="700" fill="#0f172a">Jaccard Similarity Calculation &amp; Bead Merging</text>
+    <text x="56" y="45" font-size="11" fill="#64748b">Computes shared-fragment Jaccard similarity; merges co-encapsulated beads</text>
+    <text x="56" y="61" font-size="10" font-family="ui-monospace, monospace" fill="#6b21a8">--jaccard_cutoff auto / OTSU adaptive cutoff (minimum clamp: 0.02)</text>
+  </g>
+
+  <!-- Transition 2 to 3: Merged Candidate Cells -->
+  <path d="M 380 250 L 380 286" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#arrow-down)" />
+  <g transform="translate(380, 268)">
+    <rect x="-90" y="-10" width="180" height="20" rx="10" fill="#eff6ff" stroke="#bfdbfe" stroke-width="1" />
+    <text x="0" y="4" font-size="10" font-weight="600" fill="#1d4ed8" text-anchor="middle">Merged Candidate Cell Pool</text>
+  </g>
+
+  <!-- STAGE 3: Cell Calling -->
+  <g transform="translate(130, 290)">
+    <rect x="0" y="0" width="500" height="72" rx="8" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.2" filter="url(#shadow)" />
+    <rect x="0" y="0" width="5" height="72" rx="2.5" fill="#2563eb" />
+    <circle cx="30" cy="36" r="13" fill="#eff6ff" stroke="#bfdbfe" stroke-width="1" />
+    <text x="30" y="40.5" font-size="11" font-weight="700" fill="#2563eb" text-anchor="middle">03</text>
+    <text x="56" y="26" font-size="13.5" font-weight="700" fill="#0f172a">Cell Calling</text>
+    <text x="56" y="45" font-size="11" fill="#64748b">Distinguishes true cells from background debris; overrides automatic detection</text>
+    <text x="56" y="61" font-size="10" font-family="ui-monospace, monospace" fill="#1e40af">--forcecells: truncates top N cells sorted descending by unique fragments</text>
+  </g>
+
+  <!-- Transition 3 to 4: Extra QC -->
+  <path d="M 380 362 L 380 398" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#arrow-down)" />
+  <g transform="translate(380, 380)">
+    <rect x="-135" y="-10" width="270" height="20" rx="10" fill="#fffbeb" stroke="#fde68a" stroke-width="1" />
+    <text x="0" y="4" font-size="10" font-family="ui-monospace, monospace" font-weight="600" fill="#b45309" text-anchor="middle">--frags_cutoff &amp; --tss_cutoff (Dual-Metric QC)</text>
+  </g>
+
+  <!-- STAGE 4: Extra QC Gate -->
+  <g transform="translate(130, 402)">
+    <rect x="0" y="0" width="500" height="72" rx="8" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.2" filter="url(#shadow)" />
+    <rect x="0" y="0" width="5" height="72" rx="2.5" fill="#f59e0b" />
+    <circle cx="30" cy="36" r="13" fill="#fffbeb" stroke="#fde68a" stroke-width="1" />
+    <text x="30" y="40.5" font-size="11" font-weight="700" fill="#d97706" text-anchor="middle">04</text>
+    <text x="56" y="26" font-size="13.5" font-weight="700" fill="#0f172a">Extra QC Gate</text>
+    <text x="56" y="45" font-size="11" fill="#64748b">Secondary filters on min unique fragments &amp; TSS enrichment to remove debris</text>
+    <text x="56" y="61" font-size="10" fill="#b45309">Disabled by default (0); enabling on noisy samples significantly improves purity</text>
+  </g>
+
+  <!-- Transition 4 to 5: High Quality Cells -->
+  <path d="M 380 474 L 380 510" stroke="#10b981" stroke-width="1.8" marker-end="url(#arrow-green)" />
+
+  <!-- STAGE 5: Final Cells -->
+  <g transform="translate(130, 514)">
+    <rect x="0" y="0" width="500" height="78" rx="8" fill="#f0fdf4" stroke="#86efac" stroke-width="1.4" filter="url(#shadow)" />
+    <rect x="0" y="0" width="5" height="78" rx="2.5" fill="#10b981" />
+    <circle cx="30" cy="39" r="14" fill="#dcfce7" stroke="#86efac" stroke-width="1.2" />
+    <path d="M 24 39 L 28 43 L 36 34" fill="none" stroke="#16a34a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+    <text x="56" y="28" font-size="14.5" font-weight="700" fill="#14532d">Final High-Quality Cells</text>
+    <text x="56" y="48" font-size="11" fill="#166534">High-confidence single cells generating standard Fragments BED, Peak matrix &amp; reports</text>
+    <text x="56" y="64" font-size="10" font-weight="600" fill="#15803d">Downstream ready: single-cell clustering, differential accessibility &amp; TF motif mining</text>
+  </g>
+</svg>

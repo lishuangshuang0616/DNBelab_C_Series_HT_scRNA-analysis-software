@@ -1488,6 +1488,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../library_structure.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Library Structure
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../installation_previous.html" class="md-nav__link">
         
   
@@ -1798,65 +1826,107 @@
 </blockquote>
 <hr />
 <h2 id="core-steps">Core Steps <a id="core-steps"></a><a class="headerlink" href="#core-steps" title="Permanent link">&para;</a></h2>
-<div class="pipeline-step-flow">
-<div class="c6-step-card">
-<p><span class="step-badge">STEP 01</span></p>
+<p>The C6 pooled multiplexing workflow encompasses 5 essential stages from shared raw libraries to dedicated per-sample deliverables:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: center;">Step</th>
+<th style="text-align: left;">Stage</th>
+<th style="text-align: left;">Core Mechanism</th>
+<th style="text-align: left;">Key Inputs &amp; Deliverables</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;"><strong>01</strong></td>
+<td style="text-align: left;"><strong>Input Preparation &amp; Validation</strong></td>
+<td style="text-align: left;">Shared dual libraries; automated dark cycle detection; sectioned CSV validation</td>
+<td style="text-align: left;">Shared FASTQs, Config CSV ➔ Validated Parameters</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>02</strong></td>
+<td style="text-align: left;"><strong>Sample Barcode Demultiplexing</strong></td>
+<td style="text-align: left;">Extracts barcodes from Oligo reads with whitelist error correction</td>
+<td style="text-align: left;">Oligo Reads ➔ Droplet Assignment, Unassigned Tracking</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>03</strong></td>
+<td style="text-align: left;"><strong>Alignment &amp; Bead Aggregation</strong></td>
+<td style="text-align: left;">STAR alignment &amp; annotation; similarity-based bead pooling; global high-occupancy filtering</td>
+<td style="text-align: left;">cDNA Reads ➔ Alignment BAM, Bead-to-Cell Merging</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>04</strong></td>
+<td style="text-align: left;"><strong>Independent Cell Calling</strong></td>
+<td style="text-align: left;">Completely isolated per-sample EmptyDrops calling; adaptive noise safeguards</td>
+<td style="text-align: left;">Assigned Droplets ➔ Per-Sample Authentic Cells</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>05</strong></td>
+<td style="text-align: left;"><strong>Archiving &amp; Dedicated Delivery</strong></td>
+<td style="text-align: left;">Per-sample matrices/reports/BAMs; pooled combined matrix &amp; batch summary report</td>
+<td style="text-align: left;"><code>per_sample_outs/</code> Deliverables + Combined Report</td>
+</tr>
+</tbody>
+</table>
+<div class="c6-stepper">
+<div class="c6-step-item">
 <h3 id="step-1-input-preparation-configuration">Step 1: Input Preparation &amp; Configuration <a id="step-1"></a><a class="headerlink" href="#step-1-input-preparation-configuration" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>Sequencing Libraries</strong>: A shared pooled pair of cDNA and Oligo FASTQ libraries.</li>
 <li><strong>Pipeline Configuration</strong>: A sectioned CSV file (e.g., <code>sample.config.csv</code>) declaring sample identifiers and their corresponding Sample Barcodes in the <code>[samples]</code> section.</li>
 <li><strong>Dark Reaction Auto-Detection</strong>: Version 3.2 automatically detects dark reaction cycles (Dark Cycles) in cDNA and Oligo reads without manual intervention.</li>
 </ul>
-<div class="step-tags">
-<p><span class="step-tag">Shared Paired Libraries</span>
-  <span class="step-tag">Dark Cycle Detection</span>
-  <span class="step-tag">Sectioned CSV Mapping</span></p>
+<div class="c6-step-meta">
+<p><span class="c6-step-meta-label">Key Pillars</span>
+  <span class="c6-step-pill">Shared Paired Libraries</span>
+  <span class="c6-step-pill">Dark Cycle Detection</span>
+  <span class="c6-step-pill">Sectioned CSV Mapping</span></p>
 </div>
 </div>
-<div class="c6-step-card">
-<p><span class="step-badge">STEP 02</span></p>
+<div class="c6-step-item">
 <h3 id="step-2-sample-barcode-identification-demultiplexing">Step 2: Sample Barcode Identification &amp; Demultiplexing <a id="step-2"></a><a class="headerlink" href="#step-2-sample-barcode-identification-demultiplexing" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>Precision Matching</strong>: Extracts Sample Barcodes from Oligo reads and matches them against the built-in whitelist with error-correction.</li>
 <li><strong>Flexible Mapping</strong>: Accurately assigns beads and droplets to their respective biological samples; supports single barcodes (e.g., <code>BC01</code>) or multi-barcode assignments per sample (e.g., <code>BC02;BC03</code>).</li>
 <li><strong>Unassigned Tracking</strong>: Reads that cannot be confidently matched to a known barcode are tracked under the Unassigned category, ensuring full auditability.</li>
 </ul>
-<div class="step-tags">
-<p><span class="step-tag">Whitelist Error-Correction</span>
-  <span class="step-tag">Multi-Barcode Pooling</span>
-  <span class="step-tag">Unassigned Tracking</span></p>
+<div class="c6-step-meta">
+<p><span class="c6-step-meta-label">Key Pillars</span>
+  <span class="c6-step-pill">Whitelist Error-Correction</span>
+  <span class="c6-step-pill">Multi-Barcode Pooling</span>
+  <span class="c6-step-pill">Unassigned Tracking</span></p>
 </div>
 </div>
-<div class="c6-step-card">
-<p><span class="step-badge">STEP 03</span></p>
+<div class="c6-step-item">
 <h3 id="step-3-transcript-alignment-bead-aggregation">Step 3: Transcript Alignment &amp; Bead Aggregation <a id="step-3"></a><a class="headerlink" href="#step-3-transcript-alignment-bead-aggregation" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>High-Quality Alignment</strong>: Aligns cDNA reads against the reference genome using an optimized STAR workflow with functional region annotation.</li>
 <li><strong>Cross-Sample Bead Aggregation</strong>: Uses a robust bead similarity scoring algorithm to merge beads originating from the same physical droplet while retaining Sample Barcode suffixes.</li>
 <li><strong>Experiment-Wide High-Occupancy Filtering</strong>: <code>high_occupancy_filter=true</code> is enabled by default to remove multiplexed droplet artifacts across the entire experiment.</li>
 </ul>
-<div class="step-tags">
-<p><span class="step-tag">STAR Alignment</span>
-  <span class="step-tag">Bead Aggregation</span>
-  <span class="step-tag">High-Occupancy Filtering</span></p>
+<div class="c6-step-meta">
+<p><span class="c6-step-meta-label">Key Pillars</span>
+  <span class="c6-step-pill">STAR Alignment</span>
+  <span class="c6-step-pill">Bead Aggregation</span>
+  <span class="c6-step-pill">High-Occupancy Filtering</span></p>
 </div>
 </div>
-<div class="c6-step-card">
-<p><span class="step-badge">STEP 04</span></p>
+<div class="c6-step-item">
 <h3 id="step-4-independent-cell-calling-per-sample">Step 4: Independent Cell Calling per Sample <a id="step-4"></a><a class="headerlink" href="#step-4-independent-cell-calling-per-sample" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>Isolated Calling</strong>: Droplets assigned to each sample undergo <strong>independent cell calling</strong> (EmptyDrops), preventing uneven sample loading from biasing cell detection.</li>
 <li><strong>Adaptive Bounds Protection</strong>: 3.2 introduces upper and lower threshold constraints on automatic cell estimation to prevent overfitting on noisy backgrounds.</li>
 <li><strong>Intra-Cell UMI Conflict Resolution</strong>: Resolves ambiguous UMIs mapped to multiple genes within the same cell by prioritizing high-read counts, eliminating spurious gene co-expression.</li>
 </ul>
-<div class="step-tags">
-<p><span class="step-tag">Per-Sample Calling</span>
-  <span class="step-tag">EmptyDrops Safeguard</span>
-  <span class="step-tag">UMI De-noising</span></p>
+<div class="c6-step-meta">
+<p><span class="c6-step-meta-label">Key Pillars</span>
+  <span class="c6-step-pill">Per-Sample Calling</span>
+  <span class="c6-step-pill">EmptyDrops Safeguard</span>
+  <span class="c6-step-pill">UMI De-noising</span></p>
 </div>
 </div>
-<div class="c6-step-card">
-<p><span class="step-badge">STEP 05</span></p>
+<div class="c6-step-item">
 <h3 id="step-5-deliverable-generation-dedicated-delivery">Step 5: Deliverable Generation &amp; Dedicated Delivery <a id="step-5"></a><a class="headerlink" href="#step-5-deliverable-generation-dedicated-delivery" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>Per-Sample Deliverables</strong>: Each sample receives its own subdirectory under <code>per_sample_outs/&lt;sample&gt;/</code> with raw/filtered expression matrices (MEX, H5, and H5AD formats), dimensionality reduction, clustering (PCA, UMAP, marker genes), and an interactive HTML report.</li>
@@ -1864,11 +1934,12 @@
 <li><strong>Root Combined Matrices</strong>: A unified matrix containing all called cells across all samples is provided in the root directory (MEX, H5, H5AD) with raw counts for downstream batch correction (e.g., Harmony).</li>
 <li><strong>Batch Multi-Sample Report</strong>: A root <code>&lt;run&gt;_multi_report.html</code> summarizes cell counts, sequencing saturation, library QC, and cross-sample comparison charts.</li>
 </ul>
-<div class="step-tags">
-<p><span class="step-tag">Dedicated MEX/H5/H5AD</span>
-  <span class="step-tag">Per-Sample BAM</span>
-  <span class="step-tag">Global Pooled Matrix</span>
-  <span class="step-tag">Two-Tier HTML Reports</span></p>
+<div class="c6-step-meta">
+<p><span class="c6-step-meta-label">Key Pillars</span>
+  <span class="c6-step-pill">Dedicated MEX/H5/H5AD</span>
+  <span class="c6-step-pill">Per-Sample BAM</span>
+  <span class="c6-step-pill">Global Pooled Matrix</span>
+  <span class="c6-step-pill">Two-Tier HTML Reports</span></p>
 </div>
 </div>
 </div>

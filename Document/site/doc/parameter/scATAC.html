@@ -1482,6 +1482,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../library_structure.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    文库结构
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../installation_previous.html" class="md-nav__link">
         
   
@@ -1786,7 +1814,7 @@
 <span class="w">  </span>--name<span class="w"> </span>sample1<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--fastqs<span class="w"> </span>/data/atac<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--genomeDir<span class="w"> </span>/reference/atac<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--threads<span class="w"> </span><span class="m">16</span>
+<span class="w">  </span>--threads<span class="w"> </span><span class="m">20</span>
 </code></pre></div>
 <h3 id="_3">完整命令行帮助<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code>$<span class="w"> </span>dnbc4tools<span class="w"> </span>atac<span class="w"> </span>run<span class="w"> </span>--help
@@ -1910,7 +1938,9 @@ Analysis<span class="w"> </span>Settings:
 </tbody>
 </table>
 <blockquote>
-<p><strong>提示：</strong> 同一分析中的输入文件必须来自同一文库批次，测序模式与暗反应设置须保持一致；不同文库的数据不能混合分析。</p>
+<p><strong>提示：测序文件一致性与批次处理</strong>
+同一分析中的所有测序文件必须来自同一文库批次，测序模式与暗反应设置须保持一致；不同文库的数据不能混合输入。
+如果同一文库批次的不同测序批次存在暗反应模式或者测序长度不一致的情况，则需要使用 FASTQ 裁剪工具 <a href="tools.html#fastq-切割-fqsubc4"><code>fqsubC4</code></a> 对 reads 进行裁剪，具体裁剪位置请参考<a href="../library_structure.html#scatac">文库结构识别</a>。</p>
 </blockquote>
 <h4 id="_7">细胞识别与磁珠合并参数<a class="headerlink" href="#_7" title="Permanent link">&para;</a></h4>
 <table>
@@ -1927,7 +1957,7 @@ Analysis<span class="w"> </span>Settings:
 <td style="text-align: left;"><code>--forcecells</code></td>
 <td style="text-align: left;">整数</td>
 <td style="text-align: left;">无</td>
-<td style="text-align: left;">强制流程保留确切的细胞数量（最高优先级，覆盖自动识别结果）</td>
+<td style="text-align: left;">强制流程保留确切的细胞数量，优先级最高（覆盖自动识别结果）。截取时按候选细胞条形码的唯一片段数（Unique Fragments）降序截取前 N 个细胞</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>--frags_cutoff</code></td>
@@ -1945,7 +1975,7 @@ Analysis<span class="w"> </span>Settings:
 <td style="text-align: left;"><code>--jaccard_cutoff</code></td>
 <td style="text-align: left;">浮点数 | <code>auto</code></td>
 <td style="text-align: left;"><code>auto</code></td>
-<td style="text-align: left;">磁珠（beads）合并的 Jaccard 相似度阈值（<code>auto</code> 基于 OTSU 算法估计，或输入 0–1 数值）</td>
+<td style="text-align: left;">磁珠（beads）合并的 Jaccard 相似度阈值（<code>auto</code> 基于 OTSU 算法估计，自动计算低于 0.02 时按 0.02 截断过滤；或手动输入 0–1 浮点数）</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>--merge_cutoff</code></td>
@@ -1992,16 +2022,10 @@ Analysis<span class="w"> </span>Settings:
 </thead>
 <tbody>
 <tr>
-<td style="text-align: left;"><code>--peak_signal</code></td>
-<td style="text-align: left;">选项</td>
-<td style="text-align: left;"><code>cutsite</code></td>
-<td style="text-align: left;">MACS2 峰检测输入信号：<code>cutsite</code>（Tn5 调整端点）或 <code>fragment</code>（完整片段）</td>
-</tr>
-<tr>
 <td style="text-align: left;"><code>--need_bam</code></td>
 <td style="text-align: left;">标志开关</td>
 <td style="text-align: left;">关闭</td>
-<td style="text-align: left;">启用比对 BAM 文件的生成（耗时和磁盘空间预计增加 30%–50%）</td>
+<td style="text-align: left;">启用比对 BAM 文件的生成（耗时和磁盘空间预计增加 30%–50%）。注意：由于 Chromap 软件直接生成 BED 与通过 BAM 提取 fragment 时底层存在微小差异，启用 <code>--need_bam</code> 会导致最终分析结果存在微小差异</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>--sample_read_pairs</code></td>
@@ -2027,110 +2051,32 @@ Analysis<span class="w"> </span>Settings:
 </ul>
 <h4 id="2">2. 磁珠合并与多级质控机制<a class="headerlink" href="#2" title="Permanent link">&para;</a></h4>
 <p>单细胞 ATAC 测序数据存在液滴中多磁珠共包裹（bead multiplexing）的生物学特征，流程采用两阶段过滤与合并策略：</p>
-<div class="highlight"><pre><span></span><code>flowchart TD
-    RawBeads["原始磁珠 Barcodes"] --&gt; FilterMerge["merge_cutoff (默认 500 frags)&lt;br/&gt;初步筛选有效磁珠"]
-    FilterMerge --&gt; Jaccard["Jaccard 相似度计算&lt;br/&gt;(jaccard_cutoff: auto/OTSU)"]
-    Jaccard --&gt; MergedCells["磁珠合并为候选细胞"]
-    MergedCells --&gt; CellCalling["细胞识别 (ordmag / NB)"]
-    CellCalling --&gt; ExtraQC{"附加阈值过滤&lt;br/&gt;frags_cutoff &amp; tss_cutoff"}
-    ExtraQC --&gt; FinalCells["最终高质有效细胞"]
-</code></pre></div>
+<div style="text-align: center; margin: 20px 0;">
+<p><img src="../images/atac_bead_cell_calling.svg" alt="scATAC 磁珠合并与多级质控机制" style="max-width: 100%; border-radius: 8px; box-shadow: 0 4px 14px rgba(0,0,0,0.06);" /></p>
+</div>
 <ul>
 <li><strong><code>--merge_cutoff</code></strong>：设定参与合并的磁珠底线（默认 500）。低深度样本可适当下调（如 200）以纳入更多磁珠参与计算。</li>
-<li><strong><code>--jaccard_cutoff</code></strong>：两个磁珠在基因组开放位点的重叠相似度。默认 <code>auto</code> 即可自动拟合双峰分布找到截断点。</li>
+<li><strong><code>--jaccard_cutoff</code></strong>：两个磁珠在基因组开放位点的重叠相似度。默认 <code>auto</code> 即可通过 OTSU 算法自动拟合双峰分布找到截断点；若自动计算得到的阈值低于 0.02，系统将按照 0.02 进行下限截断过滤以防止过度合并；亦可手动指定 0–1 的浮点数值。</li>
+<li><strong><code>--forcecells</code></strong>：当自动识别算法未能达到预期时，可传入整数强制保留指定数量的细胞。程序将按照每个候选细胞的唯一片段数（Unique Fragments）从大到小降序排列，直接截取前 N 个细胞输出。</li>
 <li><strong><code>--frags_cutoff</code> 与 <code>--tss_cutoff</code></strong>：属于下游的附加质控过滤器。默认设为 <code>0</code> 关闭，代表仅依赖算法识别；若报告中发现低质量核碎屑残留，可手动开启（如 <code>--frags_cutoff 1000 --tss_cutoff 0.1</code>）。</li>
+<li><strong><code>--need_bam</code> 与比对差异说明</strong>：Chromap 直接写出 BED 片段与生成 SAM/BAM 并由辅助模块转换 fragments 时，底层的片段移位（Tn5 shift）与重复序列过滤判定存在细微差异。因此开启 <code>--need_bam</code> 后下游分析指标（如特定片段统计与细胞结果）可能出现微小浮动，属软件正常行为。</li>
 </ul>
-<h4 id="3">3. 暗反应配置与文库自定义<a class="headerlink" href="#3" title="Permanent link">&para;</a></h4>
+<h4 id="3">3. 暗反应配置与文库自定义 <a id="darkreaction"></a><a class="headerlink" href="#3" title="Permanent link">&para;</a></h4>
+<blockquote>
+<p><strong>文库结构参考</strong>：完整的 ATAC 文库接头结构、延伸序列与暗反应图解请参阅 <a href="../library_structure.html#scatac">文库结构识别</a>。</p>
+</blockquote>
 <ul>
 <li><strong><code>--darkreaction</code></strong>：根据 MGI 测序仪的暗循环配置选择：</li>
 <li><code>auto</code>：默认自动根据碱基组成推断</li>
 <li><code>R1R2</code>：双端暗循环</li>
 <li><code>R1</code>：仅 Read 1 包含暗循环</li>
 <li><code>R2</code>：仅 Read 2 包含暗循环</li>
-<li><code>unset</code>：无暗反应（标准平台或 Illumina）</li>
+<li><code>unset</code>：无暗反应（标准测序模式）</li>
 <li><strong><code>--customize</code></strong>：精确自定义序列结构（覆盖 darkreaction）：
   <div class="highlight"><pre><span></span><code><span class="c1"># 结构: CB1(7-16bp), CB2(23-32bp), R1(66-115bp), R2(20-69bp)</span>
 --customize<span class="w"> </span><span class="s2">"cb,R1:7-16;cb,R1:23-32;R1,R1:66-115;R2,R2:20-69"</span>
 </code></pre></div></li>
 </ul>
-<h4 id="4">4. 峰检测信号与矩阵计数模式<a class="headerlink" href="#4" title="Permanent link">&para;</a></h4>
-<ul>
-<li><strong>峰检测信号 (<code>--peak_signal</code>)</strong>：</li>
-<li><code>cutsite</code>（默认）：将已做 Tn5 调整的两个端点作为 MACS2 的输入信号，具有更高的峰分辨率与灵敏度。</li>
-<li><code>fragment</code>：使用完整的 BEDPE 片段作为输入信号。</li>
-<li><strong>矩阵计数模式</strong>：峰检测信号与表达矩阵计数独立配置。峰检测默认统计所有合并去重后的片段，而 cell calling、FRIP 和 TSS 比例统计均使用唯一 fragment 口径。</li>
-</ul>
-<h4 id="5">5. 默认设置速查与高级参数 <a id="v32-defaults"></a><a class="headerlink" href="#5" title="Permanent link">&para;</a></h4>
-<table>
-<thead>
-<tr>
-<th style="text-align: left;">设置</th>
-<th style="text-align: left;">默认值</th>
-<th style="text-align: left;">行为说明</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align: left;"><code>--frags_cutoff</code></td>
-<td style="text-align: left;"><code>0</code></td>
-<td style="text-align: left;">关闭额外的最终总唯一 fragment 数量阈值，仍执行 cell calling 和其他已配置过滤</td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>--tss_cutoff</code></td>
-<td style="text-align: left;"><code>0.0</code></td>
-<td style="text-align: left;">关闭 TSS 区域片段比例过滤；该比例不是 TSS enrichment</td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>--merge_cutoff</code></td>
-<td style="text-align: left;"><code>500</code></td>
-<td style="text-align: left;">bead 初始合并候选的最低唯一 fragment 数，不是最终细胞 QC 阈值</td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>--jaccard_cutoff</code></td>
-<td style="text-align: left;">自动估计</td>
-<td style="text-align: left;">显式 <code>auto</code> 与省略等价；数值须在 <code>[0,1]</code> 内</td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>--peak_signal</code></td>
-<td style="text-align: left;"><code>cutsite</code></td>
-<td style="text-align: left;">将已做 Tn5 调整的两个端点作为 MACS2 BED 信号；<code>fragment</code> 使用完整 BEDPE 片段</td>
-</tr>
-</tbody>
-</table>
-<details>
-<summary>高级设置：细胞识别与计数底层参数</summary>
-<p>以下为底层高级参数，普通帮助中隐藏，必要时可显式指定：</p>
-<table>
-<thead>
-<tr>
-<th style="text-align: left;">参数</th>
-<th style="text-align: left;">默认值和行为</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align: left;"><code>--cell_calling_method</code></td>
-<td style="text-align: left;"><code>ordmag</code>；可选 <code>barcoderanks</code> 或 <code>nb</code>。NB 拟合失败时依次回退到 ordmag、barcoderanks</td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>--peak_fragments</code></td>
-<td style="text-align: left;"><code>all</code>，从全部合并去重后片段检测 peak；<code>filtered</code> 仅用合并候选相关片段</td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>--matrix_count_mode</code></td>
-<td style="text-align: left;"><code>cutsite</code>，peak 内左右端点分别计数；<code>fragment</code> 按重叠唯一片段计数</td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>--atac_exclusion_policy</code></td>
-<td style="text-align: left;"><code>apply</code>，在 calling 前应用 low-targeting 过滤；<code>audit</code> 只记录，<code>off</code> 关闭</td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>--bead_rescue</code></td>
-<td style="text-align: left;">默认关闭的实验性低深度 singleton 补入开关</td>
-</tr>
-</tbody>
-</table>
-</details>
 <hr />
 <h2 id="mkref">参考数据库构建 (mkref) <a id="参考数据库构建-mkref"></a><a class="headerlink" href="#mkref" title="Permanent link">&para;</a></h2>
 <p><code>dnbc4tools atac mkref</code> 构建 ATAC 分析所需的染色体索引、TSS 注释和 Chromap 比对索引。</p>
@@ -2309,7 +2255,7 @@ Advanced<span class="w"> </span>Settings:
 <h2 id="multi">多样本操作 (multi) <a id="多样本操作-multi"></a><a class="headerlink" href="#multi" title="Permanent link">&para;</a></h2>
 <p><code>dnbc4tools atac multi</code> 依据制表符分隔的样本列表文件，为每个样本自动生成独立的执行 Shell 脚本。该命令仅生成分析脚本，不会自动启动分析。</p>
 <h3 id="_17">用法<a class="headerlink" href="#_17" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code>dnbc4tools<span class="w"> </span>atac<span class="w"> </span>multi<span class="w"> </span>--list<span class="w"> </span>samples.tsv<span class="w"> </span>--genomeDir<span class="w"> </span>/reference/atac<span class="w"> </span>--threads<span class="w"> </span><span class="m">16</span>
+<div class="highlight"><pre><span></span><code>dnbc4tools<span class="w"> </span>atac<span class="w"> </span>multi<span class="w"> </span>--list<span class="w"> </span>samples.tsv<span class="w"> </span>--genomeDir<span class="w"> </span>/reference/atac<span class="w"> </span>--threads<span class="w"> </span><span class="m">20</span>
 </code></pre></div>
 <h3 id="_18">完整命令行帮助<a class="headerlink" href="#_18" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code>$<span class="w"> </span>dnbc4tools<span class="w"> </span>atac<span class="w"> </span>multi<span class="w"> </span>--help

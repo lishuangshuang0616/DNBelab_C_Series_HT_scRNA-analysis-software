@@ -12,7 +12,7 @@ dnbc4tools multi run \
   --name demo \
   --csv config.csv \
   --outdir ./results \
-  --threads 16
+  --threads 20
 ```
 
 | 参数 | 是否必需 | 说明 |
@@ -63,6 +63,10 @@ Basic Settings:
 
 RNA FASTQ 根目录须含 `cDNA/`、`oligo/`；ATAC 和 VDJ 目录直接放对应文库的配对 FASTQ。文件名的 R1/R2 规则见[快速开始](../quickstart.md#file-naming-conventions)。
 
+> **提示：测序文件一致性与批次处理**
+> 同一分析中的所有测序文件必须来自同一文库批次，测序模式与暗反应设置须保持一致；不同文库的数据不能混合输入。
+> 如果同一文库批次的不同测序批次存在暗反应模式或者测序长度不一致的情况，则需要使用 FASTQ 裁剪工具 [`fqsubC4`](tools.md#fastq-切割-fqsubc4) 对 reads 进行裁剪，具体裁剪位置请参考[文库结构识别](../library_structure.md)。
+
 ## 普通多组学配置 <a id="配置示例"></a>
 
 以下为 5′ RNA + TCR 的最小示例，保存为 `config.csv` 后使用上方命令运行。
@@ -97,30 +101,8 @@ VDJ 默认复用 RNA 的细胞信息；可用 `beadstrans` 指定另一份细胞
 | 分段 | 常用设置 | 完整参数说明 |
 | :--- | :--- | :--- |
 | `[rna]` | `genomeDir`, `chemistry`, `darkreaction`, `expectcells`, `forcecells`, `minumi`, `consistent_cells`, `calling_method`, `no_introns`, `end5`, `no_bam`, `star_parameters`, `sample_read_pairs` | [RNA](scRNA.md) |
-| `[atac]` | `genomeDir`, `darkreaction`, `forcecells`, `frags_cutoff`, `tss_cutoff`, `jaccard_cutoff`, `merge_cutoff`, `peak_signal`, `need_bam`, `sample_read_pairs` | [ATAC](scATAC.md) |
+| `[atac]` | `genomeDir`, `darkreaction`, `forcecells`, `frags_cutoff`, `tss_cutoff`, `jaccard_cutoff`, `merge_cutoff`, `need_bam`, `sample_read_pairs` | [ATAC](scATAC.md) |
 | `[vdj-t]` / `[vdj-b]` | `ref`, `beadstrans`, `darkreaction`, `customize`, `keep_all_cells`, `r2_only`, `enrichment_primers`, `sample_read_pairs` | [VDJ](scVDJ.md) |
 
 普通 RNA 显式 chemistry 与暗反应须成对设置。`customize` 可按对应文库规则填写多条，其余单值参数保留一份定义。
-
-### BAM 资源 <a id="bam-resources"></a>
-
-默认自动调度，日常只需设置总线程预算。只有需要覆盖自动值时才展开以下高级设置。
-
-<details markdown="block">
-<summary>高级设置：BAM 资源调度</summary>
-
-日常只需设置流程总线程数。BAM 按 CPU、文件句柄和估算可用内存自动规划并发。只有需要覆盖自动值时，才在 `[rna]` 中填写：
-
-| 参数 | 含义 |
-| :--- | :--- |
-| `bam_workers` | 并发 chunk worker 的正整数上限 |
-| `bam_compression_threads` | 每个 chunk 的压缩线程数；与 worker 共同受总线程预算约束 |
-| `bam_queue_depth` | 每个 sample writer 的队列深度，默认是实际压缩线程数的两倍 |
-| `bam_max_memory_gb` | 内存估算预算，单位 GiB；不会限制实际 RSS |
-| `bam_compression_level` | 0–9；省略保留 HTSlib 默认值 |
-| `bam_limit_memory` | 默认 `false`；设 `true` 时连一个 worker 都无法满足估算预算便报错 |
-
-自动模式会降低并发；如果单个 worker 的估算仍超预算，使用一个 worker 并记录警告。内存检测不可用时沿用 CPU/文件句柄调度。`no_bam=true` 时不生成相关 BAM，以上参数不生效。
-
-</details>
 

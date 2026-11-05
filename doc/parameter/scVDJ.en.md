@@ -17,7 +17,7 @@ dnbc4tools vdj run \
   --name sample1 --fastqs /data/tcr \
   --ref human --chain TR \
   --beadstrans /results/rna/outs/singlecell.csv \
-  --threads 16
+  --threads 20
 ```
 
 ### Full Command-Line Help
@@ -92,7 +92,9 @@ Choose one input mode: directory-based (`--fastqs`) or explicit files (`--fastq1
 | `--fastq1` | File path | None | Read 1 FASTQ file list (supports wildcards `*` or comma-separated paths) |
 | `--fastq2` | File path | None | Read 2 FASTQ file list (order must strictly match `--fastq1`) |
 
-> **Important:** All sequencing files in a single run must originate from the same library preparation; files from different libraries cannot be merged.
+> **Tip: Sequencing Consistency & Batch Handling**
+> All FASTQ inputs in a single run must originate from the same library batch with identical sequencing modes and dark reaction settings; data from different libraries cannot be mixed.
+> If different sequencing batches of the same library batch exhibit differing dark reaction cycles or read lengths, use the FASTQ trimming tool [`fqsubC4`](tools.md#fastq-切割-fqsubc4) to trim reads to match the standard library structure (see [Library Structure](../library_structure.md#scvdj)).
 
 #### Library Chemistry & Read Structure
 
@@ -133,12 +135,9 @@ VDJ_fastq_dir/
 
 `--beadstrans` is a pivotal parameter for multi-omics integration, linking V(D)J clonotypic assemblies directly to 5' scRNA expression profiles:
 
-```mermaid
-flowchart LR
-    RNA["5' scRNA Output<br/>outs/singlecell.csv"] -->|--beadstrans| VDJ["dnbc4tools vdj run"]
-    VDJ --> Link["Inherit Valid Cell Whitelist<br/>Inherit Bead Merging Map"]
-    Link --> Matched["Expression Profiles Matched to TCR/BCR Clonotypes"]
-```
+<div style="text-align: center; margin: 20px 0;">
+  <img src="../images/vdj_beadstrans_linkage_en.svg" alt="scVDJ Cross-Omics Cell Linkage Architecture (--beadstrans)" style="max-width: 100%; border-radius: 8px; box-shadow: 0 4px 14px rgba(0,0,0,0.06);" />
+</div>
 
 - **Input source**: Provide the `outs/singlecell.csv` file generated from the corresponding 5' scRNA analysis (supports `.csv.gz` from C6 multi-sample pipelines).
 - **Behavior when omitted**: If `--beadstrans` is omitted, bead merging is skipped, and `--keep_all_cells` automatically engages to retain all assembled barcodes.
@@ -148,12 +147,14 @@ flowchart LR
 
 - **Reference Database (`--ref`)**:
   - Built-in options: `human` or `mouse` (loads bundled V/D/J/C reference sequences).
-  - Custom database: Path to a custom directory containing `reference.json`, FASTA sequences, and primer files.
+  - Custom database: For other species, specify a custom directory path containing `reference.json`, V/D/J/C sequences, and primer configurations (compatible with Cell Ranger VDJ reference databases).
 - **Receptor Type (`--chain`)**:
   - `TR`: T-cell Receptor (TRA, TRB, TRG, TRD chains).
   - `IG`: Immunoglobulin (IGH, IGK, IGL chains).
 
-#### 4. Dark Reaction & Custom Read Structure
+#### 4. Dark Reaction & Custom Read Structure <a id="darkreaction"></a>
+
+> **Library Structure Reference**: For complete VDJ library linker sequences, TSO regions, and dark reaction schematics, see [Library Structure](../library_structure.md#scvdj).
 
 - **Dark Reaction (`--darkreaction`)**: VDJ libraries support only Read 1 dark cycles or unset:
   - `auto`: Automatically inferred

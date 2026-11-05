@@ -17,7 +17,7 @@ dnbc4tools vdj run \
   --name sample1 --fastqs /data/tcr \
   --ref human --chain TR \
   --beadstrans /results/rna/outs/singlecell.csv \
-  --threads 16
+  --threads 20
 ```
 
 ### 完整命令行帮助
@@ -92,7 +92,9 @@ Analysis Settings:
 | `--fastq1` | 文件路径 | 无 | Read 1 FASTQ 文件路径（支持通配符 `*` 或逗号分隔多个文件） |
 | `--fastq2` | 文件路径 | 无 | Read 2 FASTQ 文件路径（与 `--fastq1` 顺序必须严格一致） |
 
-> **提示：** 同一分析中的输入文件必须来自同一文库批次；不同文库的数据不能混合分析。
+> **提示：测序文件一致性与批次处理**
+> 同一分析中的所有测序文件必须来自同一文库批次，测序模式与暗反应设置须保持一致；不同文库的数据不能混合输入。
+> 如果同一文库批次的不同测序批次存在暗反应模式或者测序长度不一致的情况，则需要使用 FASTQ 裁剪工具 [`fqsubC4`](tools.md#fastq-切割-fqsubc4) 对 reads 进行裁剪，具体裁剪位置请参考[文库结构识别](../library_structure.md#scvdj)。
 
 #### 文库化学与测序结构参数
 
@@ -133,12 +135,9 @@ VDJ_fastq_dir/
 
 `--beadstrans` 是单细胞免疫组库分析的核心参数，用于实现 V(D)J 重组信息与单细胞基因表达的细胞级精确绑定：
 
-```mermaid
-flowchart LR
-    RNA["5' scRNA 分析结果<br/>outs/singlecell.csv"] -->|--beadstrans 传入| VDJ["dnbc4tools vdj run"]
-    VDJ --> Link["继承有效细胞白名单<br/>继承磁珠合并对应表"]
-    Link --> Matched["表达谱与 TCR/BCR 克隆型一一配对"]
-```
+<div style="text-align: center; margin: 20px 0;" markdown="block">
+  <img src="../images/vdj_beadstrans_linkage.svg" alt="scVDJ 跨组学细胞条形码联动机制 (--beadstrans)" style="max-width: 100%; border-radius: 8px; box-shadow: 0 4px 14px rgba(0,0,0,0.06);" />
+</div>
 
 - **数据来源**：提供同一样本 5' scRNA 分析输出的 `outs/singlecell.csv`（C6 多样本模式支持 `.csv.gz`）。
 - **未提供时的行为**：若未指定 `--beadstrans`，流程将跳过磁珠合并，并自动激活 `--keep_all_cells` 保留所有检测到的条形码。
@@ -148,12 +147,14 @@ flowchart LR
 
 - **参考库选择 (`--ref`)**：
   - 内置支持：直接填写 `human` 或 `mouse`，软件自动加载预装的标准 IG/TR 参考注释。
-  - 自定义支持：针对其他物种，指定包含 `reference.json`、V/D/J/C 基因序列及引物配置的自定义目录路径。
+  - 自定义支持：针对其他物种，指定包含 `reference.json`、V/D/J/C 基因序列及引物配置的自定义目录路径，兼容 Cell Ranger VDJ 数据库。
 - **受体类型 (`--chain`)**：
   - `TR`：T-cell Receptor（包含 TRA、TRB、TRG、TRD 链），用于 T 细胞受体分析。
   - `IG`：Immunoglobulin（包含 IGH、IGK、IGL 链），用于 B 细胞受体分析。
 
-#### 4. 暗反应与自定义读长结构
+#### 4. 暗反应与自定义读长结构 <a id="darkreaction"></a>
+
+> **文库结构参考**：完整的 VDJ 文库接头序列、TSO 区域与暗反应图解请参阅 [文库结构识别](../library_structure.md#scvdj)。
 
 - **暗反应 (`--darkreaction`)**：VDJ 文库仅支持单端 Read 1 暗循环或无暗循环：
   - `auto`（默认）：自动推断

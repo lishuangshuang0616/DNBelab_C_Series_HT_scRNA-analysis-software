@@ -888,6 +888,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#libraries-specification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        [libraries] Specification
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#samples-specification" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -920,17 +931,6 @@
     <span class="md-ellipsis">
       
         [rna] Experiment-Level Settings
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#bam-resource-scheduling-advanced" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        BAM Resource Scheduling (Advanced)
       
     </span>
   </a>
@@ -1394,6 +1394,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../library_structure.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Library Structure
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../installation_previous.html" class="md-nav__link">
         
   
@@ -1531,6 +1559,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#libraries-specification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        [libraries] Specification
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#samples-specification" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1569,17 +1608,6 @@
   
 </li>
       
-        <li class="md-nav__item">
-  <a href="#bam-resource-scheduling-advanced" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        BAM Resource Scheduling (Advanced)
-      
-    </span>
-  </a>
-  
-</li>
-      
     </ul>
   
 </nav>
@@ -1605,7 +1633,7 @@
 <span class="w">  </span>--name<span class="w"> </span>c6_demo<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--csv<span class="w"> </span>sample.config.csv<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--outdir<span class="w"> </span>./results<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--threads<span class="w"> </span><span class="m">16</span>
+<span class="w">  </span>--threads<span class="w"> </span><span class="m">40</span>
 </code></pre></div>
 <h3 id="basic-options">Basic Options<a class="headerlink" href="#basic-options" title="Permanent link">&para;</a></h3>
 <table>
@@ -1658,6 +1686,35 @@ sample_id,probe_barcode_ids
 S1,BC01
 S2,BC02;BC03
 </code></pre></div>
+<hr />
+<h2 id="libraries-specification"><code>[libraries]</code> Specification <a id="libraries-specification"></a><a class="headerlink" href="#libraries-specification" title="Permanent link">&para;</a></h2>
+<p>The <code>[libraries]</code> section declares the directories containing input sequencing data and their corresponding modality types.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Column</th>
+<th style="text-align: left;">Required</th>
+<th style="text-align: left;">Rules &amp; Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>fastqs</code></td>
+<td style="text-align: left;"><strong>Yes</strong></td>
+<td style="text-align: left;">Path to the directory containing paired FASTQ files. For C6 RNA libraries, this directory must contain <code>cDNA/</code> and <code>oligo/</code> subdirectories housing the respective FASTQ files.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>feature_types</code></td>
+<td style="text-align: left;"><strong>Yes</strong></td>
+<td style="text-align: left;">Modality type; fixed to <code>rna</code> for C6 RNA.</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>Tip: Sequencing Consistency &amp; Batch Handling</strong>
+All FASTQ inputs in a single run must originate from the same library batch with identical sequencing modes and dark reaction settings; data from different libraries cannot be mixed.
+If different sequencing batches of the same library batch exhibit differing dark reaction cycles or read lengths, use the FASTQ trimming tool <a href="tools.html#fastq-切割-fqsubc4"><code>fqsubC4</code></a> to trim reads to match the standard library structure (see <a href="../library_structure.html#scrna">Library Structure</a>).</p>
+</blockquote>
 <hr />
 <h2 id="samples-specification"><code>[samples]</code> Specification <a id="samples-specification"></a><a class="headerlink" href="#samples-specification" title="Permanent link">&para;</a></h2>
 <p>The <code>[samples]</code> section declares the unique identity of each biological sample and its assigned Sample Barcodes.</p>
@@ -1743,50 +1800,6 @@ Sample_B,BC02;BC03,5000,,1000
 <td style="text-align: left;"><code>no_bam</code></td>
 <td style="text-align: left;"><code>false</code></td>
 <td style="text-align: left;">When true, skips all BAM generation (sample BAMs, unassigned BAM, and oligo BAM) to conserve disk space and execution time</td>
-</tr>
-</tbody>
-</table>
-<hr />
-<h2 id="bam-resource-scheduling-advanced">BAM Resource Scheduling (Advanced) <a id="bam-resource-scheduling"></a><a class="headerlink" href="#bam-resource-scheduling-advanced" title="Permanent link">&para;</a></h2>
-<p>By default, BAM generation and compression dynamically scale based on available CPU cores, memory, and file handles. For fine-grained cluster tuning, specify the following options under <code>[rna]</code>:</p>
-<table>
-<thead>
-<tr>
-<th style="text-align: left;">Option</th>
-<th style="text-align: left;">Default</th>
-<th style="text-align: left;">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align: left;"><code>bam_workers</code></td>
-<td style="text-align: left;">Auto</td>
-<td style="text-align: left;">Upper bound on concurrent BAM worker processes</td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>bam_compression_threads</code></td>
-<td style="text-align: left;">Auto</td>
-<td style="text-align: left;">Compression threads per chunk worker</td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>bam_queue_depth</code></td>
-<td style="text-align: left;">Auto</td>
-<td style="text-align: left;">Queue depth buffer for each sample BAM writer</td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>bam_max_memory_gb</code></td>
-<td style="text-align: left;">Auto</td>
-<td style="text-align: left;">Estimated memory budget in GiB</td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>bam_compression_level</code></td>
-<td style="text-align: left;">6</td>
-<td style="text-align: left;">Gzip compression level for BAM files (0–9)</td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>bam_limit_memory</code></td>
-<td style="text-align: left;"><code>false</code></td>
-<td style="text-align: left;">When true, aborts execution if estimated memory usage exceeds the budget</td>
 </tr>
 </tbody>
 </table>

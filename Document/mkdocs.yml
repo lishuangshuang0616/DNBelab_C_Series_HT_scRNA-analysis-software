@@ -74,6 +74,7 @@ plugins:
             工具: Tools
             旧版安装: Previous Installation
             JSON 规范: JSON Spec
+            文库结构: Library Structure
   - search
 
 extra:
@@ -127,5 +128,6 @@ nav:
   - 附加:
       - 升级指南: doc/migration.md
       - 运行与排错: doc/troubleshooting.md
+      - 文库结构: doc/library_structure.md
       - 旧版安装: doc/installation_previous.md
       - JSON 规范: doc/json.md

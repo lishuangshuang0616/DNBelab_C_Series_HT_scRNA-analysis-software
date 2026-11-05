@@ -888,6 +888,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#libraries" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        [libraries] 文库路径配置
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#samples" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -920,17 +931,6 @@
     <span class="md-ellipsis">
       
         [rna] 实验级设置
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#bam" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        BAM 资源调度（高级设置）
       
     </span>
   </a>
@@ -1394,6 +1394,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../library_structure.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    文库结构
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../installation_previous.html" class="md-nav__link">
         
   
@@ -1531,6 +1559,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#libraries" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        [libraries] 文库路径配置
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#samples" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1569,17 +1608,6 @@
   
 </li>
       
-        <li class="md-nav__item">
-  <a href="#bam" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        BAM 资源调度（高级设置）
-      
-    </span>
-  </a>
-  
-</li>
-      
     </ul>
   
 </nav>
@@ -1605,7 +1633,7 @@
 <span class="w">  </span>--name<span class="w"> </span>c6_demo<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--csv<span class="w"> </span>sample.config.csv<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--outdir<span class="w"> </span>./results<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--threads<span class="w"> </span><span class="m">16</span>
+<span class="w">  </span>--threads<span class="w"> </span><span class="m">40</span>
 </code></pre></div>
 <h3 id="_2">基础参数<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h3>
 <table>
@@ -1658,6 +1686,35 @@ sample_id,probe_barcode_ids
 S1,BC01
 S2,BC02;BC03
 </code></pre></div>
+<hr />
+<h2 id="libraries"><code>[libraries]</code> 文库路径配置 <a id="libraries-配置规范"></a><a class="headerlink" href="#libraries" title="Permanent link">&para;</a></h2>
+<p><code>[libraries]</code> 区块声明输入测序数据的目录路径及其模态类型。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">列名</th>
+<th style="text-align: left;">是否必需</th>
+<th style="text-align: left;">说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>fastqs</code></td>
+<td style="text-align: left;"><strong>是</strong></td>
+<td style="text-align: left;">包含配对测序数据的目录路径。对于 C6 RNA 文库，该目录下须包含 <code>cDNA/</code> 与 <code>oligo/</code> 子目录分别存放对应的 FASTQ 文件。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>feature_types</code></td>
+<td style="text-align: left;"><strong>是</strong></td>
+<td style="text-align: left;">测序数据模态类型，C6 RNA 固定填写 <code>rna</code>。</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>提示：测序文件一致性与批次处理</strong>
+同一分析中的所有测序文件必须来自同一文库批次，测序模式与暗反应设置须保持一致；不同文库的数据不能混合输入。
+如果同一文库批次的不同测序批次存在暗反应模式或者测序长度不一致的情况，则需要使用 FASTQ 裁剪工具 <a href="tools.html#fastq-切割-fqsubc4"><code>fqsubC4</code></a> 对 reads 进行裁剪，具体裁剪位置请参考<a href="../library_structure.html#scrna">文库结构识别</a>。</p>
+</blockquote>
 <hr />
 <h2 id="samples"><code>[samples]</code> 样本表配置规范 <a id="samples-配置规范"></a><a class="headerlink" href="#samples" title="Permanent link">&para;</a></h2>
 <p><code>[samples]</code> 区块用于声明每个生物学样本的唯一标识及所分配的 Sample Barcode。</p>
@@ -1743,50 +1800,6 @@ Sample_B,BC02;BC03,5000,,1000
 <td style="text-align: left;"><code>no_bam</code></td>
 <td style="text-align: left;"><code>false</code></td>
 <td style="text-align: left;">设为 <code>true</code> 时跳过所有 BAM 生成（包括逐样本 BAM、未分配 BAM 和 Oligo BAM），显著节省磁盘空间与运行时间</td>
-</tr>
-</tbody>
-</table>
-<hr />
-<h2 id="bam">BAM 资源调度（高级设置） <a id="bam-资源调度"></a><a class="headerlink" href="#bam" title="Permanent link">&para;</a></h2>
-<p>默认模式下，C6 的 BAM 拆分与压缩会根据系统 CPU 核心数、可用内存和文件句柄自动进行负载均衡。如需对大规模服务器进行深度定制，可在 <code>[rna]</code> 分段中调整以下选项：</p>
-<table>
-<thead>
-<tr>
-<th style="text-align: left;">参数</th>
-<th style="text-align: left;">默认值</th>
-<th style="text-align: left;">说明</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align: left;"><code>bam_workers</code></td>
-<td style="text-align: left;">自动规划</td>
-<td style="text-align: left;">并发 BAM 处理 worker 数量上限（正整数）</td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>bam_compression_threads</code></td>
-<td style="text-align: left;">自动规划</td>
-<td style="text-align: left;">每个分块任务所使用的多线程压缩并发数</td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>bam_queue_depth</code></td>
-<td style="text-align: left;">自动规划</td>
-<td style="text-align: left;">每个样本 BAM 写入器的队列深度缓存</td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>bam_max_memory_gb</code></td>
-<td style="text-align: left;">自动规划</td>
-<td style="text-align: left;">BAM 调度估算的最大内存预算（单位 GiB）</td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>bam_compression_level</code></td>
-<td style="text-align: left;">6</td>
-<td style="text-align: left;">BAM 文件的 gzip 压缩级别（0–9）</td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>bam_limit_memory</code></td>
-<td style="text-align: left;"><code>false</code></td>
-<td style="text-align: left;">设为 <code>true</code> 时，若估算内存超标则直接报错中断，防止潜在 OOM</td>
 </tr>
 </tbody>
 </table>

@@ -1482,6 +1482,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../library_structure.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Library Structure
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../installation_previous.html" class="md-nav__link">
         
   
@@ -1786,7 +1814,7 @@
 <span class="w">  </span>--name<span class="w"> </span>sample1<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--fastqs<span class="w"> </span>/data/atac<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--genomeDir<span class="w"> </span>/reference/atac<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--threads<span class="w"> </span><span class="m">16</span>
+<span class="w">  </span>--threads<span class="w"> </span><span class="m">20</span>
 </code></pre></div>
 <h3 id="full-command-line-help">Full Command-Line Help<a class="headerlink" href="#full-command-line-help" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code>$<span class="w"> </span>dnbc4tools<span class="w"> </span>atac<span class="w"> </span>run<span class="w"> </span>--help
@@ -1910,7 +1938,9 @@ Analysis<span class="w"> </span>Settings:
 </tbody>
 </table>
 <blockquote>
-<p><strong>Important:</strong> All sequencing files in a single run must originate from the same library preparation and share consistent dark reaction cycles; files from different libraries cannot be merged.</p>
+<p><strong>Tip: Sequencing Consistency &amp; Batch Handling</strong>
+All FASTQ inputs in a single run must originate from the same library batch with identical sequencing modes and dark reaction settings; data from different libraries cannot be mixed.
+If different sequencing batches of the same library batch exhibit differing dark reaction cycles or read lengths, use the FASTQ trimming tool <a href="tools.html#fastq-切割-fqsubc4"><code>fqsubC4</code></a> to trim reads to match the standard library structure (see <a href="../library_structure.html#scatac">Library Structure</a>).</p>
 </blockquote>
 <h4 id="cell-calling-bead-merging-settings">Cell Calling &amp; Bead Merging Settings<a class="headerlink" href="#cell-calling-bead-merging-settings" title="Permanent link">&para;</a></h4>
 <table>
@@ -1927,7 +1957,7 @@ Analysis<span class="w"> </span>Settings:
 <td style="text-align: left;"><code>--forcecells</code></td>
 <td style="text-align: left;">Integer</td>
 <td style="text-align: left;">None</td>
-<td style="text-align: left;">Forces the pipeline to retain exactly this number of cells (highest priority, overrides auto-calling)</td>
+<td style="text-align: left;">Forces the pipeline to retain exactly this number of cells (highest priority, overrides automatic calling). Barcodes are ranked in descending order of unique fragments, and the top N barcodes are selected</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>--frags_cutoff</code></td>
@@ -1945,7 +1975,7 @@ Analysis<span class="w"> </span>Settings:
 <td style="text-align: left;"><code>--jaccard_cutoff</code></td>
 <td style="text-align: left;">Float | <code>auto</code></td>
 <td style="text-align: left;"><code>auto</code></td>
-<td style="text-align: left;">Jaccard similarity threshold for bead merging (<code>auto</code> fits OTSU algorithm; or float in <code>[0,1]</code>)</td>
+<td style="text-align: left;">Jaccard similarity threshold for bead merging (<code>auto</code> estimated via OTSU algorithm, clamped at 0.02 if estimated below 0.02; or manual 0–1 float value)</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>--merge_cutoff</code></td>
@@ -1992,16 +2022,10 @@ Analysis<span class="w"> </span>Settings:
 </thead>
 <tbody>
 <tr>
-<td style="text-align: left;"><code>--peak_signal</code></td>
-<td style="text-align: left;">Choice</td>
-<td style="text-align: left;"><code>cutsite</code></td>
-<td style="text-align: left;">MACS2 peak calling input signal: <code>cutsite</code> (Tn5-adjusted cut sites) or <code>fragment</code> (full fragments)</td>
-</tr>
-<tr>
 <td style="text-align: left;"><code>--need_bam</code></td>
 <td style="text-align: left;">Flag</td>
 <td style="text-align: left;">Disabled</td>
-<td style="text-align: left;">Enables generation of aligned BAM files (increases runtime and disk usage by 30%–50%)</td>
+<td style="text-align: left;">Enables generation of aligned BAM files (increases runtime and disk usage by 30%–50%). Note: Due to slight discrepancies in how Chromap produces BED versus BAM outputs, enabling <code>--need_bam</code> may introduce minor differences in downstream analysis results</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>--sample_read_pairs</code></td>
@@ -2027,110 +2051,32 @@ Analysis<span class="w"> </span>Settings:
 </ul>
 <h4 id="2-bead-merging-multi-stage-quality-control">2. Bead Merging &amp; Multi-stage Quality Control<a class="headerlink" href="#2-bead-merging-multi-stage-quality-control" title="Permanent link">&para;</a></h4>
 <p>Single-cell ATAC-seq exhibits droplet bead co-encapsulation. The pipeline applies a two-stage merging and filtering strategy:</p>
-<div class="highlight"><pre><span></span><code>flowchart TD
-    RawBeads["Raw Bead Barcodes"] --&gt; FilterMerge["merge_cutoff (Default 500 frags)&lt;br/&gt;Initial candidate bead filter"]
-    FilterMerge --&gt; Jaccard["Jaccard Similarity Calculation&lt;br/&gt;(jaccard_cutoff: auto/OTSU)"]
-    Jaccard --&gt; MergedCells["Beads merged into candidate cells"]
-    MergedCells --&gt; CellCalling["Cell Calling (ordmag / NB)"]
-    CellCalling --&gt; ExtraQC{"Additional QC Thresholds&lt;br/&gt;frags_cutoff &amp; tss_cutoff"}
-    ExtraQC --&gt; FinalCells["Final High-Quality Cells"]
-</code></pre></div>
+<div style="text-align: center; margin: 20px 0;">
+<p><img src="../images/atac_bead_cell_calling_en.svg" alt="scATAC Bead Merging & Multi-Level Quality Control Workflow" style="max-width: 100%; border-radius: 8px; box-shadow: 0 4px 14px rgba(0,0,0,0.06);" /></p>
+</div>
 <ul>
 <li><strong><code>--merge_cutoff</code></strong>: Threshold for beads to enter Jaccard similarity calculation (default 500). For lower-depth datasets, decrease to 200 to capture more beads.</li>
-<li><strong><code>--jaccard_cutoff</code></strong>: Jaccard index cutoff measuring genomic accessibility overlap between beads. Default <code>auto</code> estimates the bimodal threshold via OTSU.</li>
+<li><strong><code>--jaccard_cutoff</code></strong>: Jaccard similarity index measuring genomic accessibility overlap between beads. Default <code>auto</code> dynamically estimates the bimodal threshold via the OTSU algorithm (clamped at 0.02 if the calculated threshold falls below 0.02 to prevent over-merging); can also be manually specified as a float between 0 and 1.</li>
+<li><strong><code>--forcecells</code></strong>: If automatic cell calling does not meet expectations, supply an integer to force the pipeline to retain exactly this number of cells. Barcodes are ranked in descending order of unique fragments, and the top N cells are retained directly.</li>
 <li><strong><code>--frags_cutoff</code> &amp; <code>--tss_cutoff</code></strong>: Downstream supplementary QC filters. Setting them to <code>0</code> leaves filtering to the cell calling algorithm. If damaged nuclei debris remains in the report, activate manual cutoffs (e.g., <code>--frags_cutoff 1000 --tss_cutoff 0.1</code>).</li>
+<li><strong><code>--need_bam</code> &amp; Alignment Differences Note</strong>: Chromap's direct BED export differs slightly from its SAM/BAM generation and subsequent fragment extraction pipeline in terms of fragment shifting (Tn5 shift) and deduplication boundaries. Consequently, enabling <code>--need_bam</code> may produce minor variations in downstream metrics (such as fragment counts and cell statistics), which is expected behavior.</li>
 </ul>
-<h4 id="3-dark-reaction-custom-read-structure">3. Dark Reaction &amp; Custom Read Structure<a class="headerlink" href="#3-dark-reaction-custom-read-structure" title="Permanent link">&para;</a></h4>
+<h4 id="3-dark-reaction-custom-read-structure">3. Dark Reaction &amp; Custom Read Structure <a id="darkreaction"></a><a class="headerlink" href="#3-dark-reaction-custom-read-structure" title="Permanent link">&para;</a></h4>
+<blockquote>
+<p><strong>Library Structure Reference</strong>: For complete ATAC library adapter architecture, extension sequences, and dark reaction schematics, see <a href="../library_structure.html#scatac">Library Structure</a>.</p>
+</blockquote>
 <ul>
 <li><strong><code>--darkreaction</code></strong>: Select based on MGI sequencer chemistry:</li>
 <li><code>auto</code>: Automatically detected from base compositions</li>
 <li><code>R1R2</code>: Dark cycles on both Read 1 and Read 2</li>
 <li><code>R1</code>: Dark cycles only on Read 1</li>
 <li><code>R2</code>: Dark cycles only on Read 2</li>
-<li><code>unset</code>: No dark reactions (standard sequencing or Illumina)</li>
+<li><code>unset</code>: No dark reactions (standard sequencing mode)</li>
 <li><strong><code>--customize</code></strong>: Defines exact 1-based intervals for barcodes and reads (overrides darkreaction):
   <div class="highlight"><pre><span></span><code><span class="c1"># Structure: CB1(7-16bp), CB2(23-32bp), R1(66-115bp), R2(20-69bp)</span>
 --customize<span class="w"> </span><span class="s2">"cb,R1:7-16;cb,R1:23-32;R1,R1:66-115;R2,R2:20-69"</span>
 </code></pre></div></li>
 </ul>
-<h4 id="4-peak-calling-signal-matrix-count-modes">4. Peak Calling Signal &amp; Matrix Count Modes<a class="headerlink" href="#4-peak-calling-signal-matrix-count-modes" title="Permanent link">&para;</a></h4>
-<ul>
-<li><strong>Peak Signal (<code>--peak_signal</code>)</strong>:</li>
-<li><code>cutsite</code> (Default): Uses the two Tn5-adjusted endpoints as MACS2 BED tags, providing higher spatial resolution and sensitivity.</li>
-<li><code>fragment</code>: Uses full BEDPE fragments.</li>
-<li><strong>Matrix Counting Mode</strong>: Peak calling input signal and matrix quantification are configured independently. Peak calling uses all merged deduplicated fragments, while cell calling, FRIP, and TSS proportion are strictly quantified using unique fragments.</li>
-</ul>
-<h4 id="5-default-settings-advanced-parameters">5. Default Settings &amp; Advanced Parameters <a id="v32-defaults"></a><a class="headerlink" href="#5-default-settings-advanced-parameters" title="Permanent link">&para;</a></h4>
-<table>
-<thead>
-<tr>
-<th style="text-align: left;">Option</th>
-<th style="text-align: left;">Default</th>
-<th style="text-align: left;">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align: left;"><code>--frags_cutoff</code></td>
-<td style="text-align: left;"><code>0</code></td>
-<td style="text-align: left;">Disables additional minimum unique fragment threshold; standard cell calling remains active</td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>--tss_cutoff</code></td>
-<td style="text-align: left;"><code>0.0</code></td>
-<td style="text-align: left;">Disables TSS proportion threshold (note: this is proportion, not TSS enrichment)</td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>--merge_cutoff</code></td>
-<td style="text-align: left;"><code>500</code></td>
-<td style="text-align: left;">Minimum unique fragments per bead for initial merging candidacy</td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>--jaccard_cutoff</code></td>
-<td style="text-align: left;">Auto</td>
-<td style="text-align: left;">OTSU estimated cutoff; equivalent to omitting the option; valid values in <code>[0,1]</code></td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>--peak_signal</code></td>
-<td style="text-align: left;"><code>cutsite</code></td>
-<td style="text-align: left;">Uses Tn5-adjusted cutsite endpoints as MACS2 BED tags; <code>fragment</code> uses full BEDPE</td>
-</tr>
-</tbody>
-</table>
-<details>
-<summary>Advanced Settings: Underlying Cell Calling &amp; Counting Options</summary>
-<p>These advanced options are hidden in standard help and can be specified when customized tuning is needed:</p>
-<table>
-<thead>
-<tr>
-<th style="text-align: left;">Option</th>
-<th style="text-align: left;">Default Behavior</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align: left;"><code>--cell_calling_method</code></td>
-<td style="text-align: left;"><code>ordmag</code>; choices: <code>barcoderanks</code>, <code>nb</code>. Falls back to ordmag/barcoderanks if NB fitting fails</td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>--peak_fragments</code></td>
-<td style="text-align: left;"><code>all</code>, detects peaks using all merged deduplicated fragments; <code>filtered</code> uses candidate subsets</td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>--matrix_count_mode</code></td>
-<td style="text-align: left;"><code>cutsite</code>, counts left and right cut sites inside peaks; <code>fragment</code> counts overlapping unique fragments</td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>--atac_exclusion_policy</code></td>
-<td style="text-align: left;"><code>apply</code>, applies low-targeting filtering before calling; <code>audit</code> logs only; <code>off</code> disables</td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>--bead_rescue</code></td>
-<td style="text-align: left;">Disabled experimental singleton rescue switch</td>
-</tr>
-</tbody>
-</table>
-</details>
 <hr />
 <h2 id="reference-database-construction-mkref">Reference Database Construction (mkref) <a id="参考数据库构建-mkref"></a><a class="headerlink" href="#reference-database-construction-mkref" title="Permanent link">&para;</a></h2>
 <p><code>dnbc4tools atac mkref</code> builds Chromap genome indices, chromosome tables, and TSS annotation BED files.</p>
@@ -2307,7 +2253,7 @@ Advanced<span class="w"> </span>Settings:
 <h2 id="multi-sample-workflow-multi">Multi-Sample Workflow (multi) <a id="多样本操作-multi"></a><a class="headerlink" href="#multi-sample-workflow-multi" title="Permanent link">&para;</a></h2>
 <p><code>dnbc4tools atac multi</code> generates standalone executable shell scripts for each sample defined in a tab-separated list file. It does not launch analyses automatically.</p>
 <h3 id="usage_2">Usage<a class="headerlink" href="#usage_2" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code>dnbc4tools<span class="w"> </span>atac<span class="w"> </span>multi<span class="w"> </span>--list<span class="w"> </span>samples.tsv<span class="w"> </span>--genomeDir<span class="w"> </span>/reference/atac<span class="w"> </span>--threads<span class="w"> </span><span class="m">16</span>
+<div class="highlight"><pre><span></span><code>dnbc4tools<span class="w"> </span>atac<span class="w"> </span>multi<span class="w"> </span>--list<span class="w"> </span>samples.tsv<span class="w"> </span>--genomeDir<span class="w"> </span>/reference/atac<span class="w"> </span>--threads<span class="w"> </span><span class="m">20</span>
 </code></pre></div>
 <h3 id="full-command-line-help_2">Full Command-Line Help<a class="headerlink" href="#full-command-line-help_2" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code>$<span class="w"> </span>dnbc4tools<span class="w"> </span>atac<span class="w"> </span>multi<span class="w"> </span>--help

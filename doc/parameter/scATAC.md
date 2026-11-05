@@ -17,7 +17,7 @@ dnbc4tools atac run \
   --name sample1 \
   --fastqs /data/atac \
   --genomeDir /reference/atac \
-  --threads 16
+  --threads 20
 ```
 
 ### 完整命令行帮助
@@ -95,16 +95,18 @@ Analysis Settings:
 | `--fastq1` | 文件路径 | 无 | Read 1 FASTQ 文件路径（支持通配符 `*` 或逗号分隔多个文件） |
 | `--fastq2` | 文件路径 | 无 | Read 2 FASTQ 文件路径（与 `--fastq1` 顺序必须严格一致） |
 
-> **提示：** 同一分析中的输入文件必须来自同一文库批次，测序模式与暗反应设置须保持一致；不同文库的数据不能混合分析。
+> **提示：测序文件一致性与批次处理**
+> 同一分析中的所有测序文件必须来自同一文库批次，测序模式与暗反应设置须保持一致；不同文库的数据不能混合输入。
+> 如果同一文库批次的不同测序批次存在暗反应模式或者测序长度不一致的情况，则需要使用 FASTQ 裁剪工具 [`fqsubC4`](tools.md#fastq-切割-fqsubc4) 对 reads 进行裁剪，具体裁剪位置请参考[文库结构识别](../library_structure.md#scatac)。
 
 #### 细胞识别与磁珠合并参数
 
 | 参数 | 类型 | 默认值 | 说明 |
 | :--- | :--- | :--- | :--- |
-| `--forcecells` | 整数 | 无 | 强制流程保留确切的细胞数量（最高优先级，覆盖自动识别结果） |
+| `--forcecells` | 整数 | 无 | 强制流程保留确切的细胞数量，优先级最高（覆盖自动识别结果）。截取时按候选细胞条形码的唯一片段数（Unique Fragments）降序截取前 N 个细胞 |
 | `--frags_cutoff` | 整数 | `0` (关闭) | 附加的最终总唯一 fragment 数量阈值；`0` 表示关闭此附加过滤，仍执行常规 cell calling |
 | `--tss_cutoff` | 浮点数 | `0.0` (关闭) | 最低 TSS 区域片段比例过滤阈值；`0` 表示关闭此过滤（如 `0.2`） |
-| `--jaccard_cutoff` | 浮点数 \| `auto` | `auto` | 磁珠（beads）合并的 Jaccard 相似度阈值（`auto` 基于 OTSU 算法估计，或输入 0–1 数值） |
+| `--jaccard_cutoff` | 浮点数 \| `auto` | `auto` | 磁珠（beads）合并的 Jaccard 相似度阈值（`auto` 基于 OTSU 算法估计，自动计算低于 0.02 时按 0.02 截断过滤；或手动输入 0–1 浮点数） |
 | `--merge_cutoff` | 整数 | `500` | 参与 Jaccard 合并的磁珠所需最低唯一 fragments 数量门槛 |
 
 #### 文库化学与测序结构参数
@@ -118,8 +120,7 @@ Analysis Settings:
 
 | 参数 | 类型 | 默认值 | 说明 |
 | :--- | :--- | :--- | :--- |
-| `--peak_signal` | 选项 | `cutsite` | MACS2 峰检测输入信号：`cutsite`（Tn5 调整端点）或 `fragment`（完整片段） |
-| `--need_bam` | 标志开关 | 关闭 | 启用比对 BAM 文件的生成（耗时和磁盘空间预计增加 30%–50%） |
+| `--need_bam` | 标志开关 | 关闭 | 启用比对 BAM 文件的生成（耗时和磁盘空间预计增加 30%–50%）。注意：由于 Chromap 软件直接生成 BED 与通过 BAM 提取 fragment 时底层存在微小差异，启用 `--need_bam` 会导致最终分析结果存在微小差异 |
 | `--sample_read_pairs` | 整数 | 无 | 从 FASTQ 中抽取的读段对数量（用于快速降采样测试） |
 
 ---
@@ -145,65 +146,31 @@ fastq_directory/
 
 单细胞 ATAC 测序数据存在液滴中多磁珠共包裹（bead multiplexing）的生物学特征，流程采用两阶段过滤与合并策略：
 
-```mermaid
-flowchart TD
-    RawBeads["原始磁珠 Barcodes"] --> FilterMerge["merge_cutoff (默认 500 frags)<br/>初步筛选有效磁珠"]
-    FilterMerge --> Jaccard["Jaccard 相似度计算<br/>(jaccard_cutoff: auto/OTSU)"]
-    Jaccard --> MergedCells["磁珠合并为候选细胞"]
-    MergedCells --> CellCalling["细胞识别 (ordmag / NB)"]
-    CellCalling --> ExtraQC{"附加阈值过滤<br/>frags_cutoff & tss_cutoff"}
-    ExtraQC --> FinalCells["最终高质有效细胞"]
-```
+<div style="text-align: center; margin: 20px 0;">
+  <img src="../images/atac_bead_cell_calling.svg" alt="scATAC 磁珠合并与多级质控机制" style="max-width: 100%; border-radius: 8px; box-shadow: 0 4px 14px rgba(0,0,0,0.06);" />
+</div>
 
 - **`--merge_cutoff`**：设定参与合并的磁珠底线（默认 500）。低深度样本可适当下调（如 200）以纳入更多磁珠参与计算。
-- **`--jaccard_cutoff`**：两个磁珠在基因组开放位点的重叠相似度。默认 `auto` 即可自动拟合双峰分布找到截断点。
+- **`--jaccard_cutoff`**：两个磁珠在基因组开放位点的重叠相似度。默认 `auto` 即可通过 OTSU 算法自动拟合双峰分布找到截断点；若自动计算得到的阈值低于 0.02，系统将按照 0.02 进行下限截断过滤以防止过度合并；亦可手动指定 0–1 的浮点数值。
+- **`--forcecells`**：当自动识别算法未能达到预期时，可传入整数强制保留指定数量的细胞。程序将按照每个候选细胞的唯一片段数（Unique Fragments）从大到小降序排列，直接截取前 N 个细胞输出。
 - **`--frags_cutoff` 与 `--tss_cutoff`**：属于下游的附加质控过滤器。默认设为 `0` 关闭，代表仅依赖算法识别；若报告中发现低质量核碎屑残留，可手动开启（如 `--frags_cutoff 1000 --tss_cutoff 0.1`）。
+- **`--need_bam` 与比对差异说明**：Chromap 直接写出 BED 片段与生成 SAM/BAM 并由辅助模块转换 fragments 时，底层的片段移位（Tn5 shift）与重复序列过滤判定存在细微差异。因此开启 `--need_bam` 后下游分析指标（如特定片段统计与细胞结果）可能出现微小浮动，属软件正常行为。
 
-#### 3. 暗反应配置与文库自定义
+#### 3. 暗反应配置与文库自定义 <a id="darkreaction"></a>
+
+> **文库结构参考**：完整的 ATAC 文库接头结构、延伸序列与暗反应图解请参阅 [文库结构识别](../library_structure.md#scatac)。
 
 - **`--darkreaction`**：根据 MGI 测序仪的暗循环配置选择：
   - `auto`：默认自动根据碱基组成推断
   - `R1R2`：双端暗循环
   - `R1`：仅 Read 1 包含暗循环
   - `R2`：仅 Read 2 包含暗循环
-  - `unset`：无暗反应（标准平台或 Illumina）
+  - `unset`：无暗反应（标准测序模式）
 - **`--customize`**：精确自定义序列结构（覆盖 darkreaction）：
   ```bash
   # 结构: CB1(7-16bp), CB2(23-32bp), R1(66-115bp), R2(20-69bp)
   --customize "cb,R1:7-16;cb,R1:23-32;R1,R1:66-115;R2,R2:20-69"
   ```
-
-#### 4. 峰检测信号与矩阵计数模式
-
-- **峰检测信号 (`--peak_signal`)**：
-  - `cutsite`（默认）：将已做 Tn5 调整的两个端点作为 MACS2 的输入信号，具有更高的峰分辨率与灵敏度。
-  - `fragment`：使用完整的 BEDPE 片段作为输入信号。
-- **矩阵计数模式**：峰检测信号与表达矩阵计数独立配置。峰检测默认统计所有合并去重后的片段，而 cell calling、FRIP 和 TSS 比例统计均使用唯一 fragment 口径。
-
-#### 5. 默认设置速查与高级参数 <a id="v32-defaults"></a>
-
-| 设置 | 默认值 | 行为说明 |
-| :--- | :--- | :--- |
-| `--frags_cutoff` | `0` | 关闭额外的最终总唯一 fragment 数量阈值，仍执行 cell calling 和其他已配置过滤 |
-| `--tss_cutoff` | `0.0` | 关闭 TSS 区域片段比例过滤；该比例不是 TSS enrichment |
-| `--merge_cutoff` | `500` | bead 初始合并候选的最低唯一 fragment 数，不是最终细胞 QC 阈值 |
-| `--jaccard_cutoff` | 自动估计 | 显式 `auto` 与省略等价；数值须在 `[0,1]` 内 |
-| `--peak_signal` | `cutsite` | 将已做 Tn5 调整的两个端点作为 MACS2 BED 信号；`fragment` 使用完整 BEDPE 片段 |
-
-<details markdown="block">
-<summary>高级设置：细胞识别与计数底层参数</summary>
-
-以下为底层高级参数，普通帮助中隐藏，必要时可显式指定：
-
-| 参数 | 默认值和行为 |
-| :--- | :--- |
-| `--cell_calling_method` | `ordmag`；可选 `barcoderanks` 或 `nb`。NB 拟合失败时依次回退到 ordmag、barcoderanks |
-| `--peak_fragments` | `all`，从全部合并去重后片段检测 peak；`filtered` 仅用合并候选相关片段 |
-| `--matrix_count_mode` | `cutsite`，peak 内左右端点分别计数；`fragment` 按重叠唯一片段计数 |
-| `--atac_exclusion_policy` | `apply`，在 calling 前应用 low-targeting 过滤；`audit` 只记录，`off` 关闭 |
-| `--bead_rescue` | 默认关闭的实验性低深度 singleton 补入开关 |
-
-</details>
 
 ---
 
@@ -337,7 +304,7 @@ genomeDir/
 ### 用法
 
 ```bash
-dnbc4tools atac multi --list samples.tsv --genomeDir /reference/atac --threads 16
+dnbc4tools atac multi --list samples.tsv --genomeDir /reference/atac --threads 20
 ```
 
 ### 完整命令行帮助

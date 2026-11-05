@@ -862,23 +862,6 @@
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Modality parameter mapping">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#bam-resources" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        BAM resources
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
 </li>
       
     </ul>
@@ -1366,6 +1349,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../library_structure.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Library Structure
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../installation_previous.html" class="md-nav__link">
         
   
@@ -1505,23 +1516,6 @@
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Modality parameter mapping">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#bam-resources" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        BAM resources
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
 </li>
       
     </ul>
@@ -1552,7 +1546,7 @@ For high-throughput single-cell RNA analysis based on Sample Barcode multiplexin
 <span class="w">  </span>--name<span class="w"> </span>demo<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--csv<span class="w"> </span>config.csv<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--outdir<span class="w"> </span>./results<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--threads<span class="w"> </span><span class="m">16</span>
+<span class="w">  </span>--threads<span class="w"> </span><span class="m">20</span>
 </code></pre></div>
 <table>
 <thead>
@@ -1637,6 +1631,11 @@ Basic<span class="w"> </span>Settings:
 </table>
 <p>Use <code>true/false</code> for booleans. Quote comma-containing values, for example <code>darkreaction,"R1,R1R2"</code>. Global <code>[rna] expectcells</code> and <code>[atac] jaccard_cutoff</code> accept <code>auto</code>. Absolute input paths are recommended.</p>
 <p>RNA input roots contain <code>cDNA/</code> and <code>oligo/</code>; ATAC and VDJ directories contain their paired FASTQs directly. See <a href="../quickstart.html#file-naming-conventions">FASTQ naming rules</a>.</p>
+<blockquote>
+<p><strong>Tip: Sequencing Consistency &amp; Batch Handling</strong>
+All FASTQ inputs in a single run must originate from the same library batch with identical sequencing modes and dark reaction settings; data from different libraries cannot be mixed.
+If different sequencing batches of the same library batch exhibit differing dark reaction cycles or read lengths, use the FASTQ trimming tool <a href="tools.html#fastq-切割-fqsubc4"><code>fqsubC4</code></a> to trim reads to match the standard library structure (see <a href="../library_structure.html">Library Structure</a>).</p>
+</blockquote>
 <h2 id="ordinary-multi-omics-configuration">Ordinary multi-omics configuration <a id="configuration-examples"></a><a class="headerlink" href="#ordinary-multi-omics-configuration" title="Permanent link">&para;</a></h2>
 <p>This minimal 5′ RNA + TCR configuration can be saved as <code>config.csv</code> and run with the command above.</p>
 <div class="highlight"><pre><span></span><code>[rna]
@@ -1676,7 +1675,7 @@ fastqs,feature_types
 </tr>
 <tr>
 <td style="text-align: left;"><code>[atac]</code></td>
-<td style="text-align: left;"><code>genomeDir</code>, <code>darkreaction</code>, <code>forcecells</code>, <code>frags_cutoff</code>, <code>tss_cutoff</code>, <code>jaccard_cutoff</code>, <code>merge_cutoff</code>, <code>peak_signal</code>, <code>need_bam</code>, <code>sample_read_pairs</code></td>
+<td style="text-align: left;"><code>genomeDir</code>, <code>darkreaction</code>, <code>forcecells</code>, <code>frags_cutoff</code>, <code>tss_cutoff</code>, <code>jaccard_cutoff</code>, <code>merge_cutoff</code>, <code>need_bam</code>, <code>sample_read_pairs</code></td>
 <td style="text-align: left;"><a href="scATAC.html">ATAC</a></td>
 </tr>
 <tr>
@@ -1687,47 +1686,6 @@ fastqs,feature_types
 </tbody>
 </table>
 <p>Ordinary RNA requires explicit chemistry and dark cycles together. Repeat <code>customize</code> as required for libraries; keep one definition for other scalar options.</p>
-<h3 id="bam-resources">BAM resources <a id="bam-resources"></a><a class="headerlink" href="#bam-resources" title="Permanent link">&para;</a></h3>
-<p>Routine runs use automatic scheduling and need only a total CPU budget. Expand these overrides only when needed.</p>
-<details>
-<summary>BAM resource overrides</summary>
-<p>Routine runs need only a total thread budget. BAM concurrency is planned from CPU, file descriptors and estimated available memory. Optional <code>[rna]</code> overrides:</p>
-<table>
-<thead>
-<tr>
-<th style="text-align: left;">Parameter</th>
-<th style="text-align: left;">Meaning</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align: left;"><code>bam_workers</code></td>
-<td style="text-align: left;">Positive maximum number of concurrent chunk workers</td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>bam_compression_threads</code></td>
-<td style="text-align: left;">Compression threads per chunk; jointly constrained by total CPU budget</td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>bam_queue_depth</code></td>
-<td style="text-align: left;">Per-sample writer queue; defaults to twice the effective compression thread count</td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>bam_max_memory_gb</code></td>
-<td style="text-align: left;">Estimated memory budget in GiB; not an RSS cap</td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>bam_compression_level</code></td>
-<td style="text-align: left;">0–9; omission retains the HTSlib default</td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>bam_limit_memory</code></td>
-<td style="text-align: left;">Default <code>false</code>; <code>true</code> fails if even one worker cannot fit the estimate</td>
-</tr>
-</tbody>
-</table>
-<p>Automatic mode reduces concurrency; if one worker still exceeds the estimate, it runs one worker with a warning. If memory detection is unavailable, it uses CPU/file-descriptor scheduling. These options have no effect with <code>no_bam=true</code>.</p>
-</details>
 
 
 

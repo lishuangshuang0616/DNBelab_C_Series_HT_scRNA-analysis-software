@@ -1482,6 +1482,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../library_structure.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Library Structure
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../installation_previous.html" class="md-nav__link">
         
   
@@ -1777,14 +1805,17 @@
 <p>DNBelab C Series HT scRNA Parameter Configuration Guide</p>
 <h2 id="overview">Overview <a id="概述"></a><a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
 <p>This document explains the parameter definitions, default behaviors, and standard usage patterns for <code>dnbc4tools rna</code> subcommands, including single-sample analysis (<code>run</code>), reference database construction (<code>mkref</code>), and multi-sample script generation (<code>multi</code>).</p>
-<p><strong>Tip:</strong> Parameter specifications are based on the latest command-line help messages. Examples can be used directly as operational templates.</p>
+<blockquote>
+<p><strong>Tip</strong>
+Parameter specifications are based on the latest command-line help messages. Examples can be used directly as operational templates.</p>
+</blockquote>
 <h2 id="main-analysis-workflow-run">Main Analysis Workflow (run) <a id="v32-options"></a> <a id="主分析流程-run"></a><a class="headerlink" href="#main-analysis-workflow-run" title="Permanent link">&para;</a></h2>
 <h3 id="usage">Usage <a id="usage"></a><a class="headerlink" href="#usage" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code>dnbc4tools<span class="w"> </span>rna<span class="w"> </span>run<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--name<span class="w"> </span>sample1<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--fastqs<span class="w"> </span>/data/rna<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--genomeDir<span class="w"> </span>/reference/rna<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--threads<span class="w"> </span><span class="m">16</span>
+<span class="w">  </span>--threads<span class="w"> </span><span class="m">20</span>
 </code></pre></div>
 <h3 id="full-command-line-help">Full Command-Line Help<a class="headerlink" href="#full-command-line-help" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code>$<span class="w"> </span>dnbc4tools<span class="w"> </span>rna<span class="w"> </span>run<span class="w"> </span>--help
@@ -1873,7 +1904,7 @@ Analysis<span class="w"> </span>Settings:
 <td style="text-align: left;"><code>--genomeDir</code></td>
 <td style="text-align: left;">Directory</td>
 <td style="text-align: left;"><strong>Required</strong></td>
-<td style="text-align: left;">Reference directory containing STAR index and annotations built via <code>rna mkref</code></td>
+<td style="text-align: left;">Reference directory containing STAR index and annotations built via <code>rna mkref</code>, compatible with v2 references and Cell Ranger RNA reference databases</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>--outdir</code></td>
@@ -1934,7 +1965,9 @@ Analysis<span class="w"> </span>Settings:
 </tbody>
 </table>
 <blockquote>
-<p><strong>Important:</strong> All sequencing files in a single analysis run must originate from the same library preparation and share consistent dark reaction cycles; files from different libraries cannot be merged.</p>
+<p><strong>Tip: Sequencing Consistency &amp; Batch Handling</strong>
+All FASTQ inputs in a single run must originate from the same library batch with identical sequencing modes and dark reaction settings; data from different libraries cannot be mixed.
+If different sequencing batches of the same library batch exhibit differing dark reaction cycles or read lengths, use the FASTQ trimming tool <a href="tools.html#fastq-切割-fqsubc4"><code>fqsubC4</code></a> to trim reads to match the standard library structure (see <a href="../library_structure.html#scrna">Library Structure</a>).</p>
 </blockquote>
 <h4 id="cell-calling-qc-settings">Cell Calling &amp; QC Settings<a class="headerlink" href="#cell-calling-qc-settings" title="Permanent link">&para;</a></h4>
 <table>
@@ -1963,13 +1996,13 @@ Analysis<span class="w"> </span>Settings:
 <td style="text-align: left;"><code>--forcecells</code></td>
 <td style="text-align: left;">Integer</td>
 <td style="text-align: left;">None</td>
-<td style="text-align: left;">Forces the pipeline to retain exactly this number of cells (highest priority, overrides auto-calling)</td>
+<td style="text-align: left;">Forces the pipeline to retain exactly this number of cells (highest priority, overrides auto-calling). Truncates the top N candidate cells sorted in descending order of total valid UMI counts</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>--minumi</code></td>
 <td style="text-align: left;">Integer</td>
 <td style="text-align: left;"><code>1000</code></td>
-<td style="text-align: left;">Minimum UMI threshold per cell; barcodes below this cutoff are excluded</td>
+<td style="text-align: left;">Minimum UMI cutoff for evaluating candidate cells in EmptyDrops (only applies when <code>--calling_method emptydrops</code>). Droplets below this threshold do not enter the secondary ambient RNA profile likelihood test and cell rescue, and are treated directly as background. For low-coverage libraries or smaller cells with lower RNA content, lower this value (e.g., <code>500</code>) to rescue low-UMI cells</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>--consistent_cells</code></td>
@@ -2096,9 +2129,10 @@ Analysis<span class="w"> </span>Settings:
 <ul>
 <li><strong>Steep drop</strong>: Clear distinction between genuine cells and background droplets; default settings yield optimal results.</li>
 <li><strong>Gradual decline / No clear inflection</strong>: High ambient RNA contamination or damaged cells. Use conservative cell counts by setting <code>--expectcells</code> or increasing <code>--minumi 1500</code>.</li>
+<li><strong><code>--minumi</code> Candidate Evaluation Cutoff</strong>: Only applies to the <code>emptydrops</code> method (default: 1000). It defines the lower UMI boundary for candidate droplets to be evaluated in the non-ambient likelihood test. Candidate droplets meeting this cutoff (and exceeding the ambient pool's maximum UMI) undergo Monte-Carlo simulation against the ambient RNA profile; droplets below this threshold are directly treated as ambient background and excluded from EmptyDrops testing and cell rescue. If shallow sequencing causes valid small cells to be missed, lower this parameter (e.g., <code>--minumi 500</code>).</li>
 <li><strong>Cell count mismatch</strong>:</li>
 <li><em>Too low</em>: Check if <code>--minumi</code> is overly stringent or if sequencing depth is low; try lowering to <code>--minumi 500</code>.</li>
-<li><em>Too high</em>: Background noise droplets included; use <code>--forcecells &lt;N&gt;</code> to lock the target cell count directly.</li>
+<li><em>Too high</em>: Background noise droplets included; use <code>--forcecells &lt;N&gt;</code> to lock the target cell count directly (the pipeline sorts candidate barcodes in descending order of total valid UMI counts and retains the top N cells).</li>
 </ul>
 <h4 id="3-external-cell-whitelist-constraints-consistent_cells">3. External Cell Whitelist Constraints (<code>--consistent_cells</code>)<a class="headerlink" href="#3-external-cell-whitelist-constraints-consistent_cells" title="Permanent link">&para;</a></h4>
 <p>Injects prior cell information during barcode merging and cell identification (e.g., cross-omics barcode pairing or historical gold standards). Supports headered <code>.csv</code> or <code>.csv.gz</code>:</p>
@@ -2124,7 +2158,7 @@ Analysis<span class="w"> </span>Settings:
 </tr>
 <tr>
 <td style="text-align: left;"><code>cell,barcode,is_cell_barcode</code></td>
-<td style="text-align: left;">Complete constraint schema (compatible with legacy 6-column summary tables)</td>
+<td style="text-align: left;">Simultaneously specifies cell-to-bead barcode mappings and sets explicit cell calling status per barcode via <code>is_cell_barcode</code> (1/0 or true/false; e.g., passing a QC <code>singlecell.csv</code> directly)</td>
 </tr>
 </tbody>
 </table>
@@ -2141,74 +2175,72 @@ Analysis<span class="w"> </span>Settings:
 </li>
 <li><strong>Rule</strong>: If <code>--chemistry</code> is specified manually, <code>--darkreaction</code> must also be explicitly set.</li>
 </ul>
-<h4 id="5-custom-read-structure-customize">5. Custom Read Structure (<code>--customize</code>)<a class="headerlink" href="#5-custom-read-structure-customize" title="Permanent link">&para;</a></h4>
-<p>For non-standard library protocols, use <code>--customize</code> to define exact 1-based intervals for barcodes, UMIs, and reads.</p>
+<h4 id="5-custom-read-structure-customize">5. Custom Read Structure (<code>--customize</code>) <a id="customize"></a><a class="headerlink" href="#5-custom-read-structure-customize" title="Permanent link">&para;</a></h4>
+<p>For non-standard, modified, or third-party library protocols, use <code>--customize</code> to define exact 1-based closed-interval intervals for barcodes, UMIs, and reads (cannot exceed sequencing read length).</p>
+<blockquote>
+<p><strong>Library Structure Reference</strong>: For complete library linker sequences, physical segment coordinates, and dark reaction schematics, see <a href="../library_structure.html">Library Structure</a>.</p>
+</blockquote>
+<h5 id="syntax-rules-requirements">Syntax Rules &amp; Requirements<a class="headerlink" href="#syntax-rules-requirements" title="Permanent link">&para;</a></h5>
 <ul>
 <li><strong>Syntax</strong>: <code>"&lt;type&gt;,&lt;read&gt;:&lt;start&gt;-&lt;end&gt;"</code>, delimited by semicolons <code>;</code>.</li>
-<li><code>cb</code>: Cell Barcode</li>
-<li><code>umi</code>: Unique Molecular Identifier</li>
-<li><code>R1</code> / <code>R2</code>: Usable read sequence</li>
+<li><code>cb</code>: Cell Barcode (composed of 2 or 3 segments);</li>
+<li><code>umi</code>: Unique Molecular Identifier;</li>
+<li><code>R1</code> / <code>R2</code>: Usable read sequence interval.</li>
 <li><strong>Rule</strong>: Must be passed <strong>twice sequentially</strong> for scRNA: first for cDNA, second for oligo.</li>
 </ul>
-<div class="highlight"><pre><span></span><code><span class="c1"># cDNA: R1(1-10bp CB, 11-20bp CB, 21-30bp UMI), R2(1-100bp cDNA)</span>
-<span class="c1"># Oligo: R1(1-10bp CB, 11-20bp CB), R2(1-30bp Tag)</span>
-dnbc4tools<span class="w"> </span>rna<span class="w"> </span>run<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--name<span class="w"> </span>custom_demo<span class="w"> </span>--genomeDir<span class="w"> </span>./ref<span class="w"> </span><span class="se">\</span>
+<h5 id="scenario-comparisons-how-to-strip-fixed-linker-sequences">Scenario Comparisons: How to Strip Fixed Linker Sequences<a class="headerlink" href="#scenario-comparisons-how-to-strip-fixed-linker-sequences" title="Permanent link">&para;</a></h5>
+<h6 id="example-a-non-dark-reaction-mode-full-sequencing-stripping-fixed-linkers">Example A: Non-Dark Reaction Mode (Full Sequencing, Stripping Fixed Linkers)<a class="headerlink" href="#example-a-non-dark-reaction-mode-full-sequencing-stripping-fixed-linkers" title="Permanent link">&para;</a></h6>
+<p>In standard sequencing mode or sequencing without dark reactions, reads contain invariant linker sequences. If invariant bases are incorporated into barcodes, demultiplexing will fail. <strong>Directly skipping linker intervals safely removes them</strong>:</p>
+<ul>
+<li><strong>cDNA Extraction Strategy</strong>:</li>
+<li>Skip 1–6 bp (Linker 1), capture <code>cb,R1:7-16</code> (CB1 10bp)</li>
+<li>Skip 17–22 bp (Linker 2), capture <code>cb,R1:23-32</code> (CB2 10bp)</li>
+<li>Skip 33–37 bp (Linker 3), capture <code>umi,R1:38-47</code> (UMI 10bp)</li>
+<li>Read 2 maps to 1–100 bp transcript sequence: <code>R1,R2:1-100</code></li>
+<li>Argument: <code>--customize "cb,R1:7-16;cb,R1:23-32;umi,R1:38-47;R1,R2:1-100"</code></li>
+<li><strong>Oligo Extraction Strategy</strong>:</li>
+<li>Read 1 skips linkers: <code>cb,R1:7-16;cb,R1:23-32</code></li>
+<li>Read 2 extracts first UMI (1–10 bp), then skips fixed linkers to extract Tag 1 (17–26 bp) and Tag 2 (33–42 bp): <code>R1,R2:1-10;R1,R2:17-26;R1,R2:33-42</code></li>
+<li>Argument: <code>--customize "cb,R1:7-16;cb,R1:23-32;R1,R2:1-10;R1,R2:17-26;R1,R2:33-42"</code></li>
+</ul>
+<p>Operational command:
+<div class="highlight"><pre><span></span><code>dnbc4tools<span class="w"> </span>rna<span class="w"> </span>run<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--name<span class="w"> </span>non_dark_demo<span class="w"> </span>--genomeDir<span class="w"> </span>/reference/rna<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--cDNAfastq1<span class="w"> </span>cdna_R1.fq.gz<span class="w"> </span>--cDNAfastq2<span class="w"> </span>cdna_R2.fq.gz<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--oligofastq1<span class="w"> </span>oligo_R1.fq.gz<span class="w"> </span>--oligofastq2<span class="w"> </span>oligo_R2.fq.gz<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--customize<span class="w"> </span><span class="s2">"cb,R1:7-16;cb,R1:23-32;umi,R1:38-47;R1,R2:1-100"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--customize<span class="w"> </span><span class="s2">"cb,R1:7-16;cb,R1:23-32;R1,R2:1-10;R1,R2:17-26;R1,R2:33-42"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--threads<span class="w"> </span><span class="m">20</span>
+</code></pre></div></p>
+<h6 id="example-b-dark-reaction-mode-hardware-skips-fixed-sequences">Example B: Dark Reaction Mode (Hardware Skips Fixed Sequences)<a class="headerlink" href="#example-b-dark-reaction-mode-hardware-skips-fixed-sequences" title="Permanent link">&para;</a></h6>
+<p>The sequencer has already skipped invariant linkers; output reads contain exclusively informative bases starting from base 1:</p>
+<ul>
+<li><strong>cDNA Extraction</strong>: <code>--customize "cb,R1:1-10;cb,R1:11-20;umi,R1:21-30;R1,R2:1-100"</code></li>
+<li><strong>Oligo Extraction</strong>: <code>--customize "cb,R1:1-10;cb,R1:11-20;R1,R2:1-30"</code></li>
+</ul>
+<p>Operational command:
+<div class="highlight"><pre><span></span><code>dnbc4tools<span class="w"> </span>rna<span class="w"> </span>run<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--name<span class="w"> </span>dark_demo<span class="w"> </span>--genomeDir<span class="w"> </span>/reference/rna<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--cDNAfastq1<span class="w"> </span>cdna_R1.fq.gz<span class="w"> </span>--cDNAfastq2<span class="w"> </span>cdna_R2.fq.gz<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--oligofastq1<span class="w"> </span>oligo_R1.fq.gz<span class="w"> </span>--oligofastq2<span class="w"> </span>oligo_R2.fq.gz<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--customize<span class="w"> </span><span class="s2">"cb,R1:1-10;cb,R1:11-20;umi,R1:21-30;R1,R2:1-100"</span><span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--customize<span class="w"> </span><span class="s2">"cb,R1:1-10;cb,R1:11-20;R1,R2:1-30"</span>
-</code></pre></div>
-<h4 id="6-star-parameters-bam-resource-scheduling">6. STAR Parameters &amp; BAM Resource Scheduling<a class="headerlink" href="#6-star-parameters-bam-resource-scheduling" title="Permanent link">&para;</a></h4>
+<span class="w">  </span>--customize<span class="w"> </span><span class="s2">"cb,R1:1-10;cb,R1:11-20;R1,R2:1-30"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--threads<span class="w"> </span><span class="m">20</span>
+</code></pre></div></p>
+<h4 id="6-star-alignment-parameters-star_parameters">6. STAR Alignment Parameters (<code>--star_parameters</code>)<a class="headerlink" href="#6-star-alignment-parameters-star_parameters" title="Permanent link">&para;</a></h4>
 <p>Pass validated STAR alignment, filtering, or scoring parameters via <code>--star_parameters</code>:</p>
 <div class="highlight"><pre><span></span><code>--star_parameters<span class="w"> </span><span class="s2">"--outFilterMismatchNmax 10 --outFilterMultimapNmax 1"</span>
 </code></pre></div>
-<details>
-<summary>Advanced Settings: BAM Resource Scheduling</summary>
-<p>BAM generation is auto-scheduled based on CPU cores, file handles, and estimated RAM. You may override these with internal flags:</p>
-<table>
-<thead>
-<tr>
-<th style="text-align: left;">Parameter</th>
-<th style="text-align: left;">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align: left;"><code>--bam-workers</code></td>
-<td style="text-align: left;">Maximum concurrent chunk worker processes</td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>--bam-compression-threads</code></td>
-<td style="text-align: left;">Compression threads allocated per chunk worker</td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>--bam-queue-depth</code></td>
-<td style="text-align: left;">Queue depth buffer per sample writer</td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>--bam-max-memory-gb</code></td>
-<td style="text-align: left;">Estimated memory budget in GiB (not an RSS ceiling)</td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>--bam-compression-level</code></td>
-<td style="text-align: left;">Gzip compression level (0–9; defaults to HTSlib)</td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>--bam-limit-memory</code></td>
-<td style="text-align: left;">Aborts execution if even one worker exceeds estimated budget</td>
-</tr>
-</tbody>
-</table>
-<p>If disk space or speed is a priority and downstream BAM inspection is not required, use <code>--no_bam</code> to skip BAM output entirely.</p>
-</details>
+<blockquote>
+<p><strong>Note:</strong> Only STAR alignment options are accepted; pipeline-managed arguments (input/output paths, thread counts, genome index) and unknown options are rejected during preflight validation. If disk space or speed is a priority and downstream BAM inspection is not required, use <code>--no_bam</code> to skip BAM output entirely.</p>
+</blockquote>
 <hr />
 <h2 id="reference-database-construction-mkref">Reference Database Construction (mkref) <a id="参考数据库构建-mkref"></a><a class="headerlink" href="#reference-database-construction-mkref" title="Permanent link">&para;</a></h2>
 <p><code>dnbc4tools rna mkref</code> builds a STAR index database from reference FASTA and GTF annotation files.</p>
 <h3 id="usage_1">Usage<a class="headerlink" href="#usage_1" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code>dnbc4tools<span class="w"> </span>rna<span class="w"> </span>mkref<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--fasta<span class="w"> </span>genome.fa<span class="w"> </span>--ingtf<span class="w"> </span>genes.gtf<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--species<span class="w"> </span>human<span class="w"> </span>--genomeDir<span class="w"> </span>/reference/rna<span class="w"> </span>--threads<span class="w"> </span><span class="m">16</span>
+<span class="w">  </span>--species<span class="w"> </span>human<span class="w"> </span>--genomeDir<span class="w"> </span>/reference/rna<span class="w"> </span>--threads<span class="w"> </span><span class="m">20</span>
 </code></pre></div>
 <h3 id="full-command-line-help_1">Full Command-Line Help<a class="headerlink" href="#full-command-line-help_1" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code>$<span class="w"> </span>dnbc4tools<span class="w"> </span>rna<span class="w"> </span>mkref<span class="w"> </span>--help
@@ -2311,7 +2343,7 @@ Advanced<span class="w"> </span>Settings:
 <td style="text-align: left;"><code>--limitram</code></td>
 <td style="text-align: left;">Integer (GiB)</td>
 <td style="text-align: left;">STAR default</td>
-<td style="text-align: left;">RAM limit in GiB for STAR index construction</td>
+<td style="text-align: left;">Maximum RAM limit during STAR genome index generation (in GiB); restricts memory usage during alignment, where lower memory allocation incurs higher processing time</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>--extra-args</code></td>
@@ -2341,26 +2373,29 @@ Advanced<span class="w"> </span>Settings:
     <div class="highlight"><pre><span></span><code>dnbc4tools<span class="w"> </span>rna<span class="w"> </span>mkref<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--fasta<span class="w"> </span>human.fa,mouse.fa<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--ingtf<span class="w"> </span>human.gtf,mouse.gtf<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--species<span class="w"> </span>human,mouse<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--genomeDir<span class="w"> </span>/ref/human_and_mouse
+<span class="w">  </span>--species<span class="w"> </span>human,mouse
 </code></pre></div></li>
 <li>Gene names and chromosomes are automatically prefixed with the species name (e.g., <code>human_GAPDH</code>, <code>mouse_Actb</code>) for clean cross-species separation.</li>
 </ul>
 <h4 id="2-directory-layout-refjson-metadata">2. Directory Layout &amp; <code>ref.json</code> Metadata<a class="headerlink" href="#2-directory-layout-refjson-metadata" title="Permanent link">&para;</a></h4>
-<p>A successfully built reference directory contains:</p>
+<p>A successfully built reference directory generates a standardized layout under <code>--genomeDir</code> (subdivided into <code>&lt;species&gt;/</code>, named <code>species1_and_species2</code> for dual-species references):</p>
+<ul>
+<li><strong>Database Compatibility</strong>: In addition to references built via <code>rna mkref</code> in the current version, <code>dnbc4tools rna run</code> is fully compatible with legacy v2 reference databases as well as standard Cell Ranger RNA reference directories (you can directly pass directories containing STAR index and annotations to <code>--genomeDir</code>).</li>
+</ul>
 <div class="highlight"><pre><span></span><code>genomeDir/
-├── fasta/
-│   └── genome.fa          # Unified processed FASTA sequence
-├── genes/
-│   └── genes.gtf          # Standardized gene annotation
-├── star/
-│   ├── SA                 # STAR genome index
-│   ├── SAindex            # STAR index parameters
-│   ├── chrLength.txt      # Chromosome lengths
-│   ├── chrName.txt        # Chromosome names
-│   ├── mtgene.list        # Mitochondrial gene list for QC
-│   └── genomeParameters.txt
-└── ref.json               # Reference configuration and provenance
+└── &lt;species&gt;/
+    ├── fasta/
+    │   └── genome.fa          # Unified processed FASTA sequence
+    ├── genes/
+    │   └── genes.gtf          # Standardized gene annotation
+    ├── star/
+    │   ├── SA                 # STAR genome index
+    │   ├── SAindex            # STAR index parameters
+    │   ├── chrLength.txt      # Chromosome lengths
+    │   ├── chrName.txt        # Chromosome names
+    │   ├── mtgene.list        # Mitochondrial gene list for QC
+    │   └── genomeParameters.txt
+    └── ref.json               # Reference configuration and provenance
 </code></pre></div>
 <p><strong>Single-Species <code>ref.json</code> Example:</strong></p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
@@ -2402,7 +2437,7 @@ Advanced<span class="w"> </span>Settings:
 <h2 id="multi-sample-workflow-multi">Multi-Sample Workflow (multi) <a id="多样本操作-multi"></a><a class="headerlink" href="#multi-sample-workflow-multi" title="Permanent link">&para;</a></h2>
 <p><code>dnbc4tools rna multi</code> generates standalone executable shell scripts for each sample defined in a tab-separated list file. It does not launch analyses automatically.</p>
 <h3 id="usage_2">Usage<a class="headerlink" href="#usage_2" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code>dnbc4tools<span class="w"> </span>rna<span class="w"> </span>multi<span class="w"> </span>--list<span class="w"> </span>samples.tsv<span class="w"> </span>--genomeDir<span class="w"> </span>/reference/rna<span class="w"> </span>--threads<span class="w"> </span><span class="m">16</span>
+<div class="highlight"><pre><span></span><code>dnbc4tools<span class="w"> </span>rna<span class="w"> </span>multi<span class="w"> </span>--list<span class="w"> </span>samples.tsv<span class="w"> </span>--genomeDir<span class="w"> </span>/reference/rna<span class="w"> </span>--threads<span class="w"> </span><span class="m">20</span>
 </code></pre></div>
 <h3 id="full-command-line-help_2">Full Command-Line Help<a class="headerlink" href="#full-command-line-help_2" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code>$<span class="w"> </span>dnbc4tools<span class="w"> </span>rna<span class="w"> </span>multi<span class="w"> </span>--help

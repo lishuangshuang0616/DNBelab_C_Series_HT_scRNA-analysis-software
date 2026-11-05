@@ -17,7 +17,7 @@ dnbc4tools atac run \
   --name sample1 \
   --fastqs /data/atac \
   --genomeDir /reference/atac \
-  --threads 16
+  --threads 20
 ```
 
 ### Full Command-Line Help
@@ -95,16 +95,18 @@ Choose one input mode: directory-based (`--fastqs`) or explicit files (`--fastq1
 | `--fastq1` | File path | None | Read 1 FASTQ file list (supports wildcards `*` or comma-separated paths) |
 | `--fastq2` | File path | None | Read 2 FASTQ file list (order must strictly match `--fastq1`) |
 
-> **Important:** All sequencing files in a single run must originate from the same library preparation and share consistent dark reaction cycles; files from different libraries cannot be merged.
+> **Tip: Sequencing Consistency & Batch Handling**
+> All FASTQ inputs in a single run must originate from the same library batch with identical sequencing modes and dark reaction settings; data from different libraries cannot be mixed.
+> If different sequencing batches of the same library batch exhibit differing dark reaction cycles or read lengths, use the FASTQ trimming tool [`fqsubC4`](tools.md#fastq-切割-fqsubc4) to trim reads to match the standard library structure (see [Library Structure](../library_structure.md#scatac)).
 
 #### Cell Calling & Bead Merging Settings
 
 | Option | Type | Default | Description |
 | :--- | :--- | :--- | :--- |
-| `--forcecells` | Integer | None | Forces the pipeline to retain exactly this number of cells (highest priority, overrides auto-calling) |
+| `--forcecells` | Integer | None | Forces the pipeline to retain exactly this number of cells (highest priority, overrides automatic calling). Barcodes are ranked in descending order of unique fragments, and the top N barcodes are selected |
 | `--frags_cutoff` | Integer | `0` (disabled) | Additional minimum total unique fragments for called cells; `0` disables this extra filter while still running cell calling |
 | `--tss_cutoff` | Float | `0.0` (disabled) | Minimum TSS proportion threshold to retain a cell; `0` disables this filter (e.g., `0.2`) |
-| `--jaccard_cutoff` | Float \| `auto` | `auto` | Jaccard similarity threshold for bead merging (`auto` fits OTSU algorithm; or float in `[0,1]`) |
+| `--jaccard_cutoff` | Float \| `auto` | `auto` | Jaccard similarity threshold for bead merging (`auto` estimated via OTSU algorithm, clamped at 0.02 if estimated below 0.02; or manual 0–1 float value) |
 | `--merge_cutoff` | Integer | `500` | Minimum unique fragments per bead for initial bead-merge candidates |
 
 #### Library Chemistry & Read Structure
@@ -118,8 +120,7 @@ Choose one input mode: directory-based (`--fastqs`) or explicit files (`--fastq1
 
 | Option | Type | Default | Description |
 | :--- | :--- | :--- | :--- |
-| `--peak_signal` | Choice | `cutsite` | MACS2 peak calling input signal: `cutsite` (Tn5-adjusted cut sites) or `fragment` (full fragments) |
-| `--need_bam` | Flag | Disabled | Enables generation of aligned BAM files (increases runtime and disk usage by 30%–50%) |
+| `--need_bam` | Flag | Disabled | Enables generation of aligned BAM files (increases runtime and disk usage by 30%–50%). Note: Due to slight discrepancies in how Chromap produces BED versus BAM outputs, enabling `--need_bam` may introduce minor differences in downstream analysis results |
 | `--sample_read_pairs` | Integer | None | Subsample a specified number of read pairs for rapid benchmarking |
 
 ---
@@ -145,65 +146,31 @@ fastq_directory/
 
 Single-cell ATAC-seq exhibits droplet bead co-encapsulation. The pipeline applies a two-stage merging and filtering strategy:
 
-```mermaid
-flowchart TD
-    RawBeads["Raw Bead Barcodes"] --> FilterMerge["merge_cutoff (Default 500 frags)<br/>Initial candidate bead filter"]
-    FilterMerge --> Jaccard["Jaccard Similarity Calculation<br/>(jaccard_cutoff: auto/OTSU)"]
-    Jaccard --> MergedCells["Beads merged into candidate cells"]
-    MergedCells --> CellCalling["Cell Calling (ordmag / NB)"]
-    CellCalling --> ExtraQC{"Additional QC Thresholds<br/>frags_cutoff & tss_cutoff"}
-    ExtraQC --> FinalCells["Final High-Quality Cells"]
-```
+<div style="text-align: center; margin: 20px 0;">
+  <img src="../images/atac_bead_cell_calling_en.svg" alt="scATAC Bead Merging & Multi-Level Quality Control Workflow" style="max-width: 100%; border-radius: 8px; box-shadow: 0 4px 14px rgba(0,0,0,0.06);" />
+</div>
 
 - **`--merge_cutoff`**: Threshold for beads to enter Jaccard similarity calculation (default 500). For lower-depth datasets, decrease to 200 to capture more beads.
-- **`--jaccard_cutoff`**: Jaccard index cutoff measuring genomic accessibility overlap between beads. Default `auto` estimates the bimodal threshold via OTSU.
+- **`--jaccard_cutoff`**: Jaccard similarity index measuring genomic accessibility overlap between beads. Default `auto` dynamically estimates the bimodal threshold via the OTSU algorithm (clamped at 0.02 if the calculated threshold falls below 0.02 to prevent over-merging); can also be manually specified as a float between 0 and 1.
+- **`--forcecells`**: If automatic cell calling does not meet expectations, supply an integer to force the pipeline to retain exactly this number of cells. Barcodes are ranked in descending order of unique fragments, and the top N cells are retained directly.
 - **`--frags_cutoff` & `--tss_cutoff`**: Downstream supplementary QC filters. Setting them to `0` leaves filtering to the cell calling algorithm. If damaged nuclei debris remains in the report, activate manual cutoffs (e.g., `--frags_cutoff 1000 --tss_cutoff 0.1`).
+- **`--need_bam` & Alignment Differences Note**: Chromap's direct BED export differs slightly from its SAM/BAM generation and subsequent fragment extraction pipeline in terms of fragment shifting (Tn5 shift) and deduplication boundaries. Consequently, enabling `--need_bam` may produce minor variations in downstream metrics (such as fragment counts and cell statistics), which is expected behavior.
 
-#### 3. Dark Reaction & Custom Read Structure
+#### 3. Dark Reaction & Custom Read Structure <a id="darkreaction"></a>
+
+> **Library Structure Reference**: For complete ATAC library adapter architecture, extension sequences, and dark reaction schematics, see [Library Structure](../library_structure.md#scatac).
 
 - **`--darkreaction`**: Select based on MGI sequencer chemistry:
   - `auto`: Automatically detected from base compositions
   - `R1R2`: Dark cycles on both Read 1 and Read 2
   - `R1`: Dark cycles only on Read 1
   - `R2`: Dark cycles only on Read 2
-  - `unset`: No dark reactions (standard sequencing or Illumina)
+  - `unset`: No dark reactions (standard sequencing mode)
 - **`--customize`**: Defines exact 1-based intervals for barcodes and reads (overrides darkreaction):
   ```bash
   # Structure: CB1(7-16bp), CB2(23-32bp), R1(66-115bp), R2(20-69bp)
   --customize "cb,R1:7-16;cb,R1:23-32;R1,R1:66-115;R2,R2:20-69"
   ```
-
-#### 4. Peak Calling Signal & Matrix Count Modes
-
-- **Peak Signal (`--peak_signal`)**:
-  - `cutsite` (Default): Uses the two Tn5-adjusted endpoints as MACS2 BED tags, providing higher spatial resolution and sensitivity.
-  - `fragment`: Uses full BEDPE fragments.
-- **Matrix Counting Mode**: Peak calling input signal and matrix quantification are configured independently. Peak calling uses all merged deduplicated fragments, while cell calling, FRIP, and TSS proportion are strictly quantified using unique fragments.
-
-#### 5. Default Settings & Advanced Parameters <a id="v32-defaults"></a>
-
-| Option | Default | Description |
-| :--- | :--- | :--- |
-| `--frags_cutoff` | `0` | Disables additional minimum unique fragment threshold; standard cell calling remains active |
-| `--tss_cutoff` | `0.0` | Disables TSS proportion threshold (note: this is proportion, not TSS enrichment) |
-| `--merge_cutoff` | `500` | Minimum unique fragments per bead for initial merging candidacy |
-| `--jaccard_cutoff` | Auto | OTSU estimated cutoff; equivalent to omitting the option; valid values in `[0,1]` |
-| `--peak_signal` | `cutsite` | Uses Tn5-adjusted cutsite endpoints as MACS2 BED tags; `fragment` uses full BEDPE |
-
-<details markdown="block">
-<summary>Advanced Settings: Underlying Cell Calling & Counting Options</summary>
-
-These advanced options are hidden in standard help and can be specified when customized tuning is needed:
-
-| Option | Default Behavior |
-| :--- | :--- |
-| `--cell_calling_method` | `ordmag`; choices: `barcoderanks`, `nb`. Falls back to ordmag/barcoderanks if NB fitting fails |
-| `--peak_fragments` | `all`, detects peaks using all merged deduplicated fragments; `filtered` uses candidate subsets |
-| `--matrix_count_mode` | `cutsite`, counts left and right cut sites inside peaks; `fragment` counts overlapping unique fragments |
-| `--atac_exclusion_policy` | `apply`, applies low-targeting filtering before calling; `audit` logs only; `off` disables |
-| `--bead_rescue` | Disabled experimental singleton rescue switch |
-
-</details>
 
 ---
 
@@ -334,7 +301,7 @@ genomeDir/
 ### Usage
 
 ```bash
-dnbc4tools atac multi --list samples.tsv --genomeDir /reference/atac --threads 16
+dnbc4tools atac multi --list samples.tsv --genomeDir /reference/atac --threads 20
 ```
 
 ### Full Command-Line Help

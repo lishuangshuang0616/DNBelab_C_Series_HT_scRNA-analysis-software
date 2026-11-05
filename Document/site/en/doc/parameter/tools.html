@@ -1499,6 +1499,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../library_structure.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Library Structure
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../installation_previous.html" class="md-nav__link">
         
   
@@ -1809,7 +1837,7 @@
 
 <h1 id="tools-parameters">Tools Parameters<a class="headerlink" href="#tools-parameters" title="Permanent link">&para;</a></h1>
 <p>DNBelab C Series HT Auxiliary Tools Parameter Reference</p>
-<p>The primary public subcommand under <code>dnbc4tools tools</code> is <code>mkgtf</code>. The auxiliary utilities <code>bam2fastq</code>, <code>chromsplit</code>, and <code>fqsubC4</code> described below are standalone executables whose availability depends on your environment.</p>
+<p>The public subcommand of <code>dnbc4tools tools</code> is <code>mkgtf</code>. The following <code>bam2fastq</code>, <code>chromsplit</code>, and <code>fqsubC4</code> are standalone auxiliary tools located in the software <code>misc</code> directory, not subcommands of <code>dnbc4tools tools</code>.</p>
 <h2 id="gtf-processing-mkgtf">GTF Processing (mkgtf) <a id="gtf-文件操作-mkgtf"></a><a class="headerlink" href="#gtf-processing-mkgtf" title="Permanent link">&para;</a></h2>
 <blockquote>
 <p><strong>Core Function</strong></p>
@@ -1894,12 +1922,6 @@ Usage<span class="w"> </span>Examples:
 <td style="text-align: left;"><code>gene</code></td>
 <td style="text-align: left;">Target feature level in GTF (usually <code>gene</code>; fallback to <code>transcript</code> if absent)</td>
 </tr>
-<tr>
-<td style="text-align: left;"><code>--conflict-policy</code></td>
-<td style="text-align: left;">Choice</td>
-<td style="text-align: left;"><code>error</code></td>
-<td style="text-align: left;">Policy for parent gene/transcript conflicts in <code>check</code> mode: <code>error</code> (abort) or <code>warn</code> (log &amp; retain)</td>
-</tr>
 </tbody>
 </table>
 <hr />
@@ -1927,27 +1949,33 @@ Usage<span class="w"> </span>Examples:
 <hr />
 <h2 id="bam-to-fastq-bam2fastq">BAM to FASTQ (bam2fastq) <a id="bam-转-fastq-bam2fastq"></a><a class="headerlink" href="#bam-to-fastq-bam2fastq" title="Permanent link">&para;</a></h2>
 <blockquote>
-<p><strong>Conversion Utility</strong></p>
-<p>Converts aligned C4 RNA BAM files back into FASTQ format with multi-threaded parallel compression and targeted genomic slicing.</p>
+<p><strong>Conversion Utility (Located in Software <code>misc</code> Directory)</strong></p>
+<p>Converts C4 cDNA and C4/C6 oligo BAM files back into FASTQ format. Features coordinate/name-sorted input handling, automatic single/paired-end detection, C4 vs. C6 double-UMI layout recognition, multi-threaded parallel compression, and genomic locus extraction.</p>
 </blockquote>
 <h3 id="usage_1">Usage <a id="usage-bam2fastq"></a><a class="headerlink" href="#usage_1" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code>$<span class="w"> </span>bam2fastq<span class="w"> </span>--help
-BAM<span class="w"> </span>to<span class="w"> </span>FASTQ<span class="w"> </span>Converter<span class="w"> </span><span class="k">for</span><span class="w"> </span>C4<span class="w"> </span>Single<span class="w"> </span>Cell<span class="w"> </span>RNA<span class="w"> </span>seq<span class="w"> </span>Data
+A<span class="w"> </span>BAM<span class="w"> </span>to<span class="w"> </span>FASTQ<span class="w"> </span>converter<span class="w"> </span><span class="k">for</span><span class="w"> </span>C4<span class="w"> </span>cDNA<span class="w"> </span>and<span class="w"> </span>C4/C6<span class="w"> </span>oligo<span class="w"> </span>data<span class="w"> </span><span class="o">(</span>DNBelab<span class="w"> </span>C4<span class="w"> </span>/<span class="w"> </span>DNBC4tools<span class="o">)</span>
 
 Usage:<span class="w"> </span>bam2fastq<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span><span class="w"> </span>&lt;BAM&gt;<span class="w"> </span>&lt;OUTPUT&gt;
 
 Arguments:
 <span class="w">  </span>&lt;BAM&gt;<span class="w">     </span>Path<span class="w"> </span>to<span class="w"> </span>the<span class="w"> </span>input<span class="w"> </span>BAM<span class="w"> </span>file
-<span class="w">  </span>&lt;OUTPUT&gt;<span class="w">  </span>Directory<span class="w"> </span>where<span class="w"> </span>FASTQ<span class="w"> </span>files<span class="w"> </span>will<span class="w"> </span>be<span class="w"> </span>written
+<span class="w">  </span>&lt;OUTPUT&gt;<span class="w">  </span>Output<span class="w"> </span>directory<span class="w"> </span><span class="k">for</span><span class="w"> </span>FASTQ<span class="w"> </span>files
 
 Options:
-<span class="w">  </span>--threads<span class="w"> </span>&lt;THREADS&gt;<span class="w">        </span>Number<span class="w"> </span>of<span class="w"> </span>CPU<span class="w"> </span>threads<span class="w"> </span><span class="k">for</span><span class="w"> </span>parallel<span class="w"> </span>processing<span class="w"> </span><span class="o">[</span>default:<span class="w"> </span><span class="m">8</span><span class="o">]</span>
-<span class="w">  </span>--locus<span class="w"> </span>&lt;REGION&gt;<span class="w">           </span>Process<span class="w"> </span>reads<span class="w"> </span>from<span class="w"> </span>a<span class="w"> </span>specific<span class="w"> </span>genomic<span class="w"> </span>region<span class="w"> </span><span class="o">(</span>format:<span class="w"> </span>chr1:1000-2000<span class="o">)</span>
-<span class="w">  </span>--reads-per-fastq<span class="w"> </span>&lt;READS&gt;<span class="w">  </span>Maximum<span class="w"> </span>number<span class="w"> </span>of<span class="w"> </span>reads<span class="w"> </span>per<span class="w"> </span>FASTQ<span class="w"> </span>file.<span class="w"> </span>All<span class="w"> </span>reads<span class="w"> </span>go<span class="w"> </span>to<span class="w"> </span>a<span class="w"> </span>single<span class="w"> </span>file<span class="w"> </span><span class="k">if</span><span class="w"> </span>not<span class="w"> </span>specified.
-<span class="w">  </span>--max-memory<span class="w"> </span>&lt;MEMORY&gt;<span class="w">      </span>Maximum<span class="w"> </span>memory<span class="w"> </span>to<span class="w"> </span>use<span class="w"> </span><span class="k">in</span><span class="w"> </span>MB.<span class="w"> </span>Auto-determined<span class="w"> </span><span class="k">if</span><span class="w"> </span>not<span class="w"> </span>specified.
-<span class="w">  </span>--no-compress<span class="w">              </span>Disable<span class="w"> </span>gzip<span class="w"> </span>compression<span class="w"> </span><span class="k">for</span><span class="w"> </span>output<span class="w"> </span>FASTQ<span class="w"> </span>files
-<span class="w">  </span>--help<span class="w">                     </span>Print<span class="w"> </span><span class="nb">help</span>
-<span class="w">  </span>--version<span class="w">                  </span>Print<span class="w"> </span>version
+<span class="w">  </span>-t,<span class="w"> </span>--threads<span class="w"> </span>&lt;THREADS&gt;<span class="w">            </span>Number<span class="w"> </span>of<span class="w"> </span>CPU<span class="w"> </span>threads<span class="w"> </span><span class="k">for</span><span class="w"> </span>parallel<span class="w"> </span>processing<span class="w"> </span><span class="o">[</span>default:<span class="w"> </span>auto,<span class="w"> </span>all<span class="w"> </span>available<span class="w"> </span>cores<span class="o">]</span>
+<span class="w">  </span>-r,<span class="w"> </span>--locus<span class="w"> </span>&lt;REGION&gt;<span class="w">               </span>Process<span class="w"> </span>a<span class="w"> </span>zero-based,<span class="w"> </span>half-open<span class="w"> </span>region,<span class="w"> </span>e.g.<span class="w"> </span>chr1:1000-2000
+<span class="w">  </span>-n,<span class="w"> </span>--reads-per-fastq<span class="w"> </span>&lt;READS&gt;<span class="w">      </span>Maximum<span class="w"> </span>reads<span class="w"> </span>per<span class="w"> </span>output<span class="w"> </span>FASTQ<span class="w"> </span>file
+<span class="w">      </span>--max-memory<span class="w"> </span>&lt;MEMORY&gt;<span class="w">          </span>Working-memory<span class="w"> </span>target<span class="w"> </span><span class="k">in</span><span class="w"> </span>MiB<span class="p">;</span><span class="w"> </span>defaults<span class="w"> </span>to<span class="w"> </span>half<span class="w"> </span>available<span class="w"> </span>system<span class="w"> </span>memory
+<span class="w">      </span>--no-compress<span class="w">                  </span>Disable<span class="w"> </span>gzip<span class="w"> </span>compression<span class="w"> </span><span class="o">(</span>outputs<span class="w"> </span>.fastq<span class="w"> </span>instead<span class="w"> </span>of<span class="w"> </span>.fastq.gz<span class="o">)</span>
+<span class="w">      </span>--library-type<span class="w"> </span>&lt;TYPE&gt;<span class="w">          </span>Detect<span class="w"> </span>from<span class="w"> </span>BAM<span class="w"> </span>metadata/tags<span class="p">;</span><span class="w"> </span>override<span class="w"> </span>with<span class="w"> </span>cDNA<span class="w"> </span>or<span class="w"> </span>oligo<span class="w"> </span><span class="o">[</span>default:<span class="w"> </span>auto<span class="o">]</span>
+<span class="w">      </span>--oligo-layout<span class="w"> </span>&lt;LAYOUT&gt;<span class="w">        </span>Detect<span class="w"> </span>oligo<span class="w"> </span>layout<span class="p">;</span><span class="w"> </span>override<span class="w"> </span>with<span class="w"> </span>c4<span class="w"> </span>or<span class="w"> </span>c6<span class="w"> </span><span class="o">[</span>default:<span class="w"> </span>auto<span class="o">]</span>
+<span class="w">      </span>--relaxed<span class="w">                      </span>Skip<span class="w"> </span>unmatched/duplicate<span class="w"> </span>mate<span class="w"> </span>records<span class="w"> </span>with<span class="w"> </span>summary<span class="w"> </span>counts<span class="w"> </span><span class="o">[</span>default:<span class="w"> </span>true<span class="o">]</span>
+<span class="w">      </span>--auto-detect<span class="w">                  </span>Detect<span class="w"> </span>cDNA<span class="w"> </span>paired-end<span class="w"> </span>status<span class="w"> </span>from<span class="w"> </span>sampled<span class="w"> </span>flags<span class="w"> </span><span class="o">[</span>default:<span class="w"> </span>true<span class="o">]</span>
+<span class="w">      </span>--bx-list<span class="w"> </span>&lt;FILE&gt;<span class="w">               </span>Filter<span class="w"> </span>cDNA<span class="w"> </span>by<span class="w"> </span>a<span class="w"> </span>barcode<span class="w"> </span>list<span class="p">;</span><span class="w"> </span>requires<span class="w"> </span>BX-sorted<span class="w"> </span>BAM<span class="w"> </span>and<span class="w"> </span>.bam.bxi<span class="w"> </span>index
+<span class="w">      </span>--traceback<span class="w">                    </span>Show<span class="w"> </span>detailed<span class="w"> </span>error<span class="w"> </span>context<span class="w"> </span>and<span class="w"> </span>traceback<span class="w"> </span><span class="o">[</span>default:<span class="w"> </span>false<span class="o">]</span>
+<span class="w">  </span>-h,<span class="w"> </span>--help<span class="w">                         </span>Print<span class="w"> </span><span class="nb">help</span>
+<span class="w">  </span>-V,<span class="w"> </span>--version<span class="w">                      </span>Print<span class="w"> </span>version
 </code></pre></div>
 <h3 id="parameter-reference-tables_1">Parameter Reference Tables<a class="headerlink" href="#parameter-reference-tables_1" title="Permanent link">&para;</a></h3>
 <table>
@@ -1964,55 +1992,100 @@ Options:
 <td style="text-align: left;"><code>&lt;BAM&gt;</code></td>
 <td style="text-align: left;">File path</td>
 <td style="text-align: left;"><strong>Required (Positional)</strong></td>
-<td style="text-align: left;">Valid BAM file path (must have <code>.bai</code> index; paired-end must be queryname-sorted)</td>
+<td style="text-align: left;">Path to input BAM (coordinate-sorted or name-sorted cDNA BAM, or <code>c4_oligo</code> BAM)</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>&lt;OUTPUT&gt;</code></td>
-<td style="text-align: left;">Directory</td>
+<td style="text-align: left;">Directory path</td>
 <td style="text-align: left;"><strong>Required (Positional)</strong></td>
-<td style="text-align: left;">Target directory where FASTQ files will be written (created if absent)</td>
+<td style="text-align: left;">Directory where output FASTQ files will be written</td>
 </tr>
 <tr>
-<td style="text-align: left;"><code>--threads</code></td>
-<td style="text-align: left;">Integer</td>
-<td style="text-align: left;"><code>8</code></td>
-<td style="text-align: left;">Number of CPU threads for parallel processing</td>
+<td style="text-align: left;"><code>-t, --threads</code></td>
+<td style="text-align: left;">Integer / <code>auto</code></td>
+<td style="text-align: left;"><code>auto</code></td>
+<td style="text-align: left;">Number of CPU threads for parallel processing (default: all available cores)</td>
 </tr>
 <tr>
-<td style="text-align: left;"><code>--locus</code></td>
+<td style="text-align: left;"><code>-r, --locus</code></td>
 <td style="text-align: left;">String</td>
 <td style="text-align: left;">None</td>
-<td style="text-align: left;">Extract reads only from a specific genomic region (<code>chr1:1000-2000</code>)</td>
+<td style="text-align: left;">Process a zero-based, half-open region, e.g. <code>chr1:1000-2000</code> (requires <code>.bai</code> index)</td>
 </tr>
 <tr>
-<td style="text-align: left;"><code>--reads-per-fastq</code></td>
+<td style="text-align: left;"><code>-n, --reads-per-fastq</code></td>
 <td style="text-align: left;">Integer</td>
-<td style="text-align: left;">All-in-one</td>
-<td style="text-align: left;">Maximum number of reads per FASTQ chunk file</td>
+<td style="text-align: left;">None (single file)</td>
+<td style="text-align: left;">Maximum reads per output FASTQ chunk file; splits output when exceeded</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>--max-memory</code></td>
-<td style="text-align: left;">Integer (MB)</td>
+<td style="text-align: left;">Integer (MiB)</td>
 <td style="text-align: left;">Auto</td>
-<td style="text-align: left;">Maximum memory budget in MB</td>
+<td style="text-align: left;">Working-memory target in MiB (defaults to half available system memory; not an RSS ceiling)</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>--no-compress</code></td>
 <td style="text-align: left;">Flag</td>
 <td style="text-align: left;">Disabled</td>
-<td style="text-align: left;">Disable gzip compression (outputs <code>.fastq</code> directly for fastest I/O)</td>
+<td style="text-align: left;">Disable gzip compression (outputs <code>.fastq</code> directly for fastest writing speed)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>--library-type</code></td>
+<td style="text-align: left;">Choice</td>
+<td style="text-align: left;"><code>auto</code></td>
+<td style="text-align: left;">Detect from BAM metadata/tags; override with <code>cDNA</code> or <code>oligo</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>--oligo-layout</code></td>
+<td style="text-align: left;">Choice</td>
+<td style="text-align: left;"><code>auto</code></td>
+<td style="text-align: left;">Detect oligo layout; override with <code>c4</code> or <code>c6</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>--relaxed</code></td>
+<td style="text-align: left;">Boolean</td>
+<td style="text-align: left;"><code>true</code></td>
+<td style="text-align: left;">Skip unmatched/duplicate mate records with summary counts; <code>false</code> requires complete pairs</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>--auto-detect</code></td>
+<td style="text-align: left;">Boolean</td>
+<td style="text-align: left;"><code>true</code></td>
+<td style="text-align: left;">Detect cDNA paired-end status from sampled flags; <code>false</code> selects single-ended conversion</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>--bx-list</code></td>
+<td style="text-align: left;">File path</td>
+<td style="text-align: left;">None</td>
+<td style="text-align: left;">Filter cDNA by a barcode list (requires BX-sorted BAM and <code>.bam.bxi</code> index)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>--traceback</code></td>
+<td style="text-align: left;">Flag</td>
+<td style="text-align: left;">Disabled</td>
+<td style="text-align: left;">Show detailed error context and traceback</td>
 </tr>
 </tbody>
 </table>
 <h3 id="practical-examples">Practical Examples<a class="headerlink" href="#practical-examples" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># Standard conversion</span>
-bam2fastq<span class="w"> </span>anno_decon_sorted.bam<span class="w"> </span>./fastq_out
+<div class="highlight"><pre><span></span><code><span class="c1"># Basic conversion (auto-detects paired-end/single-end and library type, uses all available cores)</span>
+bam2fastq<span class="w"> </span>sample.bam<span class="w"> </span>./output/
 
-<span class="c1"># Extract specific region with parallel compression</span>
-bam2fastq<span class="w"> </span>--threads<span class="w"> </span><span class="m">16</span><span class="w"> </span>--locus<span class="w"> </span>chr1:1000000-5000000<span class="w"> </span>anno_decon_sorted.bam<span class="w"> </span>./fastq_out
+<span class="c1"># Custom thread budget</span>
+bam2fastq<span class="w"> </span>-t<span class="w"> </span><span class="m">20</span><span class="w"> </span>sample.bam<span class="w"> </span>./output/
 
-<span class="c1"># Chunk into 10M reads per file</span>
-bam2fastq<span class="w"> </span>--reads-per-fastq<span class="w"> </span><span class="m">10000000</span><span class="w"> </span>anno_decon_sorted.bam<span class="w"> </span>./fastq_out
+<span class="c1"># Extract specific genomic region (requires .bai index)</span>
+bam2fastq<span class="w"> </span>-t<span class="w"> </span><span class="m">8</span><span class="w"> </span>-r<span class="w"> </span>chr1:1000000-2000000<span class="w"> </span>sample.bam<span class="w"> </span>./output_chr1/
+
+<span class="c1"># Disable compression for fastest write speed</span>
+bam2fastq<span class="w"> </span>-t<span class="w"> </span><span class="m">8</span><span class="w"> </span>--no-compress<span class="w"> </span>sample.bam<span class="w"> </span>./output/
+
+<span class="c1"># Chunk output into 50M reads per file</span>
+bam2fastq<span class="w"> </span>-t<span class="w"> </span><span class="m">20</span><span class="w"> </span>-n<span class="w"> </span><span class="m">50000000</span><span class="w"> </span>sample.bam<span class="w"> </span>./output/
+
+<span class="c1"># Convert Oligo BAM (auto-detects C4 single-UMI vs C6 double-UMI layout)</span>
+bam2fastq<span class="w"> </span>-t<span class="w"> </span><span class="m">20</span><span class="w"> </span>oligo.records.bam<span class="w"> </span>./output_oligo/
 </code></pre></div>
 <hr />
 <h2 id="chromosome-splitting-chromsplit">Chromosome Splitting (chromsplit) <a id="染色体分割-chromsplit"></a><a class="headerlink" href="#chromosome-splitting-chromsplit" title="Permanent link">&para;</a></h2>
