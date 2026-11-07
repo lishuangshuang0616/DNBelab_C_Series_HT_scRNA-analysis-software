@@ -1325,6 +1325,33 @@
   
   
     <li class="md-nav__item">
+      <a href="../troubleshooting.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    运行与排错
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../release.html" class="md-nav__link">
         
   
@@ -1387,10 +1414,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11" >
         
           
-          <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_11" id="__nav_11_label" tabindex="0">
             
   
   
@@ -1408,8 +1435,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_10">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_11">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -1454,14 +1481,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../troubleshooting.html" class="md-nav__link">
+      <a href="../glossary.html" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    运行与排错
+    术语表
   
 
     
@@ -2135,7 +2162,7 @@ Analysis<span class="w"> </span>Settings:
 <li><em>过高</em>：常因背景空滴多，可改用 <code>--forcecells &lt;N&gt;</code> 直接固定目标有效细胞数（系统将按候选条形码的总有效 UMI 计数降序排列，直接截取前 N 个细胞）。</li>
 </ul>
 <h4 id="3-consistent_cells">3. 外部细胞白名单约束 (<code>--consistent_cells</code>)<a class="headerlink" href="#3-consistent_cells" title="Permanent link">&para;</a></h4>
-<p>用于在细胞条形码合并与最终细胞判定阶段引入外部先验信息（例如跨组学对齐或历史金标准表）。文件为带表头的 CSV（支持 <code>.csv</code> 或 <code>.csv.gz</code>）：</p>
+<p>用于在细胞条形码合并与最终细胞识别阶段引入外部先验信息（例如跨组学对齐或历史金标准表）。文件为带表头的 CSV（支持 <code>.csv</code> 或 <code>.csv.gz</code>）：</p>
 <table>
 <thead>
 <tr>
@@ -2154,11 +2181,11 @@ Analysis<span class="w"> </span>Settings:
 </tr>
 <tr>
 <td style="text-align: left;"><code>cell,is_cell_barcode</code></td>
-<td style="text-align: left;">指定候选条形码并标注其是否作为细胞判定基准</td>
+<td style="text-align: left;">指定候选条形码并标注其是否作为细胞识别基准</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>cell,barcode,is_cell_barcode</code></td>
-<td style="text-align: left;">同时提供细胞与磁珠对应关系，并通过 <code>is_cell_barcode</code>（1/0 或 true/false）直接指定每个条形码的细胞判定状态（例如直接传入质控输出的 <code>singlecell.csv</code>）</td>
+<td style="text-align: left;">同时提供细胞与微珠对应关系，并通过 <code>is_cell_barcode</code>（1/0 或 true/false）直接指定每个条形码的细胞识别状态（例如直接传入质控输出的 <code>singlecell.csv</code>）</td>
 </tr>
 </tbody>
 </table>

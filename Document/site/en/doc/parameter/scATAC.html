@@ -607,7 +607,7 @@
   <span class="md-ellipsis">
     
   
-    Parameter
+    Parameters
   
 
     
@@ -623,7 +623,7 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    Parameter
+    Parameters
   
 
           </label>
@@ -1305,7 +1305,34 @@
   <span class="md-ellipsis">
     
   
-    I/O Analysis
+    Downstream Analysis
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../troubleshooting.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Running & Troubleshooting
   
 
     
@@ -1387,17 +1414,17 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11" >
         
           
-          <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_11" id="__nav_11_label" tabindex="0">
             
   
   
   <span class="md-ellipsis">
     
   
-    Additional
+    Additional Resources
   
 
     
@@ -1408,12 +1435,12 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_10">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_11">
             <span class="md-nav__icon md-icon"></span>
             
   
-    Additional
+    Additional Resources
   
 
           </label>
@@ -1454,14 +1481,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../troubleshooting.html" class="md-nav__link">
+      <a href="../glossary.html" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Running & Troubleshooting
+    Glossary
   
 
     
@@ -2055,9 +2082,9 @@ If different sequencing batches of the same library batch exhibit differing dark
 <p><img src="../images/atac_bead_cell_calling_en.svg" alt="scATAC Bead Merging & Multi-Level Quality Control Workflow" style="max-width: 100%; border-radius: 8px; box-shadow: 0 4px 14px rgba(0,0,0,0.06);" /></p>
 </div>
 <ul>
-<li><strong><code>--merge_cutoff</code></strong>: Threshold for beads to enter Jaccard similarity calculation (default 500). For lower-depth datasets, decrease to 200 to capture more beads.</li>
-<li><strong><code>--jaccard_cutoff</code></strong>: Jaccard similarity index measuring genomic accessibility overlap between beads. Default <code>auto</code> dynamically estimates the bimodal threshold via the OTSU algorithm (clamped at 0.02 if the calculated threshold falls below 0.02 to prevent over-merging); can also be manually specified as a float between 0 and 1.</li>
-<li><strong><code>--forcecells</code></strong>: If automatic cell calling does not meet expectations, supply an integer to force the pipeline to retain exactly this number of cells. Barcodes are ranked in descending order of unique fragments, and the top N cells are retained directly.</li>
+<li><strong><code>--merge_cutoff</code></strong>: Minimum unique fragments per bead required to participate in Jaccard similarity calculation (default: 500). This parameter <strong>only controls bead merging</strong>; beads with fewer than 500 fragments or beads without overlapping partners are retained intact as singleton cells and advance to downstream steps without being discarded. In low-depth libraries, this can be lowered (e.g. 200) to allow more beads to be evaluated for merging.</li>
+<li><strong><code>--jaccard_cutoff</code></strong>: Jaccard similarity cutoff measuring genomic accessibility overlap between beads. Defaults to <code>auto</code> (OTSU bimodal distribution estimation with a safety floor of 0.02 to prevent over-merging), or a float between 0–1. Beads with $\ge 500$ fragments that do not meet this cutoff are likewise preserved as singletons.</li>
+<li><strong><code>--forcecells</code></strong>: Forces retention of a specified number of authentic cells when automatic calling does not meet expectations. Cell calling evaluates the complete candidate pool (both merged multi-bead cells and all singleton beads), sorts candidates by unique fragments in descending order, and directly selects the top N cells.</li>
 <li><strong><code>--frags_cutoff</code> &amp; <code>--tss_cutoff</code></strong>: Downstream supplementary QC filters. Setting them to <code>0</code> leaves filtering to the cell calling algorithm. If damaged nuclei debris remains in the report, activate manual cutoffs (e.g., <code>--frags_cutoff 1000 --tss_cutoff 0.1</code>).</li>
 <li><strong><code>--need_bam</code> &amp; Alignment Differences Note</strong>: Chromap's direct BED export differs slightly from its SAM/BAM generation and subsequent fragment extraction pipeline in terms of fragment shifting (Tn5 shift) and deduplication boundaries. Consequently, enabling <code>--need_bam</code> may produce minor variations in downstream metrics (such as fragment counts and cell statistics), which is expected behavior.</li>
 </ul>

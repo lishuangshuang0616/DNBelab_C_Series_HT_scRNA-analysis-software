@@ -811,7 +811,7 @@
   <span class="md-ellipsis">
     
   
-    Parameter
+    Parameters
   
 
     
@@ -827,7 +827,7 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    Parameter
+    Parameters
   
 
           </label>
@@ -1272,7 +1272,34 @@
   <span class="md-ellipsis">
     
   
-    I/O Analysis
+    Downstream Analysis
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../troubleshooting.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Running & Troubleshooting
   
 
     
@@ -1354,17 +1381,17 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11" >
         
           
-          <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_11" id="__nav_11_label" tabindex="0">
             
   
   
   <span class="md-ellipsis">
     
   
-    Additional
+    Additional Resources
   
 
     
@@ -1375,12 +1402,12 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_10">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_11">
             <span class="md-nav__icon md-icon"></span>
             
   
-    Additional
+    Additional Resources
   
 
           </label>
@@ -1421,14 +1448,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../troubleshooting.html" class="md-nav__link">
+      <a href="../glossary.html" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Running & Troubleshooting
+    Glossary
   
 
     
@@ -1738,8 +1765,8 @@
 <h1 id="dnbelab-c-series-ht-multi-omics-analysis-pipeline">DNBelab C Series HT Multi-omics Analysis Pipeline<a class="headerlink" href="#dnbelab-c-series-ht-multi-omics-analysis-pipeline" title="Permanent link">&para;</a></h1>
 <p>Single-Cell Multi-omics Integrated Analysis Guide</p>
 <h2 id="overview">Overview <a id="overview"></a><a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-<p>The Multi-omics workflow unifies orchestration and generates combined reports; ATAC is analyzed independently and summarized, while RNA and VDJ support cell association analysis. A single configuration file coordinates all sub-pipelines and generates integrated reports for cross-omics inspection.</p>
-<p><strong>Workflow</strong>: Configuration → Module Dispatch → Parallel Analysis → Status Aggregation → Integrated Report</p>
+<p>The Multi-omics workflow unifies orchestration and generates combined reports; ATAC is analyzed independently and summarized, while RNA and VDJ support cell association analysis. A single configuration file coordinates all sub-pipelines and generates combined reports for cross-omics inspection.</p>
+<p><strong>Workflow</strong>: Configuration → Module Dispatch → Parallel Analysis → Status Aggregation → Combined Report</p>
 <div align="center" style="margin: 1.5em 0;">
 <p><img src="../images/multi_pipeline.png" alt="Multi-omics Pipeline Overview" width="800" style="max-width: 100%; height: auto;"></p>
 </div>
@@ -1764,8 +1791,8 @@
 <td style="text-align: left;">Module-level status management (success / failed / skipped / reused)</td>
 </tr>
 <tr>
-<td style="text-align: left;"><strong>Integrated Report</strong></td>
-<td style="text-align: left;">Generates integrated HTML report supporting cross-omics browsing and comparison</td>
+<td style="text-align: left;"><strong>Combined Report</strong></td>
+<td style="text-align: left;">Generates combined HTML report supporting cross-omics browsing and comparison</td>
 </tr>
 <tr>
 <td style="text-align: left;"><strong>Flexible Configuration</strong></td>
@@ -1955,11 +1982,13 @@ fastqs,feature_types
 </tbody>
 </table>
 <h3 id="execution-highlights">Execution Highlights<a class="headerlink" href="#execution-highlights" title="Permanent link">&para;</a></h3>
-<blockquote>
-<p><strong>Core Principles</strong>:
-- Multi handles "<strong>orchestration and aggregation</strong>"; module algorithms remain in each single-omics sub-pipeline.
-- A module failure <strong>will not</strong> invalidate other completed modules but will be reflected in the final status summary.</p>
-</blockquote>
+<div class="admonition note">
+<p class="admonition-title">Core Principles</p>
+<ul>
+<li>Multi handles "<strong>orchestration and aggregation</strong>"; module algorithms remain in each single-omics sub-pipeline.</li>
+<li>A module failure <strong>will not</strong> invalidate other completed modules but will be reflected in the final status summary.</li>
+</ul>
+</div>
 <h3 id="typical-runtime-log">Typical Runtime Log<a class="headerlink" href="#typical-runtime-log" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="o">====================================================================================================</span>
 Running<span class="w"> </span>checking<span class="w"> </span>libraries<span class="w"> </span>—<span class="w"> </span><span class="m">2026</span>-11-02<span class="w"> </span><span class="m">16</span>:43:37
@@ -2223,7 +2252,7 @@ Analysis<span class="w"> </span>finished<span class="w"> </span>successfully!
 <p>After completion, results are organized under <code>&lt;outdir&gt;/&lt;name&gt;/</code>:</p>
 <div class="highlight"><pre><span></span><code>&lt;outdir&gt;/&lt;name&gt;/
 ├── outs/                                    # Organized output results
-│   ├── &lt;sample&gt;_multi_report.html           # Multi-omics integrated report
+│   ├── &lt;sample&gt;_multi_report.html           # Multi-omics combined report
 │   ├── rna/                                 # RNA results (if enabled)
 │   ├── atac/                                # ATAC results (if enabled)
 │   ├── vdj-t/                               # VDJ-T results (if enabled)
@@ -2247,7 +2276,7 @@ Analysis<span class="w"> </span>finished<span class="w"> </span>successfully!
 <tbody>
 <tr>
 <td style="text-align: left;"><code>outs/&lt;sample&gt;_multi_report.html</code></td>
-<td style="text-align: left;">Multi-omics integrated report displaying core QC and analysis charts from all modules</td>
+<td style="text-align: left;">Multi-omics combined report displaying core QC and analysis charts from all modules</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>outs/rna/</code></td>
@@ -2268,7 +2297,7 @@ Analysis<span class="w"> </span>finished<span class="w"> </span>successfully!
 </tbody>
 </table>
 <blockquote>
-<p><strong>Detailed Output Description</strong>: Please refer to the <a href="../outs/multi.html">Multi Output Documentation</a> for detailed interpretation of the integrated report.</p>
+<p><strong>Detailed Output Description</strong>: Please refer to the <a href="../outs/multi.html">Multi Output Documentation</a> for detailed interpretation of the combined report.</p>
 </blockquote>
 
 

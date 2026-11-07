@@ -11,10 +11,10 @@
       
       
       
-        <link rel="prev" href="migration.html">
+        <link rel="prev" href="io.html">
       
       
-        <link rel="next" href="library_structure.html">
+        <link rel="next" href="release.html">
       
       
         
@@ -1083,137 +1083,6 @@
       
   
   
-  
-  
-    <li class="md-nav__item">
-      <a href="release.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    版本说明
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="dataset.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    数据集
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-    
-      
-      
-  
-  
-    
-  
-  
-  
-    
-    
-    
-    
-    
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" checked>
-        
-          
-          <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="0">
-            
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    附加
-  
-
-    
-  </span>
-  
-  
-
-            <span class="md-nav__icon md-icon"></span>
-          </label>
-        
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="true">
-          <label class="md-nav__title" for="__nav_10">
-            <span class="md-nav__icon md-icon"></span>
-            
-  
-    附加
-  
-
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="migration.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    升级指南
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
     
   
   
@@ -1276,21 +1145,77 @@
   <a href="#_2" class="md-nav__link">
     <span class="md-ellipsis">
       
-        运行前
+        运行前检查与预检机制
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="运行前检查与预检机制">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. 基础环境核验
       
     </span>
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#_3" class="md-nav__link">
+        
+          <li class="md-nav__item">
+  <a href="#2" class="md-nav__link">
     <span class="md-ellipsis">
       
-        错误信息
+        2. 预检快照与运行锁
       
     </span>
   </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#logs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        日志系统与 logs 目录结构
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="日志系统与 logs 目录结构">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#logs_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        logs 目录结构总览
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        核心日志文件详解
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -1298,7 +1223,7 @@
   <a href="#_4" class="md-nav__link">
     <span class="md-ellipsis">
       
-        现有产物检查（高级诊断）
+        错误代码分类与排查指南
       
     </span>
   </a>
@@ -1309,7 +1234,46 @@
   <a href="#_5" class="md-nav__link">
     <span class="md-ellipsis">
       
-        中断、恢复与空结果
+        典型故障排障步骤示例
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="典型故障排障步骤示例">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-tool" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        场景 1：流程报 TOOL 错误，终端仅显示命令退出码非零
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        场景 2：集群任务超时被杀或意外中断后断点续跑
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#validate-artifacts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        现有产物检查与高级诊断 (validate-artifacts)
       
     </span>
   </a>
@@ -1320,6 +1284,162 @@
   
 </nav>
       
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="release.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    版本说明
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="dataset.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    数据集
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11" >
+        
+          
+          <label class="md-nav__link" for="__nav_11" id="__nav_11_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    附加
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_11">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    附加
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="migration.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    升级指南
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="glossary.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    术语表
+  
+
+    
+  </span>
+  
+  
+
+      </a>
     </li>
   
 
@@ -1444,21 +1564,77 @@
   <a href="#_2" class="md-nav__link">
     <span class="md-ellipsis">
       
-        运行前
+        运行前检查与预检机制
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="运行前检查与预检机制">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. 基础环境核验
       
     </span>
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#_3" class="md-nav__link">
+        
+          <li class="md-nav__item">
+  <a href="#2" class="md-nav__link">
     <span class="md-ellipsis">
       
-        错误信息
+        2. 预检快照与运行锁
       
     </span>
   </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#logs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        日志系统与 logs 目录结构
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="日志系统与 logs 目录结构">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#logs_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        logs 目录结构总览
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        核心日志文件详解
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -1466,7 +1642,7 @@
   <a href="#_4" class="md-nav__link">
     <span class="md-ellipsis">
       
-        现有产物检查（高级诊断）
+        错误代码分类与排查指南
       
     </span>
   </a>
@@ -1477,7 +1653,46 @@
   <a href="#_5" class="md-nav__link">
     <span class="md-ellipsis">
       
-        中断、恢复与空结果
+        典型故障排障步骤示例
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="典型故障排障步骤示例">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-tool" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        场景 1：流程报 TOOL 错误，终端仅显示命令退出码非零
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        场景 2：集群任务超时被杀或意外中断后断点续跑
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#validate-artifacts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        现有产物检查与高级诊断 (validate-artifacts)
       
     </span>
   </a>
@@ -1502,58 +1717,194 @@
 
 
 <h1 id="_1">运行与排错<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h1>
-<h2 id="_2">运行前<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
-<p>确认 <code>dnbc4tools --version</code> 为 <code>3.2</code>，输入 FASTQ 配对、参考和试剂配置正确，并使用与 Python 配套的原生工具。日志位于 <code>&lt;outdir&gt;/&lt;name&gt;/logs/</code>；RNA、ATAC、VDJ 启动后在 <code>preflight.json</code> 记录紧凑预检信息。已有处理目录或 <code>outs</code> 会记录在预检中；需要全新分析时使用新的样本名。</p>
-<p><code>rna multi</code> / <code>atac multi</code> 仅生成当前目录中的 <code>.sh</code>，不创建分析日志；<code>multi run</code> 会真正执行分析并记录日志。批量列表必须用 TAB 分列、<code>;</code> 分隔 R1/R2、<code>,</code> 分隔同端多 lane。生成命令成功后再运行脚本。格式错误、重复样本、重复脚本名或已有同名脚本均报错；需要重新生成时先移动旧脚本。</p>
-<h2 id="_3">错误信息<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
-<p>命令失败时，<code>Error ID</code> 用于定位这一次错误，<code>Error code</code> 用于判断问题类别。保留终端错误、命令、配置 CSV 和 <code>logs/errors.jsonl</code>。</p>
+<p>本指南汇总了 DNBelab C Series™ 单细胞分析软件（<code>dnbc4tools</code>）在分析运行、日志审计、故障诊断及断点恢复等方面的核心知识与排查步骤。</p>
+<hr />
+<h2 id="_2">运行前检查与预检机制 <a id="运行前检查"></a><a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<h3 id="1">1. 基础环境核验<a class="headerlink" href="#1" title="Permanent link">&para;</a></h3>
+<p>在执行大规模分析前，请确保：
+* 软件版本确认：执行 <code>dnbc4tools --version</code>，确认为当前最新版本（如 <code>3.2</code>）；
+* 依赖工具完备：确保原生环境依赖（如 STAR、SAMtools、MACS2 等）在系统 <code>$PATH</code> 中可用；
+* 输入数据完整性：FASTQ 文件成对匹配、未发生意外损坏或截断（建议校验 MD5 值）；
+* 参考基因组正确性：确认使用的物种参考基因组（FASTA、GTF、STAR 索引）与实验物种及建库化学版本匹配。</p>
+<h3 id="2">2. 预检快照与运行锁<a class="headerlink" href="#2" title="Permanent link">&para;</a></h3>
+<p>流程启动初期会在内存与磁盘执行严格的预检（Preflight）：
+* <strong>环境预检快照 (<code>logs/preflight.json</code>)</strong>：记录流程解析出的执行线程数（<code>Threads</code>）、运行步骤（<code>Steps</code>）、参考基因组路径（<code>Reference</code>）、建库试剂体系（<code>Chemistry</code>）以及系统内存预算（<code>resource_budget</code>，包含当前可用物理内存与配置的内存上限）；
+* <strong>独占运行锁 (<code>logs/run.lock</code>)</strong>：流程运行期间会在输出日志目录下创建 <code>run.lock</code> 文件锁，防止针对同一输出目录的并发重复调用。若作业被非正常外部信号中断（如 <code>kill -9</code>），需在确认原作业彻底结束后再进行清理或重试。</p>
+<div class="admonition tip">
+<p class="admonition-title">脚本批量生成与执行说明</p>
+<ul>
+<li><code>dnbc4tools rna multi</code> 与 <code>atac multi</code> 命令仅负责根据输入列表在当前目录生成 <code>.sh</code> 批处理脚本，<strong>本身不创建分析日志目录</strong>；</li>
+<li>真正执行生成的 <code>.sh</code> 脚本（或直接调用 <code>multi run</code>）时，流程才会初始化输出目录、创建 <code>logs/</code> 结构并记录各分析阶段的详细日志。</li>
+<li>批量样本列表推荐使用纯文本制表符（TAB）分列，分号 <code>;</code> 分隔双端测序 R1 与 R2，逗号 <code>,</code> 分隔同端多 Lane 文件。</li>
+</ul>
+</div>
+<hr />
+<h2 id="logs">日志系统与 logs 目录结构 <a id="日志系统说明"></a><a class="headerlink" href="#logs" title="Permanent link">&para;</a></h2>
+<p>每次分析启动后，所有控制台输出、子进程外部命令调用、性能监控、结构化异常以及阶段完成状态均统一归档在 <code>&lt;outdir&gt;/&lt;name&gt;/logs/</code> 目录下。</p>
+<h3 id="logs_1">logs 目录结构总览<a class="headerlink" href="#logs_1" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>&lt;outdir&gt;/&lt;name&gt;/logs/
+├── YYYYMMDD.txt                          # 主执行日志文件 (按日期命名，记录全阶段详细输出)
+├── run_manifest.json                     # 运行清单审计日志 (记录各阶段状态、耗时与终止错误)
+├── preflight.json                        # 启动预检快照 (记录运行环境、参数与资源预算)
+├── errors.jsonl                          # 结构化错误追踪日志 (JSON Lines 格式，机器可读)
+├── run.lock                              # 运行独占文件锁 (防止同一目录多作业并发写冲突)
+├── report_model.snapshot.json            # 交互式网页报告完整数据模型快照
+├── runs/                                 # 历史运行审计归档目录
+│   └── &lt;run_id&gt;/                         # 单次调用的独立快照
+│       ├── run.json                      # 该次调用的参数与状态备份
+│       └── preflight.json                # 该次调用的预检配置备份
+├── stage_manifests/                      # 阶段执行清单与指纹校验 (断点续跑关键记录)
+│   └── &lt;pipeline&gt;.&lt;stage&gt;.json
+├── stage_completion/                     # 阶段成功完成轻量级指针标记
+│   └── &lt;pipeline&gt;.&lt;stage&gt;.json
+└── &lt;sample&gt;_upload.info                  # 分析日志与诊断压缩归档包 (供提供给 MGI 用于排查问题)
+</code></pre></div>
+<hr />
+<h3 id="_3">核心日志文件详解<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h3>
+<h4 id="1-logsyyyymmddtxt">1. 主日期执行日志 (<code>logs/YYYYMMDD.txt</code>)<a class="headerlink" href="#1-logsyyyymmddtxt" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>定位</strong>：流程运行的核心主日志，根据当前日期动态命名（如 <code>logs/20261106.txt</code>）。</li>
+<li><strong>格式规范</strong>：采用统一标准时间戳格式：
+  <div class="highlight"><pre><span></span><code>%(asctime)s - %(name)s - %(levelname)s - %(message)s
+</code></pre></div></li>
+<li><strong>记录内容</strong>：</li>
+<li>每个生信分析阶段（如 <code>data/QC</code>、<code>alignment</code>、<code>count</code>、<code>similarity</code>、<code>analysis</code>、<code>report</code> 等）的启动、传参、实时进展与完成状态；</li>
+<li>底层核心算法及外部工具（如 STAR 比对、SAMtools 排序、MACS2 寻峰）调用的确切命令行、工作路径及执行输出流；</li>
+<li>各阶段处理的细胞数、特征数、数据矩阵维度等生信统计值；</li>
+<li><strong>资源消耗与耗时分析</strong>：每个阶段完成时均会记录运行耗时（秒）。若开启了环境变量 <code>export DNBC4TOOLS_PROFILE_RESOURCES=1</code>，主日志中还会输出详细的 CPU 耗时与内存峰值统计（如 <code>process CPU user=142.50s, system=18.20s; process lifetime peak RSS=12.45 GiB</code>）。</li>
+</ul>
+<h4 id="2-logserrorsjsonl">2. 结构化错误追踪日志 (<code>logs/errors.jsonl</code>)<a class="headerlink" href="#2-logserrorsjsonl" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>定位</strong>：机器可读的结构化异常追踪日志，采用 JSON Lines 格式（一行一个独立 JSON 对象），是故障定位的最核心证据。</li>
+<li><strong>数据字段结构</strong>：
+  <div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">"timestamp"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2026-11-06T13:00:00.123+08:00"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"error_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"e4f1a23b9c0d"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"error_code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"TOOL"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"run_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"20261106T130000-12345-a1b2c3d4"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"sample"</span><span class="p">:</span><span class="w"> </span><span class="s2">"demo_sample"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"pipeline"</span><span class="p">:</span><span class="w"> </span><span class="s2">"rna"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"stage"</span><span class="p">:</span><span class="w"> </span><span class="s2">"align"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"fatal"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"error_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ToolExecutionError"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"message"</span><span class="p">:</span><span class="w"> </span><span class="s2">"STAR alignment failed with exit code 104"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"traceback"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Traceback (most recent call last):\n  File ...\nToolExecutionError: ..."</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"context"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"command"</span><span class="p">:</span><span class="w"> </span><span class="s2">"STAR --genomeDir /ref/STAR_index ..."</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"exit_code"</span><span class="p">:</span><span class="w"> </span><span class="mi">104</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"stderr_tail"</span><span class="p">:</span><span class="w"> </span><span class="s2">"EXITING because of FATAL ERROR: could not open genome file ..."</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></li>
+<li><strong>排查价值</strong>：终端报错时通常会输出 <code>Error ID: &lt;12位字符&gt;</code>。在 <code>errors.jsonl</code> 中检索该 <code>error_id</code>，可查看 Python 调用栈、失败的底层 Shell 命令以及标准错误输出尾部（<code>stderr_tail</code>）。</li>
+</ul>
+<h4 id="3-logsrun_manifestjson">3. 运行清单审计日志 (<code>logs/run_manifest.json</code>)<a class="headerlink" href="#3-logsrun_manifestjson" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>定位</strong>：当前样本分析执行状态的总清单，提供给自动化生产集群与下游质控流水线读取。</li>
+<li><strong>记录内容</strong>：</li>
+<li>全局运行状态：<code>status</code>（<code>success</code>、<code>failed</code>、<code>aborted</code> 等）及布尔值 <code>success</code>；</li>
+<li>唯一执行标识：<code>run_id</code>（格式为 <code>YYYYMMDDTHHMMSS-&lt;pid&gt;-&lt;hash&gt;</code>）；</li>
+<li>时间与耗时：启动时间 <code>start_time</code>、结束时间 <code>end_time</code> 以及总执行耗时 <code>duration_sec</code>；</li>
+<li>终止错误明细：当流程发生异常中断时，记录 <code>terminal_error</code> 块（含 <code>error_id</code>、<code>error_type</code> 与 <code>message</code>）；</li>
+<li>多组学模态完成状态：分别记录各启用的组学模态（RNA、ATAC、VDJ-T、VDJ-B）的独立执行状态。</li>
+</ul>
+<h4 id="4-stage_manifests-stage_completion">4. 阶段清单与断点恢复标记 (<code>stage_manifests/</code> &amp; <code>stage_completion/</code>)<a class="headerlink" href="#4-stage_manifests-stage_completion" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong><code>stage_manifests/&lt;pipeline&gt;.&lt;stage&gt;.json</code></strong>：</li>
+<li>详细记录每个分析阶段执行时的 <code>stage_fingerprint</code>（阶段指纹，绑定了当前执行的软件算法版本与阶段契约）以及 <code>input_fingerprint</code>（输入数据与参数的哈希指纹）；</li>
+<li>流程在启用 <code>--resume</code> 断点续跑时，检查输入、参数、工具版本与输出校验信息；仅在检查通过时复用相应阶段的结果。</li>
+<li><strong><code>stage_completion/&lt;pipeline&gt;.&lt;stage&gt;.json</code></strong>：</li>
+<li>阶段成功完成的轻量级原子指针，记录该阶段成功产出的输出文件列表 <code>outputs</code>、完整性哈希 <code>output_integrity</code> 及完成时间戳 <code>completed_at</code>。</li>
+</ul>
+<h4 id="5-logssample_uploadinfo">5. 分析日志压缩归档包 (<code>logs/&lt;sample&gt;_upload.info</code>)<a class="headerlink" href="#5-logssample_uploadinfo" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>定位</strong>：流程在生成报告后通过底层工具自动生成的二进制流式压缩归档文件；</li>
+<li><strong>包含内容</strong>：结构化打包并压缩了该样本的执行日志文件（<code>YYYYMMDD.txt</code>）、阶段运行清单、中间质控诊断表及环境上下文；</li>
+<li><strong>提供给 MGI 排查问题</strong>：当遇到难以排查的生信算法异常、意外报错或需要向华大智造（MGI）技术支持团队寻求协助时，<strong>无需手动翻找和搜集零散日志，直接将该 <code>&lt;sample&gt;_upload.info</code> 文件提供给 MGI 技术支持即可</strong>。MGI 工程师可通过配套的诊断分析工具（<code>c4_diagnose</code>）读取归档中保存的运行信息与日志，辅助定位问题。</li>
+</ul>
+<hr />
+<h2 id="_4">错误代码分类与排查指南 <a id="错误代码分类"></a><a class="headerlink" href="#_4" title="Permanent link">&para;</a></h2>
+<p>当流程运行遇到错误退出时，终端与日志中会显示标准的 <code>Error code</code> 分类码。下表列出了常见分类码、产生诱因及对应的优先排查方向：</p>
 <table>
 <thead>
 <tr>
 <th style="text-align: left;">Error code</th>
-<th style="text-align: left;">优先检查</th>
+<th style="text-align: left;">错误类别与常见诱因</th>
+<th style="text-align: left;">优先检查与定位路径</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td style="text-align: left;"><code>CLI-CONFIG</code></td>
-<td style="text-align: left;">参数名、类型、必需值及分段配置</td>
+<td style="text-align: left;"><strong><code>CLI-CONFIG</code></strong></td>
+<td style="text-align: left;"><strong>参数与配置格式错误</strong><br>• 参数拼写错误、遗漏必需参数<br>• 多组学配置文件分段格式缺失（如缺少 <code>[libraries]</code>、<code>[rna]</code>、<code>[samples]</code> 等）</td>
+<td style="text-align: left;">• 检查命令行语法与参数拼写；<br>• 核对配置文件 CSV 是否符合分段规范（参阅各流程参数说明）。</td>
 </tr>
 <tr>
-<td style="text-align: left;"><code>INPUT</code></td>
-<td style="text-align: left;">FASTQ / barcode / 矩阵路径、权限、文件配对及完整性</td>
+<td style="text-align: left;"><strong><code>INPUT</code></strong></td>
+<td style="text-align: left;"><strong>输入文件不可用或损坏</strong><br>• FASTQ 路径不存在、无读取权限<br>• 双端 FASTQ 读段数不匹配或文件意外被截断<br>• 条形码白名单文件缺失或格式不符</td>
+<td style="text-align: left;">• 检查文件路径拼写与 Linux 文件读写权限；<br>• 检查 FASTQ 文件是否完整（可使用 <code>gzip -t</code> 测试压缩包完整性）；<br>• 核查双端 FASTQ 文件的 Read 行数是否完全一致。</td>
 </tr>
 <tr>
-<td style="text-align: left;"><code>REFERENCE</code></td>
-<td style="text-align: left;">FASTA、GTF、STAR/Chromap 索引与对应参考配置</td>
+<td style="text-align: left;"><strong><code>REFERENCE</code></strong></td>
+<td style="text-align: left;"><strong>参考基因组与注释库异常</strong><br>• 参考基因组目录路径错误或缺少必需索引<br>• STAR 索引版本与当前 STAR 运行版本不兼容<br>• GTF 注释文件缺少 <code>gene_id</code> 或 <code>transcript_id</code> 属性</td>
+<td style="text-align: left;">• 检查参考基因组路径是否存在完整的 FASTA、GTF 及构建好的索引；<br>• 核查物种名配置（如 <code>Human</code> / <code>Mouse</code>）是否与实际建库体系对应。</td>
 </tr>
 <tr>
-<td style="text-align: left;"><code>TOOL</code></td>
-<td style="text-align: left;">对应阶段日志、外部命令、原生工具与 Python 接口是否匹配</td>
+<td style="text-align: left;"><strong><code>TOOL</code></strong></td>
+<td style="text-align: left;"><strong>底层外部工具执行失败</strong><br>• STAR 比对内存溢出（OOM Killed）<br>• MACS2 或 SAMtools 执行抛错或被系统终止<br>• 底层 C/C++ 二进制依赖与当前操作系统动态链接库不匹配</td>
+<td style="text-align: left;">• 打开 <code>logs/errors.jsonl</code> 查看失败命令与 <code>context.stderr_tail</code>；<br>• 若提示内存不足，增加可用内存分配或调低线程数；<br>• 检查系统动态库依赖（如 <code>libz</code>、<code>glibc</code>）。</td>
 </tr>
 <tr>
-<td style="text-align: left;"><code>OUTPUT</code></td>
-<td style="text-align: left;">输出路径、剩余空间、写权限与产物完整性</td>
+<td style="text-align: left;"><strong><code>OUTPUT</code></strong></td>
+<td style="text-align: left;"><strong>输出目录与磁盘写入错误</strong><br>• 输出路径不存在且无创建权限<br>• 磁盘存储空间耗尽（Disk full）<br>• 存储配额（Quota）超限或文件系统只读</td>
+<td style="text-align: left;">• 执行 <code>df -h</code> 检查目标磁盘分区剩余可用空间；<br>• 检查当前用户对 <code>&lt;outdir&gt;</code> 是否具有写权限；<br>• 检查是否触发了集群节点或用户目录的 Inode 配额上限。</td>
 </tr>
 <tr>
-<td style="text-align: left;"><code>INTERRUPTED</code></td>
-<td style="text-align: left;">任务中断原因及可恢复的阶段</td>
+<td style="text-align: left;"><strong><code>INTERRUPTED</code></strong></td>
+<td style="text-align: left;"><strong>任务被外部意外中断</strong><br>• 集群调度系统（SLURM/SGE/PBS）因超时或超限发送 SIGKILL / SIGTERM<br>• 人为使用 <code>Ctrl+C</code> 或 <code>kill</code> 终止作业</td>
+<td style="text-align: left;">• 检查集群作业管理系统的任务日志（如 <code>slurm-&lt;jobid&gt;.out</code>），确认是否发生节点超限强制杀死；<br>• 确认原作业彻底停止后，检查日志确认已完成的检查点，按需重新投递。</td>
 </tr>
 <tr>
-<td style="text-align: left;"><code>INTERNAL</code></td>
-<td style="text-align: left;">保存 Error ID、traceback 和结构化错误日志供排查</td>
+<td style="text-align: left;"><strong><code>INTERNAL</code></strong></td>
+<td style="text-align: left;"><strong>未知 Python 运行时异常</strong><br>• 未被预期捕获的边界情况或代码逻辑异常</td>
+<td style="text-align: left;">• 记录控制台显示的 12 位 <code>Error ID</code>；<br>• 打开 <code>logs/errors.jsonl</code> 提取完整的 <code>traceback</code> 与环境信息进行深入排查。</td>
 </tr>
 </tbody>
 </table>
-<h2 id="_4">现有产物检查（高级诊断）<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h2>
-<p>内部诊断命令不在普通顶层帮助中列出，可显式调用：</p>
-<div class="highlight"><pre><span></span><code>dnbc4tools<span class="w"> </span>validate-artifacts<span class="w"> </span>--sample-dir<span class="w"> </span>/path/to/sample<span class="w"> </span>--level<span class="w"> </span>shallow
-dnbc4tools<span class="w"> </span>validate-artifacts<span class="w"> </span>--sample-dir<span class="w"> </span>/path/to/sample<span class="w"> </span>--level<span class="w"> </span>deep<span class="w">   </span>--json<span class="w"> </span>/path/to/artifact-validation.json
+<hr />
+<h2 id="_5">典型故障排障步骤示例 <a id="典型故障排障"></a><a class="headerlink" href="#_5" title="Permanent link">&para;</a></h2>
+<h3 id="1-tool">场景 1：流程报 <code>TOOL</code> 错误，终端仅显示命令退出码非零<a class="headerlink" href="#1-tool" title="Permanent link">&para;</a></h3>
+<ol>
+<li><strong>获取 Error ID</strong>：查看终端最后输出的错误摘要，例如提示 <code>Error ID: a7f8b91c2d3e (Error code: TOOL)</code>；</li>
+<li><strong>检索错误日志</strong>：在日志目录下检索该 ID：
+   <div class="highlight"><pre><span></span><code>grep<span class="w"> </span><span class="s2">"a7f8b91c2d3e"</span><span class="w"> </span>&lt;outdir&gt;/&lt;sample&gt;/logs/errors.jsonl
+</code></pre></div></li>
+<li><strong>定位失败原因</strong>：检查 <code>context.command</code> 与 <code>context.stderr_tail</code>，并在集群作业日志中核对内存超限或 OOM 终止信息；先确认失败发生在比对、矩阵生成还是 BAM 输出阶段，再调整资源设置；</li>
+<li><strong>针对性修复</strong>：若确认内存不足，增加作业内存配额，或降低 <code>--threads</code> 以减少并发。若不需要 BAM，RNA 命令可添加 <code>--no_bam</code>，multi/C6 可在 <code>[rna]</code> 中设置 <code>no_bam,true</code>。3.2 使用嵌入式 STAR 比对，STAR 不负责生成或排序 BAM；不要使用 <code>--limitBAMsortRAM</code>，也不要通过 <code>--star_parameters</code> 透传 <code>--limitBAM*</code> 调整 BAM 输出，这些参数不适用且会被参数校验拒绝。</li>
+</ol>
+<h3 id="2_1">场景 2：集群任务超时被杀或意外中断后断点续跑<a class="headerlink" href="#2_1" title="Permanent link">&para;</a></h3>
+<ol>
+<li><strong>确认旧进程已释放</strong>：确保之前的任务进程已彻底终止，不存在残留后台进程；</li>
+<li><strong>检查运行锁</strong>：若旧任务异常终止残留了 <code>logs/run.lock</code>，可安全删除该锁文件：
+   <div class="highlight"><pre><span></span><code>rm<span class="w"> </span>-f<span class="w"> </span>&lt;outdir&gt;/&lt;sample&gt;/logs/run.lock
+</code></pre></div></li>
+<li><strong>查阅阶段状态</strong>：查阅 <code>logs/stage_completion/</code> 目录，确认哪些阶段已顺利完成；</li>
+<li><strong>启动断点续跑</strong>：在原命令中追加 <code>--resume</code> 参数重新启动。流程会自动校验输入指纹与已完成阶段的合法性，直接跳过已完成的大计算量阶段（如已完成的比对或矩阵生成），从断点处平滑继续。</li>
+</ol>
+<hr />
+<h2 id="validate-artifacts">现有产物检查与高级诊断 (<code>validate-artifacts</code>) <a id="产物检查与高级诊断"></a><a class="headerlink" href="#validate-artifacts" title="Permanent link">&para;</a></h2>
+<p>为协助运维人员与生信工程师在交付或分析后快速验证交付目录的完整性，<code>dnbc4tools</code> 提供了内部产物验证诊断工具：</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># 轻量级快速结构校验 (检查必需目录与关键文件是否存在且非空)</span>
+dnbc4tools<span class="w"> </span>validate-artifacts<span class="w"> </span>--sample-dir<span class="w"> </span>/path/to/sample<span class="w"> </span>--level<span class="w"> </span>shallow
+
+<span class="c1"># 深度内容与数据一致性扫描 (校验 HDF5 结构、MEX 维度及片段索引，并导出 JSON 诊断结果)</span>
+dnbc4tools<span class="w"> </span>validate-artifacts<span class="w"> </span>--sample-dir<span class="w"> </span>/path/to/sample<span class="w"> </span>--level<span class="w"> </span>deep<span class="w"> </span>--json<span class="w"> </span>/path/to/sample/logs/artifact-validation.json
 </code></pre></div>
-<p><code>shallow</code> 做轻量检查；<code>deep</code> 扫描完整文件内容。检查空目录可能报告检查 0 个文件并通过，这不代表分析产物齐全。此工具不能替代真实数据分析验收。</p>
-<h2 id="_5">中断、恢复与空结果<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h2>
-<p>运行锁防止同一目录同时分析。锁冲突应先确认原作业状态；不应把强制解锁作为正常重试方式。高级 <code>--resume</code> 仅在阶段输入、配置、工具身份和输出校验允许时复用检查点；仅存在文件不能证明阶段完成。<code>--keep-empty</code> 和 <code>--force-unlock</code> 属于恢复开关，使用会记录到运行状态中。</p>
-<p>零细胞、样本失败、未运行分析是不同状态。C6 默认保留失败状态并继续其他样本；查看 <code>sample_failure_policy</code> 与逐样本报告状态。只重生成 HTML 不会补出缺失的矩阵或 H5AD。BAM 开关和输出命名的升级说明见<a href="migration.html">升级指南</a>。</p>
+<ul>
+<li><code>--level shallow</code>：执行轻量检查，适合快速排查是否遗漏了核心交付文件；</li>
+<li><code>--level deep</code>：校验 H5/H5AD 内部数据组、MEX 矩阵行数与特征数一致性以及 BAM 索引，并将诊断详情记录至 JSON 文件；</li>
+<li>注意：该命令用于自动化工程结构验证，不能替代真实的生物学实验质量评估。</li>
+</ul>
 
 
 

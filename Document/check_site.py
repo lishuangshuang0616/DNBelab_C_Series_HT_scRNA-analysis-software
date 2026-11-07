@@ -15,11 +15,14 @@ class Page(HTMLParser):
         super().__init__()
         self.links = []
         self.ids = set()
+        self.headings = set()
 
     def handle_starttag(self, tag, attributes):
         attributes = dict(attributes)
         if attributes.get('id'):
             self.ids.add(attributes['id'])
+            if tag in ('h1', 'h2', 'h3', 'h4', 'h5', 'h6'):
+                self.headings.add(attributes['id'])
         if tag == 'a' and attributes.get('name'):
             self.ids.add(attributes['name'])
         for key in ('href', 'src'):
@@ -47,6 +50,18 @@ def main():
         page = Page()
         page.feed(path.read_text())
         parsed[path] = page
+    for entry in manifest['versions']:
+        assert set(entry['fragments']) == set(entry['pages'])
+        for name, fragments in entry['fragments'].items():
+            page = parsed[site / entry['path'] / name]
+            assert set(fragments['anchors']) == page.ids, (entry['version'], name)
+            for alias, heading in fragments['aliases'].items():
+                assert alias in page.ids and heading in page.headings, (name, alias, heading)
+    # C6 sections must retain their semantic ID when the language changes.
+    for name in ('doc/parameter/c6.html', 'doc/outs/c6.html'):
+        assert parsed[site / name].headings == parsed[site / 'en' / name].headings, name
+    current = manifest['versions'][0]['fragments']
+    assert current['doc/parameter/c6.html']['aliases']['samples-配置规范'] == 'samples-specification'
     errors = set()
     for path, page in parsed.items():
         for link in page.links:

@@ -15,7 +15,7 @@
   <g transform="translate(40, 28)">
     <rect x="0" y="0" width="4" height="20" rx="2" fill="#2563eb" />
     <text x="12" y="15" font-size="16" font-weight="700" fill="#0f172a" letter-spacing="-0.01em">scVDJ 跨组学细胞条形码联动机制 (--beadstrans)</text>
-    <text x="12" y="32" font-size="11" fill="#64748b">将 5' scRNA 表达定量与 V(D)J 免疫组库全长组装精准对齐的单细胞数据流</text>
+    <text x="12" y="32" font-size="11" fill="#64748b">全量执行 VDJ 从头重叠群组装，基于 5' scRNA 结果精准筛选真细胞并映射统一 Cell ID</text>
   </g>
 
   <!-- CARD 1: 5' scRNA Input -->
@@ -57,16 +57,16 @@
 
     <g transform="translate(14, 46)">
       <circle cx="4" cy="14" r="3" fill="#7c3aed" />
-      <text x="14" y="18" font-size="11.5" font-weight="600" fill="#1e293b">继承真细胞白名单</text>
-      <text x="14" y="34" font-size="10.5" fill="#64748b">仅组装真实细胞 reads，严格滤除游离污染</text>
+      <text x="14" y="18" font-size="11.5" font-weight="600" fill="#1e293b">TCR / BCR 全量从头组装</text>
+      <text x="14" y="34" font-size="10.5" fill="#64748b">对全量候选读段执行 De Novo 重叠群组装</text>
 
       <circle cx="4" cy="56" r="3" fill="#7c3aed" />
-      <text x="14" y="60" font-size="11.5" font-weight="600" fill="#1e293b">继承磁珠合并映射表</text>
-      <text x="14" y="76" font-size="10.5" fill="#64748b">将 VDJ 测序磁珠自动转换还原为统一 Cell ID</text>
+      <text x="14" y="60" font-size="11.5" font-weight="600" fill="#1e293b">基于 RNA 白名单细胞过滤</text>
+      <text x="14" y="76" font-size="10.5" fill="#64748b">依据 singlecell.csv 仅保留真实细胞 Contig</text>
 
       <circle cx="4" cy="98" r="3" fill="#7c3aed" />
-      <text x="14" y="102" font-size="11.5" font-weight="600" fill="#1e293b">TCR / BCR 全长组装与注释</text>
-      <text x="14" y="118" font-size="10.5" fill="#64748b">重构 CDR3 高精全长并完成 V/D/J/C 注释</text>
+      <text x="14" y="102" font-size="11.5" font-weight="600" fill="#1e293b">继承磁珠合并与 ID 转换</text>
+      <text x="14" y="118" font-size="10.5" fill="#64748b">将多磁珠对应还原为与 RNA 一致的 Cell ID</text>
     </g>
   </g>
 

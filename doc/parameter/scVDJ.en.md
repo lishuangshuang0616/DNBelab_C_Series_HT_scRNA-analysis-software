@@ -78,7 +78,7 @@ Analysis Settings:
 | `--name` | String | **Required** | Unique sample identifier; used as output prefix and report title (e.g., `sample_VDJ_001`) |
 | `--ref` | String / Path | **Required** | VDJ reference: built-in `human` or `mouse`, or a custom directory path containing `reference.json` |
 | `--chain` | Choice | **Required** | Immune receptor type: `TR` (T-cell Receptor) or `IG` (B-cell Immunoglobulin) |
-| `--beadstrans` | File path | None | Path to 5' scRNA `singlecell.csv` (or C6 `singlecell.csv.gz`) for bead merging and cell filtering |
+| `--beadstrans` | File path | None | Optional RNA cell table for bead mapping and cell filtering; omitting it automatically enables `keep_all_cells` |
 | `--outdir` | Directory | `./` | Root output directory for analysis results and HTML reports |
 | `--threads` | Integer | All cores | Number of CPU threads allocated for parallel processing |
 
@@ -140,7 +140,8 @@ VDJ_fastq_dir/
 </div>
 
 - **Input source**: Provide the `outs/singlecell.csv` file generated from the corresponding 5' scRNA analysis (supports `.csv.gz` from C6 multi-sample pipelines).
-- **Behavior when omitted**: If `--beadstrans` is omitted, bead merging is skipped, and `--keep_all_cells` automatically engages to retain all assembled barcodes.
+- **Core Mechanism**: The pipeline performs comprehensive de novo assembly across all candidate VDJ reads. Subsequently, during the cell filtering and barcode translation stage, the pipeline applies the authentic cell whitelist from `singlecell.csv` to retain genuine cell contigs and translate bead barcodes into unified Cell IDs, outputting `filtered_contig_annotations.csv` matched with 5' scRNA.
+- **Behavior when omitted**: If `--beadstrans` is omitted, bead merging and cell filtering are skipped, and `--keep_all_cells` automatically engages to retain all assembled barcodes.
 - **Recommendation**: In paired 5' RNA + VDJ experiments, **always provide `--beadstrans`** to ensure clean clonotype-to-cell mapping and filter technical ambient noise.
 
 #### 3. Reference Databases (`--ref`) & Receptor Chains (`--chain`)

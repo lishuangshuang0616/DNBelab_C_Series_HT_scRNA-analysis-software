@@ -658,7 +658,7 @@
   <a href="#bead-aggregation" class="md-nav__link">
     <span class="md-ellipsis">
       
-        第三步：转录本比对与微球聚合 (Bead Aggregation)
+        第三步：转录本比对与微珠聚合 (Bead Aggregation)
       
     </span>
   </a>
@@ -680,7 +680,7 @@
   <a href="#_4" class="md-nav__link">
     <span class="md-ellipsis">
       
-        第五步：结果归档与专属交付
+        第五步：结果归档与输出
       
     </span>
   </a>
@@ -1331,6 +1331,33 @@
   
   
     <li class="md-nav__item">
+      <a href="../troubleshooting.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    运行与排错
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../release.html" class="md-nav__link">
         
   
@@ -1393,10 +1420,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11" >
         
           
-          <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_11" id="__nav_11_label" tabindex="0">
             
   
   
@@ -1414,8 +1441,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_10">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_11">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -1460,14 +1487,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../troubleshooting.html" class="md-nav__link">
+      <a href="../glossary.html" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    运行与排错
+    术语表
   
 
     
@@ -1645,7 +1672,7 @@
   <a href="#bead-aggregation" class="md-nav__link">
     <span class="md-ellipsis">
       
-        第三步：转录本比对与微球聚合 (Bead Aggregation)
+        第三步：转录本比对与微珠聚合 (Bead Aggregation)
       
     </span>
   </a>
@@ -1667,7 +1694,7 @@
   <a href="#_4" class="md-nav__link">
     <span class="md-ellipsis">
       
-        第五步：结果归档与专属交付
+        第五步：结果归档与输出
       
     </span>
   </a>
@@ -1816,8 +1843,8 @@
 <h1 id="dnbelab-c-series-ht-c6">DNBelab C Series HT C6 分析流程<a class="headerlink" href="#dnbelab-c-series-ht-c6" title="Permanent link">&para;</a></h1>
 <p>多样本单细胞 RNA 测序混合建库与解复用分析说明</p>
 <h2 id="_1">概述 <a id="概述"></a><a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
-<p>C6 是面向高通量单细胞 RNA 测序的多样本实验解决方案。多个生物学样本在实验建库阶段使用不同的 Sample Barcode 进行标记并基于 Sample Barcode 混合测序；生信分析阶段由 <code>dnbc4tools</code> 自动完成样本解复用、微球聚合、逐样本独立细胞识别、表达定量与分析交付。</p>
-<p><strong>工作流程</strong>：数据输入 → Barcode 解复用 → 转录本比对 → 微球聚合 → 逐样本独立 Cell Calling → 组合与专属报告交付</p>
+<p>C6 是面向高通量单细胞 RNA 测序的多样本实验解决方案。多个生物学样本在实验建库阶段使用不同的 Sample Barcode 进行标记并基于 Sample Barcode 混合测序；生信分析阶段由 <code>dnbc4tools</code> 自动完成样本解复用、微珠聚合、逐样本独立细胞识别、表达定量与分析交付。</p>
+<p><strong>工作流程</strong>：数据输入 → Barcode 解复用 → 转录本比对 → 微珠聚合 → 逐样本独立 Cell Calling → 组合与样本报告交付</p>
 <div align="center" style="margin: 1.5em 0;">
 <p><img src="../images/c6_pipeline.png" alt="C6 分析流程概览" width="800" style="max-width: 100%; height: auto;"></p>
 </div>
@@ -1826,7 +1853,7 @@
 </blockquote>
 <hr />
 <h2 id="_2">核心步骤解析 <a id="核心步骤解析"></a><a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
-<p>C6 混合建库与解复用分析涵盖从原始双文库输入到逐样本专属交付的 5 个关键阶段：</p>
+<p>C6 混合建库与解复用分析涵盖从原始双文库输入到各样本结果输出的 5 个关键阶段：</p>
 <table>
 <thead>
 <tr>
@@ -1851,8 +1878,8 @@
 </tr>
 <tr>
 <td style="text-align: center;"><strong>03</strong></td>
-<td style="text-align: left;"><strong>转录本比对与微球聚合</strong></td>
-<td style="text-align: left;">STAR 比对注释；基于相似度关联聚合同细胞微球；全局高占用过滤</td>
+<td style="text-align: left;"><strong>转录本比对与微珠聚合</strong></td>
+<td style="text-align: left;">STAR 比对注释；基于相似度关联聚合同细胞微珠；全局高占用过滤</td>
 <td style="text-align: left;">cDNA Reads ➔ 比对 BAM、Bead 聚合标签</td>
 </tr>
 <tr>
@@ -1863,8 +1890,8 @@
 </tr>
 <tr>
 <td style="text-align: center;"><strong>05</strong></td>
-<td style="text-align: left;"><strong>结果归档与专属交付</strong></td>
-<td style="text-align: left;">逐样本专属矩阵/报告/BAM 拆分；全局联合矩阵与批次报告</td>
+<td style="text-align: left;"><strong>结果归档与输出</strong></td>
+<td style="text-align: left;">各样本矩阵/报告/BAM 拆分；全局联合矩阵与批次报告</td>
 <td style="text-align: left;"><code>per_sample_outs/</code> 交付包 + 全局汇总</td>
 </tr>
 </tbody>
@@ -1887,9 +1914,9 @@
 <div class="c6-step-item">
 <h3 id="sample-barcode-assignment">第二步：条形码识别与样本分配 (Sample Barcode Assignment) <a id="step-2"></a><a class="headerlink" href="#sample-barcode-assignment" title="Permanent link">&para;</a></h3>
 <ul>
-<li><strong>精准匹配</strong>：从 Oligo reads 中提取 Sample Barcode 序列，基于内置白名单执行严谨纠错匹配。</li>
+<li><strong>条形码匹配</strong>：从 Oligo reads 中提取 Sample Barcode 序列，基于内置白名单执行纠错匹配。</li>
 <li><strong>灵活映射</strong>：将每一个液滴分配到对应的生物学样本；支持单一条形码（如 <code>BC01</code>）或同一生物学样本分配多个条形码（如 <code>BC02;BC03</code>）。</li>
-<li><strong>未分配追踪</strong>：未识别 Sample Barcode 的读段计入 Unassigned 统计，确保全流程数据可追溯。</li>
+<li><strong>未分配追踪</strong>：未识别 Sample Barcode 的读段计入 Unassigned 统计，用于查看未分配读段数量。</li>
 </ul>
 <div class="c6-step-meta">
 <p><span class="c6-step-meta-label">核心机制</span>
@@ -1899,10 +1926,10 @@
 </div>
 </div>
 <div class="c6-step-item">
-<h3 id="bead-aggregation">第三步：转录本比对与微球聚合 (Bead Aggregation) <a id="step-3"></a><a class="headerlink" href="#bead-aggregation" title="Permanent link">&para;</a></h3>
+<h3 id="bead-aggregation">第三步：转录本比对与微珠聚合 (Bead Aggregation) <a id="step-3"></a><a class="headerlink" href="#bead-aggregation" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>高质量比对</strong>：使用优化配置的 STAR 流程对 cDNA 进行参考基因组比对与基因功能区注释。</li>
-<li><strong>跨微球聚合</strong>：基于 Bead 序列的相似性评分算法，将同一物理细胞被捕获到的微球关联聚合，并在合并标签中保留 Sample Barcode 后缀。</li>
+<li><strong>跨微珠聚合</strong>：基于 Bead 序列的相似性评分算法，将同一物理细胞被捕获到的微珠关联聚合，并在合并标签中保留 Sample Barcode 后缀。</li>
 <li><strong>实验级高占用过滤</strong>：默认启用 <code>high_occupancy_filter=true</code>，在整个实验全局尺度剔除高占用异常液滴，保障下游各样本细胞纯度。</li>
 </ul>
 <div class="c6-step-meta">
@@ -1915,9 +1942,9 @@
 <div class="c6-step-item">
 <h3 id="per-sample-cell-calling">第四步：逐样本独立细胞识别 (Per-Sample Cell Calling) <a id="step-4"></a><a class="headerlink" href="#per-sample-cell-calling" title="Permanent link">&para;</a></h3>
 <ul>
-<li><strong>独立细胞判定</strong>：分配至各样本的液滴<strong>相互独立执行细胞判定</strong>，彻底避免不同样本细胞载量悬殊时产生相互干扰。</li>
-<li><strong>智能截断与保护</strong>：自动估计模式下结合高灵敏度 EmptyDrops 算法，3.2 版本增设自适应阈值保护，防止由于单一样本背景过高导致的过拟合。</li>
-<li><strong>同 UMI 冲突纠错</strong>：同一细胞内比对到多个基因的歧义 UMI 依据 read 计数严格去噪，避免同源基因虚假共表达。</li>
+<li><strong>独立细胞识别</strong>：分配至各样本的液滴<strong>相互独立执行细胞识别</strong>，按各样本数据分别确定细胞集合。</li>
+<li><strong>智能截断与保护</strong>：自动估计模式使用 EmptyDrops 进行细胞识别；3.2 为自动估计细胞数增加上下限约束。</li>
+<li><strong>同 UMI 冲突纠错</strong>：同一细胞内比对到多个基因的歧义 UMI 依据 read 计数进行冲突裁决；无法唯一归属的 UMI 不计入表达量。</li>
 </ul>
 <div class="c6-step-meta">
 <p><span class="c6-step-meta-label">核心机制</span>
@@ -1927,16 +1954,16 @@
 </div>
 </div>
 <div class="c6-step-item">
-<h3 id="_4">第五步：结果归档与专属交付 <a id="step-5"></a><a class="headerlink" href="#_4" title="Permanent link">&para;</a></h3>
+<h3 id="_4">第五步：结果归档与输出 <a id="step-5"></a><a class="headerlink" href="#_4" title="Permanent link">&para;</a></h3>
 <ul>
-<li><strong>逐样本专属分析</strong>：每个样本在 <code>per_sample_outs/&lt;sample&gt;/</code> 下独立交付完整的表达矩阵（MEX、H5、H5AD 格式）、降维聚类分析（PCA、UMAP、Marker 基因）与单独的交互式 HTML 报告。</li>
-<li><strong>专属 BAM 拆分</strong>：启用 BAM 时，按样本独立输出专属比对文件（<code>&lt;sample&gt;_alignments.bam</code>），同时保留未分配比对文件与共享 Oligo BAM。</li>
+<li><strong>各样本分析</strong>：每个样本在 <code>per_sample_outs/&lt;sample&gt;/</code> 下独立交付完整的表达矩阵（MEX、H5、H5AD 格式）、降维聚类分析（PCA、UMAP、Marker 基因）与单独的交互式 HTML 报告。</li>
+<li><strong>按样本拆分 BAM</strong>：启用 BAM 时，按样本输出比对文件（<code>&lt;sample&gt;_alignments.bam</code>），同时保留未分配比对文件与共享 Oligo BAM。</li>
 <li><strong>全局合并矩阵</strong>：在根目录下提供包含全部样本有效细胞的联合表达矩阵，保留纯净原始计数，方便后续按需导入下游批次校正工具（如 Harmony 等）。</li>
 <li><strong>批次综合报告</strong>：生成全局 <code>&lt;run&gt;_multi_report.html</code>，集中展示各样本有效细胞数、测序饱和度对比及文库级质控指标。</li>
 </ul>
 <div class="c6-step-meta">
 <p><span class="c6-step-meta-label">核心机制</span>
-  <span class="c6-step-pill">专属 MEX/H5/H5AD</span>
+  <span class="c6-step-pill">各样本 MEX/H5/H5AD</span>
   <span class="c6-step-pill">按样本拆分 BAM</span>
   <span class="c6-step-pill">全局联合矩阵</span>
   <span class="c6-step-pill">交互式双层报告</span></p>
@@ -1977,7 +2004,6 @@
 genomeDir,/database/scRNA/Homo_sapiens
 chemistry,scRNAC6
 darkreaction,auto
-no_bam,true
 
 [libraries]
 fastqs,feature_types
@@ -1989,6 +2015,7 @@ Sample_1,BC01
 Sample_2,BC02;BC03
 </code></pre></div>
 <blockquote>
+<p><strong>可选 BAM 输出设置</strong>：本示例保留默认的 <code>[rna] no_bam,false</code>，生成逐样本 BAM、未分配 BAM 和 Oligo BAM 及其适用的索引。若需节省存储空间，可在 <code>[rna]</code> 中添加 <code>no_bam,true</code>；此时不生成 BAM 文件及其索引。</p>
 <p><strong>提示</strong>：若同一样本分配了多个条形码，使用分号 <code>;</code> 分隔（如 <code>BC02;BC03</code>）。详细参数规范请参阅 <a href="../parameter/c6.html">C6 参数说明</a>。</p>
 </blockquote>
 <hr />
@@ -2091,16 +2118,16 @@ Analysis<span class="w"> </span>finished<span class="w"> </span>successfully!
     ├── raw_feature_bc_matrix/            # 全局未过滤表达矩阵 (MEX)
     ├── filtered_feature_bc_matrix/       # 全局有效细胞表达矩阵 (MEX)
     ├── filtered_feature_bc_matrix.h5ad   # 全局有效细胞表达矩阵 (H5AD，无跨样本聚类)
-    ├── singlecell.csv.gz                 # 全局液滴明细表 (含样本归属与微球聚合关系)
+    ├── singlecell.csv.gz                 # 全局液滴明细表 (含样本归属与微珠聚合关系)
     ├── metrics_summary.xls               # 全局实验汇总指标
     ├── multi_sample/                     # 样本拆分与质控明细
     │   ├── per_sample_metrics.csv        # 各样本生信指标对照表
     │   └── barcode_assignment_metrics.json # Sample Barcode 识别与分配统计
-    └── per_sample_outs/&lt;sample&gt;/         # 【逐样本独立交付目录】
-        ├── filtered_feature_bc_matrix/   # 该样本专属有效细胞表达矩阵
-        ├── &lt;sample&gt;_scRNA_report.html    # 该样本专属交互式 HTML 报告
-        ├── metrics_summary.xls           # 该样本专属质控指标表
-        └── analysis/                     # 该样本专属聚类、降维与 Marker 基因
+    └── per_sample_outs/&lt;sample&gt;/         # 【各样本结果输出目录】
+        ├── filtered_feature_bc_matrix/   # 该样本有效细胞表达矩阵
+        ├── &lt;sample&gt;_scRNA_report.html    # 该样本交互式 HTML 报告
+        ├── metrics_summary.xls           # 该样本质控指标表
+        └── analysis/                     # 该样本聚类、降维与 Marker 基因
 </code></pre></div>
 <h3 id="_13">重点输出文件说明<a class="headerlink" href="#_13" title="Permanent link">&para;</a></h3>
 <table>
@@ -2117,7 +2144,7 @@ Analysis<span class="w"> </span>finished<span class="w"> </span>successfully!
 </tr>
 <tr>
 <td style="text-align: left;"><code>rna/per_sample_outs/&lt;sample&gt;/</code></td>
-<td style="text-align: left;">逐样本专属交付目录，包含该样本独立表达矩阵、分析图表与独立 HTML 报告</td>
+<td style="text-align: left;">各样本结果输出目录，包含该样本独立表达矩阵、分析图表与独立 HTML 报告</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>rna/filtered_feature_bc_matrix.*</code></td>

@@ -14,7 +14,7 @@
         <link rel="prev" href="outs/c6.html">
       
       
-        <link rel="next" href="release.html">
+        <link rel="next" href="troubleshooting.html">
       
       
         
@@ -29,7 +29,7 @@
     
     
       
-        <title>I/O Analysis - DNBelab C Series™ HT Single-Cell Analysis Software</title>
+        <title>Downstream Analysis - DNBelab C Series™ HT Single-Cell Analysis Software</title>
       
     
     
@@ -82,7 +82,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#scrna-analysis" class="md-skip">
+        <a href="#1-single-cell-rna-gene-expression-scrna" class="md-skip">
           Skip to content
         </a>
       
@@ -118,7 +118,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              I/O Analysis
+              Downstream Analysis
             
           </span>
         </div>
@@ -605,7 +605,7 @@
   <span class="md-ellipsis">
     
   
-    Parameter
+    Parameters
   
 
     
@@ -621,7 +621,7 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    Parameter
+    Parameters
   
 
           </label>
@@ -1073,7 +1073,7 @@
   <span class="md-ellipsis">
     
   
-    I/O Analysis
+    Downstream Analysis
   
 
     
@@ -1091,7 +1091,7 @@
   <span class="md-ellipsis">
     
   
-    I/O Analysis
+    Downstream Analysis
   
 
     
@@ -1115,43 +1115,188 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#scrna-analysis" class="md-nav__link">
+  <a href="#1-single-cell-rna-gene-expression-scrna" class="md-nav__link">
     <span class="md-ellipsis">
       
-        scRNA Analysis
+        1. Single-Cell RNA Gene Expression (scRNA)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. Single-Cell RNA Gene Expression (scRNA)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#r-ecosystem-seurat" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        R Ecosystem (Seurat)
       
     </span>
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#importing-c6-results" class="md-nav__link">
+        
+          <li class="md-nav__item">
+  <a href="#python-ecosystem-scanpy" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Importing C6 results
+        Python Ecosystem (Scanpy)
       
     </span>
   </a>
   
 </li>
+        
+      </ul>
+    </nav>
+  
+</li>
       
         <li class="md-nav__item">
-  <a href="#scatac-analysis" class="md-nav__link">
+  <a href="#2-c6-multiplexed-scrna-analysis" class="md-nav__link">
     <span class="md-ellipsis">
       
-        scATAC Analysis
+        2. C6 Multiplexed scRNA Analysis
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. C6 Multiplexed scRNA Analysis">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#independent-per-sample-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Independent Per-Sample Analysis
       
     </span>
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#common-output-files" class="md-nav__link">
+        
+          <li class="md-nav__item">
+  <a href="#full-droplet-metadata-valid-cell-filtering-singlecellcsvgz" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common Output Files
+        Full Droplet Metadata &amp; Valid Cell Filtering (singlecell.csv.gz)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#multi-sample-integration-batch-correction" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Multi-Sample Integration &amp; Batch Correction
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-single-cell-atac-chromatin-accessibility-scatac" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Single-Cell ATAC Chromatin Accessibility (scATAC)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Single-Cell ATAC Chromatin Accessibility (scATAC)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#r-ecosystem-signac" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        R Ecosystem (Signac)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#r-ecosystem-archr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        R Ecosystem (ArchR)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#python-ecosystem-snapatac2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Python Ecosystem (SnapATAC2)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-single-cell-vdj-immune-profiling-scvdj" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Single-Cell V(D)J Immune Profiling (scVDJ)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Single-Cell V(D)J Immune Profiling (scVDJ)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#r-ecosystem-screpertoire-integration-with-seurat" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        R Ecosystem (scRepertoire Integration with Seurat)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#python-ecosystem-scirpy-integration-with-scanpy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Python Ecosystem (Scirpy Integration with Scanpy)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-deliverables-quick-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Deliverables Quick Reference
       
     </span>
   </a>
@@ -1162,6 +1307,33 @@
   
 </nav>
       
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="troubleshooting.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Running & Troubleshooting
+  
+
+    
+  </span>
+  
+  
+
+      </a>
     </li>
   
 
@@ -1235,17 +1407,17 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11" >
         
           
-          <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_11" id="__nav_11_label" tabindex="0">
             
   
   
   <span class="md-ellipsis">
     
   
-    Additional
+    Additional Resources
   
 
     
@@ -1256,12 +1428,12 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_10">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_11">
             <span class="md-nav__icon md-icon"></span>
             
   
-    Additional
+    Additional Resources
   
 
           </label>
@@ -1302,14 +1474,14 @@
   
   
     <li class="md-nav__item">
-      <a href="troubleshooting.html" class="md-nav__link">
+      <a href="glossary.html" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Running & Troubleshooting
+    Glossary
   
 
     
@@ -1439,43 +1611,188 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#scrna-analysis" class="md-nav__link">
+  <a href="#1-single-cell-rna-gene-expression-scrna" class="md-nav__link">
     <span class="md-ellipsis">
       
-        scRNA Analysis
+        1. Single-Cell RNA Gene Expression (scRNA)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. Single-Cell RNA Gene Expression (scRNA)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#r-ecosystem-seurat" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        R Ecosystem (Seurat)
       
     </span>
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#importing-c6-results" class="md-nav__link">
+        
+          <li class="md-nav__item">
+  <a href="#python-ecosystem-scanpy" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Importing C6 results
+        Python Ecosystem (Scanpy)
       
     </span>
   </a>
   
 </li>
+        
+      </ul>
+    </nav>
+  
+</li>
       
         <li class="md-nav__item">
-  <a href="#scatac-analysis" class="md-nav__link">
+  <a href="#2-c6-multiplexed-scrna-analysis" class="md-nav__link">
     <span class="md-ellipsis">
       
-        scATAC Analysis
+        2. C6 Multiplexed scRNA Analysis
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. C6 Multiplexed scRNA Analysis">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#independent-per-sample-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Independent Per-Sample Analysis
       
     </span>
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#common-output-files" class="md-nav__link">
+        
+          <li class="md-nav__item">
+  <a href="#full-droplet-metadata-valid-cell-filtering-singlecellcsvgz" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common Output Files
+        Full Droplet Metadata &amp; Valid Cell Filtering (singlecell.csv.gz)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#multi-sample-integration-batch-correction" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Multi-Sample Integration &amp; Batch Correction
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-single-cell-atac-chromatin-accessibility-scatac" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Single-Cell ATAC Chromatin Accessibility (scATAC)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Single-Cell ATAC Chromatin Accessibility (scATAC)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#r-ecosystem-signac" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        R Ecosystem (Signac)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#r-ecosystem-archr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        R Ecosystem (ArchR)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#python-ecosystem-snapatac2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Python Ecosystem (SnapATAC2)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-single-cell-vdj-immune-profiling-scvdj" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Single-Cell V(D)J Immune Profiling (scVDJ)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Single-Cell V(D)J Immune Profiling (scVDJ)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#r-ecosystem-screpertoire-integration-with-seurat" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        R Ecosystem (scRepertoire Integration with Seurat)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#python-ecosystem-scirpy-integration-with-scanpy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Python Ecosystem (Scirpy Integration with Scanpy)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-deliverables-quick-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Deliverables Quick Reference
       
     </span>
   </a>
@@ -1499,182 +1816,499 @@
 
 
 
-<h1 id="output-analysis-guide">Output Analysis Guide<a class="headerlink" href="#output-analysis-guide" title="Permanent link">&para;</a></h1>
-<p><strong>How to analyze dnbc4tools output in R and Python</strong></p>
-<p><a href="#scrna-analysis">scRNA</a> • <a href="#scatac-analysis">scATAC</a></p>
-<h2 id="scrna-analysis">scRNA Analysis <a id="scrna-analysis"></a><a class="headerlink" href="#scrna-analysis" title="Permanent link">&para;</a></h2>
-<p><strong>R (Seurat)</strong></p>
-<p>Load the filtered gene expression matrix using the <code>Read10X</code> function.</p>
+<h1 id="output-analysis-guide">Downstream Analysis Guide<a class="headerlink" href="#output-analysis-guide" title="Permanent link">&para;</a></h1>
+<p>This guide describes how to import data generated by DNBelab C Series™ single-cell analysis software (<code>dnbc4tools</code>) into popular bioinformatics ecosystems (<strong>R / Seurat / Signac / scRepertoire / ArchR</strong> and <strong>Python / Scanpy / SnapATAC2 / AnnData / Scirpy</strong>) for downstream exploration.</p>
+<p><a href="#scrna-analysis">scRNA Gene Expression</a> • <a href="#c6-analysis">C6 Multiplexed scRNA</a> • <a href="#scatac-analysis">scATAC Chromatin Accessibility</a> • <a href="#scvdj-analysis">scVDJ Immune Profiling</a> • <a href="#common-output-files">Deliverables Quick Reference</a></p>
+<hr />
+<h2 id="1-single-cell-rna-gene-expression-scrna">1. Single-Cell RNA Gene Expression (scRNA) <a id="scrna-analysis"></a><a class="headerlink" href="#1-single-cell-rna-gene-expression-scrna" title="Permanent link">&para;</a></h2>
+<p>Version 3.2 concurrently provides standardized MEX directories, H5 files, and H5AD files under the <code>outs/</code> root directory. Choose single-file formats (<code>.h5</code> or <code>.h5ad</code>) according to the downstream tool. Loading time and memory usage depend on matrix size, storage, and the reader used.</p>
+<h3 id="r-ecosystem-seurat">R Ecosystem (Seurat)<a class="headerlink" href="#r-ecosystem-seurat" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="nf">library</span><span class="p">(</span><span class="n">Seurat</span><span class="p">)</span>
-<span class="n">counts.data</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">Read10X</span><span class="p">(</span><span class="n">data.dir</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"/outs/filtered_feature_bc_matrix"</span><span class="p">)</span>
-</code></pre></div>
-<p><strong>Python (Scanpy)</strong></p>
-<p>You can load the data using either the <code>h5ad</code> file or the MEX matrix directory.</p>
-<p><strong>1. Read h5ad format (recommended):</strong>
-<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">scanpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sc</span>
-<span class="n">adata</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">read_h5ad</span><span class="p">(</span><span class="s1">'/outs/filtered_feature_bc_matrix.h5ad'</span><span class="p">)</span>
-</code></pre></div></p>
-<p><strong>2. Read matrix format:</strong>
-<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">scanpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sc</span>
-<span class="n">adata</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">read_10x_mtx</span><span class="p">(</span><span class="s1">'/outs/filtered_feature_bc_matrix'</span><span class="p">)</span>
-</code></pre></div></p>
-<h2 id="importing-c6-results">Importing C6 results <a id="c6-import"></a><a class="headerlink" href="#importing-c6-results" title="Permanent link">&para;</a></h2>
-<p>Use individual sample directories for independent analysis. The global filtered H5AD contains combined counts without joint UMAP/clustering. Retain raw counts for downstream normalization.</p>
-<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">scanpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sc</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="nf">library</span><span class="p">(</span><span class="n">dplyr</span><span class="p">)</span>
 
-<span class="n">sample_dir</span> <span class="o">=</span> <span class="s2">"/results/c6_run/outs/rna/per_sample_outs/S1"</span>
-<span class="n">adata</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">read_10x_h5</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">sample_dir</span><span class="si">}</span><span class="s2">/filtered_feature_bc_matrix.h5"</span><span class="p">)</span>
-<span class="c1"># The global table includes background; select called cells in bounded chunks.</span>
-<span class="n">called_parts</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="k">for</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">"/results/c6_run/outs/rna/singlecell.csv.gz"</span><span class="p">,</span> <span class="n">chunksize</span><span class="o">=</span><span class="mi">100_000</span><span class="p">):</span>
-    <span class="n">called</span> <span class="o">=</span> <span class="n">chunk</span><span class="p">[</span><span class="s2">"is_cell_barcode"</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">isin</span><span class="p">([</span><span class="s2">"1"</span><span class="p">,</span> <span class="s2">"true"</span><span class="p">])</span>
-    <span class="n">called_parts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">chunk</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">called</span><span class="p">])</span>
-<span class="n">called_cells</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">called_parts</span><span class="p">,</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="c1"># Method 1: Load compressed H5 format (recommended, fastest)</span>
+<span class="n">counts</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">Read10X_h5</span><span class="p">(</span><span class="s">"outs/filtered_feature_bc_matrix.h5"</span><span class="p">)</span>
+
+<span class="c1"># Method 2: Load canonical MEX directory</span>
+<span class="c1"># counts &lt;- Read10X(data.dir = "outs/filtered_feature_bc_matrix")</span>
+
+<span class="c1"># Create Seurat object</span>
+<span class="n">scRNA</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">CreateSeuratObject</span><span class="p">(</span>
+<span class="w">  </span><span class="n">counts</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">counts</span><span class="p">,</span>
+<span class="w">  </span><span class="n">project</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"dnbc4_rna"</span><span class="p">,</span>
+<span class="w">  </span><span class="n">min.cells</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">3</span><span class="p">,</span>
+<span class="w">  </span><span class="n">min.features</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">200</span>
+<span class="p">)</span>
+
+<span class="c1"># Mitochondrial percentage and downstream processing pipeline</span>
+<span class="n">scRNA</span><span class="p">[[</span><span class="s">"percent.mt"</span><span class="p">]]</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">PercentageFeatureSet</span><span class="p">(</span><span class="n">scRNA</span><span class="p">,</span><span class="w"> </span><span class="n">pattern</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"^MT-|^mt-"</span><span class="p">)</span>
+<span class="n">scRNA</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">NormalizeData</span><span class="p">(</span><span class="n">scRNA</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span>
+<span class="w">  </span><span class="nf">FindVariableFeatures</span><span class="p">(</span><span class="n">selection.method</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"vst"</span><span class="p">,</span><span class="w"> </span><span class="n">nfeatures</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">2000</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span>
+<span class="w">  </span><span class="nf">ScaleData</span><span class="p">()</span><span class="w"> </span><span class="o">%&gt;%</span>
+<span class="w">  </span><span class="nf">RunPCA</span><span class="p">()</span><span class="w"> </span><span class="o">%&gt;%</span>
+<span class="w">  </span><span class="nf">FindNeighbors</span><span class="p">(</span><span class="n">dims</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">1</span><span class="o">:</span><span class="m">30</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span>
+<span class="w">  </span><span class="nf">FindClusters</span><span class="p">(</span><span class="n">resolution</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0.5</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span>
+<span class="w">  </span><span class="nf">RunUMAP</span><span class="p">(</span><span class="n">dims</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">1</span><span class="o">:</span><span class="m">30</span><span class="p">)</span>
+
+<span class="c1"># Visualize clusters</span>
+<span class="nf">DimPlot</span><span class="p">(</span><span class="n">scRNA</span><span class="p">,</span><span class="w"> </span><span class="n">reduction</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"umap"</span><span class="p">,</span><span class="w"> </span><span class="n">label</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">TRUE</span><span class="p">)</span>
 </code></pre></div>
-<p>For sparse counts and gene/barcode metadata alone, use <code>sc.read_h5ad("/results/c6_run/outs/rna/filtered_feature_bc_matrix.h5ad")</code>. Retain complete barcode/probe suffixes in joins; a bead prefix alone does not identify the sample.</p>
-<h2 id="scatac-analysis">scATAC Analysis <a id="scatac-analysis"></a><a class="headerlink" href="#scatac-analysis" title="Permanent link">&para;</a></h2>
-<p>ATAC matrices count cutsites by default. Metadata <code>peak_region_fragments</code> and <code>peak_region_cutsites</code> are distinct. Align metadata to filtered matrix barcodes rather than relying on row order. BAM indexes can be BAI or CSI.</p>
-<p><strong>R (Signac)</strong></p>
-<p>Load the filtered peak matrix and create a Seurat object.</p>
-<div class="highlight"><pre><span></span><code><span class="nf">require</span><span class="p">(</span><span class="n">magrittr</span><span class="p">)</span>
-<span class="nf">require</span><span class="p">(</span><span class="n">readr</span><span class="p">)</span>
-<span class="nf">require</span><span class="p">(</span><span class="n">Matrix</span><span class="p">)</span>
-<span class="nf">require</span><span class="p">(</span><span class="n">tidyr</span><span class="p">)</span>
-<span class="nf">require</span><span class="p">(</span><span class="n">dplyr</span><span class="p">)</span>
-<span class="nf">library</span><span class="p">(</span><span class="n">Signac</span><span class="p">)</span>
+<h3 id="python-ecosystem-scanpy">Python Ecosystem (Scanpy)<a class="headerlink" href="#python-ecosystem-scanpy" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">scanpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sc</span>
+
+<span class="c1"># Method 1: Load pre-packaged AnnData format (recommended, ready to use)</span>
+<span class="n">adata</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">read_h5ad</span><span class="p">(</span><span class="s2">"outs/filtered_feature_bc_matrix.h5ad"</span><span class="p">)</span>
+
+<span class="c1"># Method 2: Load 10X H5 format</span>
+<span class="c1"># adata = sc.read_10x_h5("outs/filtered_feature_bc_matrix.h5")</span>
+
+<span class="c1"># Method 3: Load canonical MEX directory</span>
+<span class="c1"># adata = sc.read_10x_mtx("outs/filtered_feature_bc_matrix")</span>
+
+<span class="c1"># Standard Scanpy QC, dimensionality reduction, and clustering</span>
+<span class="n">adata</span><span class="o">.</span><span class="n">var_names_make_unique</span><span class="p">()</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">filter_cells</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">min_genes</span><span class="o">=</span><span class="mi">200</span><span class="p">)</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">filter_genes</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">min_cells</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+
+<span class="c1"># Annotate mitochondrial features</span>
+<span class="n">adata</span><span class="o">.</span><span class="n">var</span><span class="p">[</span><span class="s2">"mt"</span><span class="p">]</span> <span class="o">=</span> <span class="n">adata</span><span class="o">.</span><span class="n">var_names</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">startswith</span><span class="p">((</span><span class="s2">"MT-"</span><span class="p">,</span> <span class="s2">"mt-"</span><span class="p">))</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">calculate_qc_metrics</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">qc_vars</span><span class="o">=</span><span class="p">[</span><span class="s2">"mt"</span><span class="p">],</span> <span class="n">percent_top</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">log1p</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># Normalization, PCA, neighborhood graph, and clustering</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">normalize_total</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">target_sum</span><span class="o">=</span><span class="mf">1e4</span><span class="p">)</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">log1p</span><span class="p">(</span><span class="n">adata</span><span class="p">)</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">highly_variable_genes</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">min_mean</span><span class="o">=</span><span class="mf">0.0125</span><span class="p">,</span> <span class="n">max_mean</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">min_disp</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+<span class="n">adata</span> <span class="o">=</span> <span class="n">adata</span><span class="p">[:,</span> <span class="n">adata</span><span class="o">.</span><span class="n">var</span><span class="o">.</span><span class="n">highly_variable</span><span class="p">]</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">scale</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">max_value</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">pca</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">svd_solver</span><span class="o">=</span><span class="s2">"arpack"</span><span class="p">)</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">neighbors</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">n_neighbors</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> <span class="n">n_pcs</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">umap</span><span class="p">(</span><span class="n">adata</span><span class="p">)</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">leiden</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+
+<span class="c1"># Plot clusters</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">umap</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="p">[</span><span class="s2">"leiden"</span><span class="p">])</span>
+</code></pre></div>
+<hr />
+<h2 id="2-c6-multiplexed-scrna-analysis">2. C6 Multiplexed scRNA Analysis <a id="c6-analysis"></a><a class="headerlink" href="#2-c6-multiplexed-scrna-analysis" title="Permanent link">&para;</a></h2>
+<p>The C6 multiplexed workflow pools and sequences multiplexed samples within a single library, delivering both <strong>per-sample output directories</strong> (<code>outs/rna/per_sample_outs/&lt;sample&gt;/</code>) and <strong>pooled global matrices</strong> (<code>outs/rna/</code>).</p>
+<h3 id="independent-per-sample-analysis">Independent Per-Sample Analysis<a class="headerlink" href="#independent-per-sample-analysis" title="Permanent link">&para;</a></h3>
+<p>Each demultiplexed sample contains its own filtered expression matrix ready for standalone analysis:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># R: Load sample-specific matrix (e.g. Sample1)</span>
 <span class="nf">library</span><span class="p">(</span><span class="n">Seurat</span><span class="p">)</span>
+<span class="n">sample1_counts</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">Read10X_h5</span><span class="p">(</span><span class="s">"outs/rna/per_sample_outs/Sample1/filtered_feature_bc_matrix.h5"</span><span class="p">)</span>
+<span class="n">sample1_obj</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">CreateSeuratObject</span><span class="p">(</span><span class="n">counts</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sample1_counts</span><span class="p">,</span><span class="w"> </span><span class="n">project</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"Sample1"</span><span class="p">)</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="c1"># Python: Load sample-specific AnnData</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">scanpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sc</span>
+<span class="n">adata_s1</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">read_h5ad</span><span class="p">(</span><span class="s2">"outs/rna/per_sample_outs/Sample1/filtered_feature_bc_matrix.h5ad"</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="full-droplet-metadata-valid-cell-filtering-singlecellcsvgz">Full Droplet Metadata &amp; Valid Cell Filtering (<code>singlecell.csv.gz</code>)<a class="headerlink" href="#full-droplet-metadata-valid-cell-filtering-singlecellcsvgz" title="Permanent link">&para;</a></h3>
+<p>The exported columns are <code>cell,reads,gene,umi,is_cell_barcode,barcode</code>; the table does not contain <code>sample_id</code> or <code>cell_barcode</code>. The examples below use each delivered sample matrix's <code>barcodes.tsv.gz</code> to map the full <code>cell</code> identifier to its sample directory, then filter called cells. They do not infer sample names by splitting barcode suffixes. If sample directories are missing or failed, resolve unmatched calls before proceeding. The R and Python blocks are independent alternatives.</p>
+<div class="highlight"><pre><span></span><code><span class="nf">library</span><span class="p">(</span><span class="n">data.table</span><span class="p">)</span>
 
-<span class="c1"># Function to read dnbc4tools ATAC output</span>
-<span class="n">read_signac_C4</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="kr">function</span><span class="p">(</span><span class="n">mex_dir_path</span><span class="p">,</span><span class="w"> </span><span class="n">fragments</span><span class="p">,</span><span class="w"> </span><span class="n">singlecellmetadata</span><span class="p">){</span>
-<span class="w">    </span><span class="n">mtx_path</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">paste</span><span class="p">(</span><span class="n">mex_dir_path</span><span class="p">,</span><span class="w"> </span><span class="s">"matrix.mtx.gz"</span><span class="p">,</span><span class="w"> </span><span class="n">sep</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">'/'</span><span class="p">)</span>
-<span class="w">    </span><span class="n">feature_path</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">paste</span><span class="p">(</span><span class="n">mex_dir_path</span><span class="p">,</span><span class="w"> </span><span class="s">"peaks.bed.gz"</span><span class="p">,</span><span class="w"> </span><span class="n">sep</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">'/'</span><span class="p">)</span>
-<span class="w">    </span><span class="n">barcode_path</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">paste</span><span class="p">(</span><span class="n">mex_dir_path</span><span class="p">,</span><span class="w"> </span><span class="s">"barcodes.tsv.gz"</span><span class="p">,</span><span class="w"> </span><span class="n">sep</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">'/'</span><span class="p">)</span>
+<span class="c1"># Build sample membership from delivered filtered matrix barcode lists.</span>
+<span class="n">sample_dirs</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">list.dirs</span><span class="p">(</span><span class="s">"outs/rna/per_sample_outs"</span><span class="p">,</span><span class="w"> </span><span class="n">recursive</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">FALSE</span><span class="p">)</span>
+<span class="n">barcode_files</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">file.path</span><span class="p">(</span><span class="n">sample_dirs</span><span class="p">,</span><span class="w"> </span><span class="s">"filtered_feature_bc_matrix"</span><span class="p">,</span><span class="w"> </span><span class="s">"barcodes.tsv.gz"</span><span class="p">)</span>
+<span class="n">barcode_files</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">barcode_files</span><span class="p">[</span><span class="nf">file.exists</span><span class="p">(</span><span class="n">barcode_files</span><span class="p">)]</span>
+<span class="kr">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nf">length</span><span class="p">(</span><span class="n">barcode_files</span><span class="p">))</span><span class="w"> </span><span class="nf">stop</span><span class="p">(</span><span class="s">"No per-sample filtered barcode files found"</span><span class="p">)</span>
+<span class="n">cell_sample</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">rbindlist</span><span class="p">(</span><span class="nf">lapply</span><span class="p">(</span><span class="n">barcode_files</span><span class="p">,</span><span class="w"> </span><span class="kr">function</span><span class="p">(</span><span class="n">path</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="n">con</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">gzfile</span><span class="p">(</span><span class="n">path</span><span class="p">,</span><span class="w"> </span><span class="s">"rt"</span><span class="p">)</span>
+<span class="w">  </span><span class="n">cells</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">readLines</span><span class="p">(</span><span class="n">con</span><span class="p">,</span><span class="w"> </span><span class="n">warn</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">FALSE</span><span class="p">)</span>
+<span class="w">  </span><span class="nf">close</span><span class="p">(</span><span class="n">con</span><span class="p">)</span>
+<span class="w">  </span><span class="n">cells</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">cells</span><span class="p">[</span><span class="nf">nzchar</span><span class="p">(</span><span class="n">cells</span><span class="p">)]</span>
+<span class="w">  </span><span class="nf">data.table</span><span class="p">(</span><span class="n">cell</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cells</span><span class="p">,</span><span class="w"> </span><span class="n">sample_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">rep</span><span class="p">(</span><span class="nf">basename</span><span class="p">(</span><span class="nf">dirname</span><span class="p">(</span><span class="nf">dirname</span><span class="p">(</span><span class="n">path</span><span class="p">))),</span><span class="w"> </span><span class="nf">length</span><span class="p">(</span><span class="n">cells</span><span class="p">)))</span>
+<span class="p">}))</span>
+<span class="kr">if</span><span class="w"> </span><span class="p">(</span><span class="nf">anyDuplicated</span><span class="p">(</span><span class="n">cell_sample</span><span class="o">$</span><span class="n">cell</span><span class="p">))</span><span class="w"> </span><span class="nf">stop</span><span class="p">(</span><span class="s">"Cell IDs are not unique across samples"</span><span class="p">)</span>
 
-<span class="w">    </span><span class="n">features</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">readr</span><span class="o">::</span><span class="nf">read_tsv</span><span class="p">(</span><span class="n">feature_path</span><span class="p">,</span><span class="w"> </span><span class="n">col_names</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="bp">F</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="n">tidyr</span><span class="o">::</span><span class="nf">unite</span><span class="p">(</span><span class="n">feature</span><span class="p">)</span>
-<span class="w">    </span><span class="n">barcodes</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">readr</span><span class="o">::</span><span class="nf">read_tsv</span><span class="p">(</span><span class="n">barcode_path</span><span class="p">,</span><span class="w"> </span><span class="n">col_names</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="bp">F</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="n">tidyr</span><span class="o">::</span><span class="nf">unite</span><span class="p">(</span><span class="n">barcode</span><span class="p">)</span>
+<span class="n">meta_all</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">fread</span><span class="p">(</span>
+<span class="w">  </span><span class="s">"outs/rna/singlecell.csv.gz"</span><span class="p">,</span>
+<span class="w">  </span><span class="n">colClasses</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">list</span><span class="p">(</span><span class="n">character</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="s">"cell"</span><span class="p">,</span><span class="w"> </span><span class="s">"is_cell_barcode"</span><span class="p">))</span>
+<span class="p">)</span>
+<span class="n">meta_cells</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">meta_all</span><span class="p">[</span><span class="nf">tolower</span><span class="p">(</span><span class="n">is_cell_barcode</span><span class="p">)</span><span class="w"> </span><span class="o">%in%</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="s">"1"</span><span class="p">,</span><span class="w"> </span><span class="s">"true"</span><span class="p">)]</span>
+<span class="n">meta_cells</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">merge</span><span class="p">(</span><span class="n">meta_cells</span><span class="p">,</span><span class="w"> </span><span class="n">cell_sample</span><span class="p">,</span><span class="w"> </span><span class="n">by</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"cell"</span><span class="p">,</span><span class="w"> </span><span class="n">all.x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">TRUE</span><span class="p">,</span><span class="w"> </span><span class="n">sort</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">FALSE</span><span class="p">)</span>
+<span class="kr">if</span><span class="w"> </span><span class="p">(</span><span class="nf">anyNA</span><span class="p">(</span><span class="n">meta_cells</span><span class="o">$</span><span class="n">sample_id</span><span class="p">))</span><span class="w"> </span><span class="nf">stop</span><span class="p">(</span><span class="s">"Called cells lack sample assignments; check missing/failed outputs"</span><span class="p">)</span>
+<span class="kr">if</span><span class="w"> </span><span class="p">(</span><span class="nf">anyDuplicated</span><span class="p">(</span><span class="n">meta_cells</span><span class="o">$</span><span class="n">cell</span><span class="p">))</span><span class="w"> </span><span class="nf">stop</span><span class="p">(</span><span class="s">"Duplicate called-cell rows"</span><span class="p">)</span>
+<span class="nf">table</span><span class="p">(</span><span class="n">meta_cells</span><span class="o">$</span><span class="n">sample_id</span><span class="p">)</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">collections</span><span class="w"> </span><span class="kn">import</span> <span class="n">Counter</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">csv</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">gzip</span>
 
-<span class="w">    </span><span class="n">mtx</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">Matrix</span><span class="o">::</span><span class="nf">readMM</span><span class="p">(</span><span class="n">mtx_path</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span>
-<span class="w">    </span><span class="n">magrittr</span><span class="o">::</span><span class="nf">set_rownames</span><span class="p">(</span><span class="n">features</span><span class="o">$</span><span class="n">feature</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span>
-<span class="w">    </span><span class="n">magrittr</span><span class="o">::</span><span class="nf">set_colnames</span><span class="p">(</span><span class="n">barcodes</span><span class="o">$</span><span class="n">barcode</span><span class="p">)</span>
+<span class="c1"># Build sample membership without parsing or truncating barcode suffixes.</span>
+<span class="n">barcode_files</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="s2">"outs/rna/per_sample_outs"</span><span class="p">)</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span>
+    <span class="s2">"*/filtered_feature_bc_matrix/barcodes.tsv.gz"</span>
+<span class="p">))</span>
+<span class="k">if</span> <span class="ow">not</span> <span class="n">barcode_files</span><span class="p">:</span>
+    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"No per-sample filtered barcode files found"</span><span class="p">)</span>
+<span class="n">cell_to_sample</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">barcode_files</span><span class="p">:</span>
+    <span class="n">sample_id</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">parents</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">name</span>
+    <span class="k">with</span> <span class="n">gzip</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s2">"rt"</span><span class="p">,</span> <span class="n">newline</span><span class="o">=</span><span class="s2">""</span><span class="p">)</span> <span class="k">as</span> <span class="n">handle</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">csv</span><span class="o">.</span><span class="n">reader</span><span class="p">(</span><span class="n">handle</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s2">"</span><span class="se">\t</span><span class="s2">"</span><span class="p">):</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">row</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">row</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+                <span class="k">continue</span>
+            <span class="n">cell</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">cell</span> <span class="ow">in</span> <span class="n">cell_to_sample</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Duplicate cell ID in sample barcode lists: </span><span class="si">{</span><span class="n">cell</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+            <span class="n">cell_to_sample</span><span class="p">[</span><span class="n">cell</span><span class="p">]</span> <span class="o">=</span> <span class="n">sample_id</span>
 
-<span class="w">    </span><span class="n">metadata</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">read.csv</span><span class="p">(</span>
-<span class="w">        </span><span class="n">file</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">singlecellmetadata</span><span class="p">,</span>
-<span class="w">        </span><span class="n">header</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">TRUE</span><span class="p">,</span>
-<span class="w">        </span><span class="n">row.names</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">1</span>
-<span class="w">    </span><span class="p">)</span>
+<span class="c1"># Stream the full table and write only mapped, called cells.</span>
+<span class="n">counts</span> <span class="o">=</span> <span class="n">Counter</span><span class="p">()</span>
+<span class="n">seen_cells</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+<span class="k">with</span> <span class="n">gzip</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s2">"outs/rna/singlecell.csv.gz"</span><span class="p">,</span> <span class="s2">"rt"</span><span class="p">,</span> <span class="n">newline</span><span class="o">=</span><span class="s2">""</span><span class="p">)</span> <span class="k">as</span> <span class="n">source</span><span class="p">,</span> \
+        <span class="nb">open</span><span class="p">(</span><span class="s2">"called_cell_metadata.csv"</span><span class="p">,</span> <span class="s2">"w"</span><span class="p">,</span> <span class="n">newline</span><span class="o">=</span><span class="s2">""</span><span class="p">)</span> <span class="k">as</span> <span class="n">output</span><span class="p">:</span>
+    <span class="n">reader</span> <span class="o">=</span> <span class="n">csv</span><span class="o">.</span><span class="n">DictReader</span><span class="p">(</span><span class="n">source</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="p">{</span><span class="s2">"cell"</span><span class="p">,</span> <span class="s2">"is_cell_barcode"</span><span class="p">}</span><span class="o">.</span><span class="n">issubset</span><span class="p">(</span><span class="n">reader</span><span class="o">.</span><span class="n">fieldnames</span> <span class="ow">or</span> <span class="p">[]):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Missing cell or is_cell_barcode column"</span><span class="p">)</span>
+    <span class="n">writer</span> <span class="o">=</span> <span class="n">csv</span><span class="o">.</span><span class="n">DictWriter</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">fieldnames</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="n">reader</span><span class="o">.</span><span class="n">fieldnames</span><span class="p">)</span> <span class="o">+</span> <span class="p">[</span><span class="s2">"sample_id"</span><span class="p">])</span>
+    <span class="n">writer</span><span class="o">.</span><span class="n">writeheader</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">reader</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">row</span><span class="p">[</span><span class="s2">"is_cell_barcode"</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">{</span><span class="s2">"1"</span><span class="p">,</span> <span class="s2">"true"</span><span class="p">}:</span>
+            <span class="k">continue</span>
+        <span class="n">cell</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s2">"cell"</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">cell</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">cell_to_sample</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Called cell lacks a sample assignment: </span><span class="si">{</span><span class="n">cell</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">cell</span> <span class="ow">in</span> <span class="n">seen_cells</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Duplicate called-cell row: </span><span class="si">{</span><span class="n">cell</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+        <span class="n">seen_cells</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">cell</span><span class="p">)</span>
+        <span class="n">row</span><span class="p">[</span><span class="s2">"sample_id"</span><span class="p">]</span> <span class="o">=</span> <span class="n">cell_to_sample</span><span class="p">[</span><span class="n">cell</span><span class="p">]</span>
+        <span class="n">writer</span><span class="o">.</span><span class="n">writerow</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
+        <span class="n">counts</span><span class="p">[</span><span class="n">row</span><span class="p">[</span><span class="s2">"sample_id"</span><span class="p">]]</span> <span class="o">+=</span> <span class="mi">1</span>
+<span class="nb">print</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span><span class="n">counts</span><span class="p">))</span>
+</code></pre></div>
+<p>The Python example writes <code>called_cell_metadata.csv</code> with a derived <code>sample_id</code> column. Its original identifier column remains <code>cell</code>.</p>
+<h3 id="multi-sample-integration-batch-correction">Multi-Sample Integration &amp; Batch Correction<a class="headerlink" href="#multi-sample-integration-batch-correction" title="Permanent link">&para;</a></h3>
+<p>To perform joint analysis across pooled samples, load the combined matrix from <code>outs/rna/filtered_feature_bc_matrix.h5</code> (or <code>.h5ad</code>), attach demultiplexed <code>sample_id</code> metadata, and apply batch integration using Harmony or Seurat v5:</p>
+<div class="highlight"><pre><span></span><code><span class="nf">library</span><span class="p">(</span><span class="n">Seurat</span><span class="p">)</span>
+<span class="nf">library</span><span class="p">(</span><span class="n">harmony</span><span class="p">)</span>
 
-<span class="w">    </span><span class="n">chrom_assay</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">CreateChromatinAssay</span><span class="p">(</span>
-<span class="w">        </span><span class="n">counts</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mtx</span><span class="p">,</span>
-<span class="w">        </span><span class="n">sep</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="s">"_"</span><span class="p">,</span><span class="w"> </span><span class="s">"_"</span><span class="p">),</span>
-<span class="w">        </span><span class="n">fragments</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">fragments</span><span class="p">,</span>
-<span class="w">        </span><span class="n">min.cells</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">10</span><span class="p">,</span>
-<span class="w">        </span><span class="n">min.features</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">200</span>
-<span class="w">    </span><span class="p">)</span>
+<span class="c1"># Load global pooled matrix</span>
+<span class="n">all_counts</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">Read10X_h5</span><span class="p">(</span><span class="s">"outs/rna/filtered_feature_bc_matrix.h5"</span><span class="p">)</span>
+<span class="n">merged_obj</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">CreateSeuratObject</span><span class="p">(</span><span class="n">counts</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">all_counts</span><span class="p">,</span><span class="w"> </span><span class="n">project</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"C6_Pool"</span><span class="p">)</span>
 
-<span class="w">    </span><span class="n">scATAC</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">CreateSeuratObject</span><span class="p">(</span>
-<span class="w">        </span><span class="n">counts</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">chrom_assay</span><span class="p">,</span>
-<span class="w">        </span><span class="n">assay</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"peaks"</span><span class="p">,</span>
-<span class="w">        </span><span class="n">meta.data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">metadata</span>
-<span class="w">    </span><span class="p">)</span>
-<span class="w">    </span><span class="kr">return</span><span class="p">(</span><span class="n">scATAC</span><span class="p">)</span>
+<span class="c1"># Use meta_cells from the R mapping example above.</span>
+<span class="n">meta_df</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">as.data.frame</span><span class="p">(</span><span class="n">meta_cells</span><span class="p">)</span>
+<span class="nf">stopifnot</span><span class="p">(</span><span class="o">!</span><span class="nf">anyDuplicated</span><span class="p">(</span><span class="n">meta_df</span><span class="o">$</span><span class="n">cell</span><span class="p">))</span>
+<span class="nf">rownames</span><span class="p">(</span><span class="n">meta_df</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">meta_df</span><span class="o">$</span><span class="n">cell</span>
+<span class="n">common_cells</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">intersect</span><span class="p">(</span><span class="nf">colnames</span><span class="p">(</span><span class="n">merged_obj</span><span class="p">),</span><span class="w"> </span><span class="nf">rownames</span><span class="p">(</span><span class="n">meta_df</span><span class="p">))</span>
+<span class="kr">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nf">length</span><span class="p">(</span><span class="n">common_cells</span><span class="p">))</span><span class="w"> </span><span class="nf">stop</span><span class="p">(</span><span class="s">"No matching cell IDs"</span><span class="p">)</span>
+<span class="n">merged_obj</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">merged_obj</span><span class="p">[,</span><span class="w"> </span><span class="n">common_cells</span><span class="p">]</span>
+<span class="n">merged_obj</span><span class="o">$</span><span class="n">sample_id</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">meta_df</span><span class="p">[</span><span class="nf">colnames</span><span class="p">(</span><span class="n">merged_obj</span><span class="p">),</span><span class="w"> </span><span class="s">"sample_id"</span><span class="p">]</span>
+
+<span class="c1"># Run Harmony batch correction</span>
+<span class="n">merged_obj</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">NormalizeData</span><span class="p">(</span><span class="n">merged_obj</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span>
+<span class="w">  </span><span class="nf">FindVariableFeatures</span><span class="p">()</span><span class="w"> </span><span class="o">%&gt;%</span>
+<span class="w">  </span><span class="nf">ScaleData</span><span class="p">()</span><span class="w"> </span><span class="o">%&gt;%</span>
+<span class="w">  </span><span class="nf">RunPCA</span><span class="p">()</span><span class="w"> </span><span class="o">%&gt;%</span>
+<span class="w">  </span><span class="nf">RunHarmony</span><span class="p">(</span><span class="n">group.by.vars</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"sample_id"</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span>
+<span class="w">  </span><span class="nf">RunUMAP</span><span class="p">(</span><span class="n">reduction</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"harmony"</span><span class="p">,</span><span class="w"> </span><span class="n">dims</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">1</span><span class="o">:</span><span class="m">30</span><span class="p">)</span>
+
+<span class="nf">DimPlot</span><span class="p">(</span><span class="n">merged_obj</span><span class="p">,</span><span class="w"> </span><span class="n">reduction</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"umap"</span><span class="p">,</span><span class="w"> </span><span class="n">group.by</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"sample_id"</span><span class="p">)</span>
+</code></pre></div>
+<hr />
+<h2 id="3-single-cell-atac-chromatin-accessibility-scatac">3. Single-Cell ATAC Chromatin Accessibility (scATAC) <a id="scatac-analysis"></a><a class="headerlink" href="#3-single-cell-atac-chromatin-accessibility-scatac" title="Permanent link">&para;</a></h2>
+<div class="admonition note">
+<p class="admonition-title">Cutsite Quantification Note</p>
+<p>Version 3.2 defaults peak calling and matrix quantification to <strong>cutsite</strong> mode (Tn5 insertion endpoints adjusted for 9-bp stagger), providing higher fidelity for local accessibility. FRIP and TSS scores remain evaluated on deduplicated unique fragments.</p>
+</div>
+<h3 id="r-ecosystem-signac">R Ecosystem (Signac)<a class="headerlink" href="#r-ecosystem-signac" title="Permanent link">&para;</a></h3>
+<p>Choose either H5 or MTX below, then run the shared Signac analysis block. MTX input uses the three files <code>matrix.mtx.gz</code>, <code>peaks.bed.gz</code>, and <code>barcodes.tsv.gz</code> in the same directory; the matrix has peaks as rows and cells as columns.</p>
+<h4 id="atac-r-h5">H5 input<a class="headerlink" href="#atac-r-h5" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code><span class="n">counts</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">Seurat</span><span class="o">::</span><span class="nf">Read10X_h5</span><span class="p">(</span><span class="s">"outs/filtered_peak_bc_matrix.h5"</span><span class="p">)</span>
+<span class="n">peak_ranges</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="kc">NULL</span>
+</code></pre></div>
+<h4 id="atac-r-mtx">MTX input<a class="headerlink" href="#atac-r-mtx" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code><span class="n">read_atac_mtx</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="kr">function</span><span class="p">(</span><span class="n">mex_dir</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="n">matrix_con</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">gzfile</span><span class="p">(</span><span class="nf">file.path</span><span class="p">(</span><span class="n">mex_dir</span><span class="p">,</span><span class="w"> </span><span class="s">"matrix.mtx.gz"</span><span class="p">),</span><span class="w"> </span><span class="s">"rt"</span><span class="p">)</span>
+<span class="w">  </span><span class="nf">on.exit</span><span class="p">(</span><span class="nf">close</span><span class="p">(</span><span class="n">matrix_con</span><span class="p">),</span><span class="w"> </span><span class="n">add</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">TRUE</span><span class="p">)</span>
+<span class="w">  </span><span class="n">counts</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">as</span><span class="p">(</span><span class="n">Matrix</span><span class="o">::</span><span class="nf">readMM</span><span class="p">(</span><span class="n">matrix_con</span><span class="p">),</span><span class="w"> </span><span class="s">"CsparseMatrix"</span><span class="p">)</span>
+
+<span class="w">  </span><span class="n">peaks</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">read.delim</span><span class="p">(</span><span class="nf">gzfile</span><span class="p">(</span><span class="nf">file.path</span><span class="p">(</span><span class="n">mex_dir</span><span class="p">,</span><span class="w"> </span><span class="s">"peaks.bed.gz"</span><span class="p">)),</span>
+<span class="w">                      </span><span class="n">header</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">FALSE</span><span class="p">,</span><span class="w"> </span><span class="n">colClasses</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="s">"character"</span><span class="p">,</span><span class="w"> </span><span class="s">"integer"</span><span class="p">,</span><span class="w"> </span><span class="s">"integer"</span><span class="p">))</span>
+<span class="w">  </span><span class="n">barcodes</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">read.delim</span><span class="p">(</span><span class="nf">gzfile</span><span class="p">(</span><span class="nf">file.path</span><span class="p">(</span><span class="n">mex_dir</span><span class="p">,</span><span class="w"> </span><span class="s">"barcodes.tsv.gz"</span><span class="p">)),</span>
+<span class="w">                         </span><span class="n">header</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">FALSE</span><span class="p">,</span><span class="w"> </span><span class="n">colClasses</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"character"</span><span class="p">)[[</span><span class="m">1</span><span class="p">]]</span>
+<span class="w">  </span><span class="nf">stopifnot</span><span class="p">(</span><span class="nf">nrow</span><span class="p">(</span><span class="n">counts</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nf">nrow</span><span class="p">(</span><span class="n">peaks</span><span class="p">),</span><span class="w"> </span><span class="nf">ncol</span><span class="p">(</span><span class="n">counts</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nf">length</span><span class="p">(</span><span class="n">barcodes</span><span class="p">))</span>
+<span class="w">  </span><span class="nf">rownames</span><span class="p">(</span><span class="n">counts</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">paste0</span><span class="p">(</span><span class="n">peaks</span><span class="p">[[</span><span class="m">1</span><span class="p">]],</span><span class="w"> </span><span class="s">":"</span><span class="p">,</span><span class="w"> </span><span class="n">peaks</span><span class="p">[[</span><span class="m">2</span><span class="p">]],</span><span class="w"> </span><span class="s">"-"</span><span class="p">,</span><span class="w"> </span><span class="n">peaks</span><span class="p">[[</span><span class="m">3</span><span class="p">]])</span>
+<span class="w">  </span><span class="nf">colnames</span><span class="p">(</span><span class="n">counts</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">barcodes</span>
+
+<span class="w">  </span><span class="c1"># BED: 0-based, half-open; GRanges: 1-based, closed.</span>
+<span class="w">  </span><span class="n">peak_ranges</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">GenomicRanges</span><span class="o">::</span><span class="nf">GRanges</span><span class="p">(</span>
+<span class="w">    </span><span class="n">seqnames</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">peaks</span><span class="p">[[</span><span class="m">1</span><span class="p">]],</span>
+<span class="w">    </span><span class="n">ranges</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">IRanges</span><span class="o">::</span><span class="nf">IRanges</span><span class="p">(</span><span class="n">start</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">peaks</span><span class="p">[[</span><span class="m">2</span><span class="p">]]</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="m">1L</span><span class="p">,</span><span class="w"> </span><span class="n">end</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">peaks</span><span class="p">[[</span><span class="m">3</span><span class="p">]])</span>
+<span class="w">  </span><span class="p">)</span>
+<span class="w">  </span><span class="nf">list</span><span class="p">(</span><span class="n">counts</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">counts</span><span class="p">,</span><span class="w"> </span><span class="n">ranges</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">peak_ranges</span><span class="p">)</span>
 <span class="p">}</span>
+
+<span class="n">mtx_data</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">read_atac_mtx</span><span class="p">(</span><span class="s">"outs/filtered_peak_bc_matrix"</span><span class="p">)</span>
+<span class="n">counts</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">mtx_data</span><span class="o">$</span><span class="n">counts</span>
+<span class="n">peak_ranges</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">mtx_data</span><span class="o">$</span><span class="n">ranges</span>
 </code></pre></div>
-<p><strong>R (ArchR)</strong></p>
-<p>Create Arrow files from either <code>fragments.tsv.gz</code> (raw fragments) or <code>filtered.fragments.tsv.gz</code> (cell-filtered fragments).</p>
-<p><strong>Note:</strong></p>
-<ul>
-<li>ArchR-only filtering: point to the raw <code>fragments.tsv.gz</code> and rely on <code>filterTSS</code>/<code>filterFrags</code> thresholds.</li>
-<li>Combined filtering: point to <code>filtered.fragments.tsv.gz</code> generated after dnbc4tools cell filtering, then apply ArchR thresholds as an additional filter.</li>
-</ul>
-<div class="highlight"><pre><span></span><code><span class="c1"># Option A: ArchR-only filtering (raw fragments)</span>
-<span class="nf">library</span><span class="p">(</span><span class="n">ArchR</span><span class="p">)</span>
+<h4 id="atac-r-analysis">Shared Signac analysis<a class="headerlink" href="#atac-r-analysis" title="Permanent link">&para;</a></h4>
+<p>Use <code>counts</code> and <code>peak_ranges</code> from your chosen input method. MTX BED coordinates are converted to 1-based ranges explicitly for Signac. Keep the complete cell barcodes when matching metadata and fragments.</p>
+<div class="highlight"><pre><span></span><code><span class="nf">library</span><span class="p">(</span><span class="n">Signac</span><span class="p">)</span>
+<span class="nf">library</span><span class="p">(</span><span class="n">Seurat</span><span class="p">)</span>
+<span class="nf">library</span><span class="p">(</span><span class="n">GenomicRanges</span><span class="p">)</span>
+
+<span class="c1"># 2. Load cell metadata and filter valid cells</span>
+<span class="n">metadata</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">read.csv</span><span class="p">(</span><span class="s">"outs/singlecell.csv"</span><span class="p">,</span><span class="w"> </span><span class="n">row.names</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">1</span><span class="p">)</span>
+<span class="n">metadata</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">metadata</span><span class="p">[</span><span class="n">metadata</span><span class="o">$</span><span class="n">is_cell_barcode</span><span class="w"> </span><span class="o">%in%</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="m">1</span><span class="p">,</span><span class="w"> </span><span class="s">"True"</span><span class="p">,</span><span class="w"> </span><span class="s">"true"</span><span class="p">),</span><span class="w"> </span><span class="p">]</span>
+
+<span class="c1"># Align cell barcodes</span>
+<span class="n">common_cells</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">intersect</span><span class="p">(</span><span class="nf">colnames</span><span class="p">(</span><span class="n">counts</span><span class="p">),</span><span class="w"> </span><span class="nf">rownames</span><span class="p">(</span><span class="n">metadata</span><span class="p">))</span>
+<span class="n">counts</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">counts</span><span class="p">[,</span><span class="w"> </span><span class="n">common_cells</span><span class="p">,</span><span class="w"> </span><span class="n">drop</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">FALSE</span><span class="p">]</span>
+<span class="n">metadata</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">metadata</span><span class="p">[</span><span class="n">common_cells</span><span class="p">,</span><span class="w"> </span><span class="p">,</span><span class="w"> </span><span class="n">drop</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">FALSE</span><span class="p">]</span>
+
+<span class="c1"># 3. Create ChromatinAssay bound to fragments file</span>
+<span class="n">chrom_assay</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">CreateChromatinAssay</span><span class="p">(</span>
+<span class="w">  </span><span class="n">counts</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">counts</span><span class="p">,</span>
+<span class="w">  </span><span class="n">ranges</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">peak_ranges</span><span class="p">,</span>
+<span class="w">  </span><span class="n">sep</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="s">":"</span><span class="p">,</span><span class="w"> </span><span class="s">"-"</span><span class="p">),</span>
+<span class="w">  </span><span class="n">fragments</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"outs/fragments.tsv.gz"</span><span class="p">,</span>
+<span class="w">  </span><span class="n">min.cells</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">10</span><span class="p">,</span>
+<span class="w">  </span><span class="n">min.features</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">200</span>
+<span class="p">)</span>
+
+<span class="c1"># 4. Create Seurat object and run TF-IDF and SVD (LSI)</span>
+<span class="n">scATAC</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">CreateSeuratObject</span><span class="p">(</span><span class="n">counts</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">chrom_assay</span><span class="p">,</span><span class="w"> </span><span class="n">assay</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"peaks"</span><span class="p">,</span><span class="w"> </span><span class="n">meta.data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">metadata</span><span class="p">)</span>
+<span class="n">scATAC</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">RunTFIDF</span><span class="p">(</span><span class="n">scATAC</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span>
+<span class="w">  </span><span class="nf">FindTopFeatures</span><span class="p">(</span><span class="n">min.cutoff</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"q0"</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span>
+<span class="w">  </span><span class="nf">RunSVD</span><span class="p">()</span><span class="w"> </span><span class="o">%&gt;%</span>
+<span class="w">  </span><span class="nf">RunUMAP</span><span class="p">(</span><span class="n">reduction</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"lsi"</span><span class="p">,</span><span class="w"> </span><span class="n">dims</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">2</span><span class="o">:</span><span class="m">30</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span>
+<span class="w">  </span><span class="nf">FindNeighbors</span><span class="p">(</span><span class="n">reduction</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"lsi"</span><span class="p">,</span><span class="w"> </span><span class="n">dims</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">2</span><span class="o">:</span><span class="m">30</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span>
+<span class="w">  </span><span class="nf">FindClusters</span><span class="p">(</span><span class="n">algorithm</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">3</span><span class="p">,</span><span class="w"> </span><span class="n">resolution</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0.5</span><span class="p">)</span>
+
+<span class="nf">DimPlot</span><span class="p">(</span><span class="n">scATAC</span><span class="p">,</span><span class="w"> </span><span class="n">reduction</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"umap"</span><span class="p">,</span><span class="w"> </span><span class="n">label</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">TRUE</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="r-ecosystem-archr">R Ecosystem (ArchR)<a class="headerlink" href="#r-ecosystem-archr" title="Permanent link">&para;</a></h3>
+<p>ArchR is optimized for large-scale ATAC-seq datasets. Build Arrow files from either <code>fragments.tsv.gz</code> (raw fragments) or <code>filtered.fragments.tsv.gz</code> (pre-filtered cells):</p>
+<div class="highlight"><pre><span></span><code><span class="nf">library</span><span class="p">(</span><span class="n">ArchR</span><span class="p">)</span>
+<span class="nf">addArchRThreads</span><span class="p">(</span><span class="n">threads</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">16</span><span class="p">)</span>
+<span class="nf">addArchRGenome</span><span class="p">(</span><span class="s">"hg38"</span><span class="p">)</span><span class="w"> </span><span class="c1"># Set reference accordingly</span>
+
+<span class="c1"># Create Arrow files from dnbc4tools filtered fragments</span>
 <span class="n">ArrowFiles</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">createArrowFiles</span><span class="p">(</span>
-<span class="w">  </span><span class="n">inputFiles</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"/outs/fragments.tsv.gz"</span><span class="p">,</span>
-<span class="w">  </span><span class="n">sampleNames</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"MySample"</span><span class="p">,</span>
+<span class="w">  </span><span class="n">inputFiles</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"outs/filtered.fragments.tsv.gz"</span><span class="p">,</span>
+<span class="w">  </span><span class="n">sampleNames</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"Sample_ATAC"</span><span class="p">,</span>
 <span class="w">  </span><span class="n">filterTSS</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">4</span><span class="p">,</span>
 <span class="w">  </span><span class="n">filterFrags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">1000</span><span class="p">,</span>
 <span class="w">  </span><span class="n">addTileMat</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">TRUE</span><span class="p">,</span>
 <span class="w">  </span><span class="n">addGeneScoreMat</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">TRUE</span>
 <span class="p">)</span>
+
+<span class="n">proj</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">ArchRProject</span><span class="p">(</span><span class="n">ArrowFiles</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ArrowFiles</span><span class="p">,</span><span class="w"> </span><span class="n">outputDirectory</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"ArchR_Output"</span><span class="p">)</span>
+<span class="n">proj</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">addIterativeLSI</span><span class="p">(</span><span class="n">ArchRProj</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">proj</span><span class="p">,</span><span class="w"> </span><span class="n">useMatrix</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"TileMatrix"</span><span class="p">,</span><span class="w"> </span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"IterativeLSI"</span><span class="p">)</span>
+<span class="n">proj</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">addUMAP</span><span class="p">(</span><span class="n">ArchRProj</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">proj</span><span class="p">,</span><span class="w"> </span><span class="n">reducedDims</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"IterativeLSI"</span><span class="p">)</span>
+<span class="nf">plotEmbedding</span><span class="p">(</span><span class="n">proj</span><span class="p">,</span><span class="w"> </span><span class="n">colorBy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"cellColData"</span><span class="p">,</span><span class="w"> </span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"Sample"</span><span class="p">)</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><span class="c1"># Option B: Use dnbc4tools cell-filtered fragments then ArchR filters</span>
-<span class="nf">library</span><span class="p">(</span><span class="n">ArchR</span><span class="p">)</span>
-<span class="n">ArrowFiles</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">createArrowFiles</span><span class="p">(</span>
-<span class="w">  </span><span class="n">inputFiles</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"/outs/filtered.fragments.tsv.gz"</span><span class="p">,</span>
-<span class="w">  </span><span class="n">sampleNames</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"MySample"</span><span class="p">,</span>
-<span class="w">  </span><span class="n">filterTSS</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">4</span><span class="p">,</span>
-<span class="w">  </span><span class="n">filterFrags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">1000</span><span class="p">,</span>
-<span class="w">  </span><span class="n">addTileMat</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">TRUE</span><span class="p">,</span>
-<span class="w">  </span><span class="n">addGeneScoreMat</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">TRUE</span>
-<span class="p">)</span>
+<h3 id="python-ecosystem-snapatac2">Python Ecosystem (SnapATAC2)<a class="headerlink" href="#python-ecosystem-snapatac2" title="Permanent link">&para;</a></h3>
+<p>This example uses the existing peak count matrix with <a href="https://snapatac2.scverse.org/version/2.10/index.html">SnapATAC2</a> for feature selection, spectral embedding, neighbor graph construction, and clustering. Keep the raw cutsite counts in <code>adata_atac.X</code>; this workflow does not apply RNA-style total-count normalization, log transformation, HVG selection, or PCA.</p>
+<p>Choose either H5 or MTX input below. Scanpy is used only to read the 10x-compatible H5 file: pass <code>gex_only=False</code> because ATAC peaks are not gene-expression features. MTX input reads the peak BED file explicitly instead of expecting <code>features.tsv.gz</code>. Both methods create an in-memory AnnData object for the shared SnapATAC2 analysis block.</p>
+<h4 id="atac-python-h5">H5 input<a class="headerlink" href="#atac-python-h5" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">scanpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sc</span>
+
+<span class="c1"># Load ATAC filtered peak matrix</span>
+<span class="n">adata_atac</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">read_10x_h5</span><span class="p">(</span><span class="s2">"outs/filtered_peak_bc_matrix.h5"</span><span class="p">,</span> <span class="n">gex_only</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">adata_atac</span><span class="o">.</span><span class="n">var_names_make_unique</span><span class="p">()</span>
 </code></pre></div>
-<p><strong>Python (AnnData)</strong></p>
-<p>Load the filtered peak matrix into an AnnData object.</p>
-<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.sparse</span><span class="w"> </span><span class="kn">import</span> <span class="n">csr_matrix</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">anndata</span>
+<h4 id="atac-python-mtx">MTX input<a class="headerlink" href="#atac-python-mtx" title="Permanent link">&para;</a></h4>
+<p>The <code>read_atac_C4</code> function loads the peak BED and complete cell barcodes separately, then transposes the sparse matrix into AnnData’s cell-by-peak layout. BED coordinates in <code>adata_atac.var</code> retain their original 0-based, half-open convention.</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">anndata</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ad</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">scipy.io</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">scipy.sparse</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.io</span><span class="w"> </span><span class="kn">import</span> <span class="n">mmread</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.sparse</span><span class="w"> </span><span class="kn">import</span> <span class="n">csr_matrix</span>
+
 
 <span class="k">def</span><span class="w"> </span><span class="nf">read_atac_C4</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
-    <span class="n">mtx_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s2">"matrix.mtx.gz"</span><span class="p">)</span>
-    <span class="n">barcode_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s2">"barcodes.tsv.gz"</span><span class="p">)</span>
-    <span class="n">feature_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s2">"peaks.bed.gz"</span><span class="p">)</span>
-
-    <span class="n">obs</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">barcode_path</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">"</span><span class="se">\t</span><span class="s2">"</span><span class="p">)</span>
-    <span class="n">obs</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">"barcode"</span>
-
-    <span class="n">var</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">feature_path</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">"</span><span class="se">\t</span><span class="s2">"</span><span class="p">)</span>
-    <span class="n">var</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'chrom'</span><span class="p">,</span> <span class="s1">'chromStart'</span><span class="p">,</span> <span class="s1">'chromEnd'</span><span class="p">]</span>
-    <span class="n">var</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">var</span><span class="p">[</span><span class="s1">'chrom'</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span> <span class="o">+</span> <span class="s1">':'</span> <span class="o">+</span> <span class="n">var</span><span class="p">[</span><span class="s1">'chromStart'</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span> <span class="o">+</span> <span class="s1">'-'</span> <span class="o">+</span> <span class="n">var</span><span class="p">[</span><span class="s1">'chromEnd'</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
-    <span class="n">var</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">"peak"</span>
-
-    <span class="n">mtx</span> <span class="o">=</span> <span class="n">csr_matrix</span><span class="p">(</span><span class="n">scipy</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">mmread</span><span class="p">(</span><span class="n">mtx_path</span><span class="p">)</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
-
-    <span class="n">adata</span> <span class="o">=</span> <span class="n">anndata</span><span class="o">.</span><span class="n">AnnData</span><span class="p">(</span><span class="n">mtx</span><span class="p">,</span> <span class="n">obs</span><span class="o">=</span><span class="n">obs</span><span class="p">,</span> <span class="n">var</span><span class="o">=</span><span class="n">var</span><span class="p">)</span>
+    <span class="n">mex_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+    <span class="n">counts</span> <span class="o">=</span> <span class="n">mmread</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">mex_dir</span> <span class="o">/</span> <span class="s2">"matrix.mtx.gz"</span><span class="p">))</span>
+    <span class="n">barcodes</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span>
+        <span class="n">mex_dir</span> <span class="o">/</span> <span class="s2">"barcodes.tsv.gz"</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">"</span><span class="se">\t</span><span class="s2">"</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
+        <span class="n">keep_default_na</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">peaks</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span>
+        <span class="n">mex_dir</span> <span class="o">/</span> <span class="s2">"peaks.bed.gz"</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">"</span><span class="se">\t</span><span class="s2">"</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">names</span><span class="o">=</span><span class="p">[</span><span class="s2">"chrom"</span><span class="p">,</span> <span class="s2">"chromStart"</span><span class="p">,</span> <span class="s2">"chromEnd"</span><span class="p">],</span>
+        <span class="n">dtype</span><span class="o">=</span><span class="p">{</span><span class="s2">"chrom"</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="s2">"chromStart"</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="s2">"chromEnd"</span><span class="p">:</span> <span class="nb">int</span><span class="p">},</span>
+        <span class="n">keep_default_na</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="k">if</span> <span class="n">counts</span><span class="o">.</span><span class="n">shape</span> <span class="o">!=</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">peaks</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">barcodes</span><span class="p">)):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Matrix dimensions do not match peaks and barcodes"</span><span class="p">)</span>
+    <span class="n">obs</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">Index</span><span class="p">(</span><span class="n">barcodes</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"barcode"</span><span class="p">))</span>
+    <span class="n">peaks</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Index</span><span class="p">(</span>
+        <span class="n">peaks</span><span class="p">[</span><span class="s2">"chrom"</span><span class="p">]</span> <span class="o">+</span> <span class="s2">":"</span> <span class="o">+</span> <span class="n">peaks</span><span class="p">[</span><span class="s2">"chromStart"</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
+        <span class="o">+</span> <span class="s2">"-"</span> <span class="o">+</span> <span class="n">peaks</span><span class="p">[</span><span class="s2">"chromEnd"</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">),</span> <span class="n">name</span><span class="o">=</span><span class="s2">"peak"</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="c1"># Matrix Market: peaks x cells; AnnData: cells x peaks.</span>
+    <span class="n">adata</span> <span class="o">=</span> <span class="n">ad</span><span class="o">.</span><span class="n">AnnData</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="n">csr_matrix</span><span class="p">(</span><span class="n">counts</span><span class="o">.</span><span class="n">T</span><span class="p">),</span> <span class="n">obs</span><span class="o">=</span><span class="n">obs</span><span class="p">,</span> <span class="n">var</span><span class="o">=</span><span class="n">peaks</span><span class="p">)</span>
     <span class="n">adata</span><span class="o">.</span><span class="n">var_names_make_unique</span><span class="p">()</span>
     <span class="k">return</span> <span class="n">adata</span>
+
+
+<span class="n">adata_atac</span> <span class="o">=</span> <span class="n">read_atac_C4</span><span class="p">(</span><span class="s2">"outs/filtered_peak_bc_matrix"</span><span class="p">)</span>
 </code></pre></div>
-<h2 id="common-output-files">Common Output Files <a id="common-output-files"></a><a class="headerlink" href="#common-output-files" title="Permanent link">&para;</a></h2>
+<h4 id="atac-python-analysis">Shared SnapATAC2 analysis<a class="headerlink" href="#atac-python-analysis" title="Permanent link">&para;</a></h4>
+<p>Choose one input method above before running this block. The calls follow the <a href="https://snapatac2.scverse.org/version/2.10/api/_autosummary/snapatac2.pp.select_features.html">SnapATAC2 2.10 feature-selection API</a> and <a href="https://snapatac2.scverse.org/version/2.10/api/_autosummary/snapatac2.tl.spectral.html">spectral-embedding API</a>. The example selects up to 50,000 peaks and computes up to 30 spectral components; adjust feature count, component count, neighbor count, and clustering resolution to your dataset. It assumes a non-empty matrix with enough cells and peaks for these settings.</p>
+<p>This example clusters the published peak matrix. Fragment-based operations, such as recomputing TSS enrichment or constructing a gene activity matrix, require importing fragments separately.</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">snapatac2</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">snap</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.sparse</span><span class="w"> </span><span class="kn">import</span> <span class="n">csr_matrix</span>
+
+<span class="c1"># Keep raw cutsite counts in sparse CSR format</span>
+<span class="n">adata_atac</span><span class="o">.</span><span class="n">X</span> <span class="o">=</span> <span class="n">csr_matrix</span><span class="p">(</span><span class="n">adata_atac</span><span class="o">.</span><span class="n">X</span><span class="p">)</span>
+
+<span class="n">snap</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">select_features</span><span class="p">(</span><span class="n">adata_atac</span><span class="p">,</span> <span class="n">n_features</span><span class="o">=</span><span class="nb">min</span><span class="p">(</span><span class="mi">50000</span><span class="p">,</span> <span class="n">adata_atac</span><span class="o">.</span><span class="n">n_vars</span><span class="p">))</span>
+<span class="n">snap</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">spectral</span><span class="p">(</span><span class="n">adata_atac</span><span class="p">,</span> <span class="n">n_comps</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">snap</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">knn</span><span class="p">(</span><span class="n">adata_atac</span><span class="p">,</span> <span class="n">n_neighbors</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> <span class="n">use_rep</span><span class="o">=</span><span class="s2">"X_spectral"</span><span class="p">)</span>
+<span class="n">snap</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">leiden</span><span class="p">(</span><span class="n">adata_atac</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">snap</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">umap</span><span class="p">(</span><span class="n">adata_atac</span><span class="p">,</span> <span class="n">use_rep</span><span class="o">=</span><span class="s2">"X_spectral"</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">snap</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">umap</span><span class="p">(</span><span class="n">adata_atac</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">"leiden"</span><span class="p">,</span> <span class="n">show</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</code></pre></div>
+<hr />
+<h2 id="4-single-cell-vdj-immune-profiling-scvdj">4. Single-Cell V(D)J Immune Profiling (scVDJ) <a id="scvdj-analysis"></a><a class="headerlink" href="#4-single-cell-vdj-immune-profiling-scvdj" title="Permanent link">&para;</a></h2>
+<p>The key output for scVDJ is <code>outs/filtered_contig_annotations.csv</code>, containing high-confidence TCR / BCR chain rearrangements, CDR3 sequences, and clonotype classifications.</p>
+<h3 id="r-ecosystem-screpertoire-integration-with-seurat">R Ecosystem (scRepertoire Integration with Seurat)<a class="headerlink" href="#r-ecosystem-screpertoire-integration-with-seurat" title="Permanent link">&para;</a></h3>
+<p><a href="https://github.com/ncborcherding/scRepertoire">scRepertoire</a> is widely used to combine single-cell RNA and immune receptor repertoires:</p>
+<div class="highlight"><pre><span></span><code><span class="nf">library</span><span class="p">(</span><span class="n">scRepertoire</span><span class="p">)</span>
+<span class="nf">library</span><span class="p">(</span><span class="n">Seurat</span><span class="p">)</span>
+
+<span class="c1"># 1. Load contig annotation table</span>
+<span class="n">contigs</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">read.csv</span><span class="p">(</span><span class="s">"outs/filtered_contig_annotations.csv"</span><span class="p">)</span>
+
+<span class="c1"># 2. Combine TCR (or BCR) clonotypes</span>
+<span class="n">combined_tcr</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">combineTCR</span><span class="p">(</span>
+<span class="w">  </span><span class="nf">list</span><span class="p">(</span><span class="n">Sample1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">contigs</span><span class="p">),</span>
+<span class="w">  </span><span class="n">samples</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"Sample1"</span><span class="p">,</span>
+<span class="w">  </span><span class="n">removeNA</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">FALSE</span>
+<span class="p">)</span>
+
+<span class="c1"># 3. Load processed scRNA Seurat object</span>
+<span class="n">scRNA</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">readRDS</span><span class="p">(</span><span class="s">"scRNA_analyzed.rds"</span><span class="p">)</span>
+
+<span class="c1"># 4. Seamlessly map immune clonotypes onto scRNA cells</span>
+<span class="n">scRNA</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">combineExpression</span><span class="p">(</span>
+<span class="w">  </span><span class="n">combined_tcr</span><span class="p">,</span>
+<span class="w">  </span><span class="n">scRNA</span><span class="p">,</span>
+<span class="w">  </span><span class="n">cloneCall</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"gene"</span><span class="p">,</span>
+<span class="w">  </span><span class="n">proportion</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">FALSE</span>
+<span class="p">)</span>
+
+<span class="c1"># Visualize clonotype expansion on the RNA UMAP embedding</span>
+<span class="nf">DimPlot</span><span class="p">(</span><span class="n">scRNA</span><span class="p">,</span><span class="w"> </span><span class="n">group.by</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"cloneSize"</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="python-ecosystem-scirpy-integration-with-scanpy">Python Ecosystem (Scirpy Integration with Scanpy)<a class="headerlink" href="#python-ecosystem-scirpy-integration-with-scanpy" title="Permanent link">&para;</a></h3>
+<p><a href="https://scirpy.readthedocs.io/">Scirpy</a> can be used with Scanpy for single-cell immune receptor analysis:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">scanpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sc</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">scirpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ir</span>
+
+<span class="c1"># 1. Load RNA and VDJ datasets</span>
+<span class="n">adata_rna</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">read_h5ad</span><span class="p">(</span><span class="s2">"outs/filtered_feature_bc_matrix.h5ad"</span><span class="p">)</span>
+<span class="n">adata_vdj</span> <span class="o">=</span> <span class="n">ir</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">read_10x_vdj</span><span class="p">(</span><span class="s2">"outs/filtered_contig_annotations.csv"</span><span class="p">)</span>
+
+<span class="c1"># 2. Index and align immune receptor chains</span>
+<span class="n">ir</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">index_chains</span><span class="p">(</span><span class="n">adata_vdj</span><span class="p">)</span>
+
+<span class="c1"># 3. Merge VDJ annotations into RNA AnnData</span>
+<span class="n">ir</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">merge_with_ir</span><span class="p">(</span><span class="n">adata_rna</span><span class="p">,</span> <span class="n">adata_vdj</span><span class="p">)</span>
+
+<span class="c1"># 4. Perform clonotype expansion and diversity analysis</span>
+<span class="n">ir</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">chain_qc</span><span class="p">(</span><span class="n">adata_rna</span><span class="p">)</span>
+<span class="n">ir</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">clonal_expansion</span><span class="p">(</span><span class="n">adata_rna</span><span class="p">)</span>
+
+<span class="c1"># Plot clonal expansion on the RNA UMAP</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">umap</span><span class="p">(</span><span class="n">adata_rna</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="p">[</span><span class="s2">"clonal_expansion"</span><span class="p">,</span> <span class="s2">"has_ir"</span><span class="p">])</span>
+</code></pre></div>
+<hr />
+<h2 id="6-deliverables-quick-reference">5. Deliverables Quick Reference <a id="common-output-files"></a><a class="headerlink" href="#6-deliverables-quick-reference" title="Permanent link">&para;</a></h2>
+<p>The table below summarizes key deliverables, file formats, and recommended loader functions across R and Python:</p>
 <table>
 <thead>
 <tr>
 <th style="text-align: left;">File / Directory</th>
-<th style="text-align: left;">Description</th>
-<th style="text-align: left;">Analysis Type</th>
+<th style="text-align: left;">Format</th>
+<th style="text-align: left;">Modality</th>
+<th style="text-align: left;">R Reader</th>
+<th style="text-align: left;">Python Reader</th>
+<th style="text-align: left;">Intended Downstream Usage</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td style="text-align: left;"><code>filtered_feature_bc_matrix/</code></td>
-<td style="text-align: left;">Filtered gene expression matrix (MEX format).</td>
-<td style="text-align: left;">scRNA-seq</td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>filtered_peak_bc_matrix/</code></td>
-<td style="text-align: left;">Filtered peak accessibility matrix (MEX format).</td>
-<td style="text-align: left;">scATAC-seq</td>
+<td style="text-align: left;"><code>filtered_feature_bc_matrix.h5</code></td>
+<td style="text-align: left;">HDF5 (<code>.h5</code>)</td>
+<td style="text-align: left;">scRNA / C6 / Multi</td>
+<td style="text-align: left;"><code>Seurat::Read10X_h5()</code></td>
+<td style="text-align: left;"><code>scanpy.read_10x_h5()</code></td>
+<td style="text-align: left;">Filtered gene expression matrix (rapid single-file load)</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>filtered_feature_bc_matrix.h5ad</code></td>
-<td style="text-align: left;">Filtered matrix in AnnData format (Python-ready).</td>
-<td style="text-align: left;">scRNA-seq</td>
+<td style="text-align: left;">AnnData (<code>.h5ad</code>)</td>
+<td style="text-align: left;">scRNA / C6 / Multi</td>
+<td style="text-align: left;"><code>anndata::read_h5ad()</code></td>
+<td style="text-align: left;"><code>scanpy.read_h5ad()</code></td>
+<td style="text-align: left;">Pre-packaged sparse matrix and feature metadata (Python standard)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>filtered_feature_bc_matrix/</code></td>
+<td style="text-align: left;">MEX Directory (<code>.mtx.gz</code>)</td>
+<td style="text-align: left;">scRNA / C6 / Multi</td>
+<td style="text-align: left;"><code>Seurat::Read10X()</code></td>
+<td style="text-align: left;"><code>scanpy.read_10x_mtx()</code></td>
+<td style="text-align: left;">Canonical 10X-compatible three-file directory</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>filtered_peak_bc_matrix.h5</code></td>
+<td style="text-align: left;">HDF5 (<code>.h5</code>)</td>
+<td style="text-align: left;">scATAC / Multi</td>
+<td style="text-align: left;"><code>Seurat::Read10X_h5()</code></td>
+<td style="text-align: left;"><code>scanpy.read_10x_h5(gex_only=False)</code></td>
+<td style="text-align: left;">Filtered peak accessibility matrix</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>filtered_peak_bc_matrix/</code></td>
+<td style="text-align: left;">MEX</td>
+<td style="text-align: left;">scATAC / Multi</td>
+<td style="text-align: left;"><code>Matrix::readMM()</code> + <code>read.delim()</code></td>
+<td style="text-align: left;"><code>scipy.io.mmread()</code> + <code>pandas.read_csv()</code></td>
+<td style="text-align: left;">Read <code>matrix.mtx.gz</code>, <code>peaks.bed.gz</code>, and <code>barcodes.tsv.gz</code> separately; peaks are matrix rows and cells are columns</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>fragments.tsv.gz</code></td>
-<td style="text-align: left;">Fragment file for ATAC analysis.</td>
-<td style="text-align: left;">scATAC-seq</td>
+<td style="text-align: left;">Tab-delimited (Indexed)</td>
+<td style="text-align: left;">scATAC / Multi</td>
+<td style="text-align: left;"><code>Signac::CreateChromatinAssay()</code></td>
+<td style="text-align: left;"><code>pysam.TabixFile()</code></td>
+<td style="text-align: left;">Tn5 fragment coordinate records with insertion cutsite info</td>
 </tr>
 <tr>
-<td style="text-align: left;"><code>singlecell.csv</code></td>
-<td style="text-align: left;">Cell metadata and QC metrics.</td>
-<td style="text-align: left;">All</td>
+<td style="text-align: left;"><code>filtered_contig_annotations.csv</code></td>
+<td style="text-align: left;">CSV</td>
+<td style="text-align: left;">scVDJ / Multi</td>
+<td style="text-align: left;"><code>scRepertoire::combineTCR()</code></td>
+<td style="text-align: left;"><code>scirpy.io.read_10x_vdj()</code></td>
+<td style="text-align: left;">High-confidence immune receptor CDR3 and full contig calls</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>singlecell.csv.gz</code> / <code>singlecell.csv</code></td>
+<td style="text-align: left;">Compressed CSV</td>
+<td style="text-align: left;">scRNA / scATAC / C6 / Multi</td>
+<td style="text-align: left;"><code>data.table::fread()</code></td>
+<td style="text-align: left;"><code>pandas.read_csv()</code></td>
+<td style="text-align: left;">All droplet records (filter by <code>is_cell_barcode==1</code>)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>metrics_summary.xls</code></td>
+<td style="text-align: left;">TSV Plain Text</td>
+<td style="text-align: left;">All Pipelines</td>
+<td style="text-align: left;"><code>read.delim(check.names=F)</code></td>
+<td style="text-align: left;"><code>pandas.read_csv(sep="\t")</code></td>
+<td style="text-align: left;">Summary QC metrics table (do not use Excel readers)</td>
 </tr>
 </tbody>
 </table>
-<p><em>For detailed output descriptions, see the <a href="outs/outs.html">Output Files Guide</a></em></p>
+<p><em>For complete directory structures and metric definitions, see the <a href="outs/outs.html">Output Files Guide</a>.</em></p>
 
 
 

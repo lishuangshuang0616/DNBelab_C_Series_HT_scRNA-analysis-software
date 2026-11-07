@@ -607,7 +607,7 @@
   <span class="md-ellipsis">
     
   
-    Parameter
+    Parameters
   
 
     
@@ -623,7 +623,7 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    Parameter
+    Parameters
   
 
           </label>
@@ -1183,7 +1183,34 @@
   <span class="md-ellipsis">
     
   
-    I/O Analysis
+    Downstream Analysis
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../troubleshooting.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Running & Troubleshooting
   
 
     
@@ -1265,17 +1292,17 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11" >
         
           
-          <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_11" id="__nav_11_label" tabindex="0">
             
   
   
   <span class="md-ellipsis">
     
   
-    Additional
+    Additional Resources
   
 
     
@@ -1286,12 +1313,12 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_10">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_11">
             <span class="md-nav__icon md-icon"></span>
             
   
-    Additional
+    Additional Resources
   
 
           </label>
@@ -1332,14 +1359,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../troubleshooting.html" class="md-nav__link">
+      <a href="../glossary.html" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Running & Troubleshooting
+    Glossary
   
 
     
@@ -1652,7 +1679,7 @@ Analysis<span class="w"> </span>Settings:
 <td style="text-align: left;"><code>--beadstrans</code></td>
 <td style="text-align: left;">File path</td>
 <td style="text-align: left;">None</td>
-<td style="text-align: left;">Path to 5' scRNA <code>singlecell.csv</code> (or C6 <code>singlecell.csv.gz</code>) for bead merging and cell filtering</td>
+<td style="text-align: left;">Optional RNA cell table for bead mapping and cell filtering; omitting it automatically enables <code>keep_all_cells</code></td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>--outdir</code></td>
@@ -1788,7 +1815,8 @@ If different sequencing batches of the same library batch exhibit differing dark
 </div>
 <ul>
 <li><strong>Input source</strong>: Provide the <code>outs/singlecell.csv</code> file generated from the corresponding 5' scRNA analysis (supports <code>.csv.gz</code> from C6 multi-sample pipelines).</li>
-<li><strong>Behavior when omitted</strong>: If <code>--beadstrans</code> is omitted, bead merging is skipped, and <code>--keep_all_cells</code> automatically engages to retain all assembled barcodes.</li>
+<li><strong>Core Mechanism</strong>: The pipeline performs comprehensive de novo assembly across all candidate VDJ reads. Subsequently, during the cell filtering and barcode translation stage, the pipeline applies the authentic cell whitelist from <code>singlecell.csv</code> to retain genuine cell contigs and translate bead barcodes into unified Cell IDs, outputting <code>filtered_contig_annotations.csv</code> matched with 5' scRNA.</li>
+<li><strong>Behavior when omitted</strong>: If <code>--beadstrans</code> is omitted, bead merging and cell filtering are skipped, and <code>--keep_all_cells</code> automatically engages to retain all assembled barcodes.</li>
 <li><strong>Recommendation</strong>: In paired 5' RNA + VDJ experiments, <strong>always provide <code>--beadstrans</code></strong> to ensure clean clonotype-to-cell mapping and filter technical ambient noise.</li>
 </ul>
 <h4 id="3-reference-databases-ref-receptor-chains-chain">3. Reference Databases (<code>--ref</code>) &amp; Receptor Chains (<code>--chain</code>)<a class="headerlink" href="#3-reference-databases-ref-receptor-chains-chain" title="Permanent link">&para;</a></h4>

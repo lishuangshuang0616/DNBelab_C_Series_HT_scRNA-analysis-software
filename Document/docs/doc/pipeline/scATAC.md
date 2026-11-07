@@ -6,13 +6,13 @@
 
 本文档详细介绍了使用 dnbc4tools 进行单细胞 ATAC 测序数据分析的完整流程。
 
-**工作流程**：原始数据 → 质量控制 → 比对 → 磁珠合并 → Peak调用 → 细胞识别 → 降维聚类 → 分析报告
+**工作流程**：原始数据 → 质量控制 → 比对 → 微珠合并 → Peak调用 → 细胞识别 → 降维聚类 → 分析报告
 
 <div align="center" style="margin: 1.5em 0;" markdown="block">
   <img src="../images/scATAC_pipeline.png" alt="scATAC 分析流程概览" width="800" style="max-width: 100%; height: auto;">
 </div>
 
-<div style="background-color: #e7f3fe; border-left: 6px solid #2196F3; padding: 15px; margin: 1.5em 0; border-radius: 4px;" markdown="block">
+<div class="doc-callout doc-callout-info" markdown="block">
 <strong>使用说明：</strong> <code>$dnbc4tools</code> 代表可执行程序路径，需替换为您的实际安装路径。本文示例使用换行符 <code>\</code> 分隔命令以提高可读性，实际分析时可写为单行。
 </div>
 
@@ -173,7 +173,7 @@ $dnbc4tools atac mkref \
 
 ATAC 主分析流程使用单个样本单细胞 ATAC 文库测序数据。该流程的核心步骤包括：
 
-1. **数据处理**：执行质控与比对，生成所有磁珠的 `fragments` 文件。
+1. **数据处理**：执行质控与比对，生成所有微珠的 `fragments` 文件。
 2. **Peak 调用**：基于聚合数据进行 peak calling，识别开放染色质区域。
 3. **细胞识别**：利用 peaks 区域的片段信息识别有效细胞。
 4. **高级分析**：对细胞进行过滤、降维与聚类。

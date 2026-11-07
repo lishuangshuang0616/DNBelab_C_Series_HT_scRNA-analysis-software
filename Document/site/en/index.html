@@ -679,7 +679,7 @@
   <span class="md-ellipsis">
     
   
-    Parameter
+    Parameters
   
 
     
@@ -695,7 +695,7 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    Parameter
+    Parameters
   
 
           </label>
@@ -1140,7 +1140,34 @@
   <span class="md-ellipsis">
     
   
-    I/O Analysis
+    Downstream Analysis
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="doc/troubleshooting.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Running & Troubleshooting
   
 
     
@@ -1222,17 +1249,17 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11" >
         
           
-          <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_11" id="__nav_11_label" tabindex="0">
             
   
   
   <span class="md-ellipsis">
     
   
-    Additional
+    Additional Resources
   
 
     
@@ -1243,12 +1270,12 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_10">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_11">
             <span class="md-nav__icon md-icon"></span>
             
   
-    Additional
+    Additional Resources
   
 
           </label>
@@ -1289,14 +1316,14 @@
   
   
     <li class="md-nav__item">
-      <a href="doc/troubleshooting.html" class="md-nav__link">
+      <a href="doc/glossary.html" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Running & Troubleshooting
+    Glossary
   
 
     
@@ -1476,15 +1503,15 @@
 
 
 <div class="doc-hero-badge">
-  <span class="doc-badge-pill">v3.2 Latest</span>
+  <span class="doc-badge-pill">v3.2 Development Documentation</span>
   <span class="doc-badge-sub">DNBC4TOOLS Single-Cell Suite</span>
 </div>
 
 <h1 id="dnbelab-c-seriestm-ht-single-cell-analysis-software">DNBelab C Series™ HT Single-Cell Analysis Software<a class="headerlink" href="#dnbelab-c-seriestm-ht-single-cell-analysis-software" title="Permanent link">&para;</a></h1>
-<p>An end-to-end, high-performance single-cell analysis toolkit for DNBelab C Series™ sequencing data. CLI tool: <strong><code>dnbc4tools</code></strong>. Fully supports single-cell RNA, ATAC, V(D)J, and C6 multi-sample pipelines with quality control, quantification, annotation, and interactive HTML reporting.</p>
+<p>A single-cell analysis toolkit for DNBelab C Series™ sequencing data. CLI tool: <strong><code>dnbc4tools</code></strong>. Supports single-cell RNA, ATAC, V(D)J, and C6 multi-sample pipelines with quality control, quantification, annotation, and interactive HTML reporting.</p>
 <div class="doc-actions">
 <a href="doc/quickstart.html" class="doc-btn-primary">Quick Start →</a>
-<a href="doc/installation.html" class="doc-btn-outline">Installation & Environment</a>
+<a href="doc/installation.html" class="doc-btn-outline">Installation Guide</a>
 <a href="doc/migration.html" class="doc-btn-outline">Upgrade Guide (3.1 → 3.2)</a>
 </div>
 
@@ -1502,30 +1529,6 @@
 <a class="doc-pill-link" href="doc/outs/scRNA.html">Outputs</a>
 </div>
 </div>
-<div class="doc-module mod-atac">
-<div class="doc-module-header">
-  <span class="doc-module-tag">scATAC</span>
-  <h3>ATAC Chromatin Accessibility</h3>
-</div>
-<p>Open chromatin profiling, peak calling, fragment filtering, and QC metrics.</p>
-<div class="doc-module-links">
-<a class="doc-pill-link" href="doc/pipeline/scATAC.html">Workflow</a>
-<a class="doc-pill-link" href="doc/parameter/scATAC.html">Parameters</a>
-<a class="doc-pill-link" href="doc/outs/scATAC.html">Outputs</a>
-</div>
-</div>
-<div class="doc-module mod-vdj">
-<div class="doc-module-header">
-  <span class="doc-module-tag">scVDJ</span>
-  <h3>V(D)J Immune Profiling</h3>
-</div>
-<p>De novo TCR / BCR assembly, V(D)J gene annotation, and full-length clonotype calling.</p>
-<div class="doc-module-links">
-<a class="doc-pill-link" href="doc/pipeline/scVDJ.html">Workflow</a>
-<a class="doc-pill-link" href="doc/parameter/scVDJ.html">Parameters</a>
-<a class="doc-pill-link" href="doc/outs/scVDJ.html">Outputs</a>
-</div>
-</div>
 <div class="doc-module mod-multi">
 <div class="doc-module-header">
   <span class="doc-module-tag">Multi</span>
@@ -1538,16 +1541,40 @@
 <a class="doc-pill-link" href="doc/outs/multi.html">Outputs</a>
 </div>
 </div>
+<div class="doc-module mod-vdj">
+<div class="doc-module-header">
+  <span class="doc-module-tag">scVDJ</span>
+  <h3>V(D)J Immune Profiling</h3>
+</div>
+<p>De novo assembly of full-length TCR / BCR sequences, V(D)J gene annotation, and clonotype identification.</p>
+<div class="doc-module-links">
+<a class="doc-pill-link" href="doc/pipeline/scVDJ.html">Workflow</a>
+<a class="doc-pill-link" href="doc/parameter/scVDJ.html">Parameters</a>
+<a class="doc-pill-link" href="doc/outs/scVDJ.html">Outputs</a>
+</div>
+</div>
 <div class="doc-module mod-c6">
 <div class="doc-module-header">
   <span class="doc-module-tag">C6</span>
   <h3>C6 Multiplexed RNA</h3>
 </div>
-<p>High-throughput single-cell RNA-seq based on Sample Barcode multiplexing, featuring sample de-multiplexing and independent per-sample deliverables.</p>
+<p>Supports sample barcode demultiplexing and generates separate results for each sample.</p>
 <div class="doc-module-links">
 <a class="doc-pill-link" href="doc/pipeline/c6.html">Workflow</a>
 <a class="doc-pill-link" href="doc/parameter/c6.html">Parameters</a>
 <a class="doc-pill-link" href="doc/outs/c6.html">Outputs</a>
+</div>
+</div>
+<div class="doc-module mod-atac">
+<div class="doc-module-header">
+  <span class="doc-module-tag">scATAC</span>
+  <h3>ATAC Chromatin Accessibility</h3>
+</div>
+<p>Open chromatin profiling, peak calling, fragment filtering, and QC metrics.</p>
+<div class="doc-module-links">
+<a class="doc-pill-link" href="doc/pipeline/scATAC.html">Workflow</a>
+<a class="doc-pill-link" href="doc/parameter/scATAC.html">Parameters</a>
+<a class="doc-pill-link" href="doc/outs/scATAC.html">Outputs</a>
 </div>
 </div>
 </div>
@@ -1574,7 +1601,7 @@
 </tr>
 <tr>
 <td style="text-align: left;"><strong>Load matrices in R or Python</strong></td>
-<td style="text-align: left;"><a href="doc/io.html">I/O Analysis &amp; Matrix Loading →</a></td>
+<td style="text-align: left;"><a href="doc/io.html">Downstream Analysis &amp; Matrix Loading →</a></td>
 <td style="text-align: left;">Sample scripts for Seurat and Scanpy</td>
 </tr>
 <tr>
@@ -1595,7 +1622,7 @@
 </tbody>
 </table>
 <h2 id="versions-updates">Versions &amp; Updates<a class="headerlink" href="#versions-updates" title="Permanent link">&para;</a></h2>
-<p>The version selector in the header switches seamlessly to the complete <strong>3.1 archive</strong>, preserving the current page and language. The default documentation entry is <strong>3.2</strong>.</p>
+<p>The version selector in the header opens the <strong>3.1 archive</strong> in the current language. If the target version contains the current page, that page is opened; otherwise, the corresponding language homepage is opened. The default documentation entry is <strong>3.2</strong>.</p>
 <p>Version 3.2 adds C6 multi-sample analysis and QC reporting, updated matrix outputs, ATAC default counting logic, and runtime diagnostics. See <a href="doc/release.html">Release Notes</a> for full details.</p>
 <blockquote>
 <p>💡 <strong>Feedback &amp; Issues</strong>: <a href="https://github.com/MGI-tech-bioinformatics/DNBelab_C_Series_HT_scRNA-analysis-software/issues">GitHub Issues</a> · <strong>Official Website</strong>: <a href="https://www.mgi-tech.com">www.mgi-tech.com</a></p>

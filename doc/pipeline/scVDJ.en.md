@@ -6,21 +6,23 @@ Single-Cell VDJ Sequencing Data Analysis Guide
 
 This document provides a detailed guide for analyzing single-cell VDJ sequencing data using dnbc4tools.
 
-**Workflow**: 5' Transcriptome Analysis → VDJ Library Processing → Sequence Assembly & Annotation → Cell Filtering → Clonotype Analysis → Analysis Report
+**Workflow**: Choose RNA-associated or standalone mode → VDJ read processing → Assembly & annotation → Conditional RNA-based filtering → Clonotype analysis → Report
 
 <div align="center" style="margin: 1.5em 0;" markdown="block">
   <img src="../images/scVDJ_pipeline.png" alt="scVDJ Analysis Pipeline Overview" width="800" style="max-width: 100%; height: auto;">
 </div>
 
-<div style="background-color: #e7f3fe; border-left: 6px solid #2196F3; padding: 15px; margin: 1.5em 0; border-radius: 4px;" markdown="block">
+<div class="doc-callout doc-callout-info" markdown="block">
 <strong>Usage Note:</strong> <code>$dnbc4tools</code> represents the executable path and must be replaced with the actual installation path. The backslash <code>\</code> is used to split commands across multiple lines for readability.
 </div>
+
+Two modes are supported: provide `--beadstrans` to use an RNA cell table for bead mapping and RNA-based cell filtering; or omit it to run VDJ without an RNA cell table. When omitted, `keep_all_cells` is enabled automatically, so assembled barcodes are not filtered by RNA cell calls and must not be treated as an RNA-confirmed cell set.
 
 ## File Preparation <a id="file-preparation"></a>
 
 ### 5' Transcriptome Analysis
 
-For transcriptome analysis, please refer to `dnbc4tools rna run`. The 5' transcriptome analysis pipeline requires adding the `--end5` parameter to the standard single-cell RNA analysis workflow.
+For RNA-associated VDJ analysis, obtain a 5' RNA cell table using `dnbc4tools rna run --end5`, or reuse an existing table. Skip this step when running without an RNA cell table.
 
 Here is an example script to generate an expression matrix for a single sample:
 
@@ -36,8 +38,8 @@ $dnbc4tools rna run \
 	--end5
 ```
 
-<div style="background-color: #fffbe6; border-left: 6px solid #ffc107; padding: 15px; margin: 1.5em 0; border-radius: 4px;" markdown="block">
-<strong>Prerequisite:</strong> 5' transcriptome analysis is a mandatory prerequisite for VDJ analysis. It must be completed first to generate the cell-bead mapping table <code>singlecell.csv</code>.
+<div class="doc-callout doc-callout-warn" markdown="block">
+<strong>Prerequisite:</strong> An RNA `singlecell.csv` table is required only when RNA-based bead mapping and cell filtering are requested.
 </div>
 
 ### Required Files for VDJ Analysis
@@ -47,9 +49,9 @@ The analysis requires the following files:
 | File Type | Description |
 | :--- | :--- |
 | **FASTQ Files** | VDJ library sequencing data containing TCR or BCR sequence reads |
-| **singlecell.csv File** | Cell information file from 5' transcriptome analysis, containing cell calling status and bead aggregation mappings |
+| **singlecell.csv File (RNA-associated mode)** | Optional for standalone VDJ; supplies RNA cell calls and bead mappings when `--beadstrans` is used |
 
-The analysis requires the `singlecell.csv` file from the 5' transcriptome analysis output directory. This file contains merged information from the `cell` and `barcode` columns, as well as an `is_cell_barcode` column (1 for a cell, 0 for a non-cell), which is used to identify valid cells.
+In RNA-associated mode, `singlecell.csv` supplies the `cell` and `barcode` mappings and the `is_cell_barcode` flag (1 for called cells, 0 for background). Without `--beadstrans`, these RNA-based mappings and filters are not applied.
 
 > **Note**: Ensure the path to the `singlecell.csv` file is correct, as this file is crucial for linking the transcriptome and VDJ analyses.
 
@@ -68,14 +70,16 @@ CELL726_N4,585934,4617,22660,1,ACCTACGGCGTTACTATGTG;CGACGCTCTCGACAGTTAGG;CGGCAGA
 CELL4010_N1,555308,4268,22554,1,AGAGAGTCGCAGCAAGCGAC
 ```
 
+For a command without an RNA table, see the [standalone VDJ example](../quickstart.md#vdj-without-rna). The workflow image and RNA commands above illustrate the RNA-associated mode.
+
 ## Main Pipeline <a id="main-pipeline"></a>
 
-The main VDJ pipeline combines single-cell VDJ library data with the 5' transcriptome results from the same sample. It includes these key steps:
+The VDJ pipeline optionally uses a matched RNA cell table. Its main steps are:
 
-1.  Filter data and merge beads using the 5' transcriptome results.
+1. Filter reads; apply RNA bead mappings when supplied.
 2.  Align reads to VDJ gene segments and extract them.
 3.  Perform de novo assembly and annotation.
-4.  Filter cells based on the assembly annotations and cell calls from the 5' transcriptome.
+4. Apply assembly/annotation rules; use RNA cell calls for filtering when the mode enables it.
 5.  Integrate results from all steps to generate an HTML report and other output files.
 
 ### TCR Analysis

@@ -761,7 +761,7 @@
   <span class="md-ellipsis">
     
   
-    Parameter
+    Parameters
   
 
     
@@ -777,7 +777,7 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    Parameter
+    Parameters
   
 
           </label>
@@ -1222,7 +1222,34 @@
   <span class="md-ellipsis">
     
   
-    I/O Analysis
+    Downstream Analysis
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../troubleshooting.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Running & Troubleshooting
   
 
     
@@ -1304,17 +1331,17 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11" >
         
           
-          <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_11" id="__nav_11_label" tabindex="0">
             
   
   
   <span class="md-ellipsis">
     
   
-    Additional
+    Additional Resources
   
 
     
@@ -1325,12 +1352,12 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_10">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_11">
             <span class="md-nav__icon md-icon"></span>
             
   
-    Additional
+    Additional Resources
   
 
           </label>
@@ -1371,14 +1398,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../troubleshooting.html" class="md-nav__link">
+      <a href="../glossary.html" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Running & Troubleshooting
+    Glossary
   
 
     
@@ -1639,16 +1666,17 @@
 <p>Single-Cell VDJ Sequencing Data Analysis Guide</p>
 <h2 id="overview">Overview <a id="overview"></a><a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
 <p>This document provides a detailed guide for analyzing single-cell VDJ sequencing data using dnbc4tools.</p>
-<p><strong>Workflow</strong>: 5' Transcriptome Analysis → VDJ Library Processing → Sequence Assembly &amp; Annotation → Cell Filtering → Clonotype Analysis → Analysis Report</p>
+<p><strong>Workflow</strong>: Choose RNA-associated or standalone mode → VDJ read processing → Assembly &amp; annotation → Conditional RNA-based filtering → Clonotype analysis → Report</p>
 <div align="center" style="margin: 1.5em 0;">
 <p><img src="../images/scVDJ_pipeline.png" alt="scVDJ Analysis Pipeline Overview" width="800" style="max-width: 100%; height: auto;"></p>
 </div>
-<div style="background-color: #e7f3fe; border-left: 6px solid #2196F3; padding: 15px; margin: 1.5em 0; border-radius: 4px;">
+<div class="doc-callout doc-callout-info">
 <p><strong>Usage Note:</strong> <code>$dnbc4tools</code> represents the executable path and must be replaced with the actual installation path. The backslash <code>\</code> is used to split commands across multiple lines for readability.</p>
 </div>
+<p>Two modes are supported: provide <code>--beadstrans</code> to use an RNA cell table for bead mapping and RNA-based cell filtering; or omit it to run VDJ without an RNA cell table. When omitted, <code>keep_all_cells</code> is enabled automatically, so assembled barcodes are not filtered by RNA cell calls and must not be treated as an RNA-confirmed cell set.</p>
 <h2 id="file-preparation">File Preparation <a id="file-preparation"></a><a class="headerlink" href="#file-preparation" title="Permanent link">&para;</a></h2>
 <h3 id="5-transcriptome-analysis">5' Transcriptome Analysis<a class="headerlink" href="#5-transcriptome-analysis" title="Permanent link">&para;</a></h3>
-<p>For transcriptome analysis, please refer to <code>dnbc4tools rna run</code>. The 5' transcriptome analysis pipeline requires adding the <code>--end5</code> parameter to the standard single-cell RNA analysis workflow.</p>
+<p>For RNA-associated VDJ analysis, obtain a 5' RNA cell table using <code>dnbc4tools rna run --end5</code>, or reuse an existing table. Skip this step when running without an RNA cell table.</p>
 <p>Here is an example script to generate an expression matrix for a single sample:</p>
 <div class="highlight"><pre><span></span><code><span class="nv">$dnbc4tools</span><span class="w"> </span>rna<span class="w"> </span>run<span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>--name<span class="w"> </span>sample_5rna<span class="w"> </span><span class="se">\</span>
@@ -1660,8 +1688,8 @@
 <span class="w">    </span>--threads<span class="w"> </span><span class="m">30</span><span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>--end5
 </code></pre></div>
-<div style="background-color: #fffbe6; border-left: 6px solid #ffc107; padding: 15px; margin: 1.5em 0; border-radius: 4px;">
-<p><strong>Prerequisite:</strong> 5' transcriptome analysis is a mandatory prerequisite for VDJ analysis. It must be completed first to generate the cell-bead mapping table <code>singlecell.csv</code>.</p>
+<div class="doc-callout doc-callout-warn">
+<p><strong>Prerequisite:</strong> An RNA <code>singlecell.csv</code> table is required only when RNA-based bead mapping and cell filtering are requested.</p>
 </div>
 <h3 id="required-files-for-vdj-analysis">Required Files for VDJ Analysis<a class="headerlink" href="#required-files-for-vdj-analysis" title="Permanent link">&para;</a></h3>
 <p>The analysis requires the following files:</p>
@@ -1678,12 +1706,12 @@
 <td style="text-align: left;">VDJ library sequencing data containing TCR or BCR sequence reads</td>
 </tr>
 <tr>
-<td style="text-align: left;"><strong>singlecell.csv File</strong></td>
-<td style="text-align: left;">Cell information file from 5' transcriptome analysis, containing cell calling status and bead aggregation mappings</td>
+<td style="text-align: left;"><strong>singlecell.csv File (RNA-associated mode)</strong></td>
+<td style="text-align: left;">Optional for standalone VDJ; supplies RNA cell calls and bead mappings when <code>--beadstrans</code> is used</td>
 </tr>
 </tbody>
 </table>
-<p>The analysis requires the <code>singlecell.csv</code> file from the 5' transcriptome analysis output directory. This file contains merged information from the <code>cell</code> and <code>barcode</code> columns, as well as an <code>is_cell_barcode</code> column (1 for a cell, 0 for a non-cell), which is used to identify valid cells.</p>
+<p>In RNA-associated mode, <code>singlecell.csv</code> supplies the <code>cell</code> and <code>barcode</code> mappings and the <code>is_cell_barcode</code> flag (1 for called cells, 0 for background). Without <code>--beadstrans</code>, these RNA-based mappings and filters are not applied.</p>
 <blockquote>
 <p><strong>Note</strong>: Ensure the path to the <code>singlecell.csv</code> file is correct, as this file is crucial for linking the transcriptome and VDJ analyses.</p>
 </blockquote>
@@ -1699,13 +1727,14 @@ CELL1332_N6,580950,4702,22953,1,AGGTGTAAGCCTACCGGACC;CGCACTCACCTAACATTGTG;CTTGCC
 CELL726_N4,585934,4617,22660,1,ACCTACGGCGTTACTATGTG;CGACGCTCTCGACAGTTAGG;CGGCAGAGTCTTGGCGCTTA;TCCGACCGTATCTTCATCTC
 CELL4010_N1,555308,4268,22554,1,AGAGAGTCGCAGCAAGCGAC
 </code></pre></div>
+<p>For a command without an RNA table, see the <a href="../quickstart.html#vdj-without-rna">standalone VDJ example</a>. The workflow image and RNA commands above illustrate the RNA-associated mode.</p>
 <h2 id="main-pipeline">Main Pipeline <a id="main-pipeline"></a><a class="headerlink" href="#main-pipeline" title="Permanent link">&para;</a></h2>
-<p>The main VDJ pipeline combines single-cell VDJ library data with the 5' transcriptome results from the same sample. It includes these key steps:</p>
+<p>The VDJ pipeline optionally uses a matched RNA cell table. Its main steps are:</p>
 <ol>
-<li>Filter data and merge beads using the 5' transcriptome results.</li>
+<li>Filter reads; apply RNA bead mappings when supplied.</li>
 <li>Align reads to VDJ gene segments and extract them.</li>
 <li>Perform de novo assembly and annotation.</li>
-<li>Filter cells based on the assembly annotations and cell calls from the 5' transcriptome.</li>
+<li>Apply assembly/annotation rules; use RNA cell calls for filtering when the mode enables it.</li>
 <li>Integrate results from all steps to generate an HTML report and other output files.</li>
 </ol>
 <h3 id="tcr-analysis">TCR Analysis<a class="headerlink" href="#tcr-analysis" title="Permanent link">&para;</a></h3>

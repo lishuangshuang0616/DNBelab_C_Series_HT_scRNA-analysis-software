@@ -12,6 +12,6 @@ Choose a workflow based on your assay and sequencing design.
 
 ## Workflow Selection
 
-- **Independent Single-Omics**: Run the respective pipeline directly (`scRNA`, `scATAC`, or `scVDJ`). Note that `scVDJ` requires `singlecell.csv` from 5' transcriptome analysis.
+- **Independent Single-Omics**: Run the respective pipeline directly (`scRNA`, `scATAC`, or `scVDJ`). VDJ accepts an optional RNA `singlecell.csv` for bead mapping and cell filtering; omitting `--beadstrans` automatically enables `keep_all_cells`.
 - **Multi-omics (Multi)**: When RNA, ATAC, or VDJ data are generated for the same batch, use a single CSV file to orchestrate modules and generate combined reports.
 - **C6 Multiplexed RNA**: For pooled libraries with Sample Barcodes, configure the `[samples]` section to automate demultiplexing and per-sample deliverables.

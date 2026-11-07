@@ -57,14 +57,14 @@ plugins:
             安装: Installation
             快速开始: Quick Start
             流程: Pipeline
-            参数: Parameter
+            参数: Parameters
             输出: Outputs
-            结果分析: I/O Analysis
+            结果分析: Downstream Analysis
             版本说明: Release Notes
             升级指南: Upgrade Guide
             运行与排错: Running & Troubleshooting
             数据集: Dataset
-            附加: Additional
+            附加: Additional Resources
             总览: Overview
             scRNA: scRNA
             scATAC: scATAC
@@ -74,6 +74,7 @@ plugins:
             工具: Tools
             旧版安装: Previous Installation
             JSON 规范: JSON Spec
+            术语表: Glossary
             文库结构: Library Structure
   - search
 
@@ -123,11 +124,12 @@ nav:
       - 多组学: doc/outs/multi.md
       - C6 多样本: doc/outs/c6.md
   - 结果分析: doc/io.md
+  - 运行与排错: doc/troubleshooting.md
   - 版本说明: doc/release.md
   - 数据集: doc/dataset.md
   - 附加:
       - 升级指南: doc/migration.md
-      - 运行与排错: doc/troubleshooting.md
+      - 术语表: doc/glossary.md
       - 文库结构: doc/library_structure.md
       - 旧版安装: doc/installation_previous.md
       - JSON 规范: doc/json.md

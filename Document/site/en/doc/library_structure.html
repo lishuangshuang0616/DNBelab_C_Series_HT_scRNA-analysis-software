@@ -11,7 +11,7 @@
       
       
       
-        <link rel="prev" href="troubleshooting.html">
+        <link rel="prev" href="glossary.html">
       
       
         <link rel="next" href="installation_previous.html">
@@ -605,7 +605,7 @@
   <span class="md-ellipsis">
     
   
-    Parameter
+    Parameters
   
 
     
@@ -621,7 +621,7 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    Parameter
+    Parameters
   
 
           </label>
@@ -1066,7 +1066,34 @@
   <span class="md-ellipsis">
     
   
-    I/O Analysis
+    Downstream Analysis
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="troubleshooting.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Running & Troubleshooting
   
 
     
@@ -1150,17 +1177,17 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11" checked>
         
           
-          <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_11" id="__nav_11_label" tabindex="0">
             
   
   
   <span class="md-ellipsis">
     
   
-    Additional
+    Additional Resources
   
 
     
@@ -1171,12 +1198,12 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="true">
-          <label class="md-nav__title" for="__nav_10">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_11">
             <span class="md-nav__icon md-icon"></span>
             
   
-    Additional
+    Additional Resources
   
 
           </label>
@@ -1217,14 +1244,14 @@
   
   
     <li class="md-nav__item">
-      <a href="troubleshooting.html" class="md-nav__link">
+      <a href="glossary.html" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Running & Troubleshooting
+    Glossary
   
 
     
@@ -1693,18 +1720,31 @@
 </ul>
 <h3 id="oligo-library">Oligo Library<a class="headerlink" href="#oligo-library" title="Permanent link">&para;</a></h3>
 <p>The Oligo library resolves bead barcodes co-encapsulated in droplets, distinguishing true single cells from multi-bead background droplets.</p>
+<h4 id="read-1-structure-2032-bp">Read 1 Structure (20–32 bp)<a class="headerlink" href="#read-1-structure-2032-bp" title="Permanent link">&para;</a></h4>
 <ul>
-<li><strong>Read 1 (32 bp non-dark / 20 bp dark reaction)</strong>:</li>
-<li><strong>Linker 1 (6 bp)</strong>: <code>TCTGCG</code> (1–6 bp, non-dark)</li>
-<li><strong>Cell Barcode 1 (CB1, 10 bp)</strong>: (Non-dark: 7–16 bp; Dark reaction: 1–10 bp)</li>
-<li><strong>Linker 2 (6 bp)</strong>: <code>CCTTCC</code> (17–22 bp, non-dark)</li>
-<li><strong>Cell Barcode 2 (CB2, 10 bp)</strong>: (Non-dark: 23–32 bp; Dark reaction: 11–20 bp)</li>
-<li><strong>Read 2 (42 bp non-dark / 30 bp dark reaction)</strong>:</li>
-<li><strong>UMI (10 bp)</strong>: First segment is UMI (Non-dark: 1–10 bp; Dark reaction: 1–10 bp)</li>
-<li><strong>Linker 1 (6 bp)</strong>: <code>TCTGCG</code> (11–16 bp, non-dark)</li>
-<li><strong>Tag 1 (10 bp)</strong>: First tag segment (Non-dark: 17–26 bp; Dark reaction: 11–20 bp)</li>
-<li><strong>Linker 2 (6 bp)</strong>: <code>CCTTCC</code> (27–32 bp, non-dark)</li>
-<li><strong>Tag 2 (10 bp)</strong>: Second tag segment (Non-dark: 33–42 bp; Dark reaction: 21–30 bp)</li>
+<li><strong>Non-Dark Mode (32 bp)</strong>:</li>
+<li><strong>Linker 1 (6 bp)</strong>: <code>TCTGCG</code> (1–6 bp, fixed adapter skipped)</li>
+<li><strong>Cell Barcode 1 (CB1, 10 bp)</strong>: First cell barcode segment (7–16 bp, extracted as <code>cb,R1:7-16</code>)</li>
+<li><strong>Linker 2 (6 bp)</strong>: <code>CCTTCC</code> (17–22 bp, fixed adapter skipped)</li>
+<li><strong>Cell Barcode 2 (CB2, 10 bp)</strong>: Second cell barcode segment (23–32 bp, extracted as <code>cb,R1:23-32</code>)</li>
+<li><strong>Dark Reaction Mode (20 bp)</strong>:</li>
+<li>The sequencer hardware skips fixed Linker 1 and Linker 2:</li>
+<li><strong>Cell Barcode 1 (CB1, 10 bp)</strong>: 1–10 bp, extracted as <code>cb,R1:1-10</code></li>
+<li><strong>Cell Barcode 2 (CB2, 10 bp)</strong>: 11–20 bp, extracted as <code>cb,R1:11-20</code></li>
+</ul>
+<h4 id="read-2-structure-3042-bp">Read 2 Structure (30–42 bp)<a class="headerlink" href="#read-2-structure-3042-bp" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>Non-Dark Mode (42 bp)</strong>:</li>
+<li><strong>UMI (10 bp)</strong>: Molecular unique identifier (1–10 bp, extracted as <code>R1,R2:1-10</code>)</li>
+<li><strong>Linker 1 (6 bp)</strong>: <code>TCTGCG</code> (11–16 bp, fixed adapter skipped)</li>
+<li><strong>Tag 1 (10 bp)</strong>: First bead carrier tag (17–26 bp, extracted as <code>R1,R2:17-26</code>)</li>
+<li><strong>Linker 2 (6 bp)</strong>: <code>CCTTCC</code> (27–32 bp, fixed adapter skipped)</li>
+<li><strong>Tag 2 (10 bp)</strong>: Second bead carrier tag (33–42 bp, extracted as <code>R1,R2:33-42</code>)</li>
+<li><strong>Dark Reaction Mode (30 bp)</strong>:</li>
+<li>The sequencer hardware skips fixed Linker 1 and Linker 2:</li>
+<li><strong>UMI (10 bp)</strong>: 1–10 bp, extracted as <code>R1,R2:1-10</code></li>
+<li><strong>Tag 1 (10 bp)</strong>: 11–20 bp, extracted as <code>R1,R2:11-20</code></li>
+<li><strong>Tag 2 (10 bp)</strong>: 21–30 bp, extracted as <code>R1,R2:21-30</code></li>
 </ul>
 <blockquote>
 <p>For detailed scRNA command arguments, see <a href="parameter/scRNA.html#customize">scRNA Parameters: Custom Read Structure</a>.</p>

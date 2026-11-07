@@ -185,14 +185,14 @@ fastq_directory/
 
 #### 3. 外部细胞白名单约束 (`--consistent_cells`)
 
-用于在细胞条形码合并与最终细胞判定阶段引入外部先验信息（例如跨组学对齐或历史金标准表）。文件为带表头的 CSV（支持 `.csv` 或 `.csv.gz`）：
+用于在细胞条形码合并与最终细胞识别阶段引入外部先验信息（例如跨组学对齐或历史金标准表）。文件为带表头的 CSV（支持 `.csv` 或 `.csv.gz`）：
 
 | 支持的表头结构 | 功能说明 |
 | :--- | :--- |
 | `cell` | 仅限制最终识别出的有效细胞列表 |
 | `cell,barcode` | 强制指定 bead 与 cell 的归属合并映射关系；**在此模式下，Oligo 数据的分析结果将被绕过，直接应用该映射** |
-| `cell,is_cell_barcode` | 指定候选条形码并标注其是否作为细胞判定基准 |
-| `cell,barcode,is_cell_barcode` | 同时提供细胞与磁珠对应关系，并通过 `is_cell_barcode`（1/0 或 true/false）直接指定每个条形码的细胞判定状态（例如直接传入质控输出的 `singlecell.csv`） |
+| `cell,is_cell_barcode` | 指定候选条形码并标注其是否作为细胞识别基准 |
+| `cell,barcode,is_cell_barcode` | 同时提供细胞与微珠对应关系，并通过 `is_cell_barcode`（1/0 或 true/false）直接指定每个条形码的细胞识别状态（例如直接传入质控输出的 `singlecell.csv`） |
 
 #### 4. 文库化学与暗反应配置 (`--chemistry` & `--darkreaction`)
 

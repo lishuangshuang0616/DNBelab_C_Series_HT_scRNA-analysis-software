@@ -1292,6 +1292,33 @@
   
   
     <li class="md-nav__item">
+      <a href="../troubleshooting.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    运行与排错
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../release.html" class="md-nav__link">
         
   
@@ -1354,10 +1381,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11" >
         
           
-          <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_11" id="__nav_11_label" tabindex="0">
             
   
   
@@ -1375,8 +1402,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_10">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_11">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -1421,14 +1448,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../troubleshooting.html" class="md-nav__link">
+      <a href="../glossary.html" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    运行与排错
+    术语表
   
 
     
@@ -1765,7 +1792,7 @@
 </tr>
 <tr>
 <td style="text-align: left;"><strong>组合报告</strong></td>
-<td style="text-align: left;">生成整合 HTML 报告，支持跨组学浏览和对比</td>
+<td style="text-align: left;">生成组合 HTML 报告，支持跨组学浏览和对比</td>
 </tr>
 <tr>
 <td style="text-align: left;"><strong>灵活配置</strong></td>
@@ -1949,17 +1976,19 @@ fastqs,feature_types
 <tr>
 <td style="text-align: center;"><code>05</code></td>
 <td style="text-align: left;"><strong>组合报告生成</strong></td>
-<td style="text-align: left;">关联跨组学条形码（如 RNA-VDJ 细胞关联），生成多组学整合报告</td>
+<td style="text-align: left;">关联跨组学条形码（如 RNA-VDJ 细胞关联），生成多组学组合报告</td>
 <td style="text-align: left;"><code>&lt;sample&gt;_multi_report.html</code></td>
 </tr>
 </tbody>
 </table>
 <h3 id="_9">执行要点<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h3>
-<blockquote>
-<p><strong>核心原则</strong>：
-- Multi 负责“<strong>编排和汇总</strong>”，模块算法仍由各单组学子流程执行。
-- 某模块失败<strong>不会</strong>改变其他模块已完成结果，但会反映到最终状态汇总。</p>
-</blockquote>
+<div class="admonition note">
+<p class="admonition-title">核心原则</p>
+<ul>
+<li>Multi 负责“<strong>编排和汇总</strong>”，模块算法仍由各单组学子流程执行。</li>
+<li>某模块失败<strong>不会</strong>改变其他模块已完成结果，但会反映到最终状态汇总。</li>
+</ul>
+</div>
 <h3 id="_10">典型运行日志<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="o">====================================================================================================</span>
 Running<span class="w"> </span>checking<span class="w"> </span>libraries<span class="w"> </span>—<span class="w"> </span><span class="m">2026</span>-11-02<span class="w"> </span><span class="m">16</span>:43:37

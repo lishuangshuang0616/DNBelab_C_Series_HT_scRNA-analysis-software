@@ -105,27 +105,27 @@ dnbc4tools tools mkgtf --action check --ingtf raw_genes.gtf --output corrected.g
 ### Usage <a id="usage-bam2fastq"></a>
 
 ```shell
-$ bam2fastq --help
-A BAM to FASTQ converter for C4 cDNA and C4/C6 oligo data (DNBelab C4 / DNBC4tools)
+$ bam2fastq -h
+BAM to FASTQ Converter for cDNA and oligo data
 
 Usage: bam2fastq [OPTIONS] <BAM> <OUTPUT>
 
 Arguments:
   <BAM>     Path to the input BAM file
-  <OUTPUT>  Output directory for FASTQ files
+  <OUTPUT>  Directory where FASTQ files will be written
 
 Options:
-  -t, --threads <THREADS>            Number of CPU threads for parallel processing [default: auto, all available cores]
-  -r, --locus <REGION>               Process a zero-based, half-open region, e.g. chr1:1000-2000
-  -n, --reads-per-fastq <READS>      Maximum reads per output FASTQ file
-      --max-memory <MEMORY>          Working-memory target in MiB; defaults to half available system memory
-      --no-compress                  Disable gzip compression (outputs .fastq instead of .fastq.gz)
-      --library-type <TYPE>          Detect from BAM metadata/tags; override with cDNA or oligo [default: auto]
-      --oligo-layout <LAYOUT>        Detect oligo layout; override with c4 or c6 [default: auto]
-      --relaxed                      Skip unmatched/duplicate mate records with summary counts [default: true]
-      --auto-detect                  Detect cDNA paired-end status from sampled flags [default: true]
-      --bx-list <FILE>               Filter cDNA by a barcode list; requires BX-sorted BAM and .bam.bxi index
-      --traceback                    Show detailed error context and traceback [default: false]
+      --library-type <LIBRARY_TYPE>  BAM library format; auto checks c4_oligo program metadata and oligo tags [default: auto] [possible values: auto, cDNA, oligo]
+      --oligo-layout <OLIGO_LAYOUT>  Oligo layout (default: auto): c4 barcode only or c6 barcode plus R1 UMI [default: auto] [possible values: auto, c4, c6]
+  -t, --threads <THREADS>            Number of CPU threads for parallel processing (default: all available cores) [default: 8]
+  -r, --locus <REGION>               Process a zero-based, half-open genomic region (format: chr1:1000-2000)
+      --bx-list <BX_LIST>            BX list; requires a BX-sorted BAM and .bam.bxi index
+  -n, --reads-per-fastq <READS>      Maximum number of reads per FASTQ file. All reads go to a single file if not specified.
+      --max-memory <MEMORY>          Working-memory target in MB for caches, queues and output buffers; not a hard RSS limit.
+      --traceback                    Show detailed error traceback
+      --relaxed[=<RELAXED>]          Relaxed mode: skip unpaired reads instead of erroring [default: true] [possible values: true, false]
+      --auto-detect[=<AUTO_DETECT>]  Automatically detect paired-end status from BAM flags [default: true] [possible values: true, false]
+      --no-compress                  Disable gzip compression for output FASTQ files
   -h, --help                         Print help
   -V, --version                      Print version
 ```
@@ -136,17 +136,19 @@ Options:
 | :--- | :--- | :--- | :--- |
 | `<BAM>` | File path | **Required (Positional)** | Path to input BAM (coordinate-sorted or name-sorted cDNA BAM, or `c4_oligo` BAM) |
 | `<OUTPUT>` | Directory path | **Required (Positional)** | Directory where output FASTQ files will be written |
-| `-t, --threads` | Integer / `auto` | `auto` | Number of CPU threads for parallel processing (default: all available cores) |
-| `-r, --locus` | String | None | Process a zero-based, half-open region, e.g. `chr1:1000-2000` (requires `.bai` index) |
-| `-n, --reads-per-fastq` | Integer | None (single file) | Maximum reads per output FASTQ chunk file; splits output when exceeded |
-| `--max-memory` | Integer (MiB) | Auto | Working-memory target in MiB (defaults to half available system memory; not an RSS ceiling) |
-| `--no-compress` | Flag | Disabled | Disable gzip compression (outputs `.fastq` directly for fastest writing speed) |
-| `--library-type` | Choice | `auto` | Detect from BAM metadata/tags; override with `cDNA` or `oligo` |
-| `--oligo-layout` | Choice | `auto` | Detect oligo layout; override with `c4` or `c6` |
-| `--relaxed` | Boolean | `true` | Skip unmatched/duplicate mate records with summary counts; `false` requires complete pairs |
-| `--auto-detect` | Boolean | `true` | Detect cDNA paired-end status from sampled flags; `false` selects single-ended conversion |
-| `--bx-list` | File path | None | Filter cDNA by a barcode list (requires BX-sorted BAM and `.bam.bxi` index) |
-| `--traceback` | Flag | Disabled | Show detailed error context and traceback |
+| `--library-type` | Choice (`auto`, `cDNA`, `oligo`) | `auto` | BAM library format; `auto` checks `c4_oligo` program metadata and oligo tags |
+| `--oligo-layout` | Choice (`auto`, `c4`, `c6`) | `auto` | Oligo layout: `c4` barcode only or `c6` barcode plus R1 UMI (`auto` detects automatically) |
+| `-t, --threads` | Integer | All available cores (default: 8) | Number of CPU threads for parallel processing |
+| `-r, --locus` | String | None | Process a zero-based, half-open genomic region (format: `chr1:1000-2000`; requires `.bai` index) |
+| `--bx-list` | File path | None | Filter cDNA by a barcode whitelist (requires BX-sorted BAM and `.bam.bxi` index) |
+| `-n, --reads-per-fastq` | Integer | None (single file) | Maximum number of reads per FASTQ file; all reads go to a single file if not specified |
+| `--max-memory` | Integer (MB) | Half available RAM | Working-memory target in MB for caches, queues, and output buffers; not a hard RSS ceiling |
+| `--traceback` | Flag | Disabled | Show detailed error traceback and context |
+| `--relaxed` | Boolean (`true`, `false`) | `true` | Relaxed mode: skip unpaired reads instead of erroring |
+| `--auto-detect` | Boolean (`true`, `false`) | `true` | Automatically detect paired-end status from BAM flags |
+| `--no-compress` | Flag | Disabled | Disable gzip compression for output FASTQ files (outputs uncompressed `.fastq`) |
+| `-h, --help` | Flag | - | Print help message and exit |
+| `-V, --version` | Flag | - | Print version and exit |
 
 ### Practical Examples
 

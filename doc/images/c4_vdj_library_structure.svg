@@ -267,7 +267,7 @@
         <text class="dim-txt" fill="#6366f1" x="395" y="-10">1-150 bp (Full V(D)J CDR3 Coverage)</text>
         <rect x="0" y="0" width="790" height="40" rx="4" fill="#6366f1" stroke="#4f46e5" stroke-width="1.2"/>
         <text class="blk-title" x="395" y="19">全长 V(D)J 转录本 (恒定区引物延伸端)</text>
-        <text class="blk-sub" x="395" y="32">150 bp · 完整覆盖 CDR3 高变区与 V-D-J 重排接合部 (MiXCR 组装)</text>
+        <text class="blk-sub" x="395" y="32">150 bp · 完整覆盖 CDR3 高变区与 V-D-J 重排接合部</text>
         <rect x="345" y="47" width="100" height="17" rx="3" fill="#eef2ff" stroke="#c7d2fe" stroke-width="1"/>
         <text class="code-pill-txt" fill="#4f46e5" x="395" y="59.5">R2,R2:1-150</text>
       </g>

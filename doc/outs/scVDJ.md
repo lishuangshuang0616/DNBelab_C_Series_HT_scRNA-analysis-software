@@ -1,74 +1,72 @@
 # scVDJ 分析输出
 
+> **输出范围**：目录树描述常规完成运行的结果；可选文件取决于启用模块与阶段完成状态。下文质量参考区间是判读建议，不是软件内置的通过/失败规则，应以本次配置阈值和报告状态为准。
+
 单细胞 V(D)J 测序分析输出文件说明
 
 ## 概述 <a id="概述"></a>
 
-单细胞 V(D)J 分析完成后，会在指定的输出目录中生成标准化的文件和子目录结构，用于免疫受体库谱分析。
+单细胞 V(D)J 分析完成后，会在指定的输出目录中生成标准化的文件和子目录结构，用于免疫受体库谱分析。所有输出文件遵循国际 AIRR 社区规范，全面兼容主流单细胞免疫组学分析生态（如 `scRepertoire`、`immunarch`、`scirpy` 等）。
 
-> **提示**：V(D)J 分析需基于 5' 端 RNA 测序数据。所有输出文件遵循 AIRR 标准，并兼容主流免疫组学分析工具。
+> **提示**：支持两种模式：提供 `--beadstrans` 时，使用 RNA 细胞表进行微珠映射及基于 RNA 的细胞过滤；省略时，可在没有 RNA 细胞表的情况下运行 VDJ。省略该参数会自动启用 `keep_all_cells`，不按 RNA 细胞识别结果过滤组装条形码，因此不能将这些条形码视为 RNA 已确认的细胞集合。
 
-> **前提条件**：需先完成 5' 端单细胞 RNA 测序分析。
+### 核心交付物速览
+
+下表汇总了 scVDJ 分析的主要产物、文件格式、核心用途以及推荐的下游生态对接：
+
+| 交付产物与核心文件 | 格式 | 主要用途与下游生态对接 |
+| :--- | :--- | :--- |
+| **过滤后高质量重叠群注释**<br>• `filtered_contig_annotations.csv` | `CSV` | 过滤后的高质量真实细胞重叠群注释表，下游克隆型与受体分析的核心入口。<br>• **生态对接**: 可直接对接 R (`scRepertoire`) 或 Python (`scirpy`)。 |
+| **过滤后高质量重叠群序列**<br>• `filtered_contig.fasta`<br>• `filtered_contig.fasta.fai` | `FASTA`<br>`FAI 索引` | 真实细胞高置信度重叠群的核苷酸序列文件及索引，用于下游 BLAST 比对或合成验证。 |
+| **国际 AIRR 标准注释**<br>• `airr_annotations.tsv` | `TSV 文本` | 遵循国际 AIRR Community 标准的免疫受体库重排注释文件。<br>• **生态对接**: 原生兼容 Immcantation、Change-O、immunarch 等国际免疫组学生态。 |
+| **克隆型统计分析**<br>• `clonotypes.csv` | `CSV` | 样本内克隆型（Clonotype）谱系汇总表，记录各克隆型的细胞频数、比例及配对 CDR3 序列。 |
+| **共识序列与注释**<br>• `consensus_annotations.csv`<br>• `consensus.fasta` (及 `.fai`) | `CSV`<br>`FASTA` | 各克隆型一致性共识序列的详细注释表与代表性核苷酸序列。 |
+| **全量未过滤组装结果**<br>• `all_contig_annotations.csv`<br>• `all_contig.fasta` (及 `.fai`) | `CSV`<br>`FASTA` | 包含所有候选重叠群（含低质量、非生产性及背景液滴）的原始注释与序列，用于全量回溯。 |
+| **实验指标汇总**<br>• `metrics_summary.xls` | `TSV 文本` | 实验测序质量、细胞识别、V(D)J 基因映射率、生产性配对率等全局生信统计指标。<br>• **读取规范**: 制表符文本，R 用 `read.delim()`，Python 用 `pd.read_csv(sep='\t')`。 |
+| **交互式网页报告**<br>• `<sample>_scVDJ_TR(IG)_report.html` | `HTML` | 一站式可视化质控与分析报告，交互式查看细胞条形码排序曲线、前 10 大优势克隆型丰度等。<br>• **打开方式**: 无需网络，双击在任意现代桌面浏览器中直接打开。 |
 
 ## 输出目录结构 <a id="输出目录结构"></a>
 
-```
-.
-├── airr_annotations.tsv                    # AIRR标准格式的注释文件
-├── all_contig_annotations.csv              # 所有组装序列的注释信息
-├── all_contig.fasta                        # 所有组装序列的FASTA 文件
-├── all_contig.fasta.fai                    # 所有组装序列的索引文件
-├── clonotypes.csv                          # 克隆型分析结果
-├── consensus_annotations.csv               # 一致性序列注释信息
-├── consensus.fasta                         # 一致性序列FASTA 文件
-├── consensus.fasta.fai                     # 一致性序列索引文件
-├── filtered_contig_annotations.csv         # 过滤后组装序列的注释信息
-├── filtered_contig.fasta                   # 过滤后的组装序列FASTA 文件
-├── filtered_contig.fasta.fai               # 过滤后组装序列的索引文件
-├── metrics_summary.xls                     # 分析质量指标汇总表
-└── *_scVDJ_TR(IG)_report.html              # HTML格式的分析报告
+FASTA 索引（`*.fasta.fai`）仅在生成时复制，不是必需输出。无重叠群结果可包含空 FASTA 和仅表头的 CSV/TSV，表头字段也可能为精简集合。Contig CSV 布尔值为 `true`/`false`，AIRR 布尔值为 `T`/`F`。TCR 报告名为 `<sample>_scVDJ_TR_report.html`，BCR 为 `<sample>_scVDJ_IG_report.html`；下文 `TR(IG)` 仅为两种命名的简写。
+
+```text
+outs/
+├── filtered_contig_annotations.csv         # 过滤后的高质量真实细胞重叠群注释表 (下游分析首选输入)
+├── filtered_contig.fasta                   # 过滤后的高质量重叠群核苷酸序列 (FASTA 格式)
+├── filtered_contig.fasta.fai               # 过滤后重叠群序列索引文件（可选）
+├── airr_annotations.tsv                    # 国际 AIRR 社区标准格式的重排注释文件 (TSV 格式)
+├── clonotypes.csv                          # 克隆型统计分析结果表 (含细胞频数与配对 CDR3)
+├── consensus_annotations.csv               # 各克隆型代表性共识序列详细注释表
+├── consensus.fasta                         # 各克隆型一致性共识序列 (FASTA 格式)
+├── consensus.fasta.fai                     # 共识序列索引文件（可选）
+├── all_contig_annotations.csv              # 全量组装重叠群注释信息 (含背景与未过滤条形码)
+├── all_contig.fasta                        # 全量组装重叠群序列 (FASTA 格式)
+├── all_contig.fasta.fai                    # 全量重叠群序列索引文件（可选）
+├── metrics_summary.xls                     # 分析质量与性能指标汇总表 (制表符分隔 TSV)
+└── <sample>_scVDJ_TR(IG)_report.html       # 交互式综合网页质控与克隆型分析报告
 ```
 
 ## 文件详细说明 <a id="详细文件说明"></a>
 
 ### V(D)J 组装和注释文件 <a id="vdj组装和注释文件"></a>
 
-**核心内容**: V(D)J 重叠群序列组装、精确注释和质量评估结果，涵盖 TCR 和 BCR 重排序列的完整信息
+**核心内容**: V(D)J 重叠群序列组装、精确注释和质量评估结果，涵盖 TCR 和 BCR 重排序列的完整信息。
 
 #### V(D)J 转录本结构与组成
 
 **典型 V(D)J 转录本结构示意：**
 
-<img src="../images/vdj_transcript.png" alt="V(D)J 转录本结构示意图" width="650">
+<div style="text-align: center; margin: 1.5rem 0;" markdown="block">
+<img src="../images/vdj_transcript.png" alt="V(D)J 转录本结构示意图" style="max-width: 620px; width: 100%; border-radius: 8px; box-shadow: 0 4px 16px rgba(0,0,0,0.08); border: 1px solid var(--doc-border);">
+</div>
 
 **重要术语解释：**
 
-<table>
-<thead>
-<tr>
-<th width="20%"><strong>组成区域</strong></th>
-<th width="30%"><strong>英文缩写</strong></th>
-<th width="50%"><strong>生物学功能</strong></th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>非翻译区</strong></td>
-<td>UTR (Untranslated Region)</td>
-<td>调控 mRNA 稳定性和翻译效率，不编码蛋白质</td>
-</tr>
-<tr>
-<td><strong>框架区</strong></td>
-<td>FWR (Framework Region)</td>
-<td>维持免疫球蛋白折叠的保守性结构框架</td>
-</tr>
-<tr>
-<td><strong>互补决定区</strong></td>
-<td>CDR (Complementarity Determining Region)</td>
-<td>直接与抗原接触，决定结合特异性的关键可变区域</td>
-</tr>
-</tbody>
-</table>
+| 组成区域 | 英文缩写 | 生物学功能 |
+| :--- | :--- | :--- |
+| **非翻译区** | UTR (Untranslated Region) | 调控 mRNA 稳定性和翻译效率，不编码蛋白质 |
+| **框架区** | FWR (Framework Region) | 维持免疫球蛋白或 TCR 折叠的保守性结构框架（FWR1 – FWR4） |
+| **互补决定区** | CDR (Complementarity Determining Region) | 直接与抗原表位接触，决定结合特异性的关键超变区域（CDR1 – CDR3，其中 CDR3 多样性最高） |
 
 > **技术优势**: V(D)J 分析流程可精确识别并提供框架区（FWR）和互补决定区（CDR）的氨基酸与核苷酸序列。所有组装重叠群和克隆型共识序列的 V(D)J 注释信息均以多种标准格式输出。
 
@@ -76,1120 +74,315 @@
 
 ##### 全长序列判定标准 (Full Length)
 
-重叠群序列被认定为 **全长序列** 须同时满足以下严格条件：
+重叠群序列被认定为 **全长序列** 须同时满足以下条件：
 
 - 重叠群序列完全匹配已注释 V 基因的 5' 起始区域
 - 重叠群序列完整延伸至 J 基因的 3' 末端区域
 
 ##### 生产性序列判定标准 (Productive)
 
-重叠群序列被认定为 **生产性序列**（具有功能活性）须同时满足以下所有条件：
-
-- 符合上述全长序列的所有要求
-- 在正确位置包含有效的起始密码子（ATG）
-- V-J 跨越区域内不存在提前终止密码子
-- V 基因起始密码子与 J 基因终止密码子保持相同阅读框
-- 成功识别出完整的 CDR3 可变区域
-- V-J 跨越区域长度符合相应基因的生物学合理范围
+以 V(D)J 注释生成的 `productive` 标记为准。它与 `full_length` 是不同字段，输出发布阶段不会根据链数量或 FASTA 长度重新判定生产性。过滤后重叠群要求 `productive`、`is_cell`、`high_confidence` 同时为真。
 
 ##### 高置信度序列判定 (High Confidence)
 
-**不同细胞类型的预期受体配置：**
-
-<table>
-<thead>
-<tr>
-<th width="25%">细胞类型</th>
-<th width="45%">标准受体配置</th>
-<th width="30%">生物学意义</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>T 细胞</strong></td>
-<td>1 个生产性 TRA 链 + 1 个生产性 TRB 链</td>
-<td>正常 TCR α/β 异源二聚体</td>
-</tr>
-<tr>
-<td><strong>B 细胞</strong></td>
-<td>1 个生产性重链 + 1 个生产性轻链（κ 或 λ）</td>
-<td>正常 BCR 重链/轻链配对</td>
-</tr>
-</tbody>
-</table>
-
-**低置信度序列标记原则：**
-
-超出正常配置的额外生产性重叠群通常为异常情况，常见原因包括：
-
-<table>
-<thead>
-<tr>
-<th width="25%">异常类型</th>
-<th width="75%">原因分析</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>环境污染</strong></td>
-<td>游离 mRNA 的非特异性捕获，可能来自外源污染或凋亡细胞释放的核酸</td>
-</tr>
-<tr>
-<td><strong>双细胞事件</strong></td>
-<td>液滴中包含多个细胞 (doublets)，导致无法区分不同细胞的受体信号</td>
-</tr>
-<tr>
-<td><strong>技术伪影</strong></td>
-<td>PCR 扩增或测序过程中的人工序列，包括嵌合体序列或错误的引物结合</td>
-</tr>
-</tbody>
-</table>
-
-**低置信度序列的判定依据：**
-
-- 生物学上极不可能存在的异常受体配置模式
-- UMI 分子支持度显著偏低的可疑序列
-- 明显超出预期数量的额外生产性链
+`high_confidence` 由组装与克隆型阶段生成，不能仅用“每种链各一条”的固定规则代替。过滤注释表按 `productive && is_cell && high_confidence` 输出；同一细胞仍可对应多条重叠群记录。链配对应结合输出标记与克隆型归属解释。
 
 #### airr_annotations.tsv
 
-包含V(D)J重排的注释序列和共识序列，采用AIRR标准格式。
+包含 V(D)J 重排的注释序列和共识序列，严格遵循国际 AIRR Community 格式规范。
 
 *   **用途**:
-    *   **标准化数据交换**: 作为符合AIRR社区标准的交换格式，便于与其他免疫组库分析工具对接。
-    *   **深度注释**: 提供详细的V、D、J基因调用信息、CIGAR字符串、序列比对结果以及CDR3区域的核苷酸和氨基酸序列。
+    *   **标准化数据交换**: 作为国际公认的标准交换格式，可无缝对接 `scRepertoire`、`immunarch`、`Change-O` 等免疫组库工具。
+    *   **深度注释**: 提供精细的 V、D、J、C 基因分型调用、CIGAR 比对串、种系基因比对结果及 CDR3 区域核苷酸与氨基酸序列。
 
-*   **内容与格式**:
-    *   文件采用 AIRR 标准的 TSV 格式。
-    *   文件具体包含的字段如下表所示：
+*   **包含的核心字段**：
 
-    <table>
-    <thead>
-    <tr>
-    <th width="25%"><strong>字段名</strong></th>
-    <th width="75%"><strong>详细描述</strong></th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr>
-    <td><code>cell_id</code></td>
-    <td>该重排序列所属细胞的唯一标识符，用于关联单细胞数据</td>
-    </tr>
-    <tr>
-    <td><code>clone_id</code></td>
-    <td>克隆型编号，标识该重排序列归属的特定克隆群体，用于克隆型分析</td>
-    </tr>
-    <tr>
-    <td><code>sequence_id</code></td>
-    <td>重叠群的唯一名称或标识符</td>
-    </tr>
-    <tr>
-    <td><code>sequence</code></td>
-    <td>V(D)J 重排的完整核苷酸序列，包含所有可变、多样性和连接区域</td>
-    </tr>
-    <tr>
-    <td><code>sequence_aa</code></td>
-    <td>重排区域翻译获得的氨基酸序列，反映功能性蛋白产物</td>
-    </tr>
-    <tr>
-    <td><code>productive</code></td>
-    <td>标记该重排是否为生产性（具有生物学功能），需满足框内翻译和无终止密码子等条件</td>
-    </tr>
-    <tr>
-    <td><code>rev_comp</code></td>
-    <td>指示序列是否为反向互补序列（默认：false），用于序列方向标记</td>
-    </tr>
-    <tr>
-    <td><code>v_call</code></td>
-    <td>识别的 V（可变）基因片段名称</td>
-    </tr>
-    <tr>
-    <td><code>v_cigar</code></td>
-    <td>V 基因比对的 CIGAR 字符串，记录比对的详细信息（匹配、插入、删除等）</td>
-    </tr>
-    <tr>
-    <td><code>d_call</code></td>
-    <td>识别的 D（多样性）基因片段名称（仅适用于重链和 β 链）</td>
-    </tr>
-    <tr>
-    <td><code>d_cigar</code></td>
-    <td>D 基因比对的 CIGAR 字符串，详细记录多样性区域的比对结果</td>
-    </tr>
-    <tr>
-    <td><code>j_call</code></td>
-    <td>识别的 J（连接）基因片段名称，完成 V(D)J 重组的关键元件</td>
-    </tr>
-    <tr>
-    <td><code>j_cigar</code></td>
-    <td>J 基因比对的 CIGAR 字符串，记录连接区域的精确比对信息</td>
-    </tr>
-    <tr>
-    <td><code>c_call</code></td>
-    <td>识别的 C（恒定）基因片段名称，决定抗体/受体的功能类型</td>
-    </tr>
-    <tr>
-    <td><code>c_cigar</code></td>
-    <td>C 基因比对的 CIGAR 字符串，记录恒定区域的比对详情</td>
-    </tr>
-    <tr>
-    <td><code>sequence_alignment</code></td>
-    <td>V(D)J 重排区域与参考种系序列的详细比对结果，显示突变和变异</td>
-    </tr>
-    <tr>
-    <td><code>germline_alignment</code></td>
-    <td>推断的种系全长序列比对结果，用于体细胞突变分析</td>
-    </tr>
-    <tr>
-    <td><code>junction</code></td>
-    <td>V(D)J 重排连接区的核苷酸序列（CDR3 区域），决定抗原结合特异性</td>
-    </tr>
-    <tr>
-    <td><code>junction_aa</code></td>
-    <td>重排连接区的氨基酸序列（CDR3 氨基酸），抗原识别的关键结构域</td>
-    </tr>
-    <tr>
-    <td><code>junction_length</code></td>
-    <td>CDR3 区域核苷酸序列长度（bp），影响抗原结合能力和特异性</td>
-    </tr>
-    <tr>
-    <td><code>junction_aa_length</code></td>
-    <td>CDR3 区域氨基酸序列长度（aa），决定抗原结合环的空间结构</td>
-    </tr>
-    <tr>
-    <td><code>v_sequence_start</code></td>
-    <td>V 区域在重排序列中的起始位置（1-based 坐标系统）</td>
-    </tr>
-    <tr>
-    <td><code>v_sequence_end</code></td>
-    <td>V 区域在重排序列中的结束位置（1-based 坐标系统）</td>
-    </tr>
-    <tr>
-    <td><code>d_sequence_start</code></td>
-    <td>D 区域在重排序列中的起始位置（1-based 坐标系统）</td>
-    </tr>
-    <tr>
-    <td><code>d_sequence_end</code></td>
-    <td>D 区域在重排序列中的结束位置（1-based 坐标系统）</td>
-    </tr>
-    <tr>
-    <td><code>j_sequence_start</code></td>
-    <td>J 区域在重排序列中的起始位置（1-based 坐标系统）</td>
-    </tr>
-    <tr>
-    <td><code>j_sequence_end</code></td>
-    <td>J 区域在重排序列中的结束位置（1-based 坐标系统）</td>
-    </tr>
-    <tr>
-    <td><code>c_sequence_start</code></td>
-    <td>C 区域在重排序列中的起始位置（1-based 坐标系统）</td>
-    </tr>
-    <tr>
-    <td><code>c_sequence_end</code></td>
-    <td>C 区域在重排序列中的结束位置（1-based 坐标系统）</td>
-    </tr>
-    <tr>
-    <td><code>consensus_count</code></td>
-    <td>支持该重排序列的总 reads 数量，反映测序深度和序列可信度</td>
-    </tr>
-    <tr>
-    <td><code>duplicate_count</code></td>
-    <td>支持该重排序列的独特 UMI 分子数量，用于去重和定量分析</td>
-    </tr>
-    <tr>
-    <td><code>is_cell</code></td>
-    <td>标记该重排是否来源于真实细胞（TRUE：细胞；FALSE：背景/空滴）</td>
-    </tr>
-    </tbody>
-    </table>
+| 字段名 | 详细描述 |
+| :--- | :--- |
+| `cell_id` | 该重排序列所属细胞的唯一标识符，用于关联单细胞转录组数据 |
+| `clone_id` | 克隆型编号，标识该重排序列归属的特定克隆群体 |
+| `sequence_id` | 重叠群的唯一名称或标识符 |
+| `sequence` | V(D)J 重排的完整核苷酸序列，包含可变区、多样性区和连接区 |
+| `sequence_aa` | 重排区域翻译获得的氨基酸序列，反映功能性蛋白产物 |
+| `productive` | 标记该重排是否为生产性（具有生物学功能，满足框内翻译且无终止密码子） |
+| `rev_comp` | 指示序列是否为反向互补序列，按 AIRR 使用 `T`/`F` |
+| `v_call` / `d_call` / `j_call` / `c_call` | 识别的 V、D、J、C 基因片段名称（D 基因仅适用于重链和 β 链） |
+| `v_cigar` / `d_cigar` / `j_cigar` / `c_cigar` | 各基因片段比对的 CIGAR 字符串，记录匹配、插入、删除等比对细节 |
+| `sequence_alignment` | V(D)J 重排区域与参考种系序列的比对结果，显示体细胞高频突变 |
+| `germline_alignment` | 推断的种系参考序列比对结果，用于体细胞超突变（SHM）分析 |
+| `junction` / `junction_aa` | CDR3 重排连接区的核苷酸序列与氨基酸序列，决定抗原结合特异性 |
+| `junction_length` / `junction_aa_length` | CDR3 区域核苷酸长度（bp）与氨基酸长度（aa） |
+| `v_sequence_start` / `v_sequence_end` | V 区域在重排序列中的起止位置（1-based 坐标系统） |
+| `d_sequence_start` / `d_sequence_end` | D 区域在重排序列中的起止位置（1-based 坐标系统） |
+| `j_sequence_start` / `j_sequence_end` | J 区域在重排序列中的起止位置（1-based 坐标系统） |
+| `c_sequence_start` / `c_sequence_end` | C 区域在重排序列中的起止位置（1-based 坐标系统） |
+| `consensus_count` | 支持该重排序列的总 reads 数量，反映测序深度与可信度 |
+| `duplicate_count` | 支持该重排序列的独特 UMI 分子数量，用于定量分子去重分析 |
+| `is_cell` | 标记该重排是否来源于真实细胞（TRUE 为细胞，FALSE 为背景噪音） |
 
 #### all_contig_annotations.csv
 
-包含所有重叠群序列（来自细胞和背景条形码）的详细注释信息。
+包含全量组装重叠群序列（涵盖细胞与背景条形码）的详细注释信息。
 
-*   **用途**:
-    *   **全面数据审查**: 提供所有组装出的重叠群数据，包括低质量或背景信号，用于深入的质控分析。
-    *   **完整注释**: 提供完整的 V(D)J 基因片段、CDR/FWR区域的注释信息。
+*   **用途**: 用于深入质控分析与算法回溯，包含组装出的所有重叠群、低支持度序列及背景信号。
+*   **包含的核心字段**：
 
-*   **内容与格式**:
-    *   文件采用 CSV 文本格式。
-    *   文件具体包含的字段如下表所示：
-
-    <table>
-    <thead>
-    <tr>
-    <th width="25%"><strong>字段名</strong></th>
-    <th width="75%"><strong>描述</strong></th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr>
-    <td><code>sample</code></td>
-    <td>VDJ 文库的样本名称</td>
-    </tr>
-    <tr>
-    <td><code>barcode</code></td>
-    <td>该重叠群对应的细胞 ID（或条形码）</td>
-    </tr>
-    <tr>
-    <td><code>is_cell</code></td>
-    <td>布尔值，指示该细胞 ID是否被识别为细胞（TRUE为细胞，FALSE为背景）</td>
-    </tr>
-    <tr>
-    <td><code>contig_id</code></td>
-    <td>该重叠群的唯一标识符</td>
-    </tr>
-    <tr>
-    <td><code>high_confidence</code></td>
-    <td>布尔值，指示该重叠群是否被标记为高置信度（不太可能是嵌合序列或其他伪影）</td>
-    </tr>
-    <tr>
-    <td><code>length</code></td>
-    <td>重叠群序列的核苷酸长度（bp）</td>
-    </tr>
-    <tr>
-    <td><code>chain</code></td>
-    <td>与该重叠群相关的链类型：TRA、TRB、IGK、IGL或IGH</td>
-    </tr>
-    <tr>
-    <td><code>v_gene</code></td>
-    <td>得分最高的V基因片段，如TRAV1-1</td>
-    </tr>
-    <tr>
-    <td><code>d_gene</code></td>
-    <td>得分最高的D基因片段，如TRBD1</td>
-    </tr>
-    <tr>
-    <td><code>j_gene</code></td>
-    <td>得分最高的J基因片段，如TRAJ1-1</td>
-    </tr>
-    <tr>
-    <td><code>full_length</code></td>
-    <td>布尔值，指示该重叠群是否被声明为全长序列</td>
-    </tr>
-    <tr>
-    <td><code>productive</code></td>
-    <td>布尔值，指示该重叠群是否被声明为生产性序列</td>
-    </tr>
-    <tr>
-    <td><code>fwr1</code></td>
-    <td>预测的FWR1氨基酸序列</td>
-    </tr>
-    <tr>
-    <td><code>fwr1_nt</code></td>
-    <td>预测的FWR1核苷酸序列</td>
-    </tr>
-    <tr>
-    <td><code>cdr1</code></td>
-    <td>预测的CDR1氨基酸序列</td>
-    </tr>
-    <tr>
-    <td><code>cdr1_nt</code></td>
-    <td>预测的CDR1核苷酸序列</td>
-    </tr>
-    <tr>
-    <td><code>fwr2</code></td>
-    <td>预测的FWR2氨基酸序列</td>
-    </tr>
-    <tr>
-    <td><code>fwr2_nt</code></td>
-    <td>预测的FWR2核苷酸序列</td>
-    </tr>
-    <tr>
-    <td><code>cdr2</code></td>
-    <td>预测的CDR2氨基酸序列</td>
-    </tr>
-    <tr>
-    <td><code>cdr2_nt</code></td>
-    <td>预测的CDR2核苷酸序列</td>
-    </tr>
-    <tr>
-    <td><code>fwr3</code></td>
-    <td>预测的FWR3氨基酸序列</td>
-    </tr>
-    <tr>
-    <td><code>fwr3_nt</code></td>
-    <td>预测的FWR3核苷酸序列</td>
-    </tr>
-    <tr>
-    <td><code>cdr3</code></td>
-    <td>预测的CDR3氨基酸序列</td>
-    </tr>
-    <tr>
-    <td><code>cdr3_nt</code></td>
-    <td>预测的CDR3核苷酸序列</td>
-    </tr>
-    <tr>
-    <td><code>fwr4</code></td>
-    <td>预测的FWR4氨基酸序列</td>
-    </tr>
-    <tr>
-    <td><code>fwr4_nt</code></td>
-    <td>预测的FWR4核苷酸序列</td>
-    </tr>
-    <tr>
-    <td><code>reads</code></td>
-    <td>比对到该重叠群的reads数量</td>
-    </tr>
-    <tr>
-    <td><code>umis</code></td>
-    <td>比对到该重叠群的不同UMI数量</td>
-    </tr>
-    <tr>
-    <td><code>raw_clonotype_id</code></td>
-    <td>分配给该细胞条形码的克隆型ID</td>
-    </tr>
-    <tr>
-    <td><code>raw_consensus_id</code></td>
-    <td>该重叠群被分配到的共识序列ID</td>
-    </tr>
-    <tr>
-    <td><code>exact_subclonotype_id</code></td>
-    <td>该细胞条形码被分配到的精确亚克隆型ID</td>
-    </tr>
-    </tbody>
-    </table>
+| 字段名 | 描述 |
+| :--- | :--- |
+| `sample` | VDJ 文库的样本名称 |
+| `barcode` | 该重叠群对应的细胞 ID 或原始条形码 |
+| `is_cell` | 布尔值，指示该条形码是否被判定为真实细胞（`true` / `false`） |
+| `contig_id` | 该重叠群的唯一标识符 |
+| `high_confidence` | 布尔值，指示该重叠群是否为高置信度序列（排除嵌合与伪影） |
+| `length` | 重叠群序列的核苷酸长度（bp） |
+| `chain` | 链类型：TRA、TRB、IGK、IGL 或 IGH |
+| `v_gene` / `d_gene` / `j_gene` / `c_gene` | 得分最高的 V、D、J、C 基因片段分型结果 |
+| `full_length` | 布尔值，指示该重叠群是否达到全长判定标准 |
+| `productive` | 布尔值，指示该重叠群是否具备生产性功能序列特征 |
+| `fwr1`–`fwr4` / `fwr1_nt`–`fwr4_nt` | 预测的 FWR1 至 FWR4 区域氨基酸及核苷酸序列 |
+| `cdr1`–`cdr3` / `cdr1_nt`–`cdr3_nt` | 预测的 CDR1 至 CDR3 区域氨基酸及核苷酸序列 |
+| `reads` | 比对到该重叠群的 reads 数量 |
+| `umis` | 支持该重叠群的独特 UMI 分子数量 |
+| `raw_clonotype_id` | 分配给该重叠群的克隆型 ID |
+| `raw_consensus_id` | 分配给该重叠群的共识序列 ID |
+| `exact_subclonotype_id` | 精确子克隆型标识，未分配时可为空 |
 
 #### all_contig.fasta
 
-包含所有组装重叠群的核苷酸序列。
+包含所有组装重叠群核苷酸序列的 FASTA 文件。
 
-*   **用途**:
-    *   **序列数据库**: 作为所有重叠群的序列数据库，可用于igBLAST比对或其他序列分析。
-    *   **数据完整性**: 提供了最原始的组装结果。
-*   **内容与格式**:
-    *   采用标准 FASTA 格式，每个序列对应一个重叠群，序列标识符为重叠群的唯一名称。
+*   **用途**: 作为全量重叠群序列库，支持自定义 IgBLAST 比对、多序列比对及组装完整性审计。
 
 #### filtered_contig_annotations.csv
 
-`all_contig_annotations.csv` 的高质量子集，仅包含通过质量过滤的高置信度、且来源于细胞的重叠群注释结果。
+`all_contig_annotations.csv` 的高质量子集，仅保留通过质控过滤的高置信度、且来源于真实细胞的重叠群注释结果。
 
-*   **用途**:
-    *   **核心下游分析**: 这是进行克隆型定义和大多数下游分析的**推荐输入文件**。
-    *   **高质量数据**: 只包含被鉴定为真实细胞且高置信度的重叠群，确保分析结果的准确性。
-*   **内容与格式**:
-    *   文件格式与 `all_contig_annotations.csv` 完全相同。
+!!! tip "下游分析文件选择与跨模态对齐要点"
+    - **首选用作下游输入**：`filtered_contig_annotations.csv` 严格剔除了非生产性（non-productive）、低分子支持度及游离背景重叠群，是下游克隆型丰度分析、V/D/J 基因偏好性研究的核心入口。
+    - **AIRR 国际标准兼容**：同级目录生成的 `airr_annotations.tsv` 严格遵循 AIRR Community 规范，可直接载入 R 的 `scRepertoire`、`immunarch` 或 Python 的 `scirpy`。
+    - **5' scRNA 跨模态条形码对齐**：当使用 `--beadstrans outs/singlecell.csv` 联动分析时，VDJ 中的细胞条形码已映射为与 RNA 相同的统一 Cell ID（如 `CELL1118_N3`），可作为关联 RNA 元数据的键。Contig 注释表每行是一条重叠群，同一细胞可出现多次；需要一细胞一行时，应先按细胞汇总再关联。
+
+*   **格式**: 与 `all_contig_annotations.csv` 完全一致。
 
 #### filtered_contig.fasta
 
-`all_contig.fasta` 的高质量子集，仅包含通过质量过滤和细胞调用的高质量重叠群序列。
+`all_contig.fasta` 的高质量子集，仅包含通过过滤和真实细胞识别的高质量重叠群序列。
 
-*   **用途**:
-    *   **可信序列集**: 提供一个高可信度的重排序列集合，用于后续的功能分析或实验验证。
-*   **内容与格式**:
-    *   标准FASTA格式，序列标识符为重叠群ID。
+*   **用途**: 提供高可信度的重排受体序列集合，用于抗体结构建模、亲和力成熟分析或分子克隆实验验证。
 
 ### 克隆型谱系分析文件 <a id="克隆型分析文件"></a>
 
-**核心内容**: TCR 和 BCR 克隆型谱系的精确识别、频率统计和 CDR3 序列多样性分析
+**核心内容**: TCR 和 BCR 克隆型谱系的精确识别、频率统计和 CDR3 序列多样性分析。
 
 #### clonotypes.csv
 
-克隆型统计分析文件，提供每个独特克隆型的详细描述信息。
+克隆型统计分析汇总表，提供每个独特克隆型的详细特征描述。
 
 *   **用途**:
-    *   **克隆型丰度分析**: 统计每个克隆型的细胞数（频率）和占比，用于评估克隆扩增程度。
-    *   **免疫多样性评估**: 分析克隆型分布，研究免疫库的多样性。
-    *   **CDR3 序列分析**: 提供每个克隆型精确的 CDR3 氨基酸和核苷酸序列。
+    *   **克隆型丰度分析**: 统计每个克隆型的细胞数（frequency）和细胞占比（proportion），评估克隆扩增程度。
+    *   **免疫多样性评估**: 结合克隆型分布评估免疫受体库的整体多样性。
+    *   **CDR3 序列分析**: 提供每个克隆型高保真的 CDR3 氨基酸与核苷酸序列。
+*   **字段说明**:
 
-*   **内容与格式**:
-    *   文件采用 CSV 格式。
-    *   文件具体包含的字段如下表所示：
-
-    <table>
-    <thead>
-    <tr>
-    <th width="25%"><strong>字段名</strong></th>
-    <th width="75%"><strong>详细描述</strong></th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr>
-    <td><code>clonotype_id</code></td>
-    <td>分配给该共识序列的克隆型唯一标识符，用于关联和追踪特定克隆群体的所有相关细胞</td>
-    </tr>
-    <tr>
-    <td><code>frequency</code></td>
-    <td>观察到的具有该克隆型的细胞绝对数量，反映克隆扩增程度和免疫应答强度</td>
-    </tr>
-    <tr>
-    <td><code>proportion</code></td>
-    <td>该克隆型细胞占总细胞群体的相对比例，用于评估克隆优势度和多样性分布</td>
-    </tr>
-    <tr>
-    <td><code>cdr3s_aa</code></td>
-    <td>以分号分隔的链:序列对列表，格式为"链名:CDR3 氨基酸序列"。链名包括 TRA、TRB、TRG、TRD（T 细胞受体）和 IGK、IGL、IGH（B 细胞受体），CDR3 氨基酸序列用于判断抗原结合特异性和功能活性</td>
-    </tr>
-    <tr>
-    <td><code>cdr3s_nt</code></td>
-    <td>以分号分隔的链:序列对列表，格式为"链名:CDR3 核苷酸序列"。提供 CDR3 区域的 DNA 序列信息，用于体细胞突变分析、克隆进化追踪和分子标记设计</td>
-    </tr>
-    </tbody>
-    </table>
+| 字段名 | 详细描述 |
+| :--- | :--- |
+| `clonotype_id` | 分配给该共识序列的克隆型唯一标识符（如 `clonotype1`），用于追踪关联细胞 |
+| `frequency` | 具有该克隆型的细胞绝对数量，反映克隆扩增程度和免疫应答强度 |
+| `proportion` | 该克隆型细胞占总细胞群体的相对比例，用于评估优势克隆的占比 |
+| `cdr3s_aa` | 分号分隔的链:序列列表（格式为 `链名:CDR3氨基酸序列`），用于抗原结合特异性分析 |
+| `cdr3s_nt` | 分号分隔的链:序列列表（格式为 `链名:CDR3核苷酸序列`），用于体细胞高频突变与谱系树构建 |
 
 #### consensus_annotations.csv
 
-提供每个克隆型共识序列的详细注释信息。
+提供每个克隆型一致性共识序列的详细注释信息。
 
-*   **用途**:
-    *   **代表性序列注释**: 为每个克隆型提供一个代表性序列的完整 V(D)J 基因和 CDR/FWR 区域注释。
-    *   **克隆型水平分析**: 支持在克隆型水平上进行序列特征分析。
+*   **用途**: 为每个克隆型提供代表性共识序列的完整 V(D)J 基因及 CDR/FWR 区域注释。
+*   **字段说明**:
 
-*   **内容与格式**:
-    *   文件采用 CSV 格式。
-    *   文件具体包含的字段如下表所示：
-
-    <table>
-    <thead>
-    <tr>
-    <th width="25%"><strong>字段名</strong></th>
-    <th width="75%"><strong>描述</strong></th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr>
-    <td><code>clonotype_id</code></td>
-    <td>分配给该一致性序列的克隆型ID，对应clonotypes.csv中的克隆型标识符</td>
-    </tr>
-    <tr>
-    <td><code>consensus_id</code></td>
-    <td>该一致性序列的唯一标识符，用于关联FASTA 文件中的序列</td>
-    </tr>
-    <tr>
-    <td><code>sample</code></td>
-    <td>VDJ 文库的样本名称</td>
-    </tr>
-    <tr>
-    <td><code>length</code></td>
-    <td>一致性序列的核苷酸长度</td>
-    </tr>
-    <tr>
-    <td><code>chain</code></td>
-    <td>与该一致性序列相关的链类型：TRA、TRB、IGK、IGL或IGH</td>
-    </tr>
-    <tr>
-    <td><code>v_gene</code></td>
-    <td>得分最高的V基因片段调用结果</td>
-    </tr>
-    <tr>
-    <td><code>d_gene</code></td>
-    <td>得分最高的D基因片段调用结果（如适用）</td>
-    </tr>
-    <tr>
-    <td><code>j_gene</code></td>
-    <td>得分最高的J基因片段调用结果</td>
-    </tr>
-    <tr>
-    <td><code>c_gene</code></td>
-    <td>得分最高的C基因片段调用结果</td>
-    </tr>
-    <tr>
-    <td><code>full_length</code></td>
-    <td>布尔值，指示该一致性序列是否被声明为全长序列</td>
-    </tr>
-    <tr>
-    <td><code>productive</code></td>
-    <td>布尔值，指示该一致性序列是否被声明为生产性序列</td>
-    </tr>
-    <tr>
-    <td><code>cdr3</code></td>
-    <td>预测的CDR3氨基酸序列</td>
-    </tr>
-    <tr>
-    <td><code>cdr3_nt</code></td>
-    <td>预测的CDR3核苷酸序列</td>
-    </tr>
-    <tr>
-    <td><code>reads</code></td>
-    <td>支持该一致性序列的reads总数</td>
-    </tr>
-    <tr>
-    <td><code>umis</code></td>
-    <td>支持该一致性序列的不同UMI数量</td>
-    </tr>
-    </tbody>
-    </table>
+| 字段名 | 描述 |
+| :--- | :--- |
+| `clonotype_id` | 分配给该共识序列的克隆型 ID，对应 `clonotypes.csv` |
+| `consensus_id` | 该一致性共识序列的唯一标识符，对应 `consensus.fasta` |
+| `sample` | VDJ 文库的样本名称 |
+| `length` | 共识序列的核苷酸长度（bp） |
+| `chain` | 链类型：TRA、TRB、IGK、IGL 或 IGH |
+| `v_gene` / `d_gene` / `j_gene` / `c_gene` | 得分最高的 V、D、J、C 基因片段分型结果 |
+| `full_length` / `productive` | 是否为全长序列 / 生产性序列标记 |
+| `cdr3` / `cdr3_nt` | 预测的 CDR3 氨基酸与核苷酸序列 |
+| `reads` / `umis` | 支持该共识序列的 reads 数量与 UMI 分子数量 |
 
 #### consensus.fasta
 
-包含每个克隆型共识序列的FASTA 文件。
+包含每个克隆型一致性共识序列的 FASTA 文件。
 
-*   **用途**:
-    *   **代表性序列库**: 提供每个克隆型的代表性序列，用于功能预测或与其他数据集比对。
-    *   **高质量序列**: 共识序列通过克隆型分组算法生成，理想情况下为全长序列（从5'UTR起始到C基因引物结合位点结束）。
-*   **内容与格式**:
-    *   标准FASTA格式，序列标识符为`consensus_id`。
+*   **用途**: 提供各克隆型的代表性序列，理想状态下为从 5' UTR 起始到 C 基因引物结合位点结束的全长受体序列。
 
 ### 分析指标汇总 <a id="分析指标汇总"></a>
 
-**核心内容**: V(D)J 组装质量的结构化评估和统计指标汇总，提供完整的数据质量控制信息
+**核心内容**: V(D)J 组装质量的结构化评估和统计指标汇总，提供完整的数据质量控制信息。
 
 #### metrics_summary.xls
 
-采用 Excel 格式的关键分析指标汇总表，提供了对实验整体质量的结构化评估。
+采用制表符分隔（TSV）格式的关键分析指标汇总表，提供了对实验整体质量的结构化评估。
 
-*   **用途**:
-    *   **质量评估**: 快速评估测序质量、细胞识别、基因映射、组装效果等核心指标。
-    *   **结果概览**: 无需查看所有文件即可对分析结果有一个概览。
+*   **核心用途**: 快速评估测序质量、细胞识别、基因映射、组装效果等核心生信指标。
+*   **指标类别划分**:
 
-*   **内容与格式**:
-    *   包含五大类别的关键指标：
+| 指标类别 | 包含内容 |
+| :--- | :--- |
+| **基础测序统计** | 总读段数、有效条形码比例、UMI 质量、Q30 碱基质量等基础测序指标 |
+| **细胞识别结果** | 估计细胞数量、细胞内读段比例、每细胞平均读段数等细胞识别结果 |
+| **基因映射特征** | V(D)J 基因映射比例、链特异性映射统计、基因利用度分析 |
+| **序列组装质量** | 全长序列比例、生产性序列比例、CDR3 识别成功率等组装效果评估 |
+| **克隆型分析指标** | 克隆型多样性、配对成功率、主要克隆型频率等免疫组库特征 |
 
-        <table>
-        <thead>
-        <tr>
-        <th width="20%"><strong>指标类别</strong></th>
-        <th width="80%"><strong>包含内容</strong></th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr>
-        <td><strong>基本统计</strong></td>
-        <td>总读段数、有效条形码比例、UMI 质量、Q30 碱基质量等基础测序指标</td>
-        </tr>
-        <tr>
-        <td><strong>细胞识别</strong></td>
-        <td>估计细胞数量、细胞内读段比例、每细胞平均读段数等细胞调用结果</td>
-        </tr>
-        <tr>
-        <td><strong>基因映射</strong></td>
-        <td>V(D)J基因映射比例、链特异性映射统计、基因利用度分析</td>
-        </tr>
-        <tr>
-        <td><strong>组装质量</strong></td>
-        <td>全长序列比例、生产性序列比例、CDR3识别成功率等组装效果评估</td>
-        </tr>
-        <tr>
-        <td><strong>克隆型分析</strong></td>
-        <td>克隆型多样性、配对成功率、主要克隆型频率等免疫组库特征</td>
-        </tr>
-        </tbody>
-        </table>
-
-    *   内置推荐的质量控制标准，便于用户判断：
-        <details markdown="block" open>
-        <summary><strong>推荐质量阈值：</strong></summary>
-        <ul>
-        <li><strong>有效条形码比例</strong>: >70%</li>
-        <li><strong>Q30 碱基质量</strong>: >75%（条形码和 UMI 区域）</li>
-        <li><strong>V(D)J基因映射率</strong>: >30%</li>
-        <li><strong>配对生产性序列比例</strong>: >20%</li>
-        <li><strong>每细胞平均读段数</strong>: >5,000</li>
-        </ul>
-        </details>
+*   **读取方式**: 推荐在 R 中使用 `read.delim("metrics_summary.xls")`，在 Python 中使用 `pd.read_csv("metrics_summary.xls", sep="\t")`。详细指标释义与推荐质量基准请参见 [网页报告释义](#网页报告释义)。
 
 #### *_scVDJ_TR(IG)_report.html
 
 采用 HTML 网页格式的交互式综合分析报告。
 
-*   **用途**:
-    *   **结果可视化**: 以交互式图表展示质控结果、重排分析、克隆型分析等关键结果。
-    *   **结果解读**: 提供各项指标的生物学意义和技术解释，帮助用户理解数据。
-    *   **便捷分享**: 单个 HTML 文件，易于传阅和分享。
-
-*   **内容与格式**:
-    *   无需网络，可在任何现代浏览器中打开。
-    *   报告的详细解读请参考本文档下方的 [网页报告释义](#网页报告释义) 部分。
+*   **核心用途**: 以交互式图表展示质控结果、免疫受体链重组分析、克隆型丰度与谱系分布等关键分析结果。
+*   **便捷分享**: 单个离线 HTML 文件，无需网络，双击即可在任意桌面浏览器中打开。
 
 ## 网页报告释义 <a id="网页报告释义"></a>
 
 **概述**：HTML 网页报告提供单细胞 V(D)J 测序结果的可视化摘要和指标说明，覆盖实验质量与免疫受体分析相关的关键指标。
 
-HTML 网页报告用于查看单细胞 V(D)J 测序分析结果，覆盖细胞识别、测序质量、V(D)J 富集、生产性配对和克隆型丰度等内容。用户可通过交互式图表快速检查实验质量并定位需要进一步复核的指标。
-
-> **使用说明**：建议按照报告展示顺序依次查看各项指标。
-
-> **注意**: 以下标准仅供参考，实际质量评估应考虑组织类型、细胞状态和实验目标等多种因素。不同样本间存在显著差异，建议结合具体实验背景进行判断。
+!!! info "质量评估原则与阅读建议"
+    - **整体评估**：HTML 网页报告提供单细胞 V(D)J 测序结果的可视化摘要与质控分析，覆盖细胞识别、测序质量、V(D)J 基因富集映射、生产性链组装及克隆型丰度等核心环节。
+    - **基准参考**：下述质量参考标准基于常规富集样本拟定。不同样本类型（如外周血 PBMC、肿瘤浸润淋巴细胞 TIL、组织分离细胞）、目标淋巴细胞纯度与测序深度存在差异，实际评估时请结合实验背景综合判断。
+    - **阅读路径**：建议按照报告展示顺序依次核对测序质量、细胞识别与细胞内读段比例、V(D)J 基因富集率，再核查生产性 V-J 跨越配对比例，最后结合 Top 10 克隆型丰度评估克隆扩增状态。
 
 ### 报告主要内容与结构
 
-<img src="../images/html_scvdj1.png" alt="scVDJ网页报告" width="500">
+<div style="text-align: center; margin: 1.5rem 0;" markdown="block">
+<img src="../images/html_scvdj1.png" alt="scVDJ 网页报告概览" style="max-width: 540px; width: 100%; border-radius: 8px; box-shadow: 0 4px 16px rgba(0,0,0,0.08); border: 1px solid var(--doc-border);">
+</div>
 
 ### 核心分析指标详解
 
 #### V(D)J 分析指标 (V(D)J Analysis Metrics) <a id="vdj分析指标"></a>
 
-**核心功能**: 细胞识别、质量评估和免疫受体组装统计，提供实验整体效果的关键指标
+**核心功能**: 细胞识别、质量评估和免疫受体组装统计，提供实验整体效果的关键指标。
 
-**质量控制标准：**
-> **注意**: 以下标准仅供参考，实际质量评估应考虑组织类型、细胞状态和实验目标等多种因素。不同样本间存在显著差异，建议结合具体实验背景进行判断。
+**质量参考标准：**
 
-<table>
-<thead>
-<tr>
-<th width="25%"><strong>指标名称</strong></th>
-<th width="30%"><strong>推荐值</strong></th>
-<th width="30%"><strong>可接受</strong></th>
-<th width="15%"><strong>需优化</strong></th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>Mean reads per cell</strong></td>
-<td>≥ 10,000</td>
-<td>5,000–10,000</td>
-<td>< 5,000</td>
-</tr>
-<tr>
-<td><strong>Fraction of Reads in Cells</strong></td>
-<td>≥ 50%</td>
-<td>20–50%</td>
-<td>< 20%</td>
-</tr>
-</tbody>
-</table>
+| 指标名称 (Metric) | 推荐标准 (Optimal) | 可接受区间 (Acceptable) | 需关注/优化 (Suboptimal) |
+| :--- | :---: | :---: | :---: |
+| **Mean reads per cell** | ≥ 10,000 | 5,000 – 10,000 | < 5,000 |
+| **Fraction of Reads in Cells** | ≥ 50% | 20% – 50% | < 20% |
 
-**详细指标解释：**
+**详细指标解释与算法：**
 
-<table>
-<thead>
-<tr>
-<th width="30%"><strong>指标名称</strong></th>
-<th width="70%"><strong>详细解释与技术要求</strong></th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<strong>Estimated number of cells</strong><br>
-<em>估计细胞数量</em>
-</td>
-<td>
-<ul>
-<li><strong>定义</strong>: 与表达目标 V(D)J 转录本的细胞相关联的条形码数量估计值。</li>
-<li><strong>影响因素</strong>: 上样细胞数量、样本中 T/B 细胞比例、V(D)J 转录本表达水平和测序深度。</li>
-<li><strong>判读建议</strong>: 若明显低于预期，建议优先检查目标细胞比例、样本完整性、富集效率和测序深度。</li>
-</ul>
-</td>
-</tr>
-<tr>
-<td>
-<strong>Mean reads per cell</strong><br>
-<em>平均每细胞读段数</em>
-</td>
-<td>
-<ul>
-<li><strong>定义</strong>: 输入测序读段对总数除以估计有效细胞数量的比值。</li>
-<li><strong>技术要求</strong>:
-<ul>
-<li>最低测序深度：每细胞 5,000 个读段对（双端测序）。</li>
-<li>单端测序建议深度翻倍至每细胞 10,000 个读段。</li>
-</ul>
-</li>
-<li><strong>判读建议</strong>: 测序深度不足可能降低 V(D)J 细胞识别准确性、重叠群组装完整性和克隆型识别稳定性。</li>
-</ul>
-</td>
-</tr>
-<tr>
-<td>
-<strong>Fraction of Reads in Cells</strong><br>
-<em>细胞内读段占比</em>
-</td>
-<td>
-<ul>
-<li><strong>定义</strong>: 具有细胞相关条形码的读段数量与具有有效条形码的读段总量的比值。</li>
-<li><strong>判读建议</strong>:
-<ul>
-<li><strong>推荐表现</strong>: 高比例通常表示细胞捕获效率较好，背景噪音较低。</li>
-<li><strong>需关注</strong>: 比例偏低可能提示样本质量不佳、细胞浓度不合适、文库构建异常或背景读段较高。</li>
-</ul>
-</li>
-</ul>
-</td>
-</tr>
-<tr>
-<td>
-<strong>Median TRA/TRB or IGH/IGK/IGL UMIs per cell</strong><br>
-<em>每细胞特异性链 UMI 中位数</em>
-</td>
-<td>
-<ul>
-<li><strong>定义</strong>: 分配给特定免疫受体链（如 IGH、TRA、TRB、IGK、IGL 等）转录本的 UMI 数中位数。</li>
-<li><strong>用途</strong>: 用于评估每个细胞中 TCR/BCR 转录本的捕获水平和表达强度。</li>
-</ul>
-</td>
-</tr>
-<tr>
-<td>
-<strong>Number of cells with TRA/TRB or IGH/IGK/IGL contig</strong><br>
-<em>含有 TRA/TRB 或 IGH/IGK/IGL 重叠群的细胞</em>
-</td>
-<td>
-<ul>
-<li><strong>定义</strong>: 通过单细胞测序检测到至少一条 T 细胞受体（TRA/TRB）或 B 细胞受体（IGH/IGK/IGL）重叠群的细胞。</li>
-<li><strong>说明</strong>: 该指标只要求存在相关基因重叠群，不要求序列完整或具有功能性，因此可能包含片段化序列或非生产性重排。</li>
-</ul>
-</td>
-</tr>
-<tr>
-<td>
-<strong>Cells with V-J spanning TRA/TRB or IGH/IGK/IGL contig</strong><br>
-<em>含有 V-J 跨区 TRA/TRB 或 IGH/IGK/IGL 重叠群的细胞</em>
-</td>
-<td>
-<ul>
-<li><strong>定义</strong>: 要求重叠群序列跨越 V 基因和 J 基因的重组连接区。该指标比“含有重叠群的细胞”更严格，但仍可能包含非生产性重排。</li>
-<li><strong>用途</strong>: 用于评估受体重排序列的完整性，并排除未跨越 V-J 区域的片段化序列。</li>
-</ul>
-</td>
-</tr>
-<tr>
-<td>
-<strong>Cells with productive TRA/TRB or IGH/IGK/IGL contig</strong><br>
-<em>含功能性 TRA/TRB 或 IGH/IGK/IGL 重叠群的细胞</em>
-</td>
-<td>
-<ul>
-<li><strong>定义</strong>: 必须同时满足 V-J 跨区（TRA/IGK/IGL）或 V-D-J 跨区（TRB/IGH）、`productive=true`（无移码突变且 CDR3 完整）以及阅读框正确（in-frame）。</li>
-<li><strong>用途</strong>: 用于评估可用于功能性 TCR/BCR 分析和克隆型识别的高可信受体序列。</li>
-</ul>
-</td>
-</tr>
-<tr>
-<td>
-<strong>Paired clonotype diversity</strong><br>
-<em>配对克隆型多样性</em>
-</td>
-<td>
-<ul>
-<li><strong>定义</strong>: 配对克隆型的有效多样性，计算为克隆型频率的逆辛普森指数。值为 1 表示仅检测到一个克隆型；值越接近估计细胞数，表示克隆型越分散。</li>
-<li><strong>判读建议</strong>:
-<ul>
-<li>该指标强依赖样本类型和生物学背景，可用于评估免疫受体克隆扩增程度。</li>
-<li>若低于预期，可能与样本中 B/T 细胞比例低、样本质量差、文库质量差或测序深度不足有关。</li>
-</ul>
-</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
+| 指标名称 (Metric) | 统计口径与算法计算 | 判读指导与排查要点 |
+| :--- | :--- | :--- |
+| **Estimated number of cells**<br>*(估计细胞数量)* | 表达目标 V(D)J 转录本的高置信度真实细胞条形码估计数量。 | 综合上样细胞数与样本中 T/B 细胞比例判断。若明显偏低，建议优先检查目的细胞分选纯度、样本活性及 V(D)J 扩增效率。 |
+| **Mean reads per cell**<br>*(平均每细胞读段数)* | 输入测序读段总数 / 估计细胞数量。 | 评估 V(D)J 文库测序深度。双端测序推荐 ≥ 5,000–10,000 read pairs/cell；深度不足会导致全长组装失败和克隆型漏检。 |
+| **Fraction of Reads in Cells**<br>*(细胞内读段占比)* | 归属于真实细胞条形码的读段数占全部有效条形码读段总量的百分比。 | 衡量受体转录本在细胞与游离环境中的分配比。推荐 ≥ 50%；过低提示细胞破损导致游离 RNA 污染严重或空液滴背景偏高。 |
+| **Median TRA/TRB or IGH/IGK/IGL UMIs per cell**<br>*(每细胞特异性链 UMI 中位数)* | 真实细胞中分配给目标特异性免疫受体链的 UMI 分子数中位数。 | 评估单个细胞中 TCR/BCR 转录本的捕获丰度与表达强度，反映反转录与富集扩增效率。 |
+| **Number of cells with TRA/TRB or IGH/IGK/IGL contig**<br>*(含有特异性链重叠群的细胞数)* | 检测到至少一条目标链（TRA/TRB 或 IGH/IGK/IGL）重叠群序列的细胞总数。 | 只要求存在相应重叠群，不要求达到全长或生产性，作为受体检出的基础基准。 |
+| **Cells with V-J spanning TRA/TRB or IGH/IGK/IGL contig**<br>*(含 V-J 跨区重叠群的细胞数)* | 组装重叠群序列完整跨越 V 基因和 J 基因重组连接区的细胞数量。 | 排除片段化短重叠群，是评估受体序列组装物理完整性的关键指标。 |
+| **Cells with productive TRA/TRB or IGH/IGK/IGL contig**<br>*(含功能性重叠群的细胞数)* | 重叠群同时满足 V-J 跨区、无移码突变、无提前终止密码子且具完整 CDR3 的细胞数。 | 评估具有潜在生物学功能的受体检出规模，是下游克隆型分析的分子基础。 |
+| **Paired clonotype diversity**<br>*(配对克隆型多样性)* | 基于配对克隆型频率计算的逆辛普森指数（Inverse Simpson Index）。 | 值为 1 表示整个样本由单一优势克隆完全主导；数值越接近细胞总数，表明克隆型分布越均匀多样。用于评估免疫应答的克隆扩增程度。 |
 
 #### 测序指标 (Sequencing Metrics) <a id="测序指标"></a>
 
-**核心功能**: 测序数据的基础质量评估，包括条形码识别率、比对质量和测序准确性
+**核心功能**: 测序数据的基础质量评估，包括条形码识别率、比对质量和测序准确性。
 
-**质量控制标准：**
+**质量参考标准：**
 
-> **注意**: 以下标准仅供参考，实际质量评估应考虑组织类型、细胞状态和实验目标等多种因素。不同样本间存在显著差异，建议结合具体实验背景进行判断。
+| 指标名称 (Metric) | 推荐标准 (Optimal) | 可接受区间 (Acceptable) | 需关注/优化 (Suboptimal) |
+| :--- | :---: | :---: | :---: |
+| **Valid barcodes** | ≥ 80% | 70% – 80% | < 70% |
+| **Valid UMIs** | ≥ 80% | 70% – 80% | < 70% |
+| **Q30 Base Quality** | ≥ 85% | 75% – 85% | < 75% |
 
-<table>
-<thead>
-<tr>
-<th width="25%"><strong>指标名称</strong></th>
-<th width="30%"><strong>推荐值</strong></th>
-<th width="30%"><strong>可接受</strong></th>
-<th width="15%"><strong>需优化</strong></th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>Valid barcodes</strong></td>
-<td>≥ 80%</td>
-<td>70–80%</td>
-<td>< 70%</td>
-</tr>
-<tr>
-<td><strong>Valid UMIs</strong></td>
-<td>≥ 80%</td>
-<td>70–80%</td>
-<td>< 70%</td>
-</tr>
-<tr>
-<td><strong>Q30 Base Quality</strong></td>
-<td>≥ 85%</td>
-<td>75–85%</td>
-<td>< 75%</td>
-</tr>
-</tbody>
-</table>
+**详细指标解释与算法：**
 
-**详细指标解释：**
-
-<table>
-<thead>
-<tr>
-<th width="30%"><strong>指标名称</strong></th>
-<th width="70%"><strong>详细解释与技术要求</strong></th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<strong>Valid barcodes</strong><br>
-<em>有效条形码比例</em>
-</td>
-<td>
-<ul>
-<li><strong>定义</strong>: 在所有读段中，其细胞条形码（Cell Barcode）能够匹配到预设白名单（经过容错校正）的读段所占的比例。</li>
-<li><strong>用途</strong>: 用于评估细胞条形码识别是否稳定，直接影响读段能否正确归属到细胞。</li>
-<li><strong>判读建议</strong>: 比例过低通常提示条形码识别异常，可能与条形码区域测序质量、接头污染或文库构建质量有关。</li>
-</ul>
-</td>
-</tr>
-<tr>
-<td>
-<strong>Valid UMIs</strong><br>
-<em>有效 UMI 比例</em>
-</td>
-<td>
-<ul>
-<li><strong>定义</strong>: 在所有读段中，其唯一分子标识符（UMI）序列不包含 `N` 碱基且不为同聚物（如 `AAAAAA`）的比例。</li>
-<li><strong>用途</strong>: 用于评估 UMI 序列是否可用于可靠的分子去重和计数。</li>
-</ul>
-</td>
-</tr>
-<tr>
-<td>
-<strong>Q30 Base Quality</strong><br>
-<em>Q30 碱基比例</em>
-</td>
-<td>
-<ul>
-<li><strong>定义</strong>: 在细胞条形码、UMI 和 RNA 读段序列中，测序质量值 Q30 及以上的碱基所占比例。</li>
-<li><strong>用途</strong>: Q30 表示碱基测序错误率低于 0.1%。该指标用于评估条形码识别、UMI 计数和 V(D)J 序列组装的基础准确性。</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
+| 指标名称 (Metric) | 统计口径与算法计算 | 判读指导与排查要点 |
+| :--- | :--- | :--- |
+| **Valid barcodes**<br>*(有效条形码比例)* | 细胞条形码可精准匹配到白名单（经容错校正）的读段占总测序读段的比例。 | 推荐 ≥ 80%。过低通常提示条形码测序质量欠佳、接头污染或文库结构偏差。 |
+| **Valid UMIs**<br>*(有效 UMI 比例)* | UMI 序列不包含未识别碱基 `N` 且非简单均聚物（如 `AAAAAA`）的读段占比。 | 评估分子标签质量，保障分子去重与转录本计数的可靠性。推荐 ≥ 80%。 |
+| **Q30 Base Quality**<br>*(Q30 碱基比例)* | 条形码、UMI 及 RNA 测序读段中质量值 ≥ 30（错误率 < 0.1%）的碱基比例。 | 测序平台物理信号质量的基础指标，保障条形码识别与全长重叠群组装的保真度。 |
 
 #### 基因富集性能指标 (Enrichment Metrics) <a id="基因富集性能指标"></a>
 
-**核心功能**: V(D)J 基因富集效率评估，反映免疫受体序列的捕获效果
+**核心功能**: V(D)J 基因特异性富集效率评估，反映靶向扩增捕获效果。
 
-**质量控制标准：**
+**质量参考标准：**
 
-> **注意**: 以下标准仅供参考，实际质量评估应考虑组织类型、细胞状态和实验目标等多种因素。不同样本间存在显著差异，建议结合具体实验背景进行判断。
+| 指标名称 (Metric) | 推荐标准 (Optimal) | 可接受区间 (Acceptable) | 需关注/优化 (Suboptimal) |
+| :--- | :---: | :---: | :---: |
+| **Reads mapped to any V(D)J gene** | ≥ 50% | 30% – 50% | < 30% |
 
-<table>
-<thead>
-<tr>
-<th width="25%"><strong>指标类别</strong></th>
-<th width="25%"><strong>推荐值</strong></th>
-<th width="25%"><strong>可接受</strong></th>
-<th width="25%"><strong>需优化</strong></th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>Reads mapped to any V(D)J gene</strong></td>
-<td>≥ 50%</td>
-<td>30–50%</td>
-<td>< 30%</td>
-</tr>
-</tbody>
-</table>
+**详细指标解释与算法：**
 
-**详细指标解释：**
-
-<table>
-<thead>
-<tr>
-<th width="30%"><strong>指标名称</strong></th>
-<th width="70%"><strong>详细解释与技术要求</strong></th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<strong>Reads mapped to any V(D)J gene</strong><br>
-<em>任意 V(D)J 基因映射读段比例</em>
-</td>
-<td>
-<ul>
-<li><strong>定义</strong>: 具有有效条形码且部分或完全映射到任意胚系 V(D)J 基因片段的读段占比。</li>
-<li><strong>判读建议</strong>:
-<ul>
-<li><strong>&lt;30%</strong>: 可能提示样本中 B/T 细胞比例偏低、样本质量下降、文库富集效率不足或参考基因组不匹配。</li>
-</ul>
-</li>
-</ul>
-</td>
-</tr>
-<tr>
-<td>
-<strong>Reads mapped to TRA/TRB/IGH/IGK/IGL</strong><br>
-<em>TRA/TRB/IGH/IGK/IGL 特异性免疫受体链映射比例</em>
-</td>
-<td>
-<ul>
-<li><strong>类型定义</strong>:</li>
-<ul>
-<li><strong>TRA vs TRB</strong>: TRA（α 链）表达水平通常低于 TRB（β 链），该比例用于辅助判断 TCR 链捕获是否符合预期。</li>
-<li><strong>IGH vs IGK/IGL</strong>: 重链和轻链呈现配对表达特征，映射比例用于评估 BCR 各免疫受体链的相对表达丰度。</li>
-</ul>
-<li><strong>计算基准说明</strong>: 以上富集指标均以有效条形码读段总量作为分母进行计算。</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
+| 指标名称 (Metric) | 统计口径与算法计算 | 判读指导与排查要点 |
+| :--- | :--- | :--- |
+| **Reads mapped to any V(D)J gene**<br>*(任意 V(D)J 基因映射比例)* | 有效条形码读段中，部分或完全比对到已知胚系 V(D)J 基因片段的读段占比。 | 推荐 ≥ 50%；< 30% 时需优先排查：样本中目标淋巴细胞纯度不足、靶向富集 PCR 特异性欠佳或参考基因库缺失。 |
+| **Reads mapped to TRA/TRB/IGH/IGK/IGL**<br>*(特异性免疫受体链映射比例)* | 比对至特定受体链（如 TCR 的 TRA/TRB，BCR 的 IGH/IGK/IGL）的读段占总有效读段的比例。 | 用于核对各链相对丰度是否符合生物学预期（如 TRB 通常高于 TRA，BCR 重轻链配对平衡）。 |
 
 #### V(D)J 注释分析 (V(D)J Annotation) <a id="vdj注释分析"></a>
 
-**核心功能**: 生产性重排配对分析，评估免疫受体的功能性表达水平
+**核心功能**: 生产性重排配对分析，评估免疫受体的功能性表达水平。
 
-**质量控制标准：**
+**质量参考标准：**
 
-> **注意**: 以下标准仅供参考，实际质量评估应考虑组织类型、细胞状态和实验目标等多种因素。不同样本间存在显著差异，建议结合具体实验背景进行判断。
+| 指标名称 (Metric) | 推荐标准 (Optimal) | 可接受区间 (Acceptable) | 需关注/优化 (Suboptimal) |
+| :--- | :---: | :---: | :---: |
+| **Cells with productive V-J spanning pair** | ≥ 40% | 20% – 40% | < 20% |
 
-<table>
-<thead>
-<tr>
-<th width="25%"><strong>指标名称</strong></th>
-<th width="25%"><strong>推荐值</strong></th>
-<th width="25%"><strong>可接受</strong></th>
-<th width="25%"><strong>需优化</strong></th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>Cells with productive V-J spanning pair</strong></td>
-<td>≥ 40%</td>
-<td>20–40%</td>
-<td>< 20%</td>
-</tr>
-</tbody>
-</table>
+**详细指标解释与算法：**
 
-**详细指标解释：**
+| 指标名称 (Metric) | 统计口径与算法计算 | 判读指导与排查要点 |
+| :--- | :--- | :--- |
+| **Number of Cells with Productive V-J Spanning Pair**<br>*(生产性配对细胞绝对数量)* | 至少具有一对完整且具功能性的受体配对（TRA/TRB 或 IGH/轻链）的细胞总数。 | 评估样本中能够直接进入功能性 TCR/BCR 配对研究的有效细胞规模。 |
+| **Cells with productive V-J spanning pair**<br>*(生产性配对细胞比例)* | 具备生产性全长配对的细胞占所有估计细胞条形码的百分比。 | 推荐 ≥ 40%。低于 20% 提示扩增偏好性严重、双链捕获不平衡或细胞受损。 |
+| **Cells with productive V-J spanning (IGK, IGH) pair**<br>*(IGK/IGH 生产性配对比例)* | 成功检测到（IGK, IGH）功能性重轻链配对的细胞占比。 | BCR 数据集专属指标，反映 κ 轻链 B 细胞亚群的捕获配对情况。 |
+| **Cells with productive V-J spanning (IGL, IGH) pair**<br>*(IGL/IGH 生产性配对比例)* | 成功检测到（IGL, IGH）功能性重轻链配对的细胞占比。 | 与 IGK 配对互补，联合反映 B 细胞免疫球蛋白轻链的使用偏好。 |
+| **Cells with productive V-J spanning (TRA, TRB) pair**<br>*(TRA/TRB 生产性配对比例)* | 成功检测到（TRA, TRB）功能性 α/β 链配对的细胞占比。 | TCR 数据集专属指标，高比例表明样本中大部分 T 细胞均捕获到完整的 αβ 异源二聚体。 |
 
-<table>
-<thead>
-<tr>
-<th width="30%"><strong>指标名称</strong></th>
-<th width="70%"><strong>详细解释与技术要求</strong></th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<strong>Number of Cells with Productive V-J Spanning Pair</strong><br>
-<em>具有生产性 V-J 跨越配对的细胞绝对数量</em>
-</td>
-<td>
-<ul>
-<li><strong>定义</strong>: 至少具有一个 TRA/TRB 配对或免疫球蛋白重链/轻链配对生产性重叠群的细胞总数。</li>
-<li><strong>用途</strong>: 用于评估可进入功能性 TCR/BCR 配对分析的细胞规模。</li>
-</ul>
-</td>
-</tr>
-<tr>
-<td>
-<strong>Cells with productive V-J spanning pair</strong><br>
-<em>生产性 V-J 跨越配对细胞比例</em>
-</td>
-<td>
-<ul>
-<li><strong>定义</strong>: 具有至少一个完整受体配对（每个链均有生产性重叠群）的细胞相关条形码占比。</li>
-<li><strong>用途</strong>: 用于评估样本中可用于可靠克隆型分析和功能性受体解释的细胞比例。</li>
-<li><strong>生产性重叠群判定标准</strong>:
-    <ul>
-    <li><strong>跨越完整性</strong>：重叠群注释完整跨越从 V 区域 5' 端到对应链 J 区域 3' 端。</li>
-    <li><strong>起始密码子</strong>：在 V 序列预期位置成功识别有效起始密码子（ATG）。</li>
-    <li><strong>CDR3 完整性</strong>：发现完整的框内 CDR3 氨基酸基序。</li>
-    <li><strong>阅读框正确</strong>：比对的 V-J 区域中无提前终止密码子（无移码突变）。</li>
-    </ul>
-</li>
-</ul>
-</td>
-</tr>
-<tr>
-<td>
-<strong>Cells with productive V-J spanning (IGK, IGH) pair</strong><br>
-<em>IGK/IGH 生产性配对细胞比例</em>
-</td>
-<td>
-<ul>
-<li><strong>定义</strong>: 具有（IGK, IGH）免疫球蛋白受体配对且每个链均有至少一个生产性重叠群的细胞相关条形码占比。</li>
-<li><strong>判读建议</strong>:
-    <ul>
-    <li>该指标适用于 BCR 数据集，反映 IGK 与 IGH 成功配对的细胞比例。</li>
-    <li>数值受样本中 κ 轻链 B 细胞亚群比例影响，κ/λ 轻链使用比例会因物种、样本和个体差异而变化。</li>
-    </ul>
-</li>
-</ul>
-</td>
-</tr>
-<tr>
-<td>
-<strong>Cells with productive V-J spanning (IGL, IGH) pair</strong><br>
-<em>IGL/IGH 生产性配对细胞比例</em>
-</td>
-<td>
-<ul>
-<li><strong>定义</strong>: 具有（IGL, IGH）免疫球蛋白受体配对且每个链均有至少一个生产性重叠群的细胞相关条形码占比。</li>
-<li><strong>判读建议</strong>:
-    <ul>
-    <li>该指标适用于 BCR 数据集，反映 IGL 与 IGH 成功配对的细胞比例。</li>
-    <li>与 IGK 配对指标互补，用于共同判断 B 细胞轻链使用模式。</li>
-    </ul>
-</li>
-</ul>
-</td>
-</tr>
-<tr>
-<td>
-<strong>Cells with productive V-J spanning (TRA, TRB) pair</strong><br>
-<em>TRA/TRB 生产性配对细胞比例</em>
-</td>
-<td>
-<ul>
-<li><strong>定义</strong>: 具有（TRA, TRB）T 细胞受体配对且每个链均有至少一个生产性重叠群的细胞相关条形码占比。</li>
-<li><strong>判读建议</strong>:
-    <ul>
-    <li>该指标适用于 TCR 数据集，反映 TCR α 链与 β 链成功配对的细胞比例。</li>
-    <li>比例较高通常说明样本中可用于 αβ T 细胞功能性受体分析的细胞更多。</li>
-    </ul>
-</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
+### 交互式可视化图表解读
 
-#### 可视化图表1 <a id="可视化图表1"></a>
+<a id="可视化图表1"></a>
 
-**核心功能**: V(D)J 细胞质量控制、UMI 分析和免疫受体表达评估的多维度可视化展示
+网页报告内置了多维度交互式可视化图表，全面覆盖受体链 UMI 排序质控与优势克隆型丰度分析。
 
-##### V(D)J 细胞排序分析图 (V(D)J Barcode Rank Plot)
+#### 1. V(D)J 细胞条形码排序图 (V(D)J Barcode Rank Plot)
 
-**图表功能：** 展示每个细胞的 UMI 数量分布（仅统计生产性重叠群的 UMI），用于评估细胞识别结果和背景噪音水平。
+**图表功能**：展示各细胞条形码的生产性 UMI 数量降序排列分布，用于直观评估受体富集效果与背景区分度。
 
-<img src="../images/html_scvdj3.jpg" alt="V(D)J 细胞排序分析图" width="400">
+<div style="text-align: center; margin: 1.2rem 0;" markdown="block">
+<img src="../images/html_scvdj3.jpg" alt="V(D)J 细胞排序分析图" style="max-width: 340px; width: 100%; border-radius: 8px; box-shadow: 0 3px 12px rgba(0,0,0,0.08); border: 1px solid var(--doc-border);">
+</div>
 
 **如何解读**：
 
-*   **坐标轴**:
-    *   **X 轴 (Barcode Rank)**: 所有细胞条形码按 UMI 总数降序排列（对数刻度）。
-    *   **Y 轴 (UMI Counts)**: 每个细胞对应的总 UMI 数量（对数刻度）。
+*   **坐标轴定义**:
+    *   **X 轴 (Barcode Rank)**: 所有细胞条形码按生产性重叠群 UMI 总数降序排列（对数刻度）。
+    *   **Y 轴 (UMI Counts)**: 各条形码对应的总 UMI 数量（对数刻度）。
 *   **视觉编码**:
-    *   **蓝色线**: 已识别的有效细胞。
-    *   **灰色线**: 背景噪音细胞。
-    *   **蓝色渐变区域**: 细胞与背景噪音的过渡区域。
-*   **质量评估**:
-    *   质量较好的样本通常在细胞相关条形码与背景之间有清晰分离，表现为曲线快速下降。
-    *   BCR V(D)J 数据中可能出现一组高 UMI 计数细胞，通常对应免疫球蛋白表达较高的浆细胞或浆母细胞。
+    *   **蓝色实线**: 算法识别出的有效真实细胞群体。
+    *   **灰色实线**: 背景游离分子与空液滴噪音。
+    *   **蓝色渐变过渡带**: 真实细胞与背景的交界分水岭。
+*   **质控与生物学特征**:
+    *   高质量样本在细胞区域与背景区域之间具有清晰陡峭的断崖式跌落。
+    *   在 BCR 数据集中，常可观察到极高 UMI 计数的突出峰（通常对应免疫球蛋白转录活性极高的浆细胞或浆母细胞）。
 
-#### 可视化图表2 <a id="可视化图表2"></a>
+---
 
-**核心功能**: 克隆型丰度分析和免疫受体多样性评估的可视化展示
+<a id="可视化图表2"></a>
 
-##### 克隆型丰度统计分析
+#### 2. 克隆型丰度与多样性分析 (Clonotype Abundance & Diversity)
 
-**图表功能：** 展示样本中克隆型的相对丰度分布，用于评估免疫应答是否由少数优势克隆主导。
+**图表功能**：展示样本中优势克隆型的相对丰度分布与序列特征，用于直观评估免疫应答是否存在寡克隆扩增。
 
-<img src="../images/html_scvdj2.png" alt="scVDJ 克隆型分析图表" width="500">
+<div style="text-align: center; margin: 1.5rem 0;" markdown="block">
+<img src="../images/html_scvdj2.png" alt="scVDJ 克隆型分析图表" style="max-width: 540px; width: 100%; border-radius: 8px; box-shadow: 0 4px 16px rgba(0,0,0,0.08); border: 1px solid var(--doc-border);">
+</div>
 
 **如何解读**：
 
-*   **上图 (Top 10 Clonotypes)**: 柱状图显示样本中丰度最高的 10 个克隆型所占细胞比例。比例越集中，通常表示克隆扩增越明显。
-*   **下表 (详细信息表格)**: 提供前 10 个克隆型的详细信息，包括克隆型 ID、CDR3 氨基酸/核苷酸序列、绝对频率和相对比例。
-
-## 相关文档
-
-| 文档 | 说明 |
-| :--- | :--- |
-| [scVDJ 流程](../pipeline/scVDJ.md) | scVDJ 分析流程详细说明 |
-| [scVDJ 参数](../parameter/scVDJ.md) | 命令参数参考文档 |
-| [输出文件](./outs.md) | 返回总输出文档索引 |
+*   **上图柱状图 (Top 10 Clonotypes)**: 展示样本中细胞频数最高的前 10 个克隆型所占总细胞群体的百分比。柱形越高、占比越集中，表明样本呈现出更强烈的克隆扩增状态（常见于抗原刺激或肿瘤浸润淋巴细胞）。
+*   **下表详细信息 (Detailed Clonotype Table)**: 提供前 10 大克隆型的详细特征，包括克隆型编号（`Clonotype ID`）、各链 CDR3 氨基酸与核苷酸序列、绝对细胞频数（`Frequency`）以及相对占比（`Proportion`），便于直接溯源优势克隆的生物学功能。

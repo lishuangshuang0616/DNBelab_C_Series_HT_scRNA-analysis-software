@@ -19,18 +19,8 @@
 
 ### dnbc4tools 3.2
 
-*dnbc4tools* 以自包含的 `tar.gz` 软件包形式发布，内置全套预编译依赖，无需复杂配置即可在主流 Linux 系统中开箱即用。
-
-* **软件包名称**：`dnbc4tools-3.2.tar.gz`（Linux x86-64）
-* **发布状态**：待正式发布提供下载链接与校验值
-
-```bash
-# 使用 wget 下载（待正式发布提供链接）
-wget -O dnbc4tools-3.2.tar.gz "<下载链接>"
-
-# 使用 curl 下载
-curl -o dnbc4tools-3.2.tar.gz "<下载链接>"
-```
+!!! note "开发版文档：安装包尚不可下载"
+    3.2 尚未正式发布，目前未提供可下载的安装包；正式发布日期、下载地址、软件包名称和校验值待确认。下文中的安装路径与命令为示例，待取得正式发布包后使用。
 
 <div style="margin-top: 15px;" markdown="block">
   <strong>需要历史版本？</strong><br>

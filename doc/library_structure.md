@@ -8,7 +8,7 @@ DNBelab C4 系列单细胞测序技术包含 **scRNA-seq（转录组）**、**sc
 
 ## 1. scRNA-seq 文库结构 <a id="scrna"></a>
 
-DNBelab C4 单细胞转录组测序包含两个相互配合的文库：**cDNA 文库** 与 **Oligo 文库**。其中 cDNA 文库捕获转录本表达信息，Oligo 文库记录液滴中磁珠的捕获信息用于细胞判定与液滴解析。
+DNBelab C4 单细胞转录组测序包含两个相互配合的文库：**cDNA 文库** 与 **Oligo 文库**。其中 cDNA 文库捕获转录本表达信息，Oligo 文库记录液滴中微珠的捕获信息用于细胞识别与液滴解析。
 
 <div style="text-align: center; margin: 24px 0;" markdown="block">
   <img src="./images/c4_library_structure.svg" alt="DNBelab C4 scRNA 文库结构" style="max-width: 100%; border-radius: 8px; box-shadow: 0 4px 14px rgba(0,0,0,0.06);" />
@@ -30,19 +30,33 @@ cDNA 文库用于测定单细胞转录组的基因表达谱。
 
 ### Oligo 文库
 
-Oligo 文库用于识别同液滴内的磁珠条形码，辅助区分单个细胞与多珠空液滴。
+Oligo 文库用于识别同液滴内的微珠条形码，辅助区分单个细胞与多珠空液滴。
 
-- **Read 1 (32 bp 无暗 / 20 bp 暗反应)**：
-  - **Linker 1 (6 bp)**：`TCTGCG`（1–6 bp，无暗反应）
-  - **Cell Barcode 1 (CB1, 10 bp)**：（无暗反应：7–16 bp；暗反应：1–10 bp）
-  - **Linker 2 (6 bp)**：`CCTTCC`（17–22 bp，无暗反应）
-  - **Cell Barcode 2 (CB2, 10 bp)**：（无暗反应：23–32 bp；暗反应：11–20 bp）
-- **Read 2 (42 bp 无暗 / 30 bp 暗反应)**：
-  - **UMI (10 bp)**：第一段为 UMI（无暗反应：1–10 bp；暗反应：1–10 bp）
-  - **Linker 1 (6 bp)**：`TCTGCG`（11–16 bp，无暗反应）
-  - **Tag 1 (10 bp)**：第一段标签（无暗反应：17–26 bp；暗反应：11–20 bp）
-  - **Linker 2 (6 bp)**：`CCTTCC`（27–32 bp，无暗反应）
-  - **Tag 2 (10 bp)**：第二段标签（无暗反应：33–42 bp；暗反应：21–30 bp）
+#### Read 1 结构 (20–32 bp)
+
+- **无暗反应模式 (32 bp)**：
+  - **Linker 1 (6 bp)**：`TCTGCG`（1–6 bp，固定接头跳过）
+  - **Cell Barcode 1 (CB1, 10 bp)**：第一段细胞条形码（7–16 bp，提取为 `cb,R1:7-16`）
+  - **Linker 2 (6 bp)**：`CCTTCC`（17–22 bp，固定接头跳过）
+  - **Cell Barcode 2 (CB2, 10 bp)**：第二段细胞条形码（23–32 bp，提取为 `cb,R1:23-32`）
+- **暗反应模式 (20 bp)**：
+  - 测序仪硬件跳过固定 Linker 1 与 Linker 2：
+  - **Cell Barcode 1 (CB1, 10 bp)**：1–10 bp，提取为 `cb,R1:1-10`
+  - **Cell Barcode 2 (CB2, 10 bp)**：11–20 bp，提取为 `cb,R1:11-20`
+
+#### Read 2 结构 (30–42 bp)
+
+- **无暗反应模式 (42 bp)**：
+  - **UMI (10 bp)**：分子唯一标识符（1–10 bp，提取为 `R1,R2:1-10`）
+  - **Linker 1 (6 bp)**：`TCTGCG`（11–16 bp，固定接头跳过）
+  - **Tag 1 (10 bp)**：第一段微珠标签（17–26 bp，提取为 `R1,R2:17-26`）
+  - **Linker 2 (6 bp)**：`CCTTCC`（27–32 bp，固定接头跳过）
+  - **Tag 2 (10 bp)**：第二段微珠标签（33–42 bp，提取为 `R1,R2:33-42`）
+- **暗反应模式 (30 bp)**：
+  - 测序仪硬件跳过固定 Linker 1 与 Linker 2：
+  - **UMI (10 bp)**：1–10 bp，提取为 `R1,R2:1-10`
+  - **Tag 1 (10 bp)**：11–20 bp，提取为 `R1,R2:11-20`
+  - **Tag 2 (10 bp)**：21–30 bp，提取为 `R1,R2:21-30`
 
 > scRNA 参数配置与自定义传参详见 [scRNA 参数说明：自定义文库结构](parameter/scRNA.md#customize)。
 

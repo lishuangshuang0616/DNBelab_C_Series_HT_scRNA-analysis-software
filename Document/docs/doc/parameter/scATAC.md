@@ -99,15 +99,15 @@ Analysis Settings:
 > 同一分析中的所有测序文件必须来自同一文库批次，测序模式与暗反应设置须保持一致；不同文库的数据不能混合输入。
 > 如果同一文库批次的不同测序批次存在暗反应模式或者测序长度不一致的情况，则需要使用 FASTQ 裁剪工具 [`fqsubC4`](tools.md#fastq-切割-fqsubc4) 对 reads 进行裁剪，具体裁剪位置请参考[文库结构识别](../library_structure.md#scatac)。
 
-#### 细胞识别与磁珠合并参数
+#### 细胞识别与微珠合并参数 {#_7}
 
 | 参数 | 类型 | 默认值 | 说明 |
 | :--- | :--- | :--- | :--- |
 | `--forcecells` | 整数 | 无 | 强制流程保留确切的细胞数量，优先级最高（覆盖自动识别结果）。截取时按候选细胞条形码的唯一片段数（Unique Fragments）降序截取前 N 个细胞 |
 | `--frags_cutoff` | 整数 | `0` (关闭) | 附加的最终总唯一 fragment 数量阈值；`0` 表示关闭此附加过滤，仍执行常规 cell calling |
 | `--tss_cutoff` | 浮点数 | `0.0` (关闭) | 最低 TSS 区域片段比例过滤阈值；`0` 表示关闭此过滤（如 `0.2`） |
-| `--jaccard_cutoff` | 浮点数 \| `auto` | `auto` | 磁珠（beads）合并的 Jaccard 相似度阈值（`auto` 基于 OTSU 算法估计，自动计算低于 0.02 时按 0.02 截断过滤；或手动输入 0–1 浮点数） |
-| `--merge_cutoff` | 整数 | `500` | 参与 Jaccard 合并的磁珠所需最低唯一 fragments 数量门槛 |
+| `--jaccard_cutoff` | 浮点数 \| `auto` | `auto` | 微珠（beads）合并的 Jaccard 相似度阈值（`auto` 基于 OTSU 算法估计，自动计算低于 0.02 时按 0.02 截断过滤；或手动输入 0–1 浮点数） |
+| `--merge_cutoff` | 整数 | `500` | 参与 Jaccard 合并的微珠所需最低唯一 fragments 数量门槛 |
 
 #### 文库化学与测序结构参数
 
@@ -142,17 +142,17 @@ fastq_directory/
 - **命名识别规则**：自动检测依赖文件名中的 R1/R2 标识，支持 `_R1_`、`_R1`、`_1`、`_read1` 与对应的 `_R2_`、`_R2`、`_2`、`_read2`；扩展名支持 `.fastq.gz`、`.fq.gz`、`.fastq`、`.fq`。
 - **独立输入模式**：如果不使用 `--fastqs`，可使用 `--fastq1` 和 `--fastq2` 分别传入逗号分隔的文件列表。
 
-#### 2. 磁珠合并与多级质控机制
+#### 2. 微珠合并与多级质控机制 {#2}
 
-单细胞 ATAC 测序数据存在液滴中多磁珠共包裹（bead multiplexing）的生物学特征，流程采用两阶段过滤与合并策略：
+单细胞 ATAC 测序数据存在液滴中多微珠共包裹（bead multiplexing）的生物学特征，流程采用两阶段过滤与合并策略：
 
 <div style="text-align: center; margin: 20px 0;" markdown="block">
-  <img src="../images/atac_bead_cell_calling.svg" alt="scATAC 磁珠合并与多级质控机制" style="max-width: 100%; border-radius: 8px; box-shadow: 0 4px 14px rgba(0,0,0,0.06);" />
+  <img src="../images/atac_bead_cell_calling.svg" alt="scATAC 微珠合并与多级质控机制" style="max-width: 100%; border-radius: 8px; box-shadow: 0 4px 14px rgba(0,0,0,0.06);" />
 </div>
 
-- **`--merge_cutoff`**：设定参与合并的磁珠底线（默认 500）。低深度样本可适当下调（如 200）以纳入更多磁珠参与计算。
-- **`--jaccard_cutoff`**：两个磁珠在基因组开放位点的重叠相似度。默认 `auto` 即可通过 OTSU 算法自动拟合双峰分布找到截断点；若自动计算得到的阈值低于 0.02，系统将按照 0.02 进行下限截断过滤以防止过度合并；亦可手动指定 0–1 的浮点数值。
-- **`--forcecells`**：当自动识别算法未能达到预期时，可传入整数强制保留指定数量的细胞。程序将按照每个候选细胞的唯一片段数（Unique Fragments）从大到小降序排列，直接截取前 N 个细胞输出。
+- **`--merge_cutoff`**：设定参与 Jaccard 相似度计算的微珠片段数门槛（默认 500）。该参数**仅影响微珠合并环节**，低于 500 片段的微珠或未找到可信重叠的微珠，均直接作为单微珠（Singleton）完整保留并汇入下游候选池，绝不会在此环节被提前过滤丢弃。低深度样本可适当下调（如 200）以纳入更多微珠参与重叠计算。
+- **`--jaccard_cutoff`**：两个微珠在基因组开放位点的重叠相似度阈值。默认 `auto` 即可通过 OTSU 算法自动拟合双峰分布找到截断点；若自动计算得到的阈值低于 0.02，系统将按照 0.02 进行下限截断过滤以防止过度合并；亦可手动指定 0–1 的浮点数值。大于等于 500 片段的微珠若 Jaccard 未达阈值，同样作为单微珠完整保留。
+- **`--forcecells`**：当自动识别算法未能达到预期时，可传入整数强制保留指定数量的细胞。此时细胞识别（Cell Calling）将面向全量候选细胞池（包含合并后的多微珠细胞与全量单微珠细胞），按照每个候选细胞的唯一片段数（Unique Fragments）从大到小降序排列，直接截取前 N 个细胞输出。
 - **`--frags_cutoff` 与 `--tss_cutoff`**：属于下游的附加质控过滤器。默认设为 `0` 关闭，代表仅依赖算法识别；若报告中发现低质量核碎屑残留，可手动开启（如 `--frags_cutoff 1000 --tss_cutoff 0.1`）。
 - **`--need_bam` 与比对差异说明**：Chromap 直接写出 BED 片段与生成 SAM/BAM 并由辅助模块转换 fragments 时，底层的片段移位（Tn5 shift）与重复序列过滤判定存在细微差异。因此开启 `--need_bam` 后下游分析指标（如特定片段统计与细胞结果）可能出现微小浮动，属软件正常行为。
 

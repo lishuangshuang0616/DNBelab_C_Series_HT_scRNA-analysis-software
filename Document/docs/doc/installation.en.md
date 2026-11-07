@@ -19,18 +19,8 @@ dnbc4tools requires the following system and hardware environment:
 
 ### dnbc4tools 3.2
 
-*dnbc4tools* is distributed as a self-contained `tar.gz` package bundling all required precompiled dependencies, ready to run out of the box on standard Linux environments.
-
-* **Package Name**: `dnbc4tools-3.2.tar.gz` (Linux x86-64)
-* **Release Status**: Download link and checksums will be provided upon official release
-
-```bash
-# Download using wget (Link to be finalized upon formal release)
-wget -O dnbc4tools-3.2.tar.gz "<Download URL>"
-
-# Download using curl
-curl -o dnbc4tools-3.2.tar.gz "<Download URL>"
-```
+!!! note "Development documentation — package not yet available"
+    Version 3.2 has not been formally released. Its installation package is not yet available for download; the release date, download URL, package name, and checksums await confirmation. The installation paths and commands below are examples to use once the release package is available.
 
 <div style="margin-top: 15px;" markdown="block">
   <strong>Looking for older versions?</strong><br>

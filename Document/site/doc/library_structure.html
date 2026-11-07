@@ -11,7 +11,7 @@
       
       
       
-        <link rel="prev" href="troubleshooting.html">
+        <link rel="prev" href="glossary.html">
       
       
         <link rel="next" href="installation_previous.html">
@@ -1086,6 +1086,33 @@
   
   
     <li class="md-nav__item">
+      <a href="troubleshooting.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    运行与排错
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="release.html" class="md-nav__link">
         
   
@@ -1150,10 +1177,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11" checked>
         
           
-          <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_11" id="__nav_11_label" tabindex="0">
             
   
   
@@ -1171,8 +1198,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="true">
-          <label class="md-nav__title" for="__nav_10">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_11">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -1217,14 +1244,14 @@
   
   
     <li class="md-nav__item">
-      <a href="troubleshooting.html" class="md-nav__link">
+      <a href="glossary.html" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    运行与排错
+    术语表
   
 
     
@@ -1674,7 +1701,7 @@
 <p>本文档汇总展示各组学的物理文库全貌、碱基坐标区间、固定接头序列及 <code>--customize</code> 提取参数配置。</p>
 <hr />
 <h2 id="1-scrna-seq">1. scRNA-seq 文库结构 <a id="scrna"></a><a class="headerlink" href="#1-scrna-seq" title="Permanent link">&para;</a></h2>
-<p>DNBelab C4 单细胞转录组测序包含两个相互配合的文库：<strong>cDNA 文库</strong> 与 <strong>Oligo 文库</strong>。其中 cDNA 文库捕获转录本表达信息，Oligo 文库记录液滴中磁珠的捕获信息用于细胞判定与液滴解析。</p>
+<p>DNBelab C4 单细胞转录组测序包含两个相互配合的文库：<strong>cDNA 文库</strong> 与 <strong>Oligo 文库</strong>。其中 cDNA 文库捕获转录本表达信息，Oligo 文库记录液滴中微珠的捕获信息用于细胞识别与液滴解析。</p>
 <div style="text-align: center; margin: 24px 0;">
 <p><img src="./images/c4_library_structure.svg" alt="DNBelab C4 scRNA 文库结构" style="max-width: 100%; border-radius: 8px; box-shadow: 0 4px 14px rgba(0,0,0,0.06);" /></p>
 </div>
@@ -1692,19 +1719,32 @@
 <li><strong>Read 2 (100 bp)</strong>：cDNA 插入片段（转录本编码序列，比对至参考基因组）</li>
 </ul>
 <h3 id="oligo">Oligo 文库<a class="headerlink" href="#oligo" title="Permanent link">&para;</a></h3>
-<p>Oligo 文库用于识别同液滴内的磁珠条形码，辅助区分单个细胞与多珠空液滴。</p>
+<p>Oligo 文库用于识别同液滴内的微珠条形码，辅助区分单个细胞与多珠空液滴。</p>
+<h4 id="read-1-2032-bp">Read 1 结构 (20–32 bp)<a class="headerlink" href="#read-1-2032-bp" title="Permanent link">&para;</a></h4>
 <ul>
-<li><strong>Read 1 (32 bp 无暗 / 20 bp 暗反应)</strong>：</li>
-<li><strong>Linker 1 (6 bp)</strong>：<code>TCTGCG</code>（1–6 bp，无暗反应）</li>
-<li><strong>Cell Barcode 1 (CB1, 10 bp)</strong>：（无暗反应：7–16 bp；暗反应：1–10 bp）</li>
-<li><strong>Linker 2 (6 bp)</strong>：<code>CCTTCC</code>（17–22 bp，无暗反应）</li>
-<li><strong>Cell Barcode 2 (CB2, 10 bp)</strong>：（无暗反应：23–32 bp；暗反应：11–20 bp）</li>
-<li><strong>Read 2 (42 bp 无暗 / 30 bp 暗反应)</strong>：</li>
-<li><strong>UMI (10 bp)</strong>：第一段为 UMI（无暗反应：1–10 bp；暗反应：1–10 bp）</li>
-<li><strong>Linker 1 (6 bp)</strong>：<code>TCTGCG</code>（11–16 bp，无暗反应）</li>
-<li><strong>Tag 1 (10 bp)</strong>：第一段标签（无暗反应：17–26 bp；暗反应：11–20 bp）</li>
-<li><strong>Linker 2 (6 bp)</strong>：<code>CCTTCC</code>（27–32 bp，无暗反应）</li>
-<li><strong>Tag 2 (10 bp)</strong>：第二段标签（无暗反应：33–42 bp；暗反应：21–30 bp）</li>
+<li><strong>无暗反应模式 (32 bp)</strong>：</li>
+<li><strong>Linker 1 (6 bp)</strong>：<code>TCTGCG</code>（1–6 bp，固定接头跳过）</li>
+<li><strong>Cell Barcode 1 (CB1, 10 bp)</strong>：第一段细胞条形码（7–16 bp，提取为 <code>cb,R1:7-16</code>）</li>
+<li><strong>Linker 2 (6 bp)</strong>：<code>CCTTCC</code>（17–22 bp，固定接头跳过）</li>
+<li><strong>Cell Barcode 2 (CB2, 10 bp)</strong>：第二段细胞条形码（23–32 bp，提取为 <code>cb,R1:23-32</code>）</li>
+<li><strong>暗反应模式 (20 bp)</strong>：</li>
+<li>测序仪硬件跳过固定 Linker 1 与 Linker 2：</li>
+<li><strong>Cell Barcode 1 (CB1, 10 bp)</strong>：1–10 bp，提取为 <code>cb,R1:1-10</code></li>
+<li><strong>Cell Barcode 2 (CB2, 10 bp)</strong>：11–20 bp，提取为 <code>cb,R1:11-20</code></li>
+</ul>
+<h4 id="read-2-3042-bp">Read 2 结构 (30–42 bp)<a class="headerlink" href="#read-2-3042-bp" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>无暗反应模式 (42 bp)</strong>：</li>
+<li><strong>UMI (10 bp)</strong>：分子唯一标识符（1–10 bp，提取为 <code>R1,R2:1-10</code>）</li>
+<li><strong>Linker 1 (6 bp)</strong>：<code>TCTGCG</code>（11–16 bp，固定接头跳过）</li>
+<li><strong>Tag 1 (10 bp)</strong>：第一段微珠标签（17–26 bp，提取为 <code>R1,R2:17-26</code>）</li>
+<li><strong>Linker 2 (6 bp)</strong>：<code>CCTTCC</code>（27–32 bp，固定接头跳过）</li>
+<li><strong>Tag 2 (10 bp)</strong>：第二段微珠标签（33–42 bp，提取为 <code>R1,R2:33-42</code>）</li>
+<li><strong>暗反应模式 (30 bp)</strong>：</li>
+<li>测序仪硬件跳过固定 Linker 1 与 Linker 2：</li>
+<li><strong>UMI (10 bp)</strong>：1–10 bp，提取为 <code>R1,R2:1-10</code></li>
+<li><strong>Tag 1 (10 bp)</strong>：11–20 bp，提取为 <code>R1,R2:11-20</code></li>
+<li><strong>Tag 2 (10 bp)</strong>：21–30 bp，提取为 <code>R1,R2:21-30</code></li>
 </ul>
 <blockquote>
 <p>scRNA 参数配置与自定义传参详见 <a href="parameter/scRNA.html#customize">scRNA 参数说明：自定义文库结构</a>。</p>

@@ -12,7 +12,7 @@
   <img src="../images/scRNA_pipeline.png" alt="scRNA 分析流程概览" width="800" style="max-width: 100%; height: auto;">
 </div>
 
-<div style="background-color: #e7f3fe; border-left: 6px solid #2196F3; padding: 15px; margin: 1.5em 0; border-radius: 4px;" markdown="block">
+<div class="doc-callout doc-callout-info" markdown="block">
 <strong>使用说明：</strong> <code>$dnbc4tools</code> 代表可执行程序路径，需替换为您的实际安装路径。本文示例使用换行符 <code>\</code> 分隔命令以提高可读性，实际分析时可写为单行。
 </div>
 
@@ -23,7 +23,7 @@
 | 文件类型 | 说明 |
 | :--- | :--- |
 | **cDNA 文库** | 包含 Cell Barcode、UMI 和转录组信息的测序数据 |
-| **Oligo 文库** | 包含大小磁珠的 Cell Barcode 信息及小磁珠的 UMI 信息 |
+| **Oligo 文库** | 包含大小微珠的 Cell Barcode 信息及小微珠的 UMI 信息 |
 
 > **注意**：请确保 FASTQ 文件质量良好，并记录文件路径以备后续分析使用。
 
@@ -279,7 +279,7 @@ $dnbc4tools rna mkref \
 RNA 主分析流程处理单个样本的 cDNA 和 Oligo 文库测序数据。该流程的核心步骤包括：
 
 1. **数据处理**：执行质量控制、比对和功能区域注释。
-2. **细胞识别**：合并磁珠，识别有效细胞。
+2. **细胞识别**：合并微珠，识别有效细胞。
 3. **矩阵生成**：生成原始及过滤后的基因表达矩阵。
 4. **高级分析**：对过滤后矩阵进行细胞筛选、降维、聚类和注释。
 5. **报告生成**：输出 HTML 格式的分析报告及其他结果文件。

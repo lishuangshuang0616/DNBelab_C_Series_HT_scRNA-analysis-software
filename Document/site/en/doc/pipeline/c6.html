@@ -680,7 +680,7 @@
   <a href="#step-5-deliverable-generation-dedicated-delivery" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Step 5: Deliverable Generation &amp; Dedicated Delivery
+        Step 5: Result Archiving &amp; Output
       
     </span>
   </a>
@@ -850,7 +850,7 @@
   <span class="md-ellipsis">
     
   
-    Parameter
+    Parameters
   
 
     
@@ -866,7 +866,7 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    Parameter
+    Parameters
   
 
           </label>
@@ -1311,7 +1311,34 @@
   <span class="md-ellipsis">
     
   
-    I/O Analysis
+    Downstream Analysis
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../troubleshooting.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Running & Troubleshooting
   
 
     
@@ -1393,17 +1420,17 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11" >
         
           
-          <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_11" id="__nav_11_label" tabindex="0">
             
   
   
   <span class="md-ellipsis">
     
   
-    Additional
+    Additional Resources
   
 
     
@@ -1414,12 +1441,12 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_10">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_11">
             <span class="md-nav__icon md-icon"></span>
             
   
-    Additional
+    Additional Resources
   
 
           </label>
@@ -1460,14 +1487,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../troubleshooting.html" class="md-nav__link">
+      <a href="../glossary.html" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Running & Troubleshooting
+    Glossary
   
 
     
@@ -1667,7 +1694,7 @@
   <a href="#step-5-deliverable-generation-dedicated-delivery" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Step 5: Deliverable Generation &amp; Dedicated Delivery
+        Step 5: Result Archiving &amp; Output
       
     </span>
   </a>
@@ -1816,17 +1843,17 @@
 <h1 id="dnbelab-c-series-ht-c6-analysis-pipeline">DNBelab C Series HT C6 Analysis Pipeline<a class="headerlink" href="#dnbelab-c-series-ht-c6-analysis-pipeline" title="Permanent link">&para;</a></h1>
 <p>Multiplexed Single-Cell RNA Analysis &amp; Sample Deconvolution Guide</p>
 <h2 id="overview">Overview <a id="overview"></a><a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-<p>C6 is a high-throughput multiplexed single-cell RNA-seq solution based on Sample Barcode multiplexing. Multiple biological samples are labeled with distinct Sample Barcodes during library construction and pooled for sequencing. In the bioinformatics stage, <code>dnbc4tools</code> automatically de-multiplexes samples, aggregates beads, independently calls cells per sample, and generates full expression quantifications and interactive quality reports.</p>
+<p>C6 is a high-throughput multiplexed single-cell RNA-seq solution based on Sample Barcode multiplexing. Multiple biological samples are labeled with distinct Sample Barcodes during library construction and pooled for sequencing. In the bioinformatics stage, <code>dnbc4tools</code> automatically demultiplexes samples, aggregates beads, independently calls cells per sample, and generates full expression quantifications and interactive quality reports.</p>
 <p><strong>Workflow</strong>: Data Input → Barcode Demultiplexing → Alignment → Bead Aggregation → Per-Sample Cell Calling → Unified &amp; Per-Sample Deliverables</p>
 <div align="center" style="margin: 1.5em 0;">
 <p><img src="../images/c6_pipeline.png" alt="C6 Pipeline Overview" width="800" style="max-width: 100%; height: auto;"></p>
 </div>
 <blockquote>
-<p><strong>Usage Note</strong>: <code>$dnbc4tools</code> represents the executable path and should be replaced with your actual installation path. The C6 workflow is orchestrated via the <code>multi run</code> command to automate sample de-multiplexing and per-sample deliverables.</p>
+<p><strong>Usage Note</strong>: <code>$dnbc4tools</code> represents the executable path and should be replaced with your actual installation path. The C6 workflow is orchestrated via the <code>multi run</code> command to automate sample demultiplexing and per-sample deliverables.</p>
 </blockquote>
 <hr />
 <h2 id="core-steps">Core Steps <a id="core-steps"></a><a class="headerlink" href="#core-steps" title="Permanent link">&para;</a></h2>
-<p>The C6 pooled multiplexing workflow encompasses 5 essential stages from shared raw libraries to dedicated per-sample deliverables:</p>
+<p>The C6 pooled multiplexing workflow encompasses 5 essential stages from shared raw libraries to per-sample outputs:</p>
 <table>
 <thead>
 <tr>
@@ -1863,7 +1890,7 @@
 </tr>
 <tr>
 <td style="text-align: center;"><strong>05</strong></td>
-<td style="text-align: left;"><strong>Archiving &amp; Dedicated Delivery</strong></td>
+<td style="text-align: left;"><strong>Archiving &amp; Output</strong></td>
 <td style="text-align: left;">Per-sample matrices/reports/BAMs; pooled combined matrix &amp; batch summary report</td>
 <td style="text-align: left;"><code>per_sample_outs/</code> Deliverables + Combined Report</td>
 </tr>
@@ -1887,9 +1914,9 @@
 <div class="c6-step-item">
 <h3 id="step-2-sample-barcode-identification-demultiplexing">Step 2: Sample Barcode Identification &amp; Demultiplexing <a id="step-2"></a><a class="headerlink" href="#step-2-sample-barcode-identification-demultiplexing" title="Permanent link">&para;</a></h3>
 <ul>
-<li><strong>Precision Matching</strong>: Extracts Sample Barcodes from Oligo reads and matches them against the built-in whitelist with error-correction.</li>
-<li><strong>Flexible Mapping</strong>: Accurately assigns beads and droplets to their respective biological samples; supports single barcodes (e.g., <code>BC01</code>) or multi-barcode assignments per sample (e.g., <code>BC02;BC03</code>).</li>
-<li><strong>Unassigned Tracking</strong>: Reads that cannot be confidently matched to a known barcode are tracked under the Unassigned category, ensuring full auditability.</li>
+<li><strong>Barcode Matching</strong>: Extracts Sample Barcodes from Oligo reads and matches them against the built-in whitelist with error-correction.</li>
+<li><strong>Flexible Mapping</strong>: Assigns beads and droplets to their respective biological samples; supports single barcodes (e.g., <code>BC01</code>) or multi-barcode assignments per sample (e.g., <code>BC02;BC03</code>).</li>
+<li><strong>Unassigned Tracking</strong>: Reads that cannot be confidently matched to a known barcode are tracked under the Unassigned category, for reviewing unassigned read counts.</li>
 </ul>
 <div class="c6-step-meta">
 <p><span class="c6-step-meta-label">Key Pillars</span>
@@ -1915,9 +1942,9 @@
 <div class="c6-step-item">
 <h3 id="step-4-independent-cell-calling-per-sample">Step 4: Independent Cell Calling per Sample <a id="step-4"></a><a class="headerlink" href="#step-4-independent-cell-calling-per-sample" title="Permanent link">&para;</a></h3>
 <ul>
-<li><strong>Isolated Calling</strong>: Droplets assigned to each sample undergo <strong>independent cell calling</strong> (EmptyDrops), preventing uneven sample loading from biasing cell detection.</li>
-<li><strong>Adaptive Bounds Protection</strong>: 3.2 introduces upper and lower threshold constraints on automatic cell estimation to prevent overfitting on noisy backgrounds.</li>
-<li><strong>Intra-Cell UMI Conflict Resolution</strong>: Resolves ambiguous UMIs mapped to multiple genes within the same cell by prioritizing high-read counts, eliminating spurious gene co-expression.</li>
+<li><strong>Isolated Calling</strong>: Droplets assigned to each sample undergo <strong>independent cell calling</strong> (EmptyDrops), so that the called-cell set is determined separately for each sample.</li>
+<li><strong>Adaptive Bounds Protection</strong>: 3.2 introduces upper and lower bounds on the automatically estimated cell count.</li>
+<li><strong>Intra-Cell UMI Conflict Resolution</strong>: Resolves ambiguous UMIs mapped to multiple genes within the same cell using read counts; UMIs without a unique gene assignment are excluded from expression counts.</li>
 </ul>
 <div class="c6-step-meta">
 <p><span class="c6-step-meta-label">Key Pillars</span>
@@ -1927,16 +1954,16 @@
 </div>
 </div>
 <div class="c6-step-item">
-<h3 id="step-5-deliverable-generation-dedicated-delivery">Step 5: Deliverable Generation &amp; Dedicated Delivery <a id="step-5"></a><a class="headerlink" href="#step-5-deliverable-generation-dedicated-delivery" title="Permanent link">&para;</a></h3>
+<h3 id="step-5-deliverable-generation-dedicated-delivery">Step 5: Result Archiving &amp; Output <a id="step-5"></a><a class="headerlink" href="#step-5-deliverable-generation-dedicated-delivery" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>Per-Sample Deliverables</strong>: Each sample receives its own subdirectory under <code>per_sample_outs/&lt;sample&gt;/</code> with raw/filtered expression matrices (MEX, H5, and H5AD formats), dimensionality reduction, clustering (PCA, UMAP, marker genes), and an interactive HTML report.</li>
-<li><strong>Dedicated BAM Demultiplexing</strong>: When BAM generation is enabled, alignments are partitioned into sample-specific BAM files (<code>&lt;sample&gt;_alignments.bam</code>), alongside unassigned alignments and a shared oligo BAM.</li>
+<li><strong>Per-Sample BAM Output</strong>: When BAM generation is enabled, alignments are partitioned into sample-specific BAM files (<code>&lt;sample&gt;_alignments.bam</code>), alongside unassigned alignments and a shared oligo BAM.</li>
 <li><strong>Root Combined Matrices</strong>: A unified matrix containing all called cells across all samples is provided in the root directory (MEX, H5, H5AD) with raw counts for downstream batch correction (e.g., Harmony).</li>
 <li><strong>Batch Multi-Sample Report</strong>: A root <code>&lt;run&gt;_multi_report.html</code> summarizes cell counts, sequencing saturation, library QC, and cross-sample comparison charts.</li>
 </ul>
 <div class="c6-step-meta">
 <p><span class="c6-step-meta-label">Key Pillars</span>
-  <span class="c6-step-pill">Dedicated MEX/H5/H5AD</span>
+  <span class="c6-step-pill">Per-Sample MEX/H5/H5AD</span>
   <span class="c6-step-pill">Per-Sample BAM</span>
   <span class="c6-step-pill">Global Pooled Matrix</span>
   <span class="c6-step-pill">Two-Tier HTML Reports</span></p>
@@ -1977,7 +2004,6 @@
 genomeDir,/database/scRNA/Homo_sapiens
 chemistry,scRNAC6
 darkreaction,auto
-no_bam,true
 
 [libraries]
 fastqs,feature_types
@@ -1989,6 +2015,7 @@ Sample_1,BC01
 Sample_2,BC02;BC03
 </code></pre></div>
 <blockquote>
+<p><strong>Optional BAM output setting</strong>: This example uses the default <code>[rna] no_bam,false</code>, generating per-sample BAMs, unassigned BAM, and oligo BAM with their applicable indexes. To save disk space, add <code>no_bam,true</code> to <code>[rna]</code>; BAM files and their indexes will then be omitted.</p>
 <p><strong>Tip</strong>: If multiple barcodes are assigned to the same sample, separate them with semicolons <code>;</code> (e.g., <code>BC02;BC03</code>). For complete configuration specifications, refer to <a href="../parameter/c6.html">C6 Parameters</a>.</p>
 </blockquote>
 <hr />
@@ -2013,7 +2040,7 @@ Sample_2,BC02;BC03
 </ul>
 </div>
 <h3 id="execution-process">Execution Process<a class="headerlink" href="#execution-process" title="Permanent link">&para;</a></h3>
-<p>After auto-detecting dark reaction cycles and validating barcodes, the software executes de-multiplexing and per-sample analyses:</p>
+<p>After auto-detecting dark reaction cycles and validating barcodes, the software executes demultiplexing and per-sample analyses:</p>
 <div class="highlight"><pre><span></span><code><span class="o">====================================================================================================</span>
 Running<span class="w"> </span><span class="o">[</span>samples<span class="o">]</span><span class="w"> </span>C6<span class="w"> </span>RNA<span class="w"> </span>pipeline<span class="w"> </span>—<span class="w"> </span><span class="m">2026</span>-11-02<span class="w"> </span><span class="m">18</span>:11:02
 <span class="o">====================================================================================================</span>
@@ -2096,7 +2123,7 @@ Analysis<span class="w"> </span>finished<span class="w"> </span>successfully!
     ├── multi_sample/                     # Demultiplexing and sample QC metrics
     │   ├── per_sample_metrics.csv        # Per-sample metric comparison table
     │   └── barcode_assignment_metrics.json # Sample Barcode assignment statistics
-    └── per_sample_outs/&lt;sample&gt;/         # [Dedicated per-sample deliverable directory]
+    └── per_sample_outs/&lt;sample&gt;/         # [Per-sample output directory]
         ├── filtered_feature_bc_matrix/   # Sample-specific filtered matrix
         ├── &lt;sample&gt;_scRNA_report.html    # Sample-specific interactive HTML report
         ├── metrics_summary.xls           # Sample-specific metrics summary
@@ -2117,7 +2144,7 @@ Analysis<span class="w"> </span>finished<span class="w"> </span>successfully!
 </tr>
 <tr>
 <td style="text-align: left;"><code>rna/per_sample_outs/&lt;sample&gt;/</code></td>
-<td style="text-align: left;">Dedicated per-sample deliverable containing independent matrices, clustering plots, and sample report</td>
+<td style="text-align: left;">Per-sample output containing independent matrices, clustering plots, and sample report</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>rna/filtered_feature_bc_matrix.*</code></td>

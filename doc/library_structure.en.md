@@ -32,17 +32,31 @@ The cDNA library quantifies gene expression profiles across single cells.
 
 The Oligo library resolves bead barcodes co-encapsulated in droplets, distinguishing true single cells from multi-bead background droplets.
 
-- **Read 1 (32 bp non-dark / 20 bp dark reaction)**:
-  - **Linker 1 (6 bp)**: `TCTGCG` (1–6 bp, non-dark)
-  - **Cell Barcode 1 (CB1, 10 bp)**: (Non-dark: 7–16 bp; Dark reaction: 1–10 bp)
-  - **Linker 2 (6 bp)**: `CCTTCC` (17–22 bp, non-dark)
-  - **Cell Barcode 2 (CB2, 10 bp)**: (Non-dark: 23–32 bp; Dark reaction: 11–20 bp)
-- **Read 2 (42 bp non-dark / 30 bp dark reaction)**:
-  - **UMI (10 bp)**: First segment is UMI (Non-dark: 1–10 bp; Dark reaction: 1–10 bp)
-  - **Linker 1 (6 bp)**: `TCTGCG` (11–16 bp, non-dark)
-  - **Tag 1 (10 bp)**: First tag segment (Non-dark: 17–26 bp; Dark reaction: 11–20 bp)
-  - **Linker 2 (6 bp)**: `CCTTCC` (27–32 bp, non-dark)
-  - **Tag 2 (10 bp)**: Second tag segment (Non-dark: 33–42 bp; Dark reaction: 21–30 bp)
+#### Read 1 Structure (20–32 bp)
+
+- **Non-Dark Mode (32 bp)**:
+  - **Linker 1 (6 bp)**: `TCTGCG` (1–6 bp, fixed adapter skipped)
+  - **Cell Barcode 1 (CB1, 10 bp)**: First cell barcode segment (7–16 bp, extracted as `cb,R1:7-16`)
+  - **Linker 2 (6 bp)**: `CCTTCC` (17–22 bp, fixed adapter skipped)
+  - **Cell Barcode 2 (CB2, 10 bp)**: Second cell barcode segment (23–32 bp, extracted as `cb,R1:23-32`)
+- **Dark Reaction Mode (20 bp)**:
+  - The sequencer hardware skips fixed Linker 1 and Linker 2:
+  - **Cell Barcode 1 (CB1, 10 bp)**: 1–10 bp, extracted as `cb,R1:1-10`
+  - **Cell Barcode 2 (CB2, 10 bp)**: 11–20 bp, extracted as `cb,R1:11-20`
+
+#### Read 2 Structure (30–42 bp)
+
+- **Non-Dark Mode (42 bp)**:
+  - **UMI (10 bp)**: Molecular unique identifier (1–10 bp, extracted as `R1,R2:1-10`)
+  - **Linker 1 (6 bp)**: `TCTGCG` (11–16 bp, fixed adapter skipped)
+  - **Tag 1 (10 bp)**: First bead carrier tag (17–26 bp, extracted as `R1,R2:17-26`)
+  - **Linker 2 (6 bp)**: `CCTTCC` (27–32 bp, fixed adapter skipped)
+  - **Tag 2 (10 bp)**: Second bead carrier tag (33–42 bp, extracted as `R1,R2:33-42`)
+- **Dark Reaction Mode (30 bp)**:
+  - The sequencer hardware skips fixed Linker 1 and Linker 2:
+  - **UMI (10 bp)**: 1–10 bp, extracted as `R1,R2:1-10`
+  - **Tag 1 (10 bp)**: 11–20 bp, extracted as `R1,R2:11-20`
+  - **Tag 2 (10 bp)**: 21–30 bp, extracted as `R1,R2:21-30`
 
 > For detailed scRNA command arguments, see [scRNA Parameters: Custom Read Structure](parameter/scRNA.md#customize).
 

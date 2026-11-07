@@ -10,7 +10,7 @@
 ```bash
 dnbc4tools multi run \
   --name demo \
-  --csv config.csv \
+  --csv multi.config.csv \
   --outdir ./results \
   --threads 20
 ```
@@ -64,12 +64,12 @@ Use `true/false` for booleans. Quote comma-containing values, for example `darkr
 RNA input roots contain `cDNA/` and `oligo/`; ATAC and VDJ directories contain their paired FASTQs directly. See [FASTQ naming rules](../quickstart.md#file-naming-conventions).
 
 > **Tip: Sequencing Consistency & Batch Handling**
-> All FASTQ inputs in a single run must originate from the same library batch with identical sequencing modes and dark reaction settings; data from different libraries cannot be mixed.
+> Multi accepts separate RNA, ATAC, TCR, and BCR libraries in the same run. Within each modality entry, pooled FASTQs must belong to the corresponding library with compatible read structures and dark-cycle settings. Do not pool unrelated libraries into the same modality input; configure each modality independently.
 > If different sequencing batches of the same library batch exhibit differing dark reaction cycles or read lengths, use the FASTQ trimming tool [`fqsubC4`](tools.md#fastq-切割-fqsubc4) to trim reads to match the standard library structure (see [Library Structure](../library_structure.md)).
 
 ## Ordinary multi-omics configuration <a id="configuration-examples"></a>
 
-This minimal 5′ RNA + TCR configuration can be saved as `config.csv` and run with the command above.
+This minimal 5′ RNA + TCR configuration can be saved as `multi.config.csv` and run with the command above.
 
 ```csv
 [rna]

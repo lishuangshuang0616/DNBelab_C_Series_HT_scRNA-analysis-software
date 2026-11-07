@@ -1264,6 +1264,33 @@
   
   
     <li class="md-nav__item">
+      <a href="../troubleshooting.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    运行与排错
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../release.html" class="md-nav__link">
         
   
@@ -1326,10 +1353,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11" >
         
           
-          <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_11" id="__nav_11_label" tabindex="0">
             
   
   
@@ -1347,8 +1374,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_10">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_11">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -1393,14 +1420,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../troubleshooting.html" class="md-nav__link">
+      <a href="../glossary.html" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    运行与排错
+    术语表
   
 
     
@@ -1687,7 +1714,7 @@
 <div align="center" style="margin: 1.5em 0;">
 <p><img src="../images/scRNA_pipeline.png" alt="scRNA 分析流程概览" width="800" style="max-width: 100%; height: auto;"></p>
 </div>
-<div style="background-color: #e7f3fe; border-left: 6px solid #2196F3; padding: 15px; margin: 1.5em 0; border-radius: 4px;">
+<div class="doc-callout doc-callout-info">
 <p><strong>使用说明：</strong> <code>$dnbc4tools</code> 代表可执行程序路径，需替换为您的实际安装路径。本文示例使用换行符 <code>\</code> 分隔命令以提高可读性，实际分析时可写为单行。</p>
 </div>
 <h2 id="_2">文件准备 <a id="文件准备"></a><a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
@@ -1706,7 +1733,7 @@
 </tr>
 <tr>
 <td style="text-align: left;"><strong>Oligo 文库</strong></td>
-<td style="text-align: left;">包含大小磁珠的 Cell Barcode 信息及小磁珠的 UMI 信息</td>
+<td style="text-align: left;">包含大小微珠的 Cell Barcode 信息及小微珠的 UMI 信息</td>
 </tr>
 </tbody>
 </table>
@@ -1958,7 +1985,7 @@ TR_C_gene
 <p>RNA 主分析流程处理单个样本的 cDNA 和 Oligo 文库测序数据。该流程的核心步骤包括：</p>
 <ol>
 <li><strong>数据处理</strong>：执行质量控制、比对和功能区域注释。</li>
-<li><strong>细胞识别</strong>：合并磁珠，识别有效细胞。</li>
+<li><strong>细胞识别</strong>：合并微珠，识别有效细胞。</li>
 <li><strong>矩阵生成</strong>：生成原始及过滤后的基因表达矩阵。</li>
 <li><strong>高级分析</strong>：对过滤后矩阵进行细胞筛选、降维、聚类和注释。</li>
 <li><strong>报告生成</strong>：输出 HTML 格式的分析报告及其他结果文件。</li>

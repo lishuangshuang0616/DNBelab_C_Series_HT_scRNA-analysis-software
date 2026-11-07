@@ -607,7 +607,7 @@
   <span class="md-ellipsis">
     
   
-    Parameter
+    Parameters
   
 
     
@@ -623,7 +623,7 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    Parameter
+    Parameters
   
 
           </label>
@@ -1172,7 +1172,34 @@
   <span class="md-ellipsis">
     
   
-    I/O Analysis
+    Downstream Analysis
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../troubleshooting.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Running & Troubleshooting
   
 
     
@@ -1254,17 +1281,17 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11" >
         
           
-          <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_11" id="__nav_11_label" tabindex="0">
             
   
   
   <span class="md-ellipsis">
     
   
-    Additional
+    Additional Resources
   
 
     
@@ -1275,12 +1302,12 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_10">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_11">
             <span class="md-nav__icon md-icon"></span>
             
   
-    Additional
+    Additional Resources
   
 
           </label>
@@ -1321,14 +1348,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../troubleshooting.html" class="md-nav__link">
+      <a href="../glossary.html" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Running & Troubleshooting
+    Glossary
   
 
     
@@ -1544,7 +1571,7 @@ For high-throughput single-cell RNA analysis based on Sample Barcode multiplexin
 <h2 id="run-command">Run command <a id="integrated-workflow-run"></a><a class="headerlink" href="#run-command" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code>dnbc4tools<span class="w"> </span>multi<span class="w"> </span>run<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--name<span class="w"> </span>demo<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--csv<span class="w"> </span>config.csv<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--csv<span class="w"> </span>multi.config.csv<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--outdir<span class="w"> </span>./results<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--threads<span class="w"> </span><span class="m">20</span>
 </code></pre></div>
@@ -1633,11 +1660,11 @@ Basic<span class="w"> </span>Settings:
 <p>RNA input roots contain <code>cDNA/</code> and <code>oligo/</code>; ATAC and VDJ directories contain their paired FASTQs directly. See <a href="../quickstart.html#file-naming-conventions">FASTQ naming rules</a>.</p>
 <blockquote>
 <p><strong>Tip: Sequencing Consistency &amp; Batch Handling</strong>
-All FASTQ inputs in a single run must originate from the same library batch with identical sequencing modes and dark reaction settings; data from different libraries cannot be mixed.
+Multi accepts separate RNA, ATAC, TCR, and BCR libraries in the same run. Within each modality entry, pooled FASTQs must belong to the corresponding library with compatible read structures and dark-cycle settings. Do not pool unrelated libraries into the same modality input; configure each modality independently.
 If different sequencing batches of the same library batch exhibit differing dark reaction cycles or read lengths, use the FASTQ trimming tool <a href="tools.html#fastq-切割-fqsubc4"><code>fqsubC4</code></a> to trim reads to match the standard library structure (see <a href="../library_structure.html">Library Structure</a>).</p>
 </blockquote>
 <h2 id="ordinary-multi-omics-configuration">Ordinary multi-omics configuration <a id="configuration-examples"></a><a class="headerlink" href="#ordinary-multi-omics-configuration" title="Permanent link">&para;</a></h2>
-<p>This minimal 5′ RNA + TCR configuration can be saved as <code>config.csv</code> and run with the command above.</p>
+<p>This minimal 5′ RNA + TCR configuration can be saved as <code>multi.config.csv</code> and run with the command above.</p>
 <div class="highlight"><pre><span></span><code>[rna]
 genomeDir,/database/scRNA/Human
 end5,true

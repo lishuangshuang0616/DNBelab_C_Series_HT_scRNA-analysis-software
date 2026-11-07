@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Build current bilingual documentation and the frozen 3.1 manual together."""
 import argparse
+from html.parser import HTMLParser
 import json
 from pathlib import Path
 import re
@@ -15,6 +16,41 @@ import yaml
 ROOT = Path(__file__).resolve().parent
 REPO = ROOT.parent
 VERSIONS = [('3.2', ''), ('3.1', '3.1/')]
+
+
+class PageAnchors(HTMLParser):
+    """Record valid fragments and aliases belonging to the same heading."""
+    def __init__(self):
+        super().__init__()
+        self.anchors = set()
+        self.aliases = {}
+        self.heading = None
+
+    def handle_starttag(self, tag, attributes):
+        attributes = dict(attributes)
+        anchor = attributes.get('id') or (attributes.get('name') if tag == 'a' else None)
+        if anchor:
+            self.anchors.add(anchor)
+        if re.fullmatch(r'h[1-6]', tag):
+            self.heading = anchor
+        elif anchor and self.heading and anchor != self.heading:
+            self.aliases[anchor] = self.heading
+
+    def handle_endtag(self, tag):
+        if re.fullmatch(r'h[1-6]', tag):
+            self.heading = None
+
+
+def version_manifest(version, prefix, output):
+    fragments = {}
+    for path in sorted(output.rglob('*.html')):
+        page = PageAnchors()
+        page.feed(path.read_text())
+        fragments[path.relative_to(output).as_posix()] = {
+            'anchors': sorted(page.anchors), 'aliases': page.aliases,
+        }
+    return {'version': version, 'path': prefix,
+            'pages': sorted(fragments), 'fragments': fragments}
 
 
 def prepare(source, target, version):
@@ -119,9 +155,7 @@ def main():
                     shutil.rmtree(ROOT / 'docs')
                 shutil.copytree(docs, ROOT / 'docs')
         manifest = {'default': '3.2', 'versions': [
-            {'version': v, 'path': prefix, 'pages': sorted(
-                p.relative_to(outputs[v]).as_posix() for p in outputs[v].rglob('*.html'))}
-            for v, prefix in VERSIONS]}
+            version_manifest(v, prefix, outputs[v]) for v, prefix in VERSIONS]}
         controls = (ROOT / 'assets' / 'javascripts' / 'doc-controls.js').read_text()
         for version, prefix in VERSIONS:
             settings = {'current': version, 'root': '../' if prefix else './', **manifest}

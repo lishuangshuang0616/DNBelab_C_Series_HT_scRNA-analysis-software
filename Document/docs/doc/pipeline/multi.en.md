@@ -4,9 +4,9 @@ Single-Cell Multi-omics Integrated Analysis Guide
 
 ## Overview <a id="overview"></a>
 
-The Multi-omics workflow unifies orchestration and generates combined reports; ATAC is analyzed independently and summarized, while RNA and VDJ support cell association analysis. A single configuration file coordinates all sub-pipelines and generates integrated reports for cross-omics inspection.
+The Multi-omics workflow unifies orchestration and generates combined reports; ATAC is analyzed independently and summarized, while RNA and VDJ support cell association analysis. A single configuration file coordinates all sub-pipelines and generates combined reports for cross-omics inspection.
 
-**Workflow**: Configuration → Module Dispatch → Parallel Analysis → Status Aggregation → Integrated Report
+**Workflow**: Configuration → Module Dispatch → Parallel Analysis → Status Aggregation → Combined Report
 
 <div align="center" style="margin: 1.5em 0;" markdown="block">
   <img src="../images/multi_pipeline.png" alt="Multi-omics Pipeline Overview" width="800" style="max-width: 100%; height: auto;">
@@ -20,7 +20,7 @@ The Multi-omics workflow unifies orchestration and generates combined reports; A
 | :--- | :--- |
 | **Unified Orchestration** | One entry command dispatches multiple omics modules (RNA / ATAC / VDJ) |
 | **Status Tracking** | Module-level status management (success / failed / skipped / reused) |
-| **Integrated Report** | Generates integrated HTML report supporting cross-omics browsing and comparison |
+| **Combined Report** | Generates combined HTML report supporting cross-omics browsing and comparison |
 | **Flexible Configuration** | Supports arbitrary module combinations (single / dual / all modules) |
 
 ## Input Configuration <a id="input-configuration"></a>
@@ -136,9 +136,9 @@ $dnbc4tools multi run \
 
 ### Execution Highlights
 
-> **Core Principles**:
-> - Multi handles "**orchestration and aggregation**"; module algorithms remain in each single-omics sub-pipeline.
-> - A module failure **will not** invalidate other completed modules but will be reflected in the final status summary.
+!!! note "Core Principles"
+    - Multi handles "**orchestration and aggregation**"; module algorithms remain in each single-omics sub-pipeline.
+    - A module failure **will not** invalidate other completed modules but will be reflected in the final status summary.
 
 ### Typical Runtime Log
 
@@ -411,7 +411,7 @@ After completion, results are organized under `<outdir>/<name>/`:
 ```text
 <outdir>/<name>/
 ├── outs/                                    # Organized output results
-│   ├── <sample>_multi_report.html           # Multi-omics integrated report
+│   ├── <sample>_multi_report.html           # Multi-omics combined report
 │   ├── rna/                                 # RNA results (if enabled)
 │   ├── atac/                                # ATAC results (if enabled)
 │   ├── vdj-t/                               # VDJ-T results (if enabled)
@@ -429,10 +429,10 @@ After completion, results are organized under `<outdir>/<name>/`:
 
 | File/Directory | Description |
 | :--- | :--- |
-| `outs/<sample>_multi_report.html` | Multi-omics integrated report displaying core QC and analysis charts from all modules |
+| `outs/<sample>_multi_report.html` | Multi-omics combined report displaying core QC and analysis charts from all modules |
 | `outs/rna/` | RNA module standard outputs (matrix, statistics, module report, etc.) |
 | `outs/atac/` | ATAC module standard outputs (fragment files, peaks, module report, etc.) |
 | `outs/vdj-t/` / `outs/vdj-b/` | VDJ module standard outputs (clonotypes, annotations, module report, etc.) |
 | `logs/run_manifest.json` | Module runtime status summary including return codes, runtime, and reuse status |
 
-> **Detailed Output Description**: Please refer to the [Multi Output Documentation](../outs/multi.md) for detailed interpretation of the integrated report.
+> **Detailed Output Description**: Please refer to the [Multi Output Documentation](../outs/multi.md) for detailed interpretation of the combined report.

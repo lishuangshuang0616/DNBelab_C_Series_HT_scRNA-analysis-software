@@ -78,7 +78,7 @@ Analysis Settings:
 | `--name` | 字符串 | **必需** | 样本唯一标识符，用作所有输出文件的前缀和报告标题（如 `sample_VDJ_001`） |
 | `--ref` | 字符串 / 路径 | **必需** | VDJ 参考数据库：内置 `human`、`mouse`，或包含 `reference.json` 的自定义目录路径 |
 | `--chain` | 选项 | **必需** | 免疫受体类型：`TR` (T 细胞受体 TCR) 或 `IG` (B 细胞免疫球蛋白 BCR) |
-| `--beadstrans` | 文件路径 | 无 | 来自 5' scRNA 分析的 `singlecell.csv` 或 C6 的 `singlecell.csv.gz`，用于细胞判定与磁珠合并 |
+| `--beadstrans` | 文件路径 | 无 | 可选 RNA 细胞表，用于微珠映射与细胞过滤；省略时自动启用 `keep_all_cells` |
 | `--outdir` | 目录路径 | `./` | 分析结果和报告的输出根目录 |
 | `--threads` | 整数 | 全部可用核心 | 分析过程中使用的 CPU 线程数 |
 
@@ -140,7 +140,8 @@ VDJ_fastq_dir/
 </div>
 
 - **数据来源**：提供同一样本 5' scRNA 分析输出的 `outs/singlecell.csv`（C6 多样本模式支持 `.csv.gz`）。
-- **未提供时的行为**：若未指定 `--beadstrans`，流程将跳过磁珠合并，并自动激活 `--keep_all_cells` 保留所有检测到的条形码。
+- **核心机制说明**：流程对全部 VDJ reads 正常进行全量从头组装（De Novo Assembly）；随后的细胞过滤与标识转换阶段，依据 `--beadstrans` 传入的 `singlecell.csv` 白名单仅筛选保留真实细胞的组装 Contig，并将测序微珠自动转换还原为统一 Cell ID，最终输出与 5' RNA 精确对齐的 `filtered_contig_annotations.csv`。
+- **未提供时的行为**：若未指定 `--beadstrans`，流程将跳过微珠合并与白名单过滤，并自动激活 `--keep_all_cells` 保留所有检测到的组装条形码。
 - **应用场景**：常规配对 5' RNA + VDJ 分析中**强烈建议提供**该参数；仅在独立的纯 VDJ 建库或预实验中才省略。
 
 #### 3. `--ref` 参考数据库与受体类型 (`--chain`)

@@ -1203,6 +1203,33 @@
   
   
     <li class="md-nav__item">
+      <a href="../troubleshooting.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    运行与排错
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../release.html" class="md-nav__link">
         
   
@@ -1265,10 +1292,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11" >
         
           
-          <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_11" id="__nav_11_label" tabindex="0">
             
   
   
@@ -1286,8 +1313,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_10">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_11">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -1332,14 +1359,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../troubleshooting.html" class="md-nav__link">
+      <a href="../glossary.html" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    运行与排错
+    术语表
   
 
     
@@ -1652,7 +1679,7 @@ Analysis<span class="w"> </span>Settings:
 <td style="text-align: left;"><code>--beadstrans</code></td>
 <td style="text-align: left;">文件路径</td>
 <td style="text-align: left;">无</td>
-<td style="text-align: left;">来自 5' scRNA 分析的 <code>singlecell.csv</code> 或 C6 的 <code>singlecell.csv.gz</code>，用于细胞判定与磁珠合并</td>
+<td style="text-align: left;">可选 RNA 细胞表，用于微珠映射与细胞过滤；省略时自动启用 <code>keep_all_cells</code></td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>--outdir</code></td>
@@ -1788,7 +1815,8 @@ Analysis<span class="w"> </span>Settings:
 </div>
 <ul>
 <li><strong>数据来源</strong>：提供同一样本 5' scRNA 分析输出的 <code>outs/singlecell.csv</code>（C6 多样本模式支持 <code>.csv.gz</code>）。</li>
-<li><strong>未提供时的行为</strong>：若未指定 <code>--beadstrans</code>，流程将跳过磁珠合并，并自动激活 <code>--keep_all_cells</code> 保留所有检测到的条形码。</li>
+<li><strong>核心机制说明</strong>：流程对全部 VDJ reads 正常进行全量从头组装（De Novo Assembly）；随后的细胞过滤与标识转换阶段，依据 <code>--beadstrans</code> 传入的 <code>singlecell.csv</code> 白名单仅筛选保留真实细胞的组装 Contig，并将测序微珠自动转换还原为统一 Cell ID，最终输出与 5' RNA 精确对齐的 <code>filtered_contig_annotations.csv</code>。</li>
+<li><strong>未提供时的行为</strong>：若未指定 <code>--beadstrans</code>，流程将跳过微珠合并与白名单过滤，并自动激活 <code>--keep_all_cells</code> 保留所有检测到的组装条形码。</li>
 <li><strong>应用场景</strong>：常规配对 5' RNA + VDJ 分析中<strong>强烈建议提供</strong>该参数；仅在独立的纯 VDJ 建库或预实验中才省略。</li>
 </ul>
 <h4 id="3-ref-chain">3. <code>--ref</code> 参考数据库与受体类型 (<code>--chain</code>)<a class="headerlink" href="#3-ref-chain" title="Permanent link">&para;</a></h4>

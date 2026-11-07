@@ -6,21 +6,23 @@
 
 本文档详细介绍了使用 dnbc4tools 进行单细胞 VDJ 测序数据分析的完整流程。
 
-**工作流程**：5' 端转录组分析 → VDJ 文库处理 → 序列组装注释 → 细胞过滤 → 克隆型分析 → 分析报告
+**工作流程**：选择 RNA 关联或独立模式 → VDJ 文库处理 → 序列组装注释 → 按模式应用 RNA 过滤 → 克隆型分析 → 报告
 
 <div align="center" style="margin: 1.5em 0;" markdown="block">
   <img src="../images/scVDJ_pipeline.png" alt="scVDJ 分析流程概览" width="800" style="max-width: 100%; height: auto;">
 </div>
 
-<div style="background-color: #e7f3fe; border-left: 6px solid #2196F3; padding: 15px; margin: 1.5em 0; border-radius: 4px;" markdown="block">
+<div class="doc-callout doc-callout-info" markdown="block">
 <strong>使用说明：</strong> <code>$dnbc4tools</code> 代表可执行程序路径，需替换为您的实际安装路径。本文示例使用换行符 <code>\</code> 分隔命令以提高可读性，实际分析时可写为单行。
 </div>
+
+支持两种模式：提供 `--beadstrans` 时，使用 RNA 细胞表进行微珠映射及基于 RNA 的细胞过滤；省略时，可在没有 RNA 细胞表的情况下运行 VDJ。省略该参数会自动启用 `keep_all_cells`，不按 RNA 细胞识别结果过滤组装条形码，因此不能将这些条形码视为 RNA 已确认的细胞集合。
 
 ## 文件准备 <a id="文件准备"></a>
 
 ### 5' 端转录组分析
 
-转录组分析请参考 `dnbc4tools rna run`。5' 端转录组分析需在单细胞 RNA 主流程基础上添加参数 `--end5`。
+RNA 关联模式可通过 `dnbc4tools rna run --end5` 获取 5′ RNA 细胞表，也可复用已有表。无 RNA 细胞表模式跳过此步骤。
 
 为单个样本生成表达矩阵，以下是一个示例步骤或脚本模板：
 
@@ -36,8 +38,8 @@ $dnbc4tools rna run \
 	--end5
 ```
 
-<div style="background-color: #fffbe6; border-left: 6px solid #ffc107; padding: 15px; margin: 1.5em 0; border-radius: 4px;" markdown="block">
-<strong>前置条件：</strong> 5' 端转录组分析是 VDJ 分析的前提，需要先完成此步骤以获取细胞微球对应关系表 <code>singlecell.csv</code>。
+<div class="doc-callout doc-callout-warn" markdown="block">
+<strong>前置条件：</strong> 仅在需要 RNA 微珠映射及细胞过滤时，提供对应的 RNA `singlecell.csv` 表。
 </div>
 
 ### VDJ 分析所需文件
@@ -47,9 +49,9 @@ $dnbc4tools rna run \
 | 文件类型 | 说明 |
 | :--- | :--- |
 | **FASTQ 文件** | VDJ 文库测序数据，包含 TCR 或 BCR 序列信息 |
-| **singlecell.csv 文件** | 5' 端转录组分析结果中的细胞信息文件，包含细胞有效判定与微球聚合关系 |
+| **singlecell.csv 文件（RNA 关联模式）** | 独立模式不要求提供；使用 `--beadstrans` 时提供 RNA 细胞识别与微珠映射信息 |
 
-分析需要 5' 端转录组分析结果目录中的 `singlecell.csv` 文件。该文件包含 `cell` 和 `barcode` 列的合并信息，以及 `is_cell_barcode` 列（1 表示细胞，0 表示非细胞），用于鉴定有效的细胞。
+RNA 关联模式通过 `singlecell.csv` 的 `cell`、`barcode` 列提供映射，通过 `is_cell_barcode` 标记细胞（1）与背景（0）。未传入 `--beadstrans` 时，不应用这些基于 RNA 的映射和过滤。
 
 > **注意**：确保 `singlecell.csv` 文件路径正确，该文件是连接转录组与 VDJ 分析的关键。
 
@@ -68,14 +70,16 @@ CELL726_N4,585934,4617,22660,1,ACCTACGGCGTTACTATGTG;CGACGCTCTCGACAGTTAGG;CGGCAGA
 CELL4010_N1,555308,4268,22554,1,AGAGAGTCGCAGCAAGCGAC
 ```
 
+不使用 RNA 表的命令见[独立 VDJ 示例](../quickstart.md#vdj-without-rna)。上方流程图与 RNA 命令演示的是 RNA 关联模式。
+
 ## 主分析流程 <a id="主分析流程"></a>
 
-VDJ 主分析流程结合了单细胞 VDJ 文库测序数据和对应样本的 5' 转录组分析结果，包含以下关键步骤：
+VDJ 主流程可选使用匹配的 RNA 细胞表，主要步骤如下：
 
-1. 对数据进行过滤，利用 5' 转录组结果合并磁珠
+1. 进行读段过滤；提供 RNA 表时应用对应微珠映射
 2. 比对 VDJ 基因区域并提取对应的 reads
 3. 进行从头组装并注释
-4. 根据组装注释结果和 5' 转录组的细胞获取情况进行细胞过滤
+4. 按组装注释规则处理结果，并在相应模式下应用 RNA 细胞过滤
 5. 整合各步骤结果生成 HTML 网页报告并输出分析结果
 
 ### TCR 分析

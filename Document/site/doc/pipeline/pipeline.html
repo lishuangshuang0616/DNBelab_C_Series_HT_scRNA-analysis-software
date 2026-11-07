@@ -1142,6 +1142,33 @@
   
   
     <li class="md-nav__item">
+      <a href="../troubleshooting.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    运行与排错
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../release.html" class="md-nav__link">
         
   
@@ -1204,10 +1231,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11" >
         
           
-          <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_11" id="__nav_11_label" tabindex="0">
             
   
   
@@ -1225,8 +1252,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_10">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_11">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -1271,14 +1298,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../troubleshooting.html" class="md-nav__link">
+      <a href="../glossary.html" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    运行与排错
+    术语表
   
 
     
@@ -1453,7 +1480,7 @@
 </tr>
 <tr>
 <td style="text-align: left;">ATAC</td>
-<td style="text-align: left;">片段处理 → 微球合并 → 峰检测与矩阵 → 细胞质控与聚类</td>
+<td style="text-align: left;">片段处理 → 微珠合并 → 峰检测与矩阵 → 细胞质控与聚类</td>
 <td style="text-align: left;"><a href="scATAC.html">ATAC 流程</a></td>
 </tr>
 <tr>
@@ -1475,7 +1502,7 @@
 </table>
 <h2 id="_2">流程选择建议<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
 <ul>
-<li><strong>独立单组学</strong>：独立测序的文库直接进入对应单组学流程（<code>scRNA</code>、<code>scATAC</code> 或 <code>scVDJ</code>）。其中 <code>scVDJ</code> 依赖前置 5' 转录组生成的 <code>singlecell.csv</code>。</li>
+<li><strong>独立单组学</strong>：独立测序的文库直接进入对应单组学流程（<code>scRNA</code>、<code>scATAC</code> 或 <code>scVDJ</code>）。VDJ 可选使用 RNA <code>singlecell.csv</code> 进行微珠映射和细胞过滤；省略 <code>--beadstrans</code> 时自动启用 <code>keep_all_cells</code>。</li>
 <li><strong>普通多组学 (Multi)</strong>：同一批样本同时测了 RNA、ATAC 或 VDJ，使用单个 CSV 配置文件统一调度各模块并生成组合报告。</li>
 <li><strong>C6 多样本 RNA</strong>：使用 Sample Barcode 混合建库的测序数据，通过含 <code>[samples]</code> 的配置文件自动完成拆分、逐样本独立定量与报告交付。</li>
 </ul>

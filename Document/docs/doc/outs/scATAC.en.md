@@ -1,41 +1,62 @@
 # scATAC Analysis Output
 
+> **Output scope**: Directory trees describe a typical completed run. Optional outputs depend on enabled modules and successful stages. Quality ranges below are interpretation guidance, not software pass/fail rules; use the configured thresholds and report status for this run.
+
 Single-Cell ATAC Sequencing Output File Guide
 
 ## Overview <a id="overview"></a>
 
-After single-cell ATAC sequencing analysis is complete, a standardized structure of files and subdirectories is generated in the specified output directory for chromatin accessibility analysis and epigenomic research.
+After single-cell ATAC sequencing analysis is complete, a standardized structure of files and subdirectories is generated in the specified output directory for chromatin accessibility analysis and epigenomic research. Matrix and fragment files can be imported into tools such as Signac and ArchR using the appropriate format readers. See [Downstream Analysis](../io.md) for loading examples.
 
-> **Tip**: All output files use standard formats compatible with mainstream single-cell epigenomic analysis tools (e.g., Signac, ArchR), adhering to internationally accepted data format standards.
+### Deliverables at a Glance
+
+The table below summarizes the key deliverables of scATAC analysis, file formats, primary use cases, and recommended downstream ecosystem integrations:
+
+| Deliverable & Core Files | Format | Description & Ecosystem Integration |
+| :--- | :--- | :--- |
+| **Filtered Cell Fragments**<br>• `filtered.fragments.tsv.gz`<br>• `filtered.fragments.tsv.gz.tbi` | `BED (TSV.GZ)`<br>`TBI Index` | QC-filtered high-confidence fragments from real cells in BED format, recommended primary input for downstream analysis.<br>• **Recommended Tools**: Signac (`CreateChromatinAssay`) / ArchR (`createArrowFiles`) |
+| **All Aligned Fragments**<br>• `fragments.tsv.gz`<br>• `fragments.tsv.gz.tbi` | `BED (TSV.GZ)`<br>`TBI Index` | Contains all uniquely aligned fragments with genomic coordinates and barcode tags, used for full provenance and background assessment.<br>• **Ecosystem**: Can be directly loaded as BED tracks in IGV or UCSC Genome Browser. |
+| **Chromatin Peak Matrix**<br>• `filtered_peak_bc_matrix/`<br>• `filtered_peak_bc_matrix.h5` | `MEX Sparse Matrix`<br>`HDF5 (H5)` | Filtered peak quantification count matrix.<br>• **Counting Metric**: Matrix values default to **Cutsites (transposition insertion endpoints)** for higher sensitivity; never use column sums (`colSums`) as fragment sequencing depth for filtering. |
+| **Raw Peak Matrix**<br>• `raw_peak_bc_matrix/`<br>• `raw_peak_bc_matrix.h5` | `MEX Sparse Matrix`<br>`HDF5 (H5)` | Unfiltered raw peak count matrix covering all candidate beads/droplets and background noise, used for custom filtering models. |
+| **Cell Metadata**<br>• `singlecell.csv` | `CSV` | Records per-cell fragments, peaks, TSS/peak region fragments, cutsite counts, and real-cell flags (`is_cell_barcode`).<br>• **Filtering**: Filter real cells where `is_cell_barcode == 1`. |
+| **Metrics Summary**<br>• `metrics_summary.xls` | `TSV Text` | Global summary of sequencing quality, alignment rates, cell count, median fragments, and TSS enrichment.<br>• **Format**: Tab-delimited text; read with `read.delim()` in R or `pd.read_csv(sep='\t')` in Python. |
+| **Interactive Web Report**<br>• `<sample>_scATAC_report.html` | `HTML` | Comprehensive offline visual report for reviewing barcode rank curves, TSS enrichment profiles, fragment length distribution, and UMAP clustering.<br>• **How to Open**: No internet connection required; double-click to open in any modern desktop browser. |
+| **Alignment BAM**<br>• `alignment.fragments.sorted.tagged.bam`<br>• `alignment.fragments.sorted.tagged.bam.bai` | `BAM`<br>`BAI / CSI` | Coordinate-sorted BAM file with error-corrected cell barcode tags (`CB`, `CR`).<br>• **Condition**: Requires `--need_bam` flag during analysis; used for locus-level IGV inspection. |
+| **Peak Annotation**<br>• `peak_annotation.tsv` | `TSV` | Filtered-peak gene associations; optional, see [annotation fields](#peak-annotation). |
+| **Optional Diagnostics**<br>• `cell_classification.csv`<br>• `whitelist_contamination*.json` | `CSV` / `JSON` | Mixed-species assignments and C4 whitelist diagnostics when produced. |
 
 ## Directory Structure <a id="directory-structure"></a>
 
-```
-.
-├── alignment.fragments.sorted.tagged.bam       # QC-filtered alignment results (requires 'need_bam' parameter for analysis)
-├── alignment.fragments.sorted.tagged.bam.bai   # Index file for the alignment results
-├── filtered_peak_bc_matrix/                         # Directory for the filtered peak matrix in MEX format
-│   ├── barcodes.tsv.gz                         # Barcode information for filtered cells
-│   ├── matrix.mtx.gz                           # Peak signal data in sparse matrix format for filtered data
-│   └── peaks.bed.gz                            # Peak position information for filtered data
-├── fragments.tsv.gz                            # Contains all fragments aligned to the genome
-├── fragments.tsv.gz.tbi                        # Index file for fragments, for fast random access
-├── filtered.fragments.tsv.gz                   # QC-filtered ATAC fragment file, containing only fragments from filtered cells
-├── filtered.fragments.tsv.gz.tbi               # Tabix index for the filtered fragments file, for fast querying of genomic intervals
-├── metrics_summary.xls                         # Summary table of analysis quality metrics
-├── raw_peak_bc_matrix/                            # Directory for the raw peak matrix in MEX format
-│   ├── barcodes.tsv.gz                         # Raw cell barcode information
-│   ├── matrix.mtx.gz                           # Raw peak signal data in sparse matrix format
-│   └── peaks.bed.gz                            # Raw peak position information
-├── raw_peak_bc_matrix.h5
-├── filtered_peak_bc_matrix.h5
-├── singlecell.csv                              # Summary table of cell information
-└── *_scATAC_report.html                        # Analysis report in HTML format
+```text
+outs/
+├── filtered.fragments.tsv.gz                   # QC-filtered fragment file for high-quality cells (preferred for downstream analysis)
+├── filtered.fragments.tsv.gz.tbi               # Tabix index for filtered fragments
+├── fragments.tsv.gz                            # All aligned fragments file (BED format)
+├── fragments.tsv.gz.tbi                        # Tabix index for all fragments
+├── filtered_peak_bc_matrix/                    # Filtered chromatin peak quantification matrix (MEX format)
+│   ├── barcodes.tsv.gz                         # High-quality real cell barcode IDs
+│   ├── peaks.bed.gz                            # Identified peak genomic coordinates (BED format)
+│   └── matrix.mtx.gz                           # Sparse peak count matrix (single-space delimited, cutsite counts)
+├── filtered_peak_bc_matrix.h5                  # Filtered peak matrix (single-file HDF5 format)
+├── raw_peak_bc_matrix/                         # Unfiltered raw peak matrix directory (MEX format)
+│   ├── barcodes.tsv.gz
+│   ├── peaks.bed.gz
+│   └── matrix.mtx.gz
+├── raw_peak_bc_matrix.h5                       # Unfiltered raw peak matrix (single-file HDF5 format)
+├── peak_annotation.tsv                       # Optional filtered-peak gene annotations
+├── cell_classification.csv                   # Optional mixed-species assignments
+├── whitelist_contamination.json              # Optional whitelist diagnostics
+├── whitelist_contamination_cells.json        # Optional cell-level whitelist diagnostics
+├── singlecell.csv                              # Cell-level QC and metadata table (with is_cell_barcode)
+├── metrics_summary.xls                         # Analysis quality metrics summary table (tab-delimited TSV)
+├── <sample>_scATAC_report.html                 # Comprehensive interactive web QC and analysis report
+├── alignment.fragments.sorted.tagged.bam       # Coordinate-sorted alignment BAM file (output when --need_bam is enabled)
+└── alignment.fragments.sorted.tagged.bam.bai   # BAM index file (.csi generated for extra-long chromosomes)
 ```
 
 <a id="v32-outputs"></a>
 
-Raw and filtered peak matrices also have H5 exports. Matrix counts default to cutsites; cell calling, FRIP and TSS fractions retain unique-fragment statistics. BAM requires `--need_bam`; indexes can be BAI or CSI.
+Raw and filtered peak matrices also have H5 exports. Matrix counts default to cutsites; cell calling, FRIP, and TSS fractions retain unique-fragment statistics. BAM requires `--need_bam`; indexes can be BAI or CSI.
 
 ## File Details <a id="file-details"></a>
 
@@ -45,783 +66,364 @@ Raw and filtered peak matrices also have H5 exports. Matrix counts default to cu
 
 #### fragments.tsv.gz
 
-`fragments.tsv.gz` is a compressed TSV file containing ATAC-seq fragment information, which is one of the core data for downstream analysis. Its main features and contents are as follows:
+`fragments.tsv.gz` is a compressed TSV file containing ATAC-seq fragment information, serving as one of the core data files for downstream analysis.
 
 *   **Purpose**:
     *   **Chromatin Accessibility Analysis**: Precisely locate the genomic coordinates of each open chromatin region.
-    *   **Data Visualization**: Can be directly loaded as a BED file in genome browsers like IGV and UCSC for visualization.
-    *   **Downstream Tool Input**: Compatible with mainstream single-cell analysis tools such as ArchR and Signac.
+    *   **Data Visualization**: Can be loaded directly as a BED file into genome browsers such as IGV and UCSC.
+    *   **Downstream Tool Input**: Fully compatible with mainstream single-cell analysis tools including ArchR and Signac.
 
 *   **Content & Format**:
     *   The file is in **BED-like** format, with each row representing a unique ATAC-seq fragment.
-    *   The file contains the **5 columns of information** as shown in the table below:
+    *   Contains the following 5 columns:
 
-        <table>
-        <thead>
-        <tr>
-        <th width="20%">Field Name</th>
-        <th width="80%">Description</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr>
-        <td><code>chrom</code></td>
-        <td>The name of the reference genome chromosome, identifying the chromosomal location of the fragment.</td>
-        </tr>
-        <tr>
-        <td><code>chromStart</code></td>
-        <td>The adjusted start position of the fragment on the chromosome (0-based), corrected for the transposase cleavage site.</td>
-        </tr>
-        <tr>
-        <td><code>chromEnd</code></td>
-        <td>The adjusted end position of the fragment on the chromosome (exclusive), corrected for the transposase cleavage site.</td>
-        </tr>
-        <tr>
-        <td><code>barcode</code></td>
-        <td>The cell ID identifier, corresponding to the <code>CB</code> tag in the BAM file, used to assign the fragment to a specific cell.</td>
-        </tr>
-        <tr>
-        <td><code>readSupport</code></td>
-        <td>The total number of read pairs associated with this fragment (including unique and duplicate reads).</td>
-        </tr>
-        </tbody>
-        </table>
+        | Field Name | Description |
+        | :--- | :--- |
+        | `chrom` | Reference genome chromosome name identifying the fragment location |
+        | `chromStart` | 0-based adjusted start position on the chromosome, corrected for transposase insertion offset |
+        | `chromEnd` | Adjusted end position on the chromosome (exclusive), corrected for transposase insertion offset |
+        | `barcode` | Cell barcode ID corresponding to the `CB` tag in the BAM file, used to attribute fragments to specific cells |
+        | `readSupport` | Total number of read pairs associated with this fragment (including unique and duplicate reads) |
 
 *   **Coordinate Adjustment**:
-    *   To accurately locate the transposase cleavage site, the fragment intervals in the file are adjusted: the start position is shifted 4bp forward from the leftmost alignment position, and the end position is shifted 5bp backward from the rightmost alignment position.
+    *   To accurately map Tn5 transposase cleavage sites, fragment coordinates are shifted: the start position is moved 4 bp forward from the leftmost alignment, and the end position is moved 5 bp backward from the rightmost alignment.
 
 #### fragments.tsv.gz.tbi
 
 The Tabix index file for `fragments.tsv.gz`.
 
-*   **Core Purpose**:
-    *   **Fast Data Access**: Allows for rapid, genome-interval-based querying of large `fragments.tsv.gz` files without reading the entire file.
-    *   **Tool Performance Optimization**: Used by tools like ArchR, Signac, and IGV to load and process data from specific regions.
-*   **Format**:
-    *   A standard binary index file generated by the `tabix` tool.
+*   **Core Purpose**: Enables rapid, interval-based random access queries on large fragment files without loading the entire dataset into memory.
+*   **Format**: Standard binary index file generated by `tabix`.
 
 #### filtered.fragments.tsv.gz
 
-This is the ATAC-seq fragment file after cell quality control and filtering. It is a subset of `fragments.tsv.gz`, containing only fragments from high-quality cells.
+The QC-filtered ATAC-seq fragment file, representing a curated subset of `fragments.tsv.gz` containing only high-confidence real cells.
 
 *   **Core Purpose**:
-    *   **Core Downstream Analysis**: This is the **recommended input file** for core downstream steps such as cell clustering and differential accessibility analysis.
-    *   **Improved Signal-to-Noise Ratio**: Using this file improves the accuracy and signal-to-noise ratio of the analysis results by removing low-quality cells and background noise.
+    *   **Primary Downstream Input**: Recommended input for cell clustering, differential accessibility, and transcription factor motif analyses.
+    *   **Signal-to-Noise Enhancement**: Drastically reduces background noise by removing debris and low-quality non-cell barcodes.
 *   **Content & Format**:
-    *   The file format is identical to `fragments.tsv.gz` (compressed BED-like TSV) and contains the same 5 columns.
-    *   It includes only fragments from barcodes identified as "real cells" by the cell filtering algorithm (e.g., based on TSS enrichment and number of fragments in peaks).
+    *   Identical in format to `fragments.tsv.gz` (5 columns, compressed BED-like TSV).
+    *   Contains only fragments assigned to barcodes that passed cell calling algorithms.
 
 #### filtered.fragments.tsv.gz.tbi
 
 The Tabix index file for `filtered.fragments.tsv.gz`.
 
-*   **Core Purpose**:
-    *   **Downstream Analysis Support**: Ensures that downstream tools (like ArchR, Signac) can quickly access data from specific genomic regions when using the filtered fragment file.
-*   **Format**:
-    *   A standard binary index file generated by the `tabix` tool.
+*   **Core Purpose**: Ensures fast region-based access when downstream tools (such as ArchR and Signac) query the filtered fragments.
+*   **Format**: Standard binary Tabix index file.
 
 #### alignment.fragments.sorted.tagged.bam
 
-This is the ATAC-seq alignment result file containing all fragments that have a valid barcode and were successfully aligned.
+The coordinate-sorted BAM file containing all validly barcoded and successfully aligned reads.
 
 *   **Core Purpose**:
-    *   **In-depth Analysis & Visualization**: Can be used in genome browsers like IGV for deep visualization to inspect alignments at specific loci.
-    *   **Custom Analysis**: Provides the raw input for advanced users who need to directly manipulate alignment-level data.
+    *   **Visualization & Verification**: Inspect alignment coverage across specific loci in IGV.
+    *   **Custom Pipeline Input**: Serves as raw aligned data for custom epigenetic processing.
+*   **Key TAG Fields**:
 
-*   **Content & Format**:
-    *   Uses the international standard **BAM (Binary Alignment Map)** format.
-    *   The file is **sorted by genomic coordinates** and indexed (with a `.bai` file) for fast random access.
-    *   Each read is tagged with cell origin information via TAG fields.
-
-*   **Key TAG Field Descriptions**:
-    *   Cell and molecular barcode information is stored in the following TAG fields:
-
-        <table>
-        <thead>
-        <tr>
-        <th width="15%">Tag</th>
-        <th width="15%">Type</th>
-        <th width="70%">Description</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr>
-        <td><code>CB</code></td>
-        <td>Z</td>
-        <td>Cell barcode identifier after error correction and cell merging.</td>
-        </tr>
-        <tr>
-        <td><code>CC</code></td>
-        <td>Z</td>
-        <td>Error-corrected cell barcode sequence.</td>
-        </tr>
-        <tr>
-        <td><code>CR</code></td>
-        <td>Z</td>
-        <td>Cell barcode sequence as reported by the sequencer.</td>
-        </tr>
-        </tbody>
-        </table>
+    | TAG | Type | Description |
+    | :--- | :---: | :--- |
+    | `CB` | Z | Error-corrected and merged cell barcode identifier |
+    | `CC` | Z | Error-corrected cell barcode sequence |
+    | `CR` | Z | Raw cell barcode sequence as reported by the sequencer |
 
 #### alignment.fragments.sorted.tagged.bam.bai
 
-The index file for `alignment.fragments.sorted.tagged.bam`.
+Index file for `alignment.fragments.sorted.tagged.bam`.
 
-*   **Core Purpose**:
-    *   **Fast Data Access**: Allows tools like IGV and Samtools to quickly jump to and read alignment data from any genomic region without loading the entire BAM file.
-    *   **Performance Guarantee**: Essential for the performance of any tool that performs random access operations on the BAM file.
-*   **Format**:
-    *   Standard **BAI (BAM Index)** format generated by the `samtools index` command.
+*   **Core Purpose**: Enables fast random access and visualization in tools like IGV and Samtools.
+*   **Format**: Standard **BAI** index format (or `.csi` when reference chromosomes exceed standard BAI size limits).
 
 ### Peak Matrix Files <a id="peak-matrix-files"></a>
 
-**Core Content**: The single-cell peak signal count matrix, divided into raw and quality-controlled filtered data, using the standard sparse matrix format.
+**Core Content**: Single-cell peak quantification matrices in raw and filtered states, formatted as standard sparse matrices.
+
+!!! warning "Crucial Note: Matrix Counting Metric (Cutsite) vs. Cell QC Metric (Unique Fragment)"
+    - **Cutsite Counting Metric**: Values in the peak matrix (`filtered_peak_bc_matrix`) represent **two-end cleavage site counts (cutsites)** after Tn5 9-bp offset adjustment, providing maximal sensitivity for local chromatin accessibility.
+    - **Fragment QC Metric**: In `singlecell.csv`, metrics including `peak_region_fragments`, FRIP (Fraction of Reads in Peaks), TSS enrichment fraction, and cell calling filters are **strictly based on deduplicated unique fragments**.
+    - **Usage Warning**: In R (Signac) or Python, **never use matrix column sums (`colSums(mtx)`) as cell fragment sequencing depth for QC filtering**! Theoretically, 1 fragment ≈ 2 cutsites, and their statistical distributions and biological implications differ significantly.
+    - **Delimiter Specification**: Since version 3.2, `matrix.mtx.gz` uses a single space delimiter. Custom parsing scripts should use `line.split()` (matching arbitrary whitespace) or standard `Matrix::readMM`.
 
 #### Filtered Peak Matrix (`filtered_peak_bc_matrix/`)
 
-Contains the peak count matrix after high-quality cell filtering, serving as the core data for downstream quantitative analysis.
+Contains the peak count matrix filtered for high-confidence real cells, serving as the primary quantification input for downstream analysis.
 
-*   **Core Purpose**:
-    *   **Downstream Quantitative Analysis**: The **primary input** for analyses such as cell clustering, differential accessibility analysis, and trajectory inference.
-    *   **High-Quality Data**: Contains only barcodes identified as real cells, ensuring the accuracy of the analysis results.
+*   **Format**: Standard **Matrix Market Exchange (MEX)** format, composed of three compressed files:
 
-*   **Content & Format**:
-    *   Uses the standard **Matrix Market Exchange (MEX)** format, consisting of the following three compressed files:
-        <table>
-        <thead>
-        <tr>
-        <th width="25%">Filename</th>
-        <th width="75%">Description</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr>
-        <td><code>barcodes.tsv.gz</code></td>
-        <td>A list of cell IDs, identifying high-quality cells that passed QC. Each line contains one cell ID, corresponding to a column in the matrix.</td>
-        </tr>
-        <tr>
-        <td><code>peaks.bed.gz</code></td>
-        <td>A file with peak region coordinates in BED format. Contains chromosome, start, and end positions, corresponding to a row in the matrix.</td>
-        </tr>
-        <tr>
-        <td><code>matrix.mtx.gz</code></td>
-        <td>The peak region count matrix in Matrix Market format. Contains matrix dimensions and the row, column, and value for non-zero elements.</td>
-        </tr>
-        </tbody>
-        </table>
-
-*   **Format Advantages**:
-    *   **Space-Efficient**: The sparse matrix format (`.mtx`) saves significant storage space by only storing non-zero elements.
-    *   **Highly Compatible**: The MEX format is a standard in the single-cell community, compatible with almost all mainstream analysis tools like Seurat, Signac, Scanpy, etc.
+    | File Name | Description |
+    | :--- | :--- |
+    | `barcodes.tsv.gz` | Cell barcode ID list for high-quality real cells, corresponding to matrix columns |
+    | `peaks.bed.gz` | Peak position file in BED format (chromosome, start, end), corresponding to matrix rows |
+    | `matrix.mtx.gz` | Sparse count matrix in Matrix Market format, recording non-zero row/column indices and cutsite values |
 
 #### Raw Peak Matrix (`raw_peak_bc_matrix/`)
 
-Contains the raw peak count matrix for all detected cell barcodes (without filtering).
+Contains the unfiltered peak count matrix for all detected barcodes (including real cells and background droplets).
 
-*   **Core Purpose**:
-    *   **Quality Control Assessment**: Can be used to evaluate the effectiveness of cell filtering or to perform manual filtering based on custom criteria.
-    *   **Data Integrity**: Preserves all original data, which can be used for deep mining or re-analysis if needed.
+*   **Core Purpose**: Used to evaluate cell calling thresholds or apply custom filtering models.
+*   **Format**: Identical structure to `filtered_peak_bc_matrix/` in MEX format.
 
-*   **Content & Format**:
-    *   Uses the standard **Matrix Market Exchange (MEX)** format, with the same file composition as the `filtered_peak_bc_matrix/` directory.
-    *   Includes all detected barcodes, including high-quality cells, low-quality cells, and background droplets.
+### Analysis Metrics Summary <a id="analysis-metrics-summary"></a>
 
-### Analysis Summary <a id="analysis-summary"></a>
-
-**Core Content**: A summary of experimental quality assessment and statistical metrics, providing complete data quality control information.
+**Core Content**: Comprehensive quality assessment and statistical metrics covering sequencing, alignment, and cell calling.
 
 #### metrics_summary.xls
 
-An Excel-formatted summary table of key analysis metrics, providing a structured assessment of the overall experiment quality.
+A structured table of key quality metrics in tab-delimited text format (TSV).
 
-*   **Core Purpose**:
-    *   **Quality Assessment**: Quickly evaluate key metrics such as sequencing data quality, alignment efficiency, and cell identification results.
-    *   **Results Overview**: Provides a summary view of the analysis results without inspecting all files.
+*   **Core Purpose**: Rapidly inspect data quality, alignment efficiency, cell yields, and chromatin accessibility enrichment.
+*   **Metric Categories**:
 
-*   **Content & Format**:
-    *   Contains key metrics from three main categories:
-        <table>
-        <thead>
-        <tr>
-        <th width="20%">Metric Category</th>
-        <th width="80%">Includes</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr>
-        <td><strong>Basic Stats</strong></td>
-        <td>Basic sequencing metrics like total read pairs, valid barcode ratio, Q30 base quality, etc.</td>
-        </tr>
-        <tr>
-        <td><strong>Cell Calling</strong></td>
-        <td>Cell calling results like estimated number of cells, fraction of fragments in peaks, fraction of fragments in TSS, number of peaks detected, TSS enrichment, etc.</td>
-        </tr>
-        <tr>
-        <td><strong>Alignment</strong></td>
-        <td>Alignment statistics like genome alignment rate, mitochondrial DNA ratio, etc.</td>
-        </tr>
-        </tbody>
-        </table>
+    | Metric Category | Contents |
+    | :--- | :--- |
+    | **Sequencing Statistics** | Total raw read pairs, valid barcode fraction, Q30 base quality metrics |
+    | **Cell Calling Metrics** | Estimated number of cells, median fragments per cell, FRIP, TSS fraction, number of peaks |
+    | **Alignment & Structural Metrics** | Confidently mapped read pairs, mitochondrial ratio, nucleosome-free and mono-nucleosome fractions |
 
-    *   Includes built-in recommended quality control thresholds for user convenience:
-        <details markdown="block" open>
-        <summary><strong>Recommended Quality Thresholds:</strong></summary>
-        <ul>
-        <li><strong>Valid Barcode Ratio</strong>: >70%</li>
-        <li><strong>Q30 Base Quality</strong>: >75% (Barcode and UMI regions)</li>
-        <li><strong>Genome Alignment Rate</strong>: >50%</li>
-        <li><strong>TSS Enrichment Score (Human/Mouse)</strong>: >4</li>
-        <li><strong>Fraction of Fragments in Peaks</strong>: >15%</li>
-        <li><strong>Fraction of Fragments in TSS</strong>: >10%</li>
-        <li><strong>Percentage of Duplicate Reads</strong>: >10%</li>
-        </ul>
-        </details>
+*   **Usage**: Tab-delimited plain text; read with `read.delim("metrics_summary.xls")` in R or `pd.read_csv("metrics_summary.xls", sep="\t")` in Python. For metric descriptions and recommended benchmarks, refer to [Web Report Interpretation](#web-report-interpretation).
+
+#### Peak Annotation {#peak-annotation}
+
+`peak_annotation.tsv` is a tab-delimited annotation table for filtered peaks. It is published when the filtered `peaks.bed.gz` and reference GTF are available and annotation succeeds. Annotation failures do not make this a mandatory output. A peak may have multiple gene associations, so the table is not guaranteed to have one row per matrix feature.
+
+| Fields | Meaning |
+| :--- | :--- |
+| `chrom`, `start`, `end` | Peak coordinates, using 0-based start and exclusive end |
+| `gene`, `gene_id` | Associated gene symbol and reference gene ID |
+| `distance` | Signed distance from the associated TSS to the nearest peak base; zero for overlap, positive downstream along transcription |
+| `peak_type` | Promoter/distal association or an intergenic/unannotated result |
+| `genomic_region` | Genomic region classification |
+| `gene_biotype`, `tss_source` | GTF gene biotype and annotation source of the selected TSS |
+
+Additional optional files: `cell_classification.csv` at the ATAC output root for mixed-species classification; `whitelist_contamination.json` and `whitelist_contamination_cells.json` when the C4 whitelist/low-targeting policy emits diagnostics (`audit` or `apply`). `Multiplet` is a mixed-species candidate and `Unassigned` means no confident species assignment. These are not confirmed biological doublet labels.
 
 #### singlecell.csv
 
-`singlecell.csv` includes `Cell,totalFrags,fragments,mt_region_fragments,chloroplast_region_fragments,TSS_region_fragments,blacklist_region_fragments,peaks_number,peak_region_fragments,peak_region_cutsites,is_cell_barcode,Cellbarcode`. The peak-region fragment and cutsite columns represent distinct counts. A missing cutsite statistic from an older tool is not zero.
-A CSV-formatted table of cell-level quality control information, recording detailed statistics for each cell barcode.
+Cell-level multi-dimensional QC and metadata table in CSV format.
 
+*   **Columns**:
+    `Cell,totalFrags,fragments,mt_region_fragments,chloroplast_region_fragments,TSS_region_fragments,blacklist_region_fragments,peaks_number,peak_region_fragments,peak_region_cutsites,is_cell_barcode,Cellbarcode`.
 *   **Core Purpose**:
-    *   **Fine-grained QC**: Allows users to perform more detailed cell filtering and analysis based on custom criteria.
-    *   **Downstream Analysis Input**: Can be used as cell metadata input for analysis tools like Signac and Scanpy.
+    *   **Fine-grained QC**: Extract real cells by `is_cell_barcode == 1`, or apply custom secondary filtering on fragments and TSS proportions.
+    *   **Downstream Metadata**: Integrates directly as cell metadata (`adata.obs` in Scanpy or `cell_metadata` in ArchR/Signac).
 
-*   **Content & Format**:
-    *   Each row represents one cell barcode.
-    *   Key columns include: number of fragments, number of peaks, number of fragments in TSS/peak regions, whether it is identified as a high-quality cell, bead merging information, etc.
+`totalFrags` counts fragment-supporting read pairs including duplicate support; `fragments` counts deduplicated unique fragments. The report summary uses nuclear fragments for FRIP/TSS fractions. Targeting scatter plots instead divide by all unique `fragments`; the normalized TSS enrichment profile is a separate signal. Empty fragment gzip files may have no `.tbi` index. ATAC clustering objects remain in processing and are not published as an `outs/analysis/` bundle.
 
 #### *_scATAC_report.html
 
-An interactive HTML report for reviewing analysis results.
+Self-contained interactive visual analysis report in HTML format.
 
-*   **Core Purpose**:
-    *   **Results Visualization**: Intuitively displays key analysis results such as QC metrics, cell clustering, and TSS enrichment in the form of interactive charts.
-    *   **Results Interpretation**: Provides the biological significance and technical explanation of various metrics to help users interpret the data deeply.
-    *   **Easy Sharing**: A single HTML file that is easy to circulate and share.
+*   **Core Purpose**: Provides interactive charts for QC metrics, barcode rank curves, TSS profiles, fragment length periodicity, and cell clustering.
+*   **Convenient Sharing**: Single offline file; opens directly in any desktop browser without an internet connection.
 
-*   **Content & Format**:
-    *   Can be opened in any modern browser without an internet connection.
-    *   For a detailed interpretation of the report, please refer to the [Web Report Interpretation](#web-report-interpretation) section below.
-    *   Key content modules included are as follows:
-        <table>
-        <thead>
-        <tr>
-        <th width="25%">Report Feature</th>
-        <th width="75%">Description</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr>
-        <td><strong>Interactive Charts</strong></td>
-        <td>Interactive visualizations for QC metrics, cell clustering, peak analysis, etc.</td>
-        </tr>
-        <tr>
-        <td><strong>Statistical Summary</strong></td>
-        <td>A numerical summary and trend analysis of key performance indicators.</td>
-        </tr>
-        <tr>
-        <td><strong>Detailed Interpretation</strong></td>
-        <td>The biological significance and technical explanation of various metrics.</td>
-        </tr>
-        </tbody>
-        </table>
-
-## File Format Description <a id="file-format-description"></a>
-
-**Technical Specification**: A detailed description of the standard formats used for the output files.
+## File Format Specifications <a id="file-format-specifications"></a>
 
 #### Matrix Market Format (`.mtx.gz`) <a id="market-matrix-format-mtxgz"></a>
 
-Market Exchange Format (MEX) is a standard format for storing sparse count matrices in single-cell analysis, known for its space efficiency and high compatibility.
+The Matrix Market Exchange Format (MEX) is the community standard for storing sparse single-cell count matrices.
 
-*   **Core Advantages**:
-    *   **Space-Efficient**: The sparse matrix format only stores non-zero elements, which significantly saves storage space for single-cell data where over 95% of values are typically zero.
-    *   **Highly Compatible**: As an international standard, it can be directly read by almost all mainstream analysis tools, including Seurat, Scanpy, and Signac.
+*   **File Components**:
 
-*   **File Composition**:
-    *   A complete MEX format dataset consists of the following **three files**:
-        <table>
-        <thead>
-        <tr>
-        <th width="25%"><strong>Filename</strong></th>
-        <th width="75%"><strong>Description</strong></th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr>
-        <td><code>matrix.mtx.gz</code></td>
-        <td>A compressed sparse matrix file. The header contains matrix dimensions, and each subsequent line records the position (row/column index) and value of a non-zero element.</td>
-        </tr>
-        <tr>
-        <td><code>barcodes.tsv.gz</code></td>
-        <td>A compressed cell barcode file. Each line is a cell ID, and the line number corresponds to the matrix **column**.</td>
-        </tr>
-        <tr>
-        <td><code>peaks.bed.gz</code></td>
-        <td>A compressed feature (peak) file. Each line is a peak's coordinates in BED format, and the line number corresponds to the matrix **row**.</td>
-        </tr>
-        </tbody>
-        </table>
+    | File Name | Description |
+    | :--- | :--- |
+    | `matrix.mtx.gz` | Compressed sparse matrix. Header records dimensions and total non-zero entries; subsequent lines record row/column indices and values |
+    | `barcodes.tsv.gz` | Compressed barcode file; each row corresponds to a cell ID and matrix **column** |
+    | `peaks.bed.gz` | Compressed peak feature file; each row corresponds to a peak BED coordinate and matrix **row** |
 
 ## Web Report Interpretation <a id="web-report-interpretation"></a>
 
-**Overview**: The HTML web report provides visual summaries and metric explanations for single-cell ATAC sequencing results, including key performance indicators for experimental quality and downstream analysis.
+**Overview**: The HTML report provides visual summaries and quality metrics for single-cell ATAC sequencing, covering library quality, chromatin structure, and downstream clustering.
 
-The HTML web report is the main entry point for reviewing single-cell ATAC sequencing results. It covers cell calling, fragment quality, TSS enrichment, peak-related metrics, and clustering results, and helps users identify metrics that require further review.
+!!! info "Quality Assessment Principles & Guide"
+    - **Holistic Assessment**: The HTML report provides a comprehensive summary of scATAC results, spanning cell calling, sequencing fidelity, fragment length periodicity, TSS enrichment, and peak distribution.
+    - **Baseline Context**: Benchmark thresholds reflect standard primary tissue samples. Actual metrics vary across tissue types (e.g., solid tumors, primary neural tissue, frozen nuclei), cell states, and sequencing depth. Interpret metrics in context.
+    - **Review Workflow**: We recommend inspecting base sequencing quality and alignment first, followed by mitochondrial ratio, TSS enrichment, and FRIP, before verifying the biological plausibility of UMAP clusters.
 
-> **Usage Notes**: It is recommended to review the metrics in the order they are presented in the report.
+### Report Structure & Key Content
 
-> **Note**: The following standards are for reference only. Actual quality assessment should consider factors such as sample type, cell state, and experimental goals. Since significant differences can exist between samples, we recommend interpreting the results in the context of your specific experimental background.
+<div style="text-align: center; margin: 1.5rem 0;" markdown="block">
+<img src="../images/html_scatac1.png" alt="scATAC Web Report Overview" style="max-width: 540px; width: 100%; border-radius: 8px; box-shadow: 0 4px 16px rgba(0,0,0,0.08); border: 1px solid var(--doc-border);">
+</div>
 
-### Main Report Content and Structure
-
-<img src="../images/html_scatac1.png" alt="scATAC Web Report" width="500">
-
-### Core Analysis Metrics Explained
+### Detailed Analysis Metrics
 
 #### Cell Metrics <a id="cell-metrics"></a>
 
-**Core Function**: Cell identification, quality assessment, and chromatin accessibility statistics, providing key indicators for the overall effectiveness of the experiment.
+**Core Function**: Evaluates cell calling yield, library quality, and chromatin accessibility enrichment.
 
-**Quality Control Standards:**
+**Quality Reference Benchmarks:**
 
-<table>
-<thead>
-<tr>
-<th width="25%">Metric Name</th>
-<th width="30%">Recommended</th>
-<th width="30%">Acceptable</th>
-<th width="15%">Needs Improvement</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>Median fragments per cell</strong></td>
-<td>≥ 10,000</td>
-<td>2,000–10,000</td>
-<td>< 2,000</td>
-</tr>
-<tr>
-<td><strong>Median fraction of fragments overlapping peaks</strong></td>
-<td>≥ 30%</td>
-<td>15–30%</td>
-<td>< 15%</td>
-</tr>
-<tr>
-<td><strong>Median fraction of fragments overlapping TSS</strong></td>
-<td>≥ 20%</td>
-<td>10–20%</td>
-<td>< 10%</td>
-</tr>
-<tr>
-<td><strong>Fraction fragments in cells</strong></td>
-<td>≥ 50%</td>
-<td>20–50%</td>
-<td>< 20%</td>
-</tr>
-</tbody>
-</table>
+| Metric | Optimal | Acceptable | Suboptimal |
+| :--- | :---: | :---: | :---: |
+| **Median fragments per cell** | ≥ 10,000 | 2,000 – 10,000 | < 2,000 |
+| **Median fraction of fragments overlapping peaks** | ≥ 30% | 15% – 30% | < 15% |
+| **Median fraction of fragments overlapping TSS** | ≥ 20% | 10% – 20% | < 10% |
+| **Fraction fragments in cells** | ≥ 50% | 20% – 50% | < 20% |
 
-**Detailed Metric Explanations:**
+**Detailed Metric Definitions & Interpretation:**
 
-<table>
-<thead>
-<tr>
-<th width="30%">Metric Name</th>
-<th width="70%">Detailed Explanation & Technical Requirements</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>Estimated number of cells</strong></td>
-<td>
-<ul>
-<li><strong>Definition</strong>: The total number of valid cells identified from the sequencing data (as distinct from background noise or empty droplets).</li>
-<li><strong>Calculation Process</strong>: After merging barcodes from the same droplet, cells are filtered based on peak-overlapping fragment counts, TSS proportion, and related QC metrics.</li>
-<li><strong>Interpretation</strong>: Compare this value with expected cell loading, fragment-count distribution, and filtering results. If it is much lower than expected, review sample integrity, library quality, and sequencing depth.</li>
-</ul>
-</td>
-</tr>
-<tr>
-<td><strong>Species</strong></td>
-<td>
-<ul>
-<li><strong>Definition</strong>: The species or reference genome version used for the analysis.</li>
-<li><strong>Use case</strong>: Confirms whether the reference genome used for analysis matches the sample species. This is a basic item for result review and troubleshooting.</li>
-</ul>
-</td>
-</tr>
-<tr>
-<td><strong>Median fragments per cell</strong></td>
-<td>
-<ul>
-<li><strong>Definition</strong>: The median number of valid ATAC-seq fragments contained within a single cell.</li>
-<li><strong>Use case</strong>: Assesses the number of valid fragments available for open-chromatin analysis in each cell and reflects sequencing coverage.</li>
-<li><strong>Interpretation</strong>:
-<ul>
-<li><strong>High-Quality Standard</strong>: ≥ 10,000</li>
-<li><strong>Recommended Minimum</strong>: ≥ 2,000</li>
-</ul>
-</li>
-</ul>
-</td>
-</tr>
-<tr>
-<td><strong>Mean raw read pairs per cell</strong></td>
-<td>
-<ul>
-<li><strong>Definition</strong>: The average number of raw sequencing read pairs assigned to each cell.</li>
-<li><strong>Calculation</strong>: `Total Raw Read Pairs / Estimated Number of Cells`</li>
-<li><strong>Interpretation</strong>: A value of ≥ 25,000 is recommended to ensure adequate chromatin coverage. Lower values may reduce the stability of peak calling, clustering, and differential accessibility analysis.</li>
-</ul>
-</td>
-</tr>
-<tr>
-<td><strong>Fraction overlapping peaks</strong></td>
-<td>
-<ul>
-<li><strong>Definition</strong>: The proportion of a single cell's fragments that fall into identified open chromatin regions (Peaks).</li>
-<li><strong>Use case</strong>: Key metric for ATAC signal specificity. A higher proportion indicates that valid fragments are more concentrated in open chromatin regions and background noise is relatively lower.</li>
-<li><strong>Interpretation</strong>:
-<ul><li><strong>Needs attention</strong>: If < 15%, review nuclei quality, transposition efficiency, peak calling results, and sequencing depth.</li></ul>
-</li>
-</ul>
-</td>
-</tr>
-<tr>
-<td><strong>Fraction overlapping TSS</strong></td>
-<td>
-<ul>
-<li><strong>Definition</strong>: The proportion of a single cell's fragments that fall within the ±2kb region of a Transcription Start Site (TSS).</li>
-<li><strong>Use case</strong>: Assesses promoter-proximal open-chromatin signal and ATAC-seq library specificity.</li>
-<li><strong>Interpretation</strong>:
-<ul><li><strong>Needs attention</strong>: If < 10%, interpret together with the TSS enrichment profile, fragment length distribution, and sample preparation workflow.</li></ul>
-</li>
-</ul>
-</td>
-</tr>
-<tr>
-<td><strong>Fraction of fragments in cells</strong></td>
-<td>
-<ul>
-<li><strong>Definition</strong>: The proportion of all valid fragments that are successfully assigned to a high-quality cell ID.</li>
-<li><strong>Use case</strong>: Assesses how much valid fragment signal comes from high-quality cells and helps evaluate background fragments or empty-droplet effects.</li>
-<li><strong>Interpretation</strong>:
-<ul><li><strong>Needs attention</strong>: A low ratio may indicate high background fragments, abnormal filtering strictness, poor sample quality, or library construction issues.</li></ul>
-</li>
-</ul>
-</td>
-</tr>
-<tr>
-<td><strong>Number of peaks</strong></td>
-<td>
-<ul>
-<li><strong>Definition</strong>: The total number of open chromatin regions (peaks) identified across the genome after aggregating the signal from all cells.</li>
-<li><strong>Use case</strong>: Assesses the number of detectable open chromatin regions and the coverage of regulatory elements in the sample.</li>
-<li><strong>Influencing factors</strong>: Affected by cell number, cell-type heterogeneity, sequencing depth, and peak calling parameters.</li>
-<li><strong>Typical Range</strong>: 50,000 – 150,000 peaks.</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
+| Metric | Calculation & Definition | Interpretation & Troubleshooting |
+| :--- | :--- | :--- |
+| **Estimated number of cells** | Total number of high-confidence real cell barcodes identified after bead merging and filtering based on fragment count and TSS enrichment. | Evaluate against targeted cell input. If substantially lower than expected, check cell viability, microfluidic encapsulation, or nuclear integrity. |
+| **Species** | Reference organism and genome build used for alignment and annotation. | First checkpoint to verify that reference genome configurations match the biological specimen. |
+| **Median fragments per cell** | Median number of unique ATAC-seq fragments assigned to real cells. | Core measure of per-cell sequencing depth and capture sensitivity. Optimal is ≥ 10,000 (minimum ≥ 2,000); low values reduce power in peak calling and clustering. |
+| **Mean raw read pairs per cell** | Total raw read pairs / Estimated number of cells. | Evaluates overall sequencing depth. Recommended ≥ 25,000 read pairs/cell to ensure sufficient chromatin coverage. |
+| **Fraction overlapping peaks** | Median across called cells of `peak_region_fragments / nuclear_fragments`, where `nuclear_fragments = fragments − mt_region_fragments − chloroplast_region_fragments`; the implementation clips the denominator to at least 1. | Gold standard for ATAC signal specificity and signal-to-noise ratio. Recommended ≥ 30%; < 15% indicates high ambient DNA background or poor transposition. |
+| **Fraction overlapping TSS** | Median across called cells of `TSS_region_fragments / nuclear_fragments` for regions within ±1,000 bp of annotated TSSs. The denominator is the same as for the peak-overlap summary. | Reflects promoter accessibility signal enrichment. Recommended ≥ 20%; < 10% suggests non-specific cleavage or chromatin degradation. |
+| **Fraction of fragments in cells** | Sum of `totalFrags` for called cells / sum of `totalFrags` for all rows. This counts fragment-supporting read pairs including duplicate support, not deduplicated `fragments`. | Measures real cellular signal relative to ambient background and empty droplets. Recommended ≥ 50%; low values suggest abundant cell-free chromatin debris. |
+| **Number of peaks** | Total number of open chromatin peaks identified across all pooled high-quality cells. | Typically ranges from 50,000 to 150,000, depending on cell heterogeneity, cell count, and sequencing depth. |
 
 #### Sequencing Metrics <a id="sequencing-metrics"></a>
 
-**Core Function**: Basic quality assessment of sequencing data, including barcode identification rate, alignment quality, and sequencing accuracy.
+**Core Function**: Assesses primary sequencing quality, barcode validity, and alignment fidelity.
 
-**Quality Control Standards:**
+**Quality Reference Benchmarks:**
 
-<table>
-<thead>
-<tr>
-<th width="25%">Metric Category</th>
-<th width="25%">Recommended</th>
-<th width="25%">Acceptable</th>
-<th width="25%">Needs Improvement</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>Valid barcodes</strong></td>
-<td>≥ 80%</td>
-<td>70–80%</td>
-<td>< 70%</td>
-</tr>
-<tr>
-<td><strong>Q30 bases in barcode</strong></td>
-<td>> 85%</td>
-<td>75–85%</td>
-<td>< 75%</td>
-</tr>
-<tr>
-<td><strong>Q30 bases in read</strong></td>
-<td>> 85%</td>
-<td>75–85%</td>
-<td>< 75%</td>
-</tr>
-<tr>
-<td><strong>Confidently mapped read pairs</strong></td>
-<td>> 80%</td>
-<td>50–80%</td>
-<td>< 50%</td>
-</tr>
-</tbody>
-</table>
+| Metric | Optimal | Acceptable | Suboptimal |
+| :--- | :---: | :---: | :---: |
+| **Valid barcodes** | ≥ 80% | 70% – 80% | < 70% |
+| **Q30 bases in barcode** | > 85% | 75% – 85% | < 75% |
+| **Q30 bases in read** | > 85% | 75% – 85% | < 75% |
+| **Confidently mapped read pairs** | > 80% | 50% – 80% | < 50% |
 
-**Detailed Metric Explanations:**
+**Detailed Metric Definitions & Interpretation:**
 
-<table>
-<thead>
-<tr>
-<th width="30%">Metric Name</th>
-<th width="70%">Detailed Explanation & Technical Requirements</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>Total number of read pairs</strong></td>
-<td>
-<ul>
-<li><strong>Definition</strong>: The total number of raw sequencing read pairs allocated to the sample.</li>
-<li><strong>Use case</strong>: Represents the total data volume of the sequencing run and serves as the baseline for evaluating sequencing depth and downstream QC metrics.</li>
-</ul>
-</td>
-</tr>
-<tr>
-<td><strong>Valid barcodes</strong></td>
-<td>
-<ul>
-<li><strong>Definition</strong>: The proportion of reads whose cell barcode sequence can be successfully matched to the predefined whitelist (with error correction).</li>
-<li><strong>Use case</strong>: Assesses whether cell barcode recognition is stable and whether fragments can be assigned to cells correctly.</li>
-<li><strong>Interpretation</strong>: A low proportion usually suggests barcode recognition issues, which may be related to barcode sequencing quality, contamination, or library preparation quality.</li>
-</ul>
-</td>
-</tr>
-<tr>
-<td><strong>Confidently mapped read pairs</strong></td>
-<td>
-<ul>
-<li><strong>Definition</strong>: The proportion of all reads that successfully align to any location on the reference genome.</li>
-<li><strong>Interpretation</strong>:
-<ul><li><strong>Needs attention</strong>: If < 50%, review sample contamination, species selection, reference genome version, and sequencing quality.</li></ul>
-</li>
-</ul>
-</td>
-</tr>
-<tr>
-<td><strong>Mitochondrial reads ratio</strong></td>
-<td>
-<ul>
-<li><strong>Definition</strong>: The proportion of all aligned reads that map to the mitochondrial genome.</li>
-<li><strong>Use case</strong>: Assesses mitochondrial-derived fragment proportion and helps evaluate nuclei preparation and sample integrity.</li>
-<li><strong>Interpretation</strong>: An excessively high ratio (e.g., > 10%) often suggests cell death, excessive lysis, or elevated mitochondrial DNA capture.</li>
-</ul>
-</td>
-</tr>
-<tr>
-<td><strong>Nucleosome-free regions</strong></td>
-<td>
-<ul>
-<li><strong>Definition</strong>: The proportion of fragments originating from open chromatin regions (that is, nucleosome-free regions).</li>
-<li><strong>Use case</strong>: Assesses the proportion of fragments from open chromatin and reflects valid ATAC-seq signal strength.</li>
-<li><strong>Interpretation</strong>: A high proportion (e.g., > 40%) generally indicates strong chromatin accessibility signal and efficient transposition.</li>
-</ul>
-</td>
-</tr>
-<tr>
-<td><strong>Mono-nucleosome regions</strong></td>
-<td>
-<ul>
-<li><strong>Definition</strong>: The proportion of fragment regions containing a single nucleosome.</li>
-<li><strong>Use case</strong>: Assesses mono-nucleosome fragment proportion and, together with nucleosome-free regions, helps evaluate chromatin structure integrity.</li>
-</ul>
-</td>
-</tr>
-<tr>
-<td><strong>Q30 bases in barcode</strong></td>
-<td>
-<ul>
-<li><strong>Definition</strong>: The proportion of bases with a sequencing quality score of Q30 or higher in the cell barcode sequence.</li>
-</ul>
-</td>
-</tr>
-<tr>
-<td><strong>Q30 bases in read</strong></td>
-<td>
-<ul>
-<li><strong>Definition</strong>: The proportion of bases with a sequencing quality score of Q30 or higher in the sequencing read.</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
+| Metric | Calculation & Definition | Interpretation & Troubleshooting |
+| :--- | :--- | :--- |
+| **Total number of reads pairs** | Total raw paired-end reads generated for the sample. | Direct measure of total raw sequencing volume and baseline for sequencing depth. |
+| **Valid barcodes** | Fraction of reads whose cell barcodes match the pre-defined whitelist (with error correction). | Recommended ≥ 80%. Low fractions indicate barcode sequencing errors, primer abnormalities, or index drift. |
+| **Confidently mapped read pairs** | Fraction of read pairs uniquely aligned to the reference genome. | Recommended ≥ 80%. Values < 50% warrant checking for sample contamination, incorrect reference build, or excess repeat multi-mapping. |
+| **Mitochondria reads ratio** | Percentage of aligned reads mapping to the mitochondrial genome. | Core indicator of nuclear isolation purity. Unprotected mtDNA is hyper-accessible to Tn5; recommended < 10%, > 20% indicates nuclear envelope rupture. |
+| **Nucleosome-free regions** | Percentage of transposition fragments shorter than 147 bp. | Reflects active accessible chromatin at promoters and enhancers. Recommended > 40%; low values indicate under-transposition or chromatin compaction. |
+| **Mono-nucleosome regions** | Percentage of fragments between 147 bp and 294 bp (spanning a single nucleosome). | Complements nucleosome-free fragments to verify nucleosomal phase periodicity. |
+| **Q30 bases in barcode** | Percentage of bases in barcode reads with Phred quality score ≥ 30 (error rate < 0.1%). | Evaluates primary sequencing quality for cell identity assignment. Recommended > 85%. |
+| **Q30 bases in read** | Percentage of genomic insert read bases with quality score ≥ 30. | Determines alignment fidelity and peak boundary resolution. |
 
-#### Visualization Chart 1 <a id="visualization-chart-1"></a>
+### Interactive Visualization Charts
 
-**Core Function**: Multi-dimensional visualization for cell quality control, fragment analysis, and chromatin accessibility assessment.
+<a id="visualization-charts-1"></a>
 
-#### Barcode Rank Plot
+The HTML report includes multi-dimensional interactive charts covering cell QC, chromatin periodicity, and clustering.
 
-**Chart Function**:
-This plot ranks all cell barcodes by fragment count to distinguish high-quality true cells from background noise.
+#### 1. Barcode Rank Plot
+
+**Chart Function**: Displays cumulative fragments across all cell barcodes ranked in descending order to separate real cells from background noise.
+
+<div style="text-align: center; margin: 1.2rem 0;" markdown="block">
+<img src="../images/html_scatac3.jpg" alt="Barcode Rank Plot" style="max-width: 340px; width: 100%; border-radius: 8px; box-shadow: 0 3px 12px rgba(0,0,0,0.08); border: 1px solid var(--doc-border);">
+</div>
 
 **How to Interpret**:
 
 *   **Axes**:
-    *   **X-axis (Barcode Rank)**: All barcodes ranked in descending order by fragment count. Left = high-fragment barcodes; right = low-fragment barcodes.
-    *   **Y-axis (Fragment Counts)**: Total peak-overlapping fragment counts per barcode (log scale).
-*   **Key Feature (Knee Point)**:
-    *   The curve usually has a clear "knee point".
-    *   The **blue region** to the left of the knee indicates barcodes identified as high-quality real cells.
-    *   The **gray region** to the right indicates background noise.
-*   **Interactivity**:
-    *   Hover to inspect barcode rank and fragment count details.
-    *   Blue color intensity reflects the local density of real cells.
+    *   **X-axis (Barcode Rank)**: All barcodes ranked by peak fragment count in descending order (log scale).
+    *   **Y-axis (Fragment Counts)**: Fragment count per barcode (log scale).
+*   **Knee Point Characteristics**:
+    *   High-quality libraries exhibit a steep cliff-like inflection (knee point).
+    *   **Blue region**: High-confidence real cells identified by the calling algorithm.
+    *   **Gray region**: Background ambient fragments and empty droplets.
+*   **Interactive Features**: Hover to inspect individual barcode rankings; blue color gradient reflects local cell density.
 
-#### Droplet Beads Distribution
+---
 
-**Chart Function**:
-Shows the distribution of captured cell barcodes (beads) within droplets identified as real cells.
+#### 2. Droplet Beads Distribution
 
-**How to Interpret**:
-
-*   **Theoretical distribution**: Bead count per droplet is expected to approximately follow a **Poisson distribution**, reflecting random capture in microfluidics.
-*   **Practical factors**: The observed distribution is affected by sequencing saturation, droplet size uniformity, and cell concentration.
-
-#### Cell Data Distribution
-
-**Chart Function**:
-Three violin plots show the distributions of key QC metrics in high-quality cells: **Fragments**, **TSS Proportion**, and **Peak Proportion**.
+**Chart Function**: Displays the distribution of bead counts captured per real cell droplet.
 
 **How to Interpret**:
 
-*   **Violin plot basics**:
-    *   Plot **width** indicates cell density at that value. Wider sections represent more cells.
-    *   The internal boxplot summarizes median and quartiles.
-*   **Metric interpretation**:
-    *   **Fragments**: Distribution of total fragments per cell. Better libraries usually have a higher central density.
-    *   **TSS Proportion**: Distribution of fragment fractions around TSS. A higher center indicates stronger transcription-associated accessibility.
-    *   **Peak Proportion**: Distribution of fragment fractions in called peaks. A higher center indicates better signal-to-noise.
+*   **Theoretical Model**: Microfluidic co-encapsulation follows a **Poisson distribution**, reflecting random capture mechanics.
+*   **Practical Context**: Deviations reflect microfluidic droplet uniformity, cell suspension concentration, or sequencing saturation.
 
-#### Fragment Length Distribution
+---
 
-**Chart Function**:
-Shows the insert length distribution of deduplicated ATAC-seq fragments, a key plot for assessing sample quality and chromatin structure integrity.
+#### 3. Cell Data Distribution
+
+**Chart Function**: Displays violin plots for real cells across three core metrics: **Fragments**, **TSS Proportion**, and **Peak Proportion**.
 
 **How to Interpret**:
 
-*   **Periodic peaks**:
-    *   **< ~100 bp**: First peak, corresponding to **nucleosome-free regions (NFRs)**, that is, open chromatin.
-    *   **~200 bp**: Second peak, corresponding to **mono-nucleosome** fragments.
-    *   **~400 bp, ~600 bp**: Subsequent peaks corresponding to **di-nucleosome** and **tri-nucleosome** fragments.
-*   **Quality assessment**:
-    *   **High-quality sample**: Clear ~200 bp periodic peaks with a prominent NFR peak, indicating intact nuclei and clear chromatin structure.
-    *   **Low-quality sample**: Flat curve without periodicity, often indicating over-lysis or disrupted chromatin architecture.
+*   **Violin Shape**: Width represents cell density; wider bodies indicate consistent cell properties. Internal box plots show medians and quartiles.
+*   **Quality Guidance**: Higher centers for Fragments and TSS/Peak proportions indicate robust signal and low noise.
 
-#### Other Key Metrics <a id="other-key-metrics"></a>
+---
 
-<img src="../images/html_scatac2.png" alt="scATAC Web Report" width="500">
+#### 4. Fragment Length Distribution
 
-##### Percent duplicates
-
-- **Definition**: The proportion of fragments identified as PCR duplicates.
-- **Use case**: Used to assess library complexity and sequencing saturation, and to determine whether additional sequencing is likely to be useful.
-- **Quality interpretation**:
-  - High duplication (e.g., >20-30%) usually indicates sequencing has approached saturation and additional sequencing may have limited benefit.
-  - Very low duplication (e.g., <10%) may suggest insufficient depth; deeper sequencing may recover more unique fragments.
-
-##### Jaccard threshold
-
-- **Definition**: Similarity cutoff used to determine whether two beads came from the same droplet/cell.
-- **Use case**: In C4 ATAC, one droplet may contain multiple beads; the software uses bead-level fragment overlap (Jaccard index) to decide whether beads should be merged.
-- **Algorithm**: Automatically determined by Otsu's method. To ensure stability, if the computed threshold is < `0.02`, it is set to `0.02`.
-
-#### Visualization Chart 2 <a id="visualization-chart-2"></a>
-
-**Core Function**: Advanced visualizations for cell clustering, TSS enrichment patterns, saturation assessment, and bead similarity.
-
-#### Cluster Analysis
-
-**Chart Function**:
-Cells with similar chromatin accessibility patterns are grouped in 2D space using UMAP + Louvain clustering to identify potential cell subpopulations.
+**Chart Function**: Plots the frequency distribution of deduplicated fragment insert sizes, serving as a structural "fingerprint" of chromatin integrity.
 
 **How to Interpret**:
 
-1. **Left plot (cell clusters)**
-    - Each point is one cell.
-    - Different colors indicate different clusters, potentially representing distinct cell types or states.
-    - Nearby points have more similar accessibility profiles.
-2. **Right plot (fragment count overlay)**
-    - Uses the same UMAP layout with a color gradient for per-cell fragment count.
-    - Darker colors indicate higher fragment counts and usually better data quality.
+*   **Periodicity Peaks**:
+    *   **< 147 bp (First peak)**: **Nucleosome-Free Regions (NFR)**, enriched in promoters and active enhancers.
+    *   **~200 bp (Second peak)**: **Mono-nucleosomal** fragments.
+    *   **~400 bp / ~600 bp (Subsequent peaks)**: Di-nucleosomal and multi-nucleosomal fragments.
+*   **QC Interpretation**: High-quality libraries exhibit prominent NFR peaks and distinct ~200 bp periodicity; flat curves indicate over-lysis or chromatin degradation.
 
-#### TSS Enrichment Profile
+---
 
-**Chart Function**:
-Shows fragment insertion enrichment around transcription start sites (TSS), a core indicator of ATAC-seq signal specificity and quality.
+<a id="additional-key-metrics"></a>
+<a id="visualization-charts-2"></a>
 
-**How to Interpret**:
+#### 5. Cluster Analysis
 
-1. **Axes**
-    - **X-axis**: Position relative to TSS (0 = TSS).
-    - **Y-axis**: Normalized signal intensity (insertion frequency).
-2. **Key pattern**
-    - High-quality data usually shows a clear enrichment peak at TSS center (0).
-    - Signal should drop quickly away from the center.
-3. **Quality assessment**
-    - **TSS Enrichment Score** quantifies this pattern; higher scores (e.g., >4-6) indicate better signal-to-noise.
-    - Flat curves without a clear enrichment peak may suggest poor sample quality or library preparation issues.
+**Chart Function**: Visualizes cell chromatin accessibility patterns in 2D space using Latent Semantic Indexing (LSI) dimensionality reduction and UMAP projection.
 
-#### Single Cell Targeting Plot
-
-**Chart Function**:
-A scatter plot of two key QC metrics per cell, used to evaluate cell-calling performance.
+<div style="text-align: center; margin: 1.5rem 0;" markdown="block">
+<img src="../images/html_scatac2.png" alt="scATAC Cluster Analysis" style="max-width: 540px; width: 100%; border-radius: 8px; box-shadow: 0 4px 16px rgba(0,0,0,0.08); border: 1px solid var(--doc-border);">
+</div>
 
 **How to Interpret**:
 
-1. **Axes**
-    - **X-axis (Fragment Counts)**: Total fragments per cell (log scale).
-    - **Y-axis (TSS Enrichment)**: TSS enrichment score per cell.
-2. **Quality assessment**
-    - **Top-right**: High fragment count + high TSS enrichment, usually high-quality real cells.
-    - **Bottom-left**: Low fragment count + low TSS enrichment, usually background/noise and filtered out.
-    - Ideally, high-quality cells and background should be clearly separable.
+*   **Left Plot (Cell Clusters)**: Each dot represents a cell colored by cluster identity. Distinct separation reflects successful capture of epigenetic heterogeneity.
+*   **Right Plot (Fragment Depth)**: Colors cells by fragment count to check whether clusters are driven by sequencing depth artifacts.
 
-#### Saturation Curve
+---
 
-**Chart Function**:
-Evaluates sequencing depth sufficiency and library complexity, that is, whether additional sequencing can still identify substantial numbers of new unique fragments.
+#### 6. TSS Enrichment Profile
+
+**Chart Function**: Aggregates Tn5 cleavage frequencies across ±1,000 bp of all annotated TSS sites to quantify chromatin signal-to-noise ratio.
 
 **How to Interpret**:
 
-1. **Axes**
-    - **X-axis**: Mean read pairs per cell (sequencing depth).
-    - **Y-axis**: Median unique fragments per cell.
-2. **Curve behavior**
-    - **Linear/rising phase**: Additional sequencing yields many new unique fragments.
-    - **Plateau/saturation phase**: Library complexity is mostly exhausted; additional sequencing gives diminishing returns.
-3. **Quality guidance**
-    - A saturation (duplication-related) level around 20%-50% is often a practical balance between cost and completeness.
+*   **Axes**: X-axis is distance from TSS (0 = TSS center); Y-axis is normalized insertion signal.
+*   **Peak Shape**: High-quality samples show a sharp, symmetrical peak at TSS center with rapid decay to baseline.
+*   **Enrichment Score**: Higher scores (> 4–6) indicate excellent signal-to-noise; flat profiles suggest sample degradation or poor transposition.
 
-#### Bead Similarity Ranking
+---
 
-**Chart Function**:
-In C4 ATAC, this plot is used to merge multiple beads from the same droplet by ranking bead pairs using Jaccard similarity.
+#### 7. Single Cell Targeting Plot
+
+**Chart Function**: Bivariate scatter plot of total fragments (X-axis, log scale) vs. TSS enrichment score (Y-axis).
+
+**How to Interpret**: Real cells cluster in the top-right quadrant (high fragments + high TSS enrichment); background noise clusters in the bottom-left. Ideal datasets show a clear bimodal separation.
+
+---
+
+#### 8. Saturation Curve
+
+**Chart Function**: Evaluates sequencing depth sufficiency and library complexity yield.
 
 **How to Interpret**:
+*   **Axes**: X-axis is mean read pairs per cell; Y-axis is median unique fragments per cell.
+*   **Curve Behavior**: A steep linear phase indicates high discovery of new unique fragments; a flattening plateau indicates library saturation (20%–50% duplication rate is a typical cost-effective target).
 
-1. **Axes**
-    - **X-axis**: All bead pairs ranked by Jaccard similarity (descending).
-    - **Y-axis**: Jaccard similarity index (log scale).
-2. **Key regions**
-    - **Blue region**: Similarity above the Otsu-derived threshold; bead pairs are considered from the same cell and merged.
-    - **Gray region**: Similarity below threshold; bead pairs are treated as from different cells.
+---
 
-## Related Documentation
+#### 9. Bead Similarity Ranking
 
-| Document | Description |
-| :--- | :--- |
-| [scATAC Pipeline](../pipeline/scATAC.md) | Detailed scATAC analysis workflow |
-| [scATAC Parameters](../parameter/scATAC.md) | Command parameter reference |
-| [Output Files](./outs.md) | Return to output documentation index |
+**Chart Function**: Ranks bead pairs by Jaccard similarity to merge barcodes originating from the same multi-bead droplet.
+
+**How to Interpret**:
+*   **Blue region**: Bead pairs with similarity above the Otsu threshold are merged as single-cell origins.
+*   **Gray region**: Pairs below threshold are retained as distinct cells.
+
+---
+
+#### 10. Additional Algorithmic Metrics
+
+| Metric | Definition & Computation | Interpretation & Guidance |
+| :--- | :--- | :--- |
+| **Percent duplicates** | Fraction of aligned fragments flagged as PCR duplicates. | Reflects library complexity and depth saturation. Typically 20%–50%; > 50% indicates near saturation with diminishing returns for further sequencing; < 15% suggests potential benefit from deeper sequencing. |
+| **Jaccard threshold** | Similarity threshold used to determine whether two beads originated from the same droplet. | In multi-bead droplet platforms, calculated adaptively via Otsu's method (floored at 0.02) to merge split barcodes and prevent artificial doublets. |

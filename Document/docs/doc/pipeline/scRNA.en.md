@@ -12,7 +12,7 @@ This document provides a complete guide on how to use dnbc4tools for single-cell
   <img src="../images/scRNA_pipeline.png" alt="scRNA Analysis Pipeline Overview" width="800" style="max-width: 100%; height: auto;">
 </div>
 
-<div style="background-color: #e7f3fe; border-left: 6px solid #2196F3; padding: 15px; margin: 1.5em 0; border-radius: 4px;" markdown="block">
+<div class="doc-callout doc-callout-info" markdown="block">
 <strong>Usage Note:</strong> <code>$dnbc4tools</code> represents the executable path and must be replaced with the actual installation path. The backslash <code>\</code> is used to split a command across multiple lines for readability.
 </div>
 

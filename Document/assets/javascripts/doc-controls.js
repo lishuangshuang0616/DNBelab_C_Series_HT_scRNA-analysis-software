@@ -7,6 +7,31 @@
   const english = currentPath.startsWith('en/');
   const pagePath = english ? currentPath.slice(3) : currentPath;
   const text = (zh, en) => english ? en : zh;
+  const current = config.versions.find(entry => entry.version === config.current);
+  const destination = (entry, requestedPath) => {
+    const exists = entry.pages.includes(requestedPath);
+    const target = exists ? requestedPath : (requestedPath.startsWith('en/') ? 'en/index.html' : 'index.html');
+    const url = new URL(entry.path + target, siteBase);
+    url.search = window.location.search;
+    if (!exists || !window.location.hash) return url;
+    let anchor;
+    try {
+      anchor = decodeURIComponent(window.location.hash.slice(1));
+    } catch (_) {
+      return url;
+    }
+    const source = current.fragments[currentPath];
+    const fragments = entry.fragments[target];
+    if (!fragments) return url;
+    const canonical = source?.aliases[anchor] || anchor;
+    // Prefer the semantic heading ID, then known aliases for older links.
+    const candidates = [canonical, anchor, ...Object.keys(source?.aliases || {})
+      .filter(alias => source.aliases[alias] === canonical)];
+    // Auto-numbered headings can refer to unrelated sections in another manual.
+    const match = candidates.find(candidate => !/^_\d+$/.test(candidate) && fragments.anchors.includes(candidate));
+    if (match) url.hash = fragments.aliases[match] || match;
+    return url;
+  };
   const ready = () => {
     const header = document.querySelector('.md-header__inner');
     if (!header || header.querySelector('.doc-version')) return;
@@ -25,12 +50,7 @@
     }
     select.addEventListener('change', () => {
       const entry = config.versions.find(item => item.version === select.value);
-      const exists = entry.pages.includes(currentPath);
-      const target = exists ? currentPath : (english ? 'en/index.html' : 'index.html');
-      const url = new URL(entry.path + target, siteBase);
-      url.search = window.location.search;
-      if (exists) url.hash = window.location.hash;
-      window.location.assign(url.href);
+      window.location.assign(destination(entry, currentPath).href);
     });
     label.append(caption, select);
     const language = header.querySelector('.md-header__option .md-select');
@@ -40,10 +60,11 @@
       link.textContent = english ? '中文' : 'English';
       link.hreflang = english ? 'zh' : 'en';
       link.setAttribute('aria-label', english ? '切换到中文' : 'Switch to English');
-      const url = new URL((english ? '' : 'en/') + pagePath, versionBase);
-      url.search = window.location.search;
-      url.hash = window.location.hash;
-      link.href = url.href;
+      const updateLanguageLink = () => {
+        link.href = destination(current, (english ? '' : 'en/') + pagePath).href;
+      };
+      updateLanguageLink();
+      window.addEventListener('hashchange', updateLanguageLink);
       language.replaceWith(link);
       link.parentElement.before(label);
     } else {
@@ -56,7 +77,9 @@
       notice.append(document.createTextNode(text('你正在阅读 3.1 历史文档。', 'You are reading the archived 3.1 manual. ')));
       const link = document.createElement('a');
       const latest = config.versions.find(item => item.version === config.default);
-      link.href = new URL(latest.path + currentPath, siteBase).href;
+      const updateArchiveLink = () => { link.href = destination(latest, currentPath).href; };
+      updateArchiveLink();
+      window.addEventListener('hashchange', updateArchiveLink);
       link.textContent = text('查看 3.2 文档', 'Read the 3.2 manual');
       notice.append(link);
       document.querySelector('.md-content__inner')?.prepend(notice);

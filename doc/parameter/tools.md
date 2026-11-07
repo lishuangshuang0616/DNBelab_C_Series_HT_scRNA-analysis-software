@@ -105,27 +105,27 @@ dnbc4tools tools mkgtf --action check --ingtf raw_genes.gtf --output corrected.g
 ### 用法 <a id="usage-bam2fastq"></a>
 
 ```shell
-$ bam2fastq --help
-A BAM to FASTQ converter for C4 cDNA and C4/C6 oligo data (DNBelab C4 / DNBC4tools)
+$ bam2fastq -h
+BAM to FASTQ Converter for cDNA and oligo data
 
 Usage: bam2fastq [OPTIONS] <BAM> <OUTPUT>
 
 Arguments:
   <BAM>     Path to the input BAM file
-  <OUTPUT>  Output directory for FASTQ files
+  <OUTPUT>  Directory where FASTQ files will be written
 
 Options:
-  -t, --threads <THREADS>            Number of CPU threads for parallel processing [default: auto, all available cores]
-  -r, --locus <REGION>               Process a zero-based, half-open region, e.g. chr1:1000-2000
-  -n, --reads-per-fastq <READS>      Maximum reads per output FASTQ file
-      --max-memory <MEMORY>          Working-memory target in MiB; defaults to half available system memory
-      --no-compress                  Disable gzip compression (outputs .fastq instead of .fastq.gz)
-      --library-type <TYPE>          Detect from BAM metadata/tags; override with cDNA or oligo [default: auto]
-      --oligo-layout <LAYOUT>        Detect oligo layout; override with c4 or c6 [default: auto]
-      --relaxed                      Skip unmatched/duplicate mate records with summary counts [default: true]
-      --auto-detect                  Detect cDNA paired-end status from sampled flags [default: true]
-      --bx-list <FILE>               Filter cDNA by a barcode list; requires BX-sorted BAM and .bam.bxi index
-      --traceback                    Show detailed error context and traceback [default: false]
+      --library-type <LIBRARY_TYPE>  BAM library format; auto checks c4_oligo program metadata and oligo tags [default: auto] [possible values: auto, cDNA, oligo]
+      --oligo-layout <OLIGO_LAYOUT>  Oligo layout (default: auto): c4 barcode only or c6 barcode plus R1 UMI [default: auto] [possible values: auto, c4, c6]
+  -t, --threads <THREADS>            Number of CPU threads for parallel processing (default: all available cores) [default: 8]
+  -r, --locus <REGION>               Process a zero-based, half-open genomic region (format: chr1:1000-2000)
+      --bx-list <BX_LIST>            BX list; requires a BX-sorted BAM and .bam.bxi index
+  -n, --reads-per-fastq <READS>      Maximum number of reads per FASTQ file. All reads go to a single file if not specified.
+      --max-memory <MEMORY>          Working-memory target in MB for caches, queues and output buffers; not a hard RSS limit.
+      --traceback                    Show detailed error traceback
+      --relaxed[=<RELAXED>]          Relaxed mode: skip unpaired reads instead of erroring [default: true] [possible values: true, false]
+      --auto-detect[=<AUTO_DETECT>]  Automatically detect paired-end status from BAM flags [default: true] [possible values: true, false]
+      --no-compress                  Disable gzip compression for output FASTQ files
   -h, --help                         Print help
   -V, --version                      Print version
 ```
@@ -134,19 +134,21 @@ Options:
 
 | 参数 / 选项 | 类型 | 默认值 | 说明 |
 | :--- | :--- | :--- | :--- |
-| `<BAM>` | 文件路径 | **必需 (位置参数)** | 输入的 BAM 文件路径（支持坐标排序或名称排序的 cDNA BAM 及 `c4_oligo` 生成的 Oligo BAM） |
-| `<OUTPUT>` | 目录路径 | **必需 (位置参数)** | FASTQ 文件输出目录（自动按样本与分卷命名写出） |
-| `-t, --threads` | 整数 / `auto` | `auto` | 并行处理 CPU 线程数，默认使用系统全部可用核心 |
-| `-r, --locus` | 字符串 | 无 | 处理指定的基因组区域（0-based 半开区间，如 `chr1:1000-2000`；需要 BAM `.bai` 索引） |
-| `-n, --reads-per-fastq` | 整数 | 全部单文件 | 单个输出 FASTQ 文件的最大读段数量，超过则自动分卷 |
-| `--max-memory` | 整数 (MiB) | 自动判断 | 目标工作内存上限（MiB，默认系统可用内存的一半；非硬性 RSS 限制） |
-| `--no-compress` | 标志开关 | 关闭 | 禁用 gzip 压缩（直接输出 `.fastq` 以获得最高写出速度） |
-| `--library-type` | 选项 | `auto` | 文库类型推断：`cDNA` 或 `oligo`。默认通过 BAM 头部及标签（`c4_oligo`、`OR/OY/OB/U2/Y2`）自动推断 |
-| `--oligo-layout` | 选项 | `auto` | Oligo 文库结构布局：`c4`（单 UMI 30bp Barcode）或 `c6`（双 UMI 结构）。默认自动检测 |
-| `--relaxed` | 布尔值 | `true` | 是否跳过未配对/重复的配对记录并输出统计；设为 `false` 则要求严格完整配对 |
-| `--auto-detect` | 布尔值 | `true` | 是否根据采样标记自动检测 cDNA 双端/单端状态；设为 `false` 则按单端转换 |
-| `--bx-list` | 文件路径 | 无 | 按条形码白名单过滤 cDNA；要求 BAM 经 BX 排序且具有 `.bam.bxi` 索引 |
-| `--traceback` | 标志开关 | 关闭 | 出错时输出详细上下文与回溯堆栈信息 |
+| `<BAM>` | 文件路径 | **必需 (位置参数)** | 输入的 BAM 文件路径（支持坐标排序或名称排序的 cDNA BAM，及带 `c4_oligo` 标签的 Oligo BAM） |
+| `<OUTPUT>` | 目录路径 | **必需 (位置参数)** | FASTQ 文件输出目录路径 |
+| `--library-type` | 选项 (`auto`, `cDNA`, `oligo`) | `auto` | BAM 文库类型格式；`auto` 会自动检查 `c4_oligo` 程序元数据及 Oligo 标签 |
+| `--oligo-layout` | 选项 (`auto`, `c4`, `c6`) | `auto` | Oligo 文库结构布局：`c4` 仅条形码，`c6` 为条形码加 R1 UMI；`auto` 自动检测 |
+| `-t, --threads` | 整数 | 全部可用核心 (默认 8) | 用于并行处理的 CPU 线程数 |
+| `-r, --locus` | 字符串 | 无 | 处理指定的基因组区域（0-based 半开区间，格式为 `chr1:1000-2000`；需 BAM `.bai` 索引） |
+| `--bx-list` | 文件路径 | 无 | 按条形码白名单列表过滤；要求 BAM 经 BX 排序且具有 `.bam.bxi` 索引 |
+| `-n, --reads-per-fastq` | 整数 | 无 (全部单文件) | 单个输出 FASTQ 文件的最大读段数；未指定时全部输出到单个文件，超过则自动分卷 |
+| `--max-memory` | 整数 (MB) | 系统可用内存一半 | 用于缓存、队列与输出缓冲区的目标工作内存 (MB)；非硬性系统 RSS 上限 |
+| `--traceback` | 标志开关 | 关闭 | 出错时显示详细的错误追踪堆栈上下文 |
+| `--relaxed` | 布尔值 (`true`, `false`) | `true` | 宽松模式：跳过未配对读段而非直接报错退出 |
+| `--auto-detect` | 布尔值 (`true`, `false`) | `true` | 是否根据 BAM flags 自动检测双端测序（paired-end）状态 |
+| `--no-compress` | 标志开关 | 关闭 | 禁用 gzip 压缩（直接输出未压缩的 `.fastq` 文件以获得最高写出吞吐） |
+| `-h, --help` | 标志开关 | - | 显示帮助信息并退出 |
+| `-V, --version` | 标志开关 | - | 显示版本号并退出 |
 
 ### 常用示例
 
@@ -224,7 +226,7 @@ chromsplit --fasta large_genome.fasta --prefix custom_split --min_length 2000000
 
 > **核心功能**
 >
-> 高性能 FASTQ 序列区间提取与重构工具。支持按碱基坐标精准截取 Barcode、UMI 或 Insert 序列，用于多批次加测格式统一与非标文库重构。
+> 高性能 FASTQ 序列区间提取与重构工具。支持按碱基坐标截取 Barcode、UMI 或 Insert 序列，用于多批次加测格式统一与非标文库重构。
 
 ### 用法
 

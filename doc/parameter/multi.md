@@ -10,7 +10,7 @@
 ```bash
 dnbc4tools multi run \
   --name demo \
-  --csv config.csv \
+  --csv multi.config.csv \
   --outdir ./results \
   --threads 20
 ```
@@ -64,12 +64,12 @@ Basic Settings:
 RNA FASTQ 根目录须含 `cDNA/`、`oligo/`；ATAC 和 VDJ 目录直接放对应文库的配对 FASTQ。文件名的 R1/R2 规则见[快速开始](../quickstart.md#file-naming-conventions)。
 
 > **提示：测序文件一致性与批次处理**
-> 同一分析中的所有测序文件必须来自同一文库批次，测序模式与暗反应设置须保持一致；不同文库的数据不能混合输入。
+> Multi 允许在同一次运行中配置独立的 RNA、ATAC、TCR 和 BCR 文库。对同一模态输入项，合并的 FASTQ 应来自对应文库，并保持读段结构及暗反应设置兼容；不要将无关文库混入同一模态输入目录。不同模态分别配置。
 > 如果同一文库批次的不同测序批次存在暗反应模式或者测序长度不一致的情况，则需要使用 FASTQ 裁剪工具 [`fqsubC4`](tools.md#fastq-切割-fqsubc4) 对 reads 进行裁剪，具体裁剪位置请参考[文库结构识别](../library_structure.md)。
 
 ## 普通多组学配置 <a id="配置示例"></a>
 
-以下为 5′ RNA + TCR 的最小示例，保存为 `config.csv` 后使用上方命令运行。
+以下为 5′ RNA + TCR 的最小示例，保存为 `multi.config.csv` 后使用上方命令运行。
 
 ```csv
 [rna]
